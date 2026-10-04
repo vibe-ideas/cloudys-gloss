@@ -9,9 +9,11 @@ test('悬浮球：一键双语与恢复、拖动不误触、窄屏贴边、快�
   expect(await orb.evaluate((element) => getComputedStyle(element).fontSize)).not.toBe('90px');
   await page.screenshot({ animations: 'disabled', path: testInfo.outputPath('floating-idle.png') });
   server.setDelay(500);
+  await host.locator('.dock').hover();
   await orb.click();
   await expect(host.getByRole('button', { name: '恢复原文', exact: true })).toHaveAttribute('aria-pressed', 'true');
   await expect(page.locator('#first [data-cloudys-gloss="translation"]')).toBeVisible();
+  await host.locator('.dock').hover();
   await host.getByRole('button', { name: '恢复原文', exact: true }).click();
   await expect(page.locator('[data-cloudys-gloss="translation"]')).toHaveCount(0);
   const count = server.calls.length;

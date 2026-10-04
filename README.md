@@ -21,6 +21,7 @@ pnpm dev       # Chrome / Chromium
 - [安装与使用](docs/guides/getting-started.md)
 - [模型配置](docs/guides/models.md)
 - [模型启动与 macOS 登录自启](docs/guides/model-service.md)
+- [版本下载](https://github.com/vibe-ideas/cloudys-gloss/releases) · [自动发布流程](docs/development/releases.md)
 - [架构](docs/development/architecture.md) · [开发与测试](docs/development/testing.md)
 - [性能实测与模型选择](docs/performance/README.md)
 - [翻译质量对比](docs/performance/2026-10-04-translation-quality.md) · [质量回归用例](docs/development/translation-quality.md)

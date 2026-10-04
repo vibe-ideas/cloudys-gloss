@@ -4,6 +4,8 @@ test('2000 段大页面：同批第一段先显示、第二段显示动态占位
   await page.goto(`${server.url}/large`);
   const original = await page.locator('main').innerHTML();
   server.holdStreams();
+  const dock = page.locator('[data-cloudys-gloss="floating-control"] .dock');
+  await dock.hover();
   await page.getByRole('button', { name: '翻译当前网页', exact: true }).click();
   await expect(page.locator('#row-0 [data-state="partial"]')).toContainText('中文译文：Paragraph 0');
   await expect(page.locator('#row-1 [data-state="translating"]').getByRole('img', { name: '翻译中', exact: true })).toBeVisible();
@@ -20,6 +22,7 @@ test('2000 段大页面：同批第一段先显示、第二段显示动态占位
   server.releaseStreams();
   await expect(page.locator('#row-1999 [data-state="done"]')).toContainText('中文译文');
   expect(server.calls.length).toBeLessThan(25);
+  await dock.hover();
   await page.getByRole('button', { name: '恢复原文', exact: true }).click();
   await expect(page.locator('main [data-cloudys-gloss]')).toHaveCount(0);
   expect(await page.locator('main').innerHTML()).toBe(original);

@@ -5,6 +5,9 @@ import { existsSync } from 'node:fs';
 const firefoxBinary = process.env.FIREFOX_BINARY ?? (existsSync('/Applications/Firefox Developer Edition.app/Contents/MacOS/firefox') ? '/Applications/Firefox Developer Edition.app/Contents/MacOS/firefox' : undefined);
 
 export default defineConfig({
+  zip: {
+    includeSources: ['entrypoints/**', 'src/**', 'public/**', 'wxt.config.ts', 'tsconfig.json', 'package.json', 'pnpm-lock.yaml', 'README.md'],
+  },
   vite: () => ({ plugins: [preact()] }),
   webExt: {
     binaries: firefoxBinary ? { firefox: firefoxBinary } : undefined,
