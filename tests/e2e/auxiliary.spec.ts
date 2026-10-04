@@ -1,13 +1,12 @@
 import { test, expect } from './fixtures';
 
-test('页面辅助内容：搜索标签与 CSS 隐藏文字不泄露为孤立译文，关闭公告后正文与旧式表格链接仍完整', async ({ extension }, testInfo) => {
+test('页面辅助内容：可见搜索标签和表格导航分别翻译，CSS 隐藏文字不泄露，关闭公告与输入操作正常', async ({ extension }, testInfo) => {
   const { page, server, toggle } = extension;
   await page.goto(`${server.url}/auxiliary-content`);
   const search = await page.locator('#site-search').innerHTML();
   const labels = await page.locator('#label-host').innerHTML();
   const toolbar = await page.locator('#legacy-nav').innerHTML();
   const login = await page.locator('#legacy-login').innerHTML();
-  const toolbarHeight = (await page.locator('.legacy-heading').boundingBox())!.height;
   await toggle();
   await expect(page.locator('#visible-copy > [data-state="done"]')).toHaveText('中文译文：A visible paragraph includes a useful reference.');
   await expect(page.locator('#inline-copy > [data-state="done"]')).toHaveText('中文译文：Read the original carefully.');
@@ -15,26 +14,30 @@ test('页面辅助内容：搜索标签与 CSS 隐藏文字不泄露为孤立译
   await page.locator('#close-notice').click();
   await expect(page.locator('#notice-message')).toHaveCount(0);
   await expect(page.locator('#notice-host [data-cloudys-gloss]')).toHaveCount(0);
-  await expect(page.locator('#site-search')).toHaveJSProperty('innerHTML', search);
-  await expect(page.locator('#label-host')).toHaveJSProperty('innerHTML', labels);
-  await expect(page.locator('#legacy-nav')).toHaveJSProperty('innerHTML', toolbar);
-  await expect(page.locator('#legacy-login')).toHaveJSProperty('innerHTML', login);
-  // Firefox can round the same CSS height differently after the row moves.
-  expect((await page.locator('.legacy-heading').boundingBox())!.height).toBeCloseTo(toolbarHeight, 2);
+  await expect(page.locator('#site-search button > [data-state=done]')).toContainText('Search');
+  await expect(page.locator('#label-host label > [data-state=done]')).toHaveText('电子邮箱地址');
+  await expect(page.locator('#legacy-nav a > [data-state=done]')).toHaveCount(5);
+  await expect(page.locator('#legacy-login a > [data-state=done]')).toContainText('login');
   await page.locator('#search-input').fill('translation');
   await expect(page.locator('#search-input')).toHaveValue('translation');
   await page.locator('#legacy-copy').scrollIntoViewIfNeeded();
   await expect(page.locator('#legacy-title > [data-state="done"]')).toContainText('Researchers explain how everyday observations improve city planning');
   await expect(page.locator('#legacy-copy > [data-state="done"]')).toHaveText('中文译文：Read the first report, compare the second report, then see the discussion.');
   await expect(page.locator('#visible-copy > a')).toHaveAttribute('href', '#legacy-title');
-  const forbidden = ['Search', 'Search the site', 'Email address', 'More ways to donate', 'Screen reader helper', 'Hidden alternate label', 'Transparent helper', 'Invisible donation prompt', 'Community News', 'login'];
+  const forbidden = ['Search the site', 'More ways to donate', 'Screen reader helper', 'Hidden alternate label', 'Transparent helper', 'Invisible donation prompt'];
   expect(server.calls.flatMap((call) => call.texts ?? []).filter((text) => forbidden.some((hidden) => text.includes(hidden)))).toEqual([]);
-  await page.screenshot({ animations: 'disabled', fullPage: true, path: testInfo.outputPath('auxiliary-content-desktop.png') });
+  // Playwright's default caret hiding leaves an empty input style attribute;
+  // preserve the actual host DOM for the restoration assertion below.
+  await page.screenshot({ animations: 'disabled', caret: 'initial', fullPage: true, path: testInfo.outputPath('auxiliary-content-desktop.png') });
   await page.setViewportSize({ width: 390, height: 844 });
   expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(390);
-  await page.screenshot({ animations: 'disabled', fullPage: true, path: testInfo.outputPath('auxiliary-content-mobile.png') });
+  await page.screenshot({ animations: 'disabled', caret: 'initial', fullPage: true, path: testInfo.outputPath('auxiliary-content-mobile.png') });
   await toggle();
   await expect(page.locator('#auxiliary-main [data-cloudys-gloss]')).toHaveCount(0);
+  await expect(page.locator('#site-search')).toHaveJSProperty('innerHTML', search);
+  await expect(page.locator('#label-host')).toHaveJSProperty('innerHTML', labels);
+  await expect(page.locator('#legacy-nav')).toHaveJSProperty('innerHTML', toolbar);
+  await expect(page.locator('#legacy-login')).toHaveJSProperty('innerHTML', login);
   await expect(page.locator('#visible-copy')).toHaveText('A visible Screen reader helperHidden alternate labelTransparent helperparagraph includes a useful reference.');
   await expect(page.locator('#notice-host > a')).toHaveText('More ways to donate');
   await expect(page.locator('#notice-host > a')).toBeHidden();

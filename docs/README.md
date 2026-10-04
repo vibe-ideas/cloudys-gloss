@@ -5,6 +5,7 @@
 - [安装、开发启动与网页操作](guides/getting-started.md)
 - [MLX、Ollama 与兼容 API 配置](guides/models.md)
 - [模型启动、macOS 登录自启与停止卸载](guides/model-service.md)
+- [PDF 文件、在线链接与逐页双语阅读](guides/pdf.md)
 
 ## 开发维护
 
@@ -16,6 +17,7 @@
 
 ## 体验设计
 
+- [页眉、常见组件与 PDF 体验修复](design/2026-10-05-components-pdf.md)
 - [全文双语排版与视觉回归](design/bilingual-reading.md)
 - [多样化网页体验测试与修复](design/2026-10-05-diverse-web-ux.md)
 - [Apple 产品页真实浏览验收与待修问题](design/2026-10-05-apple-product-review.md)
@@ -23,6 +25,7 @@
 ## 性能
 
 - [报告索引、指标口径与模型选择](performance/README.md)
+- [常见组件、大页面调度与 PDF 资源开销](performance/2026-10-05-components-pdf.md)
 - [三模型翻译质量与逐例对照](performance/2026-10-04-translation-quality.md)
 - [M4 Pro：MLX 与 llama.cpp 对比](performance/2026-10-04-backends.md)
 - [M4 Pro：MLX 模型 TPS 与内存对比](performance/2026-10-04-mlx-models.md)

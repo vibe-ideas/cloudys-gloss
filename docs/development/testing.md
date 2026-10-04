@@ -35,6 +35,17 @@ pnpm smoke:live
 
 线上页面用于补充人工浏览，不能作为 CI 的唯一依赖。发现问题后应在这些受控夹具中建立稳定回归；实测范围和未覆盖边界记录在 [体验报告](../design/2026-10-05-diverse-web-ux.md)。
 
+## 组件、HTTP 与 PDF 回归
+
+- `component-design.spec.ts`：页眉导航、面包屑、按钮、标签页、折叠摘要、静态表单标签、表格操作、菜单、固定控件和模态对话框；检查布局边界、原有点击行为、提示层和恢复。
+- `http-context.spec.ts`：普通 HTTP 页面缺少 `crypto.randomUUID` 时，全文、组件提示和划词卡仍能使用；内容脚本不得直接请求模型。
+- `performance.spec.ts`：24 个导航项与 2000 张正文卡片共存，首屏正文不被组件挤到队尾，只请求访问视口附近的内容，跳到页尾后继续翻译并完整恢复。测量结果作为 `component-performance.json` 附件保存，记录首段显示、跳转起点及全过程帧间隔，浏览器支持时附带 Long Tasks。属于受控前端体验测量，不是模型 TPS；帧间隔不是对某个函数耗时的归因。
+- `pdf.spec.ts`：原创 20 页 PDF，验证网络链接、本地文件、显式开启翻译、切页取消、无文字页提示、窄屏、关闭释放、错误恢复和慢下载取消。PDF.js、worker、provider 和 background 均使用生产实现；Firefox 测试副本的 DOM 操作桥不会进入发布包。
+
+PDF 夹具在 `pdf-fixture.ts` 中生成，不含第三方文档。纯函数测试覆盖提取行段、分批边界、URL 校验、大小限制、无长度响应和取消。浏览器内存只对画布像素和活动页数作明确断言，不将它们冒充进程总内存指标。
+
+`pnpm smoke:pdf` 额外读取 Mozilla PDF.js 的公开多栏论文样例，在两种浏览器验证真实 PDF 的字形解析、原稿、逐段回传和 390px 布局；场景维护在 `tests/online/pdf.spec.ts`。模型响应仍是可控夹具，不评价译文准确性。此命令依赖外网，不进入普通 CI；结果位于 `artifacts/public-pdf-review`。
+
 ## 本地助手与真实模型启停回归
 
 Apple Silicon Mac（macOS 26.2+）使用 `pnpm model:install` 安装 mlx-serve 后运行：

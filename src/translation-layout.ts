@@ -1,25 +1,33 @@
 type Region = { element: HTMLElement; overflow: number; overflowX: number; gridOverlap: boolean; minimum?: number; users: Set<Element>; changed: Map<string, { value: string; priority: string; applied: string }>; originalStyle: string | null; lastStyle: string | null; hostChanged: boolean };
 
 /** Grow normal-flow reading regions only when inserted text would overflow them.
- * Absolutely positioned overlays are left untouched: growing them cannot move
- * neighbouring overlays safely. Selection translation remains available there.
+ * Rigid overlays keep their geometry and expose the retained translation through
+ * the shared label hint; expanding them cannot move neighbouring overlays safely.
  */
 export class TranslationLayout {
   private regions = new Map<HTMLElement, Region>();
   private sources = new Map<Element, Region[]>();
   private pending = new Set<Region>();
   private targets = new Map<Element, Element>();
+  private components = new Map<Element, { hint: boolean; display: string }>();
   private observer?: ResizeObserver;
   private frame?: number;
-  prepare(element: Element) {
+  prepare(element: Element, compact = false) {
     const ancestors: HTMLElement[] = [];
+    let hint = false;
     for (let current: Element | null = element; current && current !== document.body; current = current.parentElement) {
       const style = getComputedStyle(current);
       // Keep the app's scroll viewport intact, including fixed dialogs and
       // absolutely positioned reading panes. Their children can still grow.
       if (['auto', 'scroll'].includes(style.overflowY)) break;
-      if (['absolute', 'fixed'].includes(style.position)) return false;
+      if (['absolute', 'fixed'].includes(style.position) || compact && style.position === 'sticky') {
+        hint = true; break;
+      }
       if (current instanceof HTMLElement) ancestors.push(current);
+    }
+    if (compact || hint) {
+      this.components.set(element, { hint, display: getComputedStyle(element).display });
+      if (hint) { ancestors.length = 0; if (element instanceof HTMLElement) ancestors.push(element); }
     }
     const regions = ancestors.map((ancestor) => {
       let region = this.regions.get(ancestor);
@@ -34,7 +42,30 @@ export class TranslationLayout {
     this.sources.set(element, regions);
     return true;
   }
+  isHint(element: Element) { return this.components.get(element)?.hint ?? false; }
+  hintReady(element: Element, ready: boolean) {
+    if (!this.isHint(element)) return;
+    const region = this.regions.get(element as HTMLElement); if (!region) return;
+    if (ready) {
+      this.set(region, 'text-decoration-line', 'underline');
+      this.set(region, 'text-decoration-style', 'dotted');
+      this.set(region, 'text-underline-offset', '3px');
+    } else { this.restore(region); region.changed.clear(); region.originalStyle = region.element.getAttribute('style'); region.lastStyle = region.originalStyle; region.hostChanged = false; }
+  }
+  ownsStyle(element: Element) { const region = this.regions.get(element as HTMLElement); return !!region && region.lastStyle === element.getAttribute('style'); }
   watch(source: Element, node: HTMLElement) {
+    const component = this.components.get(source);
+    const sourceRegion = this.regions.get(source as HTMLElement);
+    if (component && sourceRegion) {
+      if (component.hint) {
+        return;
+      }
+      if (component.display === 'inline') this.set(sourceRegion, 'display', 'inline-block');
+      if (component.display === 'flex' || component.display === 'inline-flex') this.set(sourceRegion, 'flex-wrap', 'wrap');
+      this.set(sourceRegion, 'white-space', 'normal');
+      this.set(sourceRegion, 'min-inline-size', '0');
+      this.set(sourceRegion, 'max-inline-size', '100%');
+    }
     this.observer ??= new ResizeObserver((entries) => {
       for (const entry of entries) {
         const source = this.targets.get(entry.target);
@@ -57,6 +88,7 @@ export class TranslationLayout {
     this.update(source);
   }
   update(source: Element) {
+    if (this.isHint(source)) return;
     for (const region of this.sources.get(source) ?? []) this.pending.add(region);
     this.schedule();
   }
@@ -126,6 +158,7 @@ export class TranslationLayout {
     region.lastStyle = region.element.getAttribute('style');
   }
   release(source: Element, node?: HTMLElement) {
+    this.components.delete(source);
     this.targets.delete(source);
     if (node) { this.observer?.unobserve(node); this.targets.delete(node); }
     for (const region of this.sources.get(source) ?? []) {
@@ -154,6 +187,6 @@ export class TranslationLayout {
     if (this.frame !== undefined) cancelAnimationFrame(this.frame);
     this.frame = undefined; this.observer?.disconnect(); this.observer = undefined;
     for (const region of this.regions.values()) this.restore(region);
-    this.regions.clear(); this.sources.clear(); this.pending.clear(); this.targets.clear();
+    this.regions.clear(); this.sources.clear(); this.pending.clear(); this.targets.clear(); this.components.clear();
   }
 }

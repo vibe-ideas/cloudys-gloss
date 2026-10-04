@@ -1,20 +1,27 @@
-import { OWN, blockText, excludedElement, renderedSemanticText, semanticCandidates, semanticText, splitText } from './blocks';
+import { OWN, blockText, excludedElement, renderedSemanticText, resetSemanticContext, semanticCandidates, semanticContext, semanticText, semanticTextSteps, splitText, translationKind, type SemanticContext } from './blocks';
 import { mountTranslationMotion, translationLoader } from './translation-motion';
 import { translationStyle } from './translation-style';
 import { TranslationLayout } from './translation-layout';
-type Block = { element: Element; text: string; sourceText: string; chunks: string[]; translated: string[]; confirmed: boolean[]; next: number; near: boolean; visible: boolean; node?: HTMLElement; rendered?: string; failed: boolean; active: number; layout?: string | false; scroll?: ScrollRegion; scrollChecked?: boolean; localNear?: boolean };
+import { ComponentHints } from './component-hints';
+import { createId } from './id';
+type Block = { element: Element; text: string; sourceText: string; chunks: string[]; translated: string[]; confirmed: boolean[]; next: number; near: boolean; visible: boolean; visibilityAt?: number; compact: boolean; node?: HTMLElement; rendered?: string; failed: boolean; active: number; layout?: string | false; description?: { target: Element; original: string | null; applied: string }; scroll?: ScrollRegion; scrollChecked?: boolean; localNear?: boolean };
 type ScrollRegion = { element: Element; observer: IntersectionObserver; near: boolean; blocks: Set<Block> };
 export type TranslationStatus = { enabled: boolean; translated: number; pending: number; error: string };
 type Work = { block: Block; index: number; text: string };
+type Reading = { element: Element; iterator: Generator<void, string>; context: SemanticContext; revision: number };
+const inlineHiding = /(?:^|;)\s*(?:display\s*:\s*none|visibility\s*:\s*(?:hidden|collapse)|opacity\s*:\s*0(?:[;\s!]|$)|content-visibility\s*:\s*hidden)/i;
+const semanticClasses = /(?:^|\s)(?:badge|chip|button|btn|cta)(?:\s|$)/;
 export interface TranslationTransport { translate(id: string, texts: string[], onItem: (index: number, text: string, confirmed: boolean) => void): Promise<string[]>; cancel(id: string): void }
 export class PageTranslator {
   private blocks = new Map<Element, Block>();
   private nearby = new Set<Block>();
   private complete = new Set<Block>();
   private dirty = new Set<Block>();
+  private visibilityDirty = new Set<Block>();
   private requests = new Map<string, Work[]>();
   private roots = new Set<Element>();
-  private scans: Generator<Element>[] = [];
+  private scans: { iterator: Generator<Element>; context: SemanticContext }[] = [];
+  private readings = new Map<Element, Reading>();
   private scanTimer?: ReturnType<typeof setTimeout>;
   private intersections?: IntersectionObserver;
   private viewport?: IntersectionObserver;
@@ -28,6 +35,9 @@ export class PageTranslator {
   private removed = false;
   private motion?: HTMLStyleElement;
   private layout = new TranslationLayout();
+  private hints = new ComponentHints();
+  private preferComponents = false;
+  private extraction = semanticContext();
   constructor(private transport: TranslationTransport, private changed: () => void = () => {}) {}
   get status() { return { enabled: this.running, translated: this.complete.size, pending: this.requests.size, error: this.lastError }; }
   start() {
@@ -37,6 +47,7 @@ export class PageTranslator {
     this.intersections = new IntersectionObserver((entries) => {
       for (const entry of entries) {
         const block = this.blocks.get(entry.target); if (!block) continue;
+        this.recordVisibility(block, entry, true);
         if (entry.isIntersecting && !block.scrollChecked) this.discoverScrollRegion(block);
         // A viewport-root observer clips at inner scrollports even with a large
         // rootMargin. Let their local observer supply the prefetch distance.
@@ -45,15 +56,53 @@ export class PageTranslator {
       this.schedule();
     }, { rootMargin: '500px 0px' });
     this.viewport = new IntersectionObserver((entries) => {
-      for (const entry of entries) { const block = this.blocks.get(entry.target); if (block) block.visible = entry.isIntersecting; }
+      for (const entry of entries) { const block = this.blocks.get(entry.target); if (block) this.recordVisibility(block, entry); }
       this.schedule();
     });
     this.scan(document.body);
     this.mutations = new MutationObserver((records) => {
+      let reset = false;
+      const resetClassification = () => {
+        if (reset) return;
+        resetSemanticContext(this.extraction);
+        const contexts = new Set(this.scans.map(scan => scan.context));
+        for (const reading of this.readings.values()) contexts.add(reading.context);
+        for (const context of contexts) resetSemanticContext(context);
+        reset = true;
+      };
       for (const record of records) {
         const target = record.target instanceof Element ? record.target : record.target.parentElement;
-        if (!target || excludedElement(target)) continue;
+        if (!target || target.closest(`[${OWN}]`)) continue;
+        if (record.type === 'attributes') {
+          if (record.attributeName === 'style' && this.layout.ownsStyle(target)) continue;
+          const value = target.getAttribute(record.attributeName!) ?? '';
+          // Theme/animation attributes affect rendered visibility, but do not
+          // change the cheap semantic scan or restart a paused large container.
+          if (record.attributeName === 'class' ? semanticClasses.test(record.oldValue ?? '') || semanticClasses.test(value)
+            : record.attributeName === 'style' ? inlineHiding.test(record.oldValue ?? '') || inlineHiding.test(value) : true) resetClassification();
+          // A dropdown/accordion can reveal existing DOM without adding nodes.
+          // Revisit only that component, while body theme changes reuse nearby
+          // blocks rather than rescanning a long document.
+          const tracked = this.closestTracked(target);
+          if (tracked) this.visibilityDirty.add(this.blocks.get(tracked)!);
+          const revealed = (record.attributeName === 'hidden' || record.attributeName === 'inert') && !target.hasAttribute(record.attributeName)
+            || record.attributeName === 'aria-hidden' && record.oldValue === 'true'
+            || record.attributeName === 'style' && inlineHiding.test(record.oldValue ?? '');
+          if (revealed && !excludedElement(target)) this.roots.add(target);
+          // Stylesheet-hidden blocks were already registered during the cheap
+          // scan. Their observer handles display changes; opacity/visibility
+          // need only retry blocked nearby members, including app theme roots.
+          for (const block of this.nearby) if (target.contains(block.element)) {
+            if (block.layout === false) { block.layout = undefined; this.dirty.add(block); }
+            else this.visibilityDirty.add(block);
+          }
+          continue;
+        }
+        if (excludedElement(target)) continue;
         if (record.type === 'childList' && [...record.addedNodes, ...record.removedNodes].every((node) => node instanceof Element && node.hasAttribute(OWN))) continue;
+        // Classification is cached only within an incremental scan. A host DOM
+        // change invalidates in-progress caches before their next time slice.
+        resetClassification();
         if (record.removedNodes.length) this.removed = true;
         const tracked = this.closestTracked(target);
         if (tracked) { this.invalidate(tracked); this.roots.add(tracked); }
@@ -64,15 +113,27 @@ export class PageTranslator {
       }
       this.schedule();
     });
-    this.mutations.observe(document.body, { childList: true, subtree: true, characterData: true });
+    this.mutations.observe(document.body, { childList: true, subtree: true, characterData: true, attributes: true, attributeOldValue: true, attributeFilter: ['hidden', 'aria-hidden', 'inert', 'open', 'class', 'style'] });
     this.changed();
   }
   private closestTracked(element: Element) {
     for (let current: Element | null = element; current; current = current.parentElement) if (this.blocks.has(current)) return current;
   }
   private setNear(block: Block, near: boolean) {
+    if (near && !block.near && block.layout !== undefined) this.visibilityDirty.add(block);
     block.near = near;
     if (near) { this.nearby.add(block); this.dirty.add(block); } else this.nearby.delete(block);
+  }
+  private recordVisibility(block: Block, entry: IntersectionObserverEntry, expanded = false) {
+    // Observer callbacks need not arrive together. Reuse the nearby observer's
+    // already-clipped geometry so visible copy does not look offscreen while
+    // waiting for its second observer. No extra layout reads or DOM scan.
+    const rect = entry.intersectionRect;
+    if (expanded && !rect) return;
+    const time = entry.time ?? performance.now();
+    if (time < (block.visibilityAt ?? -Infinity)) return;
+    block.visibilityAt = time;
+    block.visible = entry.isIntersecting && (!expanded || rect.bottom > 0 && rect.top < innerHeight && rect.right > 0 && rect.left < innerWidth);
   }
   private knownScrollRegion(element: Element) {
     for (let ancestor = element.parentElement; ancestor; ancestor = ancestor.parentElement) {
@@ -128,26 +189,53 @@ export class PageTranslator {
   }
   private invalidate(element: Element) {
     const block = this.blocks.get(element);
-    if (block) { block.node?.remove(); this.layout.release(element, block.node); this.detachScrollRegion(block); this.nearby.delete(block); this.dirty.delete(block); this.complete.delete(block); }
+    if (block) { this.clearDescription(block); block.node?.remove(); this.layout.release(element, block.node); this.hints.release(element); this.detachScrollRegion(block); this.nearby.delete(block); this.dirty.delete(block); this.visibilityDirty.delete(block); this.complete.delete(block); }
     this.intersections?.unobserve(element); this.viewport?.unobserve(element); this.blocks.delete(element);
   }
-  private scan(root: Element) { this.scans.push(semanticCandidates(root)); this.scanSlice(); }
+  private scan(root: Element) { this.scans.push({ iterator: semanticCandidates(root), context: semanticContext() }); this.scanSlice(); }
   private scanSlice = () => {
     if (!this.running || this.scanTimer) return;
-    const started = performance.now(); let visited = 0;
-    while (this.scans.length && visited++ < 200 && performance.now() - started < 6) {
-      const next = this.scans[0]!.next();
+    const started = performance.now(); let visited = 0; let readNext = false;
+    while ((this.scans.length || this.readings.size) && visited < 200 && performance.now() - started < 6) {
+      // Give a large container a small quantum, then continue discovering its
+      // children. First-screen paragraphs must not wait for every main sibling.
+      if ((readNext || !this.scans.length) && this.readings.size) {
+        readNext = false;
+        const reading = this.readings.values().next().value!;
+        this.readings.delete(reading.element);
+        if (!reading.element.isConnected || this.blocks.has(reading.element)) continue;
+        if (reading.revision !== reading.context.revision) {
+          reading.iterator = semanticTextSteps(reading.element, reading.context);
+          reading.revision = reading.context.revision;
+        }
+        let next: IteratorResult<void, string> | undefined;
+        for (let step = 0; step < 16 && visited++ < 200 && performance.now() - started < 6; step++) {
+          next = reading.iterator.next();
+          if (next.done) break;
+        }
+        if (next?.done) this.track(reading.element, next.value, reading.context);
+        else this.readings.set(reading.element, reading);
+        continue;
+      }
+      readNext = true; visited++;
+      const scan = this.scans[0]!;
+      const next = scan.iterator.next();
       if (next.done) { this.scans.shift(); continue; }
       const element = next.value;
-      if (!element.isConnected || this.blocks.has(element)) continue;
-      const text = semanticText(element); if (!text) continue;
-      const block: Block = { element, text, sourceText: text, chunks: splitText(text, 900), translated: [], confirmed: [], next: 0, near: false, visible: false, failed: false, active: 0 };
-      this.blocks.set(element, block);
-      const region = this.knownScrollRegion(element); if (region) this.attachScrollRegion(block, region);
-      this.intersections?.observe(element); this.viewport?.observe(element);
+      if (!element.isConnected) continue;
+      const existing = this.blocks.get(element);
+      if (existing) { if (existing.layout === false) { existing.layout = undefined; this.dirty.add(existing); this.schedule(); } continue; }
+      if (!this.readings.has(element)) this.readings.set(element, { element, iterator: semanticTextSteps(element, scan.context), context: scan.context, revision: scan.context.revision });
     }
-    if (this.scans.length) this.scanTimer = setTimeout(() => { this.scanTimer = undefined; this.scanSlice(); }, 0);
+    if (this.scans.length || this.readings.size) this.scanTimer = setTimeout(() => { this.scanTimer = undefined; this.scanSlice(); }, 0);
   };
+  private track(element: Element, text: string, context: SemanticContext) {
+    if (!text) return;
+    const block: Block = { element, text, sourceText: text, chunks: splitText(text, 900), translated: [], confirmed: [], next: 0, near: false, visible: false, compact: translationKind(element, context) === 'component', failed: false, active: 0 };
+    this.blocks.set(element, block);
+    const region = this.knownScrollRegion(element); if (region) this.attachScrollRegion(block, region);
+    this.intersections?.observe(element); this.viewport?.observe(element);
+  }
   private schedule() {
     if (!this.running || this.timer) return;
     this.timer = setTimeout(() => {
@@ -156,12 +244,23 @@ export class PageTranslator {
       for (const root of roots) if (!roots.some((other) => other !== root && other.contains(root))) this.scan(root);
       if (this.removed) { for (const [element] of this.blocks) if (!element.isConnected) this.invalidate(element); this.removed = false; }
       // Read nearby typography/layout before the coalesced DOM write pass.
+      const stale: Block[] = [];
+      for (const block of this.visibilityDirty) {
+        if (!block.near) continue;
+        this.visibilityDirty.delete(block);
+        if (block.layout === false) { block.layout = undefined; this.dirty.add(block); }
+        else if (block.layout !== undefined && (semanticText(block.element, this.extraction) !== block.sourceText || renderedSemanticText(block.element, this.extraction) !== block.text)) stale.push(block);
+      }
       for (const block of this.nearby) if (block.layout === undefined) {
-        const text = renderedSemanticText(block.element);
+        const text = renderedSemanticText(block.element, this.extraction);
         if (!text) { block.layout = false; continue; }
         block.text = text; block.chunks = splitText(text, 900);
-        block.layout = this.layout.prepare(block.element) ? translationStyle(block.element) : false;
+        block.layout = this.layout.prepare(block.element, block.compact) ? translationStyle(block.element, block.compact) : false;
       }
+      // Attribute animations only mark local blocks. Compare once per read
+      // phase, then remove stale output after all measurements are finished.
+      for (const block of stale) { this.invalidate(block.element); this.roots.add(block.element); }
+      if (stale.length) this.schedule();
       this.pump();
       // One coalesced write pass, no layout measurement on streamed updates.
       for (const block of this.dirty) if (this.blocks.get(block.element) === block && block.element.isConnected) this.paint(block);
@@ -172,6 +271,7 @@ export class PageTranslator {
     if (!block.layout) return;
     if (!block.node) {
       block.node = document.createElement('span'); block.node.setAttribute(OWN, 'pending'); block.node.lang = 'zh-CN';
+      if (block.compact || this.layout.isHint(block.element)) { block.node.id = `cloudys-gloss-text-${createId()}`; block.node.setAttribute('aria-hidden', 'true'); block.node.dataset.glossMode = this.layout.isHint(block.element) ? 'hint' : 'component'; }
       block.node.style.cssText = block.layout;
       const content = document.createElement('span'); content.dataset.glossPart = 'text';
       block.node.append(content);
@@ -183,7 +283,8 @@ export class PageTranslator {
     const text = block.translated.slice(0, prefix).join(' ');
     const done = block.chunks.every((_, index) => block.confirmed[index]);
     const unchanged = done && text.normalize('NFKC').replace(/\s+/gu, ' ').trim() === block.text.normalize('NFKC').replace(/\s+/gu, ' ').trim();
-    block.node.style.setProperty('display', unchanged ? 'none' : 'block', 'important');
+    const hint = this.layout.isHint(block.element);
+    block.node.style.setProperty('display', unchanged || hint ? 'none' : 'block', 'important');
     const stateName = done ? 'done' : block.failed ? 'error' : text ? 'partial' : block.active ? 'translating' : 'queued';
     const rendered = JSON.stringify([stateName, text, block.failed && block.active > 0]);
     if (block.rendered === rendered) return;
@@ -200,15 +301,43 @@ export class PageTranslator {
       if (!block.failed) block.node.append(translationLoader(Boolean(text), Boolean(block.active)));
       if (block.failed) {
         block.node.append(document.createTextNode(' 翻译失败 · '));
+        if (!block.compact) {
         const retry = document.createElement('button'); retry.type = 'button'; retry.textContent = '重试'; retry.title = this.lastError;
         retry.style.cssText = 'font:inherit!important;font-size:0.8em!important;color:inherit!important;border:0!important;background:transparent!important;text-decoration:underline!important;cursor:pointer!important;padding:0!important;';
         retry.disabled = block.active > 0;
         retry.onclick = () => { this.lastError = ''; block.failed = false; block.next = 0; this.dirty.add(block); this.schedule(); };
         block.node.append(retry);
+        }
       }
     }
     if (done) this.complete.add(block); else this.complete.delete(block);
+    if (hint) {
+      const ready = !!text && !unchanged && !block.failed;
+      if (ready) this.hints.update(block.element, text); else this.hints.release(block.element);
+      this.layout.hintReady(block.element, ready);
+    } else if (block.compact && done && !unchanged) {
+      const target = block.element instanceof HTMLLabelElement ? block.element.control ?? block.element : block.element;
+      if (block.description && block.description.target !== target) this.clearDescription(block);
+      const current = target.getAttribute('aria-describedby');
+      const original = current === block.description?.applied ? block.description.original : current;
+      const applied = [original, block.node.id].filter(Boolean).join(' ');
+      block.description = { target, original, applied }; target.setAttribute('aria-describedby', applied);
+    } else if (unchanged || block.failed) this.clearDescription(block);
     this.layout.update(block.element);
+  }
+  private clearDescription(block: Block) {
+    const target = block.description?.target;
+    if (target && block.description && target.getAttribute('aria-describedby') === block.description.applied) {
+      if (block.description.original === null) target.removeAttribute('aria-describedby');
+      else target.setAttribute('aria-describedby', block.description.original);
+    } else if (block.description && block.node) {
+      const current = target!.getAttribute('aria-describedby');
+      if (current?.split(/\s+/).includes(block.node.id)) {
+        const remaining = current.split(/\s+/).filter(token => token && token !== block.node!.id).join(' ');
+        if (remaining) target!.setAttribute('aria-describedby', remaining); else target!.removeAttribute('aria-describedby');
+      }
+    }
+    block.description = undefined;
   }
   private pump() {
     if (!this.running) return;
@@ -219,26 +348,32 @@ export class PageTranslator {
     }
     while (this.requests.size < 2) {
       const work: Work[] = []; let chars = 0;
-      const candidates = [...this.nearby].sort((a, b) => Number(b.visible) - Number(a.visible));
+      const candidates = [...this.nearby].sort((a, b) => Number(b.visible) - Number(a.visible) || (this.preferComponents ? Number(b.compact) - Number(a.compact) : Number(a.compact) - Number(b.compact)));
+      let compactBatch: boolean | undefined;
       for (const block of candidates) {
         if (block.failed || block.layout === false || !block.element.isConnected) continue;
-        while (block.next < block.chunks.length && work.length < 2) {
+        if (block.next >= block.chunks.length) continue;
+        compactBatch ??= block.compact;
+        if (block.compact !== compactBatch) continue;
+        const limit = compactBatch ? 8 : 2;
+        while (block.next < block.chunks.length && work.length < limit) {
           if (block.confirmed[block.next]) { block.next++; continue; }
           const text = block.chunks[block.next]!;
           if (chars + text.length > 1800) break;
           work.push({ block, index: block.next++, text }); chars += text.length; block.active++;
         }
-        if (work.length >= 2) break;
+        if (work.length >= limit) break;
       }
       if (!work.length) break;
-      const id = crypto.randomUUID(); const generation = this.generation;
+      this.preferComponents = !compactBatch;
+      const id = createId(); const generation = this.generation;
       this.requests.set(id, work);
       for (const { block } of work) this.dirty.add(block);
       const receive = (item: number, text: string, confirmed: boolean) => {
         if (!this.running || generation !== this.generation || !this.requests.has(id)) return;
         const value = work[item]; if (!value) return;
         const { block, index } = value;
-        if (this.blocks.get(block.element) !== block || !block.element.isConnected || blockText(block.element, false) !== block.sourceText) return;
+        if (this.blocks.get(block.element) !== block || !block.element.isConnected || blockText(block.element, false, undefined, this.extraction) !== block.sourceText) return;
         block.translated[index] = text; block.confirmed[index] = confirmed;
         this.dirty.add(block); this.schedule();
       };
@@ -257,15 +392,15 @@ export class PageTranslator {
   stop() {
     this.running = false; this.generation++;
     if (this.timer) clearTimeout(this.timer); this.timer = undefined;
-    if (this.scanTimer) clearTimeout(this.scanTimer); this.scanTimer = undefined; this.scans = [];
+    if (this.scanTimer) clearTimeout(this.scanTimer); this.scanTimer = undefined; this.scans = []; this.readings.clear();
     this.mutations?.disconnect(); this.intersections?.disconnect(); this.viewport?.disconnect(); this.scrollVisibility?.disconnect();
     for (const region of this.scrollRegions.values()) region.observer.disconnect();
     this.scrollRegions.clear(); this.scrollVisibility = undefined;
     for (const id of this.requests.keys()) this.transport.cancel(id);
-    this.requests.clear(); this.roots.clear(); this.nearby.clear(); this.dirty.clear(); this.complete.clear();
-    for (const block of this.blocks.values()) block.node?.remove();
-    this.layout.stop();
+    this.requests.clear(); this.roots.clear(); this.nearby.clear(); this.dirty.clear(); this.visibilityDirty.clear(); this.complete.clear();
+    for (const block of this.blocks.values()) { this.clearDescription(block); block.node?.remove(); }
+    this.layout.stop(); this.hints.stop(); this.preferComponents = false;
     this.motion?.remove(); this.motion = undefined;
-    this.blocks.clear(); this.lastError = ''; this.removed = false; this.changed();
+    this.blocks.clear(); resetSemanticContext(this.extraction); this.lastError = ''; this.removed = false; this.changed();
   }
 }

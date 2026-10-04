@@ -4,6 +4,9 @@ import { readingFixture, readingTranslations } from './reading-fixture';
 import { layoutFixture, layoutTranslations } from './layout-fixture';
 import { diverseFixture, diverseTranslations } from './diverse-layout-fixture';
 import { auxiliaryFixture } from './auxiliary-fixture';
+import { componentPerformanceFixture } from './performance-fixture';
+import { pdfFixture } from './pdf-fixture';
+import { componentFixture, componentTranslations } from './component-fixture';
 export async function startServer() {
   const calls: { texts?: string[]; word?: string; context?: string; example?: string }[] = [];
   let delay = 0; let invalid = false;
@@ -13,6 +16,20 @@ export async function startServer() {
   const commands: { id: string; operation: string; args: unknown[] }[] = [];
   const pending = new Map<string, { resolve: (value: unknown) => void; reject: (error: Error) => void; timer: ReturnType<typeof setTimeout> }>();
   const server = createServer(async (request, response) => {
+    if (request.url === '/pdf-fixture.pdf') {
+      response.writeHead(200, { 'Content-Type': 'application/pdf', 'Content-Length': pdfFixture.byteLength }); response.end(pdfFixture); return;
+    }
+    if (request.url === '/slow-pdf.pdf') {
+      response.writeHead(200, { 'Content-Type': 'application/pdf', 'Content-Length': pdfFixture.byteLength }); response.write(pdfFixture.subarray(0, 8));
+      const timer = setTimeout(() => response.end(pdfFixture.subarray(8)), 1000); timer.unref();
+      response.once('close', () => clearTimeout(timer)); return;
+    }
+    if (request.url === '/not-a-pdf.pdf') {
+      response.writeHead(200, { 'Content-Type': 'text/html' }); response.end('<!doctype html><p>This is an HTML document.</p>'); return;
+    }
+    if (request.url === '/large-pdf.pdf') {
+      response.writeHead(200, { 'Content-Type': 'application/pdf', 'Content-Length': 41 * 1024 * 1024 }); response.end('%PDF-1.7'); return;
+    }
     if (request.url === `/bridge/${token}`) {
       response.writeHead(200, { 'Content-Type': 'application/json' }); response.end(JSON.stringify(commands.shift() ?? null)); return;
     }
@@ -35,7 +52,7 @@ export async function startServer() {
       }
       const data = JSON.parse(requestBody.messages[1].content) as typeof calls[number]; calls.push(data);
       if (delay) await new Promise((resolve) => setTimeout(resolve, delay));
-      const content = invalid ? { broken: true } : data.texts ? { translations: data.texts.map((text) => diverseTranslations[text] ?? layoutTranslations[text] ?? readingTranslations[text] ?? `中文译文：${text}`) } : {
+      const content = invalid ? { broken: true } : data.texts ? { translations: data.texts.map((text) => componentTranslations[text] ?? diverseTranslations[text] ?? layoutTranslations[text] ?? readingTranslations[text] ?? `中文译文：${text}`) } : {
         word: data.word, ipa: { us: '/ˈklaʊdi/', uk: '/ˈklaʊdi/' },
         senses: [{ partOfSpeech: 'adjective', meaning: '多云的；不清晰的' }], contextMeaning: '在当前句子中表示多云的天气',
         examples: data.example ? [{ zh: '多云的早晨让人思绪宁静。' }]
@@ -59,11 +76,13 @@ export async function startServer() {
       }
       response.writeHead(200, { 'Content-Type': 'application/json' }); response.end(JSON.stringify({ choices: [{ message: { content: JSON.stringify(content) } }] })); return;
     }
-    response.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8', 'Content-Security-Policy': `default-src 'self'; script-src ${['/layout-design', '/diverse-layout', '/auxiliary-content'].includes(request.url ?? '') ? "'unsafe-inline'" : "'none'"}; connect-src 'none'; style-src 'unsafe-inline'` });
+    response.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8', 'Content-Security-Policy': `default-src 'self'; script-src ${['/layout-design', '/diverse-layout', '/auxiliary-content', '/component-design'].includes(request.url ?? '') ? "'unsafe-inline'" : "'none'"}; connect-src 'none'; style-src 'unsafe-inline'` });
     if (request.url === '/reading-design') { response.end(readingFixture); return; }
     if (request.url === '/layout-design') { response.end(layoutFixture); return; }
     if (request.url === '/diverse-layout') { response.end(diverseFixture); return; }
     if (request.url === '/auxiliary-content') { response.end(auxiliaryFixture); return; }
+    if (request.url === '/component-performance') { response.end(componentPerformanceFixture); return; }
+    if (request.url === '/component-design') { response.end(componentFixture); return; }
     if (request.url === '/large') {
       response.end(`<!doctype html><html><head><title>Long reading test</title><style>body{font:18px/1.8 system-ui;margin:40px;max-width:760px}p{min-height:90px;margin:24px 0}</style></head><body><main>${Array.from({ length: 2000 }, (_, index) => `<p id="row-${index}">Paragraph ${index}. Reading across languages should feel natural. A clear translation helps readers understand the ideas while keeping the original words in view.</p>`).join('')}</main></body></html>`); return;
     }

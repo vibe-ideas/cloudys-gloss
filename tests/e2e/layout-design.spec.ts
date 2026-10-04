@@ -1,6 +1,6 @@
 import { test, expect } from './fixtures';
 
-test('复杂产品页翻译后按钮和标签不变形，大标题清晰，固定高度卡片与后续内容不重叠，关闭恢复布局', async ({ extension }, testInfo) => {
+test('复杂产品页翻译后按钮和标签双语可用，大标题清晰，固定高度卡片与后续内容不重叠，关闭恢复布局', async ({ extension }, testInfo) => {
   const { page, server, toggle } = extension;
   await page.goto(`${server.url}/layout-design`);
   const original = await page.locator('main').innerHTML();
@@ -8,8 +8,8 @@ test('复杂产品页翻译后按钮和标签不变形，大标题清晰，固�
   await toggle();
   await expect(page.locator('.headline > [data-state="done"]')).toContainText('每一个想法');
   await expect(page.locator('#card-two p > [data-state="done"]')).toContainText('清晰可读');
-  await expect(page.locator('.actions [data-cloudys-gloss],[role=tablist] [data-cloudys-gloss]')).toHaveCount(0);
-  expect((await page.locator('.actions').boundingBox())!.height).toBe(controls!.height);
+  await expect(page.locator('.actions [data-state=done],[role=tablist] [data-state=done]')).toHaveCount(4);
+  expect((await page.locator('.actions').boundingBox())!.height).toBeGreaterThanOrEqual(controls!.height);
   await page.getByRole('tab', { name: 'Battery', exact: true }).click();
   await expect(page.getByRole('tab', { name: 'Battery', exact: true })).toHaveAttribute('aria-selected', 'true');
   const headline = page.locator('.headline > [data-state="done"]');
@@ -36,12 +36,13 @@ test('复杂产品页翻译后按钮和标签不变形，大标题清晰，固�
       return contained && below && separated && rowSeparated && document.documentElement.scrollWidth <= document.documentElement.clientWidth;
     })).toBe(true);
     await page.locator('.overlay-stage').scrollIntoViewIfNeeded();
-    await expect(page.locator('.overlay-stage [data-cloudys-gloss]')).toHaveCount(0);
+    await expect(page.locator('.overlay-stage [data-gloss-mode=hint][data-state=done]')).toHaveCount(2);
+    await expect(page.locator('.overlay-stage [data-gloss-mode=hint]').first()).toBeHidden();
     await page.screenshot({ fullPage: true, animations: 'disabled', path: testInfo.outputPath(`layout-${width}.png`) });
   }
   const requests = server.calls.flatMap(call => call.texts ?? []);
-  expect(requests).not.toContain('Fixed overlay label.');
-  expect(requests).not.toContain('Buy');
+  expect(requests).toContain('Fixed overlay label.');
+  expect(requests).toContain('Buy');
   // Restore the user interaction too, so the remaining DOM difference is ours.
   await page.getByRole('tab', { name: 'Camera', exact: true }).click();
   await toggle();

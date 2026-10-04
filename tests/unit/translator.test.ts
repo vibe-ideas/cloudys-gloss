@@ -21,6 +21,193 @@ afterEach(() => vi.unstubAllGlobals());
 const visible = () => observers.forEach((enter) => enter([...observed].map((target) => ({ target, isIntersecting: true } as IntersectionObserverEntry)), {} as IntersectionObserver));
 const intersect = (observer: ObserverRecord, elements: Element[], isIntersecting: boolean) => observer.callback(elements.map((target) => ({ target, isIntersecting } as IntersectionObserverEntry)), {} as IntersectionObserver);
 describe('双语阅读生命周期', () => {
+  it('首次扫描暂停在即将被删除的正文上时，后续存活段落仍被发现并完成翻译', async () => {
+    document.body.innerHTML = '<main><p id="first">Removed paragraph.</p><p id="middle">Middle paragraph.</p><p id="last">Last paragraph.</p></main>';
+    const first = document.querySelector('#first')!;
+    let now = 0;
+    const clock = vi.spyOn(performance, 'now').mockImplementation(() => now);
+    const add = observed.add;
+    const record = vi.spyOn(observed, 'add').mockImplementation(function (this: Set<Element>, value: Element) {
+      const result = add.call(this, value);
+      // Pause after the paragraph is registered, before visiting its sibling.
+      // This is independent of real machine timing.
+      if (value === first) now = 10;
+      return result;
+    });
+    const translate = vi.fn(async (_id: string, texts: string[]) => texts.map(text => `译文：${text}`));
+    const translator = new PageTranslator({ translate, cancel: vi.fn() }); translator.start();
+    record.mockRestore(); clock.mockRestore(); first.remove();
+    const last = document.querySelector('#last')!;
+    await vi.waitFor(() => expect(observed.has(last)).toBe(true)); visible();
+    await vi.waitFor(() => expect(last.querySelector('[data-state="done"]')?.textContent).toBe('译文：Last paragraph.'));
+    expect(translate.mock.calls.flatMap(([, texts]) => texts)).toEqual(['Middle paragraph.', 'Last paragraph.']);
+    translator.stop();
+  });
+  it('包含两千个子块的大容器不会突破首次扫描节点预算，首屏正文先被发现，暂停期间修改的直接文本仍完整翻译', async () => {
+    document.body.innerHTML = `<main>Original introduction. ${Array.from({ length: 2000 }, (_, i) => `<article><p id="reading-${i}">Reading ${i}.</p></article>`).join('')} Closing context.</main>`;
+    const main = document.querySelector('main')!;
+    const matches = Element.prototype.matches;
+    let boundaries = 0;
+    const match = vi.spyOn(Element.prototype, 'matches').mockImplementation(function (this: Element, selector: string) {
+      if (this.tagName === 'ARTICLE' && selector.startsWith('p,h1,h2,h3,h4,h5,h6,li,blockquote')) boundaries++;
+      return matches.call(this, selector);
+    });
+    // Hold the clock still to exercise the independent node budget exactly,
+    // without depending on how fast this test machine executes DOM selectors.
+    const clock = vi.spyOn(performance, 'now').mockReturnValue(0);
+    const translate = vi.fn(async (_id: string, texts: string[]) => texts.map(text => `译文：${text}`));
+    const translator = new PageTranslator({ translate, cancel: vi.fn() }); translator.start();
+    clock.mockRestore(); match.mockRestore();
+    expect(boundaries).toBeLessThan(200);
+    expect(observed.has(document.querySelector('#reading-0')!)).toBe(true);
+    expect(observed.has(main)).toBe(false);
+    main.firstChild!.textContent = 'Updated introduction. ';
+    await vi.waitFor(() => expect(observed.has(main)).toBe(true), { timeout: 3000 });
+    intersect(observerRecords[0]!, [main], true); intersect(observerRecords[1]!, [main], true);
+    await vi.waitFor(() => expect(main.querySelector(':scope > [data-state="done"]')?.textContent).toBe('译文：Updated introduction. Closing context.'));
+    expect(translate.mock.calls.flatMap(([, texts]) => texts)).toEqual(['Updated introduction. Closing context.']);
+    translator.stop();
+  });
+  it('正文附近回调先到、可见回调迟到时，首批仍先发送可见正文而不会被两批导航标签抢占', async () => {
+    document.body.innerHTML = `<nav>${Array.from({ length: 24 }, (_, i) => `<a href="#${i}">Section ${i}</a>`).join('')}</nav><h2>Article 0: Practical reading</h2><p>Reading 0. The first visible paragraph.</p>`;
+    const translate = vi.fn<(id: string, texts: string[]) => Promise<string[]>>(() => new Promise(() => {}));
+    const translator = new PageTranslator({ translate, cancel: vi.fn() }); translator.start();
+    await vi.waitFor(() => expect(observed.size).toBe(26));
+    const labels = [...document.querySelectorAll('a')];
+    // Firefox may deliver the labels' viewport records before the copy's.
+    intersect(observerRecords[1]!, labels, true);
+    observerRecords[0]!.callback([...observed].map(target => {
+      const rect = new DOMRect(20, target.matches('a') ? 20 : 240, 200, 30);
+      return { target, isIntersecting: true, intersectionRect: rect, time: performance.now() } as IntersectionObserverEntry;
+    }), {} as IntersectionObserver);
+    await vi.waitFor(() => expect(translate).toHaveBeenCalledTimes(2));
+    expect(translate.mock.calls[0]![1]).toEqual(['Article 0: Practical reading', 'Reading 0. The first visible paragraph.']);
+    expect(translate.mock.calls[1]![1]).toHaveLength(8);
+    translator.stop();
+  });
+  it('一千个操作标签与正文共存时先发送首屏正文，随后只合并附近标签且最多保留两个请求', async () => {
+    document.body.innerHTML = `<div>${Array.from({ length: 1000 }, (_, i) => `<a href="#${i}">Section ${i}</a>`).join('')}</div><p>The first visible paragraph.</p><p>The second visible paragraph.</p>`;
+    const walker = vi.spyOn(document, 'createTreeWalker');
+    const translate = vi.fn<(id: string, texts: string[]) => Promise<string[]>>(() => new Promise(() => {}));
+    const translator = new PageTranslator({ translate, cancel: vi.fn() }); translator.start();
+    await vi.waitFor(() => expect(observed.size).toBe(1002), { timeout: 3000 });
+    const nearby = [...[...document.querySelectorAll('a')].slice(0, 8), ...document.querySelectorAll('p')];
+    intersect(observerRecords[0]!, nearby, true); intersect(observerRecords[1]!, nearby, true);
+    await vi.waitFor(() => expect(translate).toHaveBeenCalledTimes(2));
+    expect(translate.mock.calls[0]![1]).toEqual(['The first visible paragraph.', 'The second visible paragraph.']);
+    expect(translate.mock.calls[1]![1]).toHaveLength(8);
+    expect(translate.mock.calls[1]![1].every(text => text.startsWith('Section'))).toBe(true);
+    expect(translate.mock.calls[1]![1].join('').length).toBeLessThanOrEqual(1800);
+    expect(walker.mock.calls.length).toBeLessThanOrEqual(4000);
+    translator.stop(); walker.mockRestore();
+  });
+  it('按钮静态标签翻译后保留无障碍名称与原描述，不读输入值，停止后精确恢复', async () => {
+    document.body.innerHTML = '<button aria-describedby="help">Save changes</button><span id="help">Save your document.</span><label>Email address<input value="private@example.test"></label>';
+    const original = document.body.innerHTML;
+    const translate = vi.fn(async (_id: string, texts: string[]) => texts.map(text => `译文：${text}`));
+    const translator = new PageTranslator({ translate, cancel: vi.fn() }); translator.start(); visible();
+    await vi.waitFor(() => expect(translator.status.translated).toBe(2));
+    const button = document.querySelector('button')!;
+    const translation = button.querySelector('[data-state="done"]')!;
+    expect(translation.getAttribute('aria-hidden')).toBe('true');
+    expect(button.getAttribute('aria-describedby')).toBe(`help ${translation.id}`);
+    expect(button.querySelectorAll('button')).toHaveLength(0);
+    expect(document.querySelector('input')!.getAttribute('aria-describedby')).toBe(document.querySelector('label [data-state=done]')!.id);
+    expect(translate.mock.calls.flatMap(([, texts]) => texts)).toEqual(['Save changes', 'Email address']);
+    translator.stop(); expect(document.body.innerHTML).toBe(original);
+  });
+  it('菜单仅移除 hidden 或行内隐藏样式时重新提取局部标签，关闭翻译保留展开状态', async () => {
+    document.body.innerHTML = '<nav hidden><a href="#one">Hidden navigation</a></nav><section style="display:none"><button>Hidden action</button></section>';
+    const translate = vi.fn(async (_id: string, texts: string[]) => texts.map(text => `译文：${text}`));
+    const translator = new PageTranslator({ translate, cancel: vi.fn() }); translator.start(); visible();
+    expect(translate).not.toHaveBeenCalled();
+    document.querySelector('nav')!.removeAttribute('hidden');
+    document.querySelector('section')!.style.display = 'block';
+    await vi.waitFor(() => expect([...observed].map(node => node.textContent).sort()).toEqual(['Hidden action', 'Hidden navigation'])); visible();
+    await vi.waitFor(() => expect(translator.status.translated).toBe(2));
+    expect(translate.mock.calls.flatMap(([, texts]) => texts).sort()).toEqual(['Hidden action', 'Hidden navigation']);
+    translator.stop(); expect(document.querySelector('nav')!.hidden).toBe(false);
+    expect(document.querySelector('section')!.style.display).toBe('block');
+  });
+  it('网页在双语开启后追加无障碍说明，关闭时只删除插件引用并保留新增说明', async () => {
+    document.body.innerHTML = '<button aria-describedby="original-help">Save changes</button>';
+    const translator = new PageTranslator({ translate: async () => ['保存更改'], cancel: vi.fn() }); translator.start(); visible();
+    await vi.waitFor(() => expect(translator.status.translated).toBe(1));
+    const source = document.querySelector('button')!;
+    source.setAttribute('aria-describedby', `${source.getAttribute('aria-describedby')} new-help`);
+    translator.stop(); expect(source.getAttribute('aria-describedby')).toBe('original-help new-help');
+  });
+  it('输入框已聚焦且关联标签位于固定栏时，新译文自动显示，关闭提示保留网页新增说明', async () => {
+    document.body.innerHTML = '<nav style="position:fixed"><label for="setting">Save changes</label></nav><input id="setting" aria-describedby="original-help">';
+    let finish!: (values: string[]) => void;
+    const translator = new PageTranslator({ translate: () => new Promise(resolve => { finish = resolve; }), cancel: vi.fn() }); translator.start(); visible();
+    await vi.waitFor(() => expect(translator.status.pending).toBe(1));
+    const source = document.querySelector('input')!; source.focus(); finish(['保存更改']);
+    await vi.waitFor(() => expect(document.querySelector<HTMLElement>('[data-cloudys-gloss="component-hint"]')?.style.display).toBe('block'));
+    source.setAttribute('aria-describedby', `${source.getAttribute('aria-describedby')} new-help`);
+    source.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+    expect(source.getAttribute('aria-describedby')).toBe('original-help new-help');
+    translator.stop(); expect(source.getAttribute('aria-describedby')).toBe('original-help new-help');
+  });
+  it('应用根节点反复切换主题类和颜色样式时不会再次遍历已有的两千段文档', async () => {
+    document.body.innerHTML = `<main id="app">${Array.from({ length: 2000 }, (_, i) => `<p>Document paragraph ${i}.</p>`).join('')}</main>`;
+    const walker = vi.spyOn(document, 'createTreeWalker');
+    const translator = new PageTranslator({ translate: vi.fn(), cancel: vi.fn() }); translator.start();
+    await vi.waitFor(() => expect(observed.size).toBe(2000), { timeout: 3000 });
+    const scans = walker.mock.calls.length;
+    for (let i = 0; i < 10; i++) {
+      document.querySelector('main')!.className = `theme-${i}`;
+      document.querySelector('main')!.style.color = i % 2 ? 'black' : 'blue';
+    }
+    await new Promise(resolve => setTimeout(resolve, 100));
+    expect(walker).toHaveBeenCalledTimes(scans);
+    translator.stop(); walker.mockRestore();
+  });
+  it('固定导航用一个悬浮提示显示译文，离开、Esc、滚动和关闭后不会留下提示', async () => {
+    document.body.innerHTML = '<nav style="position:fixed;height:40px"><a href="#one">Support</a><a href="#two">Account</a></nav>';
+    const original = document.body.innerHTML;
+    const translator = new PageTranslator({ translate: async (_id, texts) => texts.map(text => `译文：${text}`), cancel: vi.fn() }); translator.start(); visible();
+    await vi.waitFor(() => expect(translator.status.translated).toBe(2));
+    const links = document.querySelectorAll('a');
+    for (const event of ['pointerout', 'Escape', 'scroll']) {
+      links[0]!.dispatchEvent(new FocusEvent('focusin', { bubbles: true }));
+      const hint = document.querySelector<HTMLElement>('[data-cloudys-gloss="component-hint"]')!;
+      expect(hint.style.display).toBe('block'); expect(hint.shadowRoot!.textContent).toContain('译文：Support');
+      if (event === 'Escape') document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
+      else if (event === 'scroll') window.dispatchEvent(new Event('scroll'));
+      else links[0]!.dispatchEvent(new FocusEvent(event, { bubbles: true }));
+      await vi.waitFor(() => expect(hint.style.display).toBe('none'));
+    }
+    links[1]!.dispatchEvent(new FocusEvent('focusin', { bubbles: true }));
+    expect(document.querySelectorAll('[data-cloudys-gloss="component-hint"]')).toHaveLength(1);
+    const hostEscape = vi.fn((event: Event) => event.stopPropagation());
+    links[1]!.addEventListener('keydown', hostEscape);
+    links[1]!.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+    expect(hostEscape).toHaveBeenCalledTimes(1);
+    expect(document.querySelector<HTMLElement>('[data-cloudys-gloss="component-hint"]')!.style.display).toBe('none');
+    translator.stop(); expect(document.querySelector('[data-cloudys-gloss="component-hint"]')).toBeNull();
+    expect(document.body.innerHTML).toBe(original);
+  });
+  it('固定控件的中间译文最终与原文相同时清除提示及可用标记', async () => {
+    document.body.innerHTML = '<nav style="position:fixed"><a href="#pro">Example Pro</a></nav>';
+    let receive!: (index: number, text: string, confirmed: boolean) => void;
+    let finish!: (values: string[]) => void;
+    const translator = new PageTranslator({ translate: (_id, _texts, callback) => { receive = callback; return new Promise(resolve => { finish = resolve; }); }, cancel: vi.fn() });
+    translator.start(); visible(); await vi.waitFor(() => expect(translator.status.pending).toBe(1));
+    receive(0, '临时结果', false);
+    const link = document.querySelector('a')!;
+    await vi.waitFor(() => expect(link.style.textDecorationStyle).toBe('dotted'));
+    link.focus();
+    link.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+    receive(0, '更新中的临时译文', false);
+    await new Promise(resolve => setTimeout(resolve, 60));
+    expect(document.querySelector<HTMLElement>('[data-cloudys-gloss="component-hint"]')!.style.display).toBe('none');
+    finish(['Example Pro']);
+    await vi.waitFor(() => expect(translator.status.translated).toBe(1));
+    expect(link.style.textDecorationStyle).toBe('');
+    expect(document.querySelector<HTMLElement>('[data-cloudys-gloss="component-hint"]')!.style.display).toBe('none');
+    translator.stop();
+  });
   it('同批第一段已返回、第二段仍在生成时先展示第一段，停止后移除所有进度节点', async () => {
     let receive!: (index: number, text: string, confirmed: boolean) => void;
     let finish!: (values: string[]) => void;
@@ -104,6 +291,26 @@ describe('双语阅读生命周期', () => {
     translator.stop();
     document.querySelector('p')!.firstChild!.textContent = 'Visible text. ';
     expect(document.body.innerHTML).toBe(original);
+  });
+  it('段内辅助文字只切换 CSS 类显隐时重译附近完整语句，关闭翻译保留宿主最新显示状态', async () => {
+    document.body.innerHTML = '<style>.concealed{display:none}</style><p>Primary text. <span class="concealed">Additional details.</span></p>';
+    const paragraph = document.querySelector('p')!;
+    const extra = paragraph.querySelector('span')!;
+    const translate = vi.fn(async (_id: string, texts: string[]) => texts.map(text => `译文：${text}`));
+    const translator = new PageTranslator({ translate, cancel: vi.fn() }); translator.start(); visible();
+    await vi.waitFor(() => expect(paragraph.querySelector('[data-state="done"]')?.textContent).toBe('译文：Primary text.'));
+    for (let i = 0; i < 10; i++) extra.className = i % 2 ? '' : 'concealed';
+    await vi.waitFor(() => expect(translator.status.translated).toBe(0));
+    await new Promise(resolve => setTimeout(resolve, 60)); visible();
+    await vi.waitFor(() => expect(paragraph.querySelector('[data-state="done"]')?.textContent).toBe('译文：Primary text. Additional details.'));
+    extra.className = 'concealed';
+    await vi.waitFor(() => expect(translator.status.translated).toBe(0));
+    await new Promise(resolve => setTimeout(resolve, 60)); visible();
+    await vi.waitFor(() => expect(paragraph.querySelector('[data-state="done"]')?.textContent).toBe('译文：Primary text.'));
+    expect(translate.mock.calls.flatMap(([, texts]) => texts)).toEqual(['Primary text.', 'Primary text. Additional details.', 'Primary text.']);
+    translator.stop();
+    expect(extra.className).toBe('concealed');
+    expect(paragraph.textContent).toBe('Primary text. Additional details.');
   });
   it('内部滚动面板的末段被前文译文推出可见区后，仍在附近范围内便继续完成，无需用户再次滚动', async () => {
     document.body.innerHTML = `<section id="reader" style="height:380px;overflow-y:auto">${Array.from({ length: 8 }, (_, index) => `<p>Panel paragraph ${index + 1}.</p>`).join('')}</section>`;

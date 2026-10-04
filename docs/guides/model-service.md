@@ -6,7 +6,7 @@
 
 ## 安装前准备
 
-需要 Apple Silicon Mac、macOS 26.2+、Python 3.12+（运行管理脚本）、Node.js 22.12+、pnpm 10、uv。已有 Homebrew 时可安装工具：
+需要 Apple Silicon Mac、macOS 26.2+、Python 3.12+（运行管理脚本）、Node.js 24 或 22.13+、pnpm 10、uv。已有 Homebrew 时可安装工具：
 
 ```sh
 brew install uv python@3.12 node pnpm

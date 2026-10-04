@@ -2,6 +2,7 @@ import { render } from 'preact';
 import { useState } from 'preact/hooks';
 import { OWN, blockText, excludedElement } from './blocks';
 import type { Settings, WordCard } from './schema';
+import { createId } from './id';
 
 type Anchor = { left: number; top: number; bottom: number };
 export function placePopover(anchor: Anchor, width: number, height: number, viewportWidth: number, viewportHeight: number) {
@@ -111,7 +112,7 @@ export class SelectionPopover {
     const style = document.createElement('style'); style.textContent = css;
     this.mount = document.createElement('div'); this.shadow.append(style, this.mount);
     document.documentElement.append(this.host);
-    const id = crypto.randomUUID(); this.id = id;
+    const id = createId(); this.id = id;
     const show = (card?: WordCard, error?: string) => {
       if (this.id !== id) return;
       render(<section class={`panel ${this.theme}`} role="dialog" tabIndex={-1} aria-label="AI 单词卡" aria-busy={!card && !error}>

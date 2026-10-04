@@ -1,0 +1,197 @@
+{
+  "date": "2026-10-05",
+  "environment": {
+    "chip": "Apple M4 Pro",
+    "memoryGiB": 48,
+    "os": "macOS 27.0.1",
+    "node": "24.14.0",
+    "viewport": [
+      1100,
+      800
+    ],
+    "workers": 1,
+    "cache": "new profile and empty extension cache per sample"
+  },
+  "sourceSha256": {
+    "src/blocks.ts": "c44fa760fceee4812d0f0e7097a47539a3e9b668a9e0be926ee2a28ca63bd52f",
+    "src/translator.ts": "6e4533b5db652a2524a5f572d1bf91475b4a5c8129ca2cede7cbdda0b74e759d",
+    "src/translation-layout.ts": "19d13620db6258925866d937f33c0abe8a400e83a23a13f4297c99a57cb5bc85",
+    "tests/e2e/performance.spec.ts": "df63edc276f9f2517680cc2e551c9e93aa0396d8b115fb6a786730ab8537cab3",
+    "tests/e2e/performance-fixture.ts": "4fc647ab8c49bbeda9efc964d4f7c69ff88a5dc6c19d05aceb9d4770ff304fd0",
+    "tests/performance/baseline-frames.ts": "f70696de40506cd9ed6434f3f3cf15ce16bec2569dea05c5db7552b3b60406dc"
+  },
+  "runs": [
+    {
+      "firstBodyMs": 94,
+      "jumpStartedMs": 180.19999998807907,
+      "maxFrameGapMs": 16.800000000000068,
+      "frames": 66,
+      "frameGaps": [],
+      "longTasks": [],
+      "browser": "chromium",
+      "browserVersion": "153.0.8010.12",
+      "model": "deterministic local fixture",
+      "responseDelayMs": 25,
+      "cards": 2000,
+      "requests": 14,
+      "requestedBlocks": 45,
+      "sample": 1
+    },
+    {
+      "firstBodyMs": 93.59999996423721,
+      "jumpStartedMs": 180.30000001192093,
+      "maxFrameGapMs": 16.800000000000068,
+      "frames": 67,
+      "frameGaps": [],
+      "longTasks": [],
+      "browser": "chromium",
+      "browserVersion": "153.0.8010.12",
+      "model": "deterministic local fixture",
+      "responseDelayMs": 25,
+      "cards": 2000,
+      "requests": 13,
+      "requestedBlocks": 37,
+      "sample": 2
+    },
+    {
+      "firstBodyMs": 138.5999999642372,
+      "jumpStartedMs": 171.30000001192093,
+      "maxFrameGapMs": 16.80000000000001,
+      "frames": 68,
+      "frameGaps": [],
+      "longTasks": [],
+      "browser": "chromium",
+      "browserVersion": "153.0.8010.12",
+      "model": "deterministic local fixture",
+      "responseDelayMs": 25,
+      "cards": 2000,
+      "requests": 12,
+      "requestedBlocks": 35,
+      "sample": 3
+    },
+    {
+      "firstBodyMs": 115,
+      "jumpStartedMs": 150,
+      "maxFrameGapMs": 18.6400000000001,
+      "frames": 82,
+      "frameGaps": [],
+      "browser": "firefox",
+      "browserVersion": "158.0",
+      "model": "deterministic local fixture",
+      "responseDelayMs": 25,
+      "cards": 2000,
+      "requests": 15,
+      "requestedBlocks": 46,
+      "sample": 1
+    },
+    {
+      "firstBodyMs": 106,
+      "jumpStartedMs": 142,
+      "maxFrameGapMs": 18.399999999999977,
+      "frames": 83,
+      "frameGaps": [],
+      "browser": "firefox",
+      "browserVersion": "158.0",
+      "model": "deterministic local fixture",
+      "responseDelayMs": 25,
+      "cards": 2000,
+      "requests": 15,
+      "requestedBlocks": 47,
+      "sample": 2
+    },
+    {
+      "firstBodyMs": 118,
+      "jumpStartedMs": 150,
+      "maxFrameGapMs": 18.59999999999991,
+      "frames": 84,
+      "frameGaps": [],
+      "browser": "firefox",
+      "browserVersion": "158.0",
+      "model": "deterministic local fixture",
+      "responseDelayMs": 25,
+      "cards": 2000,
+      "requests": 14,
+      "requestedBlocks": 45,
+      "sample": 3
+    }
+  ],
+  "withoutExtension": [
+    {
+      "browser": "chromium",
+      "browserVersion": "153.0.8010.12",
+      "sample": 1,
+      "cards": 2000,
+      "extension": false,
+      "maxFrameGapMs": 16.800000000000182,
+      "frames": 152
+    },
+    {
+      "browser": "chromium",
+      "browserVersion": "153.0.8010.12",
+      "sample": 2,
+      "cards": 2000,
+      "extension": false,
+      "maxFrameGapMs": 16.800000000000182,
+      "frames": 152
+    },
+    {
+      "browser": "chromium",
+      "browserVersion": "153.0.8010.12",
+      "sample": 3,
+      "cards": 2000,
+      "extension": false,
+      "maxFrameGapMs": 16.800000000000182,
+      "frames": 152
+    },
+    {
+      "browser": "firefox",
+      "browserVersion": "158.0",
+      "sample": 1,
+      "cards": 2000,
+      "extension": false,
+      "maxFrameGapMs": 18.559999999999945,
+      "frames": 151
+    },
+    {
+      "browser": "firefox",
+      "browserVersion": "158.0",
+      "sample": 2,
+      "cards": 2000,
+      "extension": false,
+      "maxFrameGapMs": 18.6400000000001,
+      "frames": 151
+    },
+    {
+      "browser": "firefox",
+      "browserVersion": "158.0",
+      "sample": 3,
+      "cards": 2000,
+      "extension": false,
+      "maxFrameGapMs": 18.660000000000082,
+      "frames": 151
+    }
+  ],
+  "measurementCorrection": {
+    "reason": "Playwright 1.63 locator assertion retries captured whole-page ARIA failure snapshots while the done node was absent. Timing now waits on the same in-page done and text condition. Behavioral thresholds unchanged.",
+    "cpuCallChain": [
+      "ariaSnapshotForExpectFailure",
+      "generateAriaTree",
+      "toAriaNode",
+      "getElementAccessibleName",
+      "getTextAlternativeInternal"
+    ],
+    "getTextAlternativeInternalSelfMs": 466.4
+  },
+  "bundleBytes": {
+    "chrome-mv3": {
+      "contentScripts": 73433,
+      "pdfResources": 2590571,
+      "unpackedTotal": 8158624
+    },
+    "firefox-mv2": {
+      "contentScripts": 73433,
+      "pdfResources": 2590571,
+      "unpackedTotal": 8158205
+    }
+  }
+}

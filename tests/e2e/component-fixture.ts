@@ -1,0 +1,34 @@
+/** Static UI labels, hidden panels, and constrained shells without user data. */
+export const componentTranslations: Record<string, string> = {
+  'Products': '产品与解决方案', 'Documentation': '文档与使用指南', 'Community': '开发者社区',
+  'Home': '首页', 'Guides': '使用指南', 'Quick start': '快速开始',
+  'Save changes': '保存当前更改', 'Delete item': '删除当前项目', 'Unavailable': '暂不可用',
+  'Overview': '概览与基本信息', 'Settings': '设置与偏好', 'Advanced options': '高级选项与说明',
+  'Email address': '电子邮箱地址', 'Notifications': '通知方式', 'Email updates': '接收邮件更新',
+  'Name': '名称与标识', 'Status': '当前状态', 'Actions': '可用操作', 'Ready': '已准备就绪',
+  'More actions': '更多操作', 'Download report': '下载当前报告', 'Duplicate item': '创建项目副本',
+  'Hidden settings become readable when the tab opens.': '切换标签后，原先隐藏的设置说明会正常显示译文。',
+  'An expanded explanation stays next to its summary.': '展开后的说明紧随摘要呈现，保留原来的阅读顺序。',
+  'The first visible paragraph stays responsive while navigation labels are translated.': '导航标签翻译时，首屏正文也能及时显示，不必等待所有菜单先完成。',
+  'Fixed help': '固定工具栏帮助', 'Sticky account': '吸顶账户入口',
+  'Long help': '这是较长的控件帮助译文，需要完整保留。'.repeat(90),
+  'Open dialog': '打开对话框', 'Close dialog': '关闭对话框',
+  'The dialog explains the current operation.': '此对话框说明当前操作的内容。',
+};
+export const componentFixture = `<!doctype html><html lang="en"><head><meta name="viewport" content="width=device-width,initial-scale=1"><title>Common component translation</title><style>
+*{box-sizing:border-box}body{margin:0;color:#223047;background:#f5f7fa;font:16px/1.5 system-ui}header{background:#182334;color:#fff;padding:12px 20px}header nav{display:flex;gap:20px;align-items:center;flex-wrap:wrap}header a{color:inherit;text-decoration:none;display:inline-flex;align-items:center;font-size:14px;min-height:28px}main{max-width:850px;padding:20px;margin:auto}.breadcrumbs ol{display:flex;gap:14px;flex-wrap:wrap;list-style:none;padding:0}.breadcrumbs li{min-width:0}.breadcrumbs a{color:#26528e}section,fieldset{margin:20px 0;padding:16px;border:1px solid #d8dfeb;border-radius:12px;background:#fff}.toolbar,[role=tablist]{display:flex;gap:12px;align-items:flex-start;flex-wrap:wrap}button{font:14px/1.3 system-ui;padding:8px 14px;border:1px solid #899ab5;border-radius:7px;background:#fff;color:#223047;cursor:pointer;white-space:nowrap;min-height:36px}button:disabled{opacity:.65;cursor:default}.toolbar button{height:36px}.toolbar button:first-child{background:#2451a8;color:#fff}[role=tab]{border-radius:7px 7px 0 0}[aria-selected=true]{background:#e8effb}summary{cursor:pointer;font-weight:600}label{font-size:14px}input[type=email]{font:inherit;padding:8px;max-width:100%;width:100%;margin-top:8px}table{width:100%;border-collapse:collapse}th,td{border-bottom:1px solid #d8dfeb;padding:10px;text-align:left;vertical-align:top}th{font-size:13px}.badge{display:inline-block;padding:3px 8px;background:#e8f4ef;border-radius:6px}.menu{padding:12px;border:1px solid #899ab5}.menu button{display:block;margin:4px;width:calc(100% - 8px)}.tab-panel:not(.active){display:none}.fixed-tools{position:fixed;right:14px;bottom:14px;height:36px;display:flex;gap:6px;z-index:30}.fixed-tools button{font-size:12px;padding:6px 8px;height:36px;max-width:112px}.sticky-tools{position:sticky;top:0;background:#eef3fc;padding:2px 20px;height:40px;z-index:20}.sticky-tools button{height:36px;padding:6px 8px;font-size:12px}dialog{position:fixed;overflow:visible;max-width:min(420px,calc(100vw - 32px));border:1px solid #899ab5;border-radius:12px;padding:20px;z-index:40}dialog::backdrop{background:#0005}@media(max-width:500px){main{padding:12px}section,fieldset{padding:12px}header nav{gap:14px}}
+</style></head><body><header id="header"><nav aria-label="Primary"><a href="#products">Products</a><a href="#docs">Documentation</a><a href="#community">Community</a></nav></header><div class="sticky-tools"><button id="sticky-account">Sticky account</button></div><main>
+<nav class="breadcrumbs" aria-label="Breadcrumb"><ol><li><a href="#home">Home</a></li><li><a href="#guides">Guides</a></li><li aria-current="page">Quick start</li></ol></nav>
+<p id="intro">The first visible paragraph stays responsive while navigation labels are translated.</p>
+<section><div class="toolbar"><button id="save" aria-describedby="save-help">Save changes</button><button id="delete">Delete item</button><button id="disabled" disabled>Unavailable</button></div><span id="save-help" hidden>Stores the current form.</span></section>
+<section><div role="tablist" aria-label="Demo tabs"><button role="tab" aria-selected="true" aria-controls="overview-panel" id="overview-tab">Overview</button><button role="tab" aria-selected="false" aria-controls="settings-panel" id="settings-tab">Settings</button></div><div id="overview-panel" class="tab-panel active" role="tabpanel"></div><div id="settings-panel" class="tab-panel" role="tabpanel"><p>Hidden settings become readable when the tab opens.</p></div></section>
+<section><details><summary>Advanced options</summary><p>An expanded explanation stays next to its summary.</p></details></section>
+<fieldset><legend>Notifications</legend><label for="email">Email address</label><input id="email" type="email" value="private@example.test"><label><input type="checkbox" id="updates">Email updates</label></fieldset>
+<section><table><thead><tr><th scope="col">Name</th><th scope="col">Status</th><th scope="col">Actions</th></tr></thead><tbody><tr><td>Example project</td><td><span class="badge">Ready</span></td><td><button id="more" aria-haspopup="menu" aria-expanded="false" aria-controls="menu">More actions</button></td></tr></tbody></table><div id="menu" role="menu" class="menu" hidden><button role="menuitem">Download report</button><button role="menuitem">Duplicate item</button></div></section>
+<button id="open-dialog">Open dialog</button><dialog><p>The dialog explains the current operation.</p><button id="close-dialog">Close dialog</button></dialog>
+</main><div class="fixed-tools"><button id="fixed-help">Fixed help</button><button id="long-help">Long help</button></div><script>
+document.querySelector('#save').onclick=()=>document.querySelector('#save').dataset.clicked='true';
+document.querySelectorAll('[role=tab]').forEach(tab=>tab.onclick=()=>{document.querySelectorAll('[role=tab]').forEach(other=>other.setAttribute('aria-selected',String(other===tab)));document.querySelectorAll('.tab-panel').forEach(panel=>panel.classList.toggle('active',panel.id===tab.getAttribute('aria-controls')))});
+document.querySelector('#more').onclick=()=>{const menu=document.querySelector('#menu');menu.hidden=!menu.hidden;document.querySelector('#more').setAttribute('aria-expanded',String(!menu.hidden))};
+document.querySelector('#open-dialog').onclick=()=>document.querySelector('dialog').showModal();document.querySelector('#close-dialog').onclick=()=>document.querySelector('dialog').close();
+</script></body></html>`;

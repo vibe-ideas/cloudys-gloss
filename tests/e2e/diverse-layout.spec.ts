@@ -43,10 +43,10 @@ test('文档阅读：长译文撑开表格行，侧栏、代码和链接保持�
   await page.locator('#deployment-table').scrollIntoViewIfNeeded();
   await expect(page.locator(`#deployment-table ${translation}`)).toHaveCount(6);
   await expect.poll(() => layoutViolations(page, '#deployment-table tr')).toEqual([]);
-  await expect(page.locator('.docs-nav')).toHaveJSProperty('innerHTML', navigation);
+  await expect(page.locator('.docs-nav a > [data-state=done]')).toHaveCount(3);
   await expect(page.locator('#docs-command')).toHaveJSProperty('innerHTML', command);
   await expect(page.locator('#docs-link > a')).toHaveAttribute('href', '#deployment-table');
-  expect(server.calls.flatMap((call) => call.texts ?? []).filter((text) => ['Overview', 'Configuration', 'Command reference', 'deploy --check --environment=production'].includes(text))).toEqual([]);
+  expect(server.calls.flatMap((call) => call.texts ?? [])).not.toContain('deploy --check --environment=production');
   await page.screenshot({ animations: 'disabled', path: testInfo.outputPath('documentation-table-desktop.png') });
   await page.setViewportSize({ width: 390, height: 844 });
   await page.locator('#deployment-table').scrollIntoViewIfNeeded();
@@ -55,6 +55,7 @@ test('文档阅读：长译文撑开表格行，侧栏、代码和链接保持�
   await page.screenshot({ animations: 'disabled', path: testInfo.outputPath('documentation-table-mobile.png') });
   await toggle();
   await expect(page.locator('#diverse-main')).toHaveJSProperty('innerHTML', original);
+  await expect(page.locator('.docs-nav')).toHaveJSProperty('innerHTML', navigation);
 });
 
 test('资讯网格：固定行高卡片接收长中文标题后不裁切或互相覆盖，手机单列与恢复原文正常', async ({ extension }, testInfo) => {
@@ -78,11 +79,10 @@ test('资讯网格：固定行高卡片接收长中文标题后不裁切或互�
   await expect(page.locator('#news-layout')).toHaveJSProperty('innerHTML', original);
 });
 
-test('长文阅读：图注引用与正文链接保持顺序，折叠展开和 SPA 新段落增量翻译且操作控件不变', async ({ extension }, testInfo) => {
+test('长文阅读：图注引用与正文链接保持顺序，折叠展开和 SPA 新段落增量翻译且双语操作控件正常', async ({ extension }, testInfo) => {
   const { page, server, toggle } = extension;
   await page.goto(`${server.url}/diverse-layout`);
   const original = await page.locator('#essay-layout').innerHTML();
-  const tools = await page.locator('.essay-tools').innerHTML();
   await page.locator('#essay-layout').scrollIntoViewIfNeeded();
   await toggle();
   for (const selector of ['#essay-intro', '#essay-caption', '#essay-quote', '#essay-link']) {
@@ -91,8 +91,7 @@ test('长文阅读：图注引用与正文链接保持顺序，折叠展开和 S
   }
   await expect.poll(() => layoutViolations(page, '#essay-intro,#essay-layout figure,#essay-quote,#essay-link')).toEqual([]);
   await expect(page.locator('#essay-link > a')).toHaveAttribute('href', '#essay-intro');
-  await expect(page.locator('.essay-tools')).toHaveJSProperty('innerHTML', tools);
-  expect(server.calls.flatMap((call) => call.texts ?? []).filter((text) => text.includes('Load the next paragraph') || text.includes('Save this article'))).toEqual([]);
+  await expect(page.locator('.essay-tools [data-state=done]')).toHaveCount(2);
   await page.locator('#essay-details > summary').click();
   await expect(page.locator(`#expanded-note > ${translation}`)).toContainText('展开后的补充说明');
   const introductoryRequests = server.calls.flatMap((call) => call.texts ?? []).filter((text) => text === 'The morning light changes the way we see familiar places.').length;

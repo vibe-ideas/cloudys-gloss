@@ -1,6 +1,6 @@
 import { test, expect } from './fixtures';
 
-test('深色导航保持原样，浅深正文译文紧随原文且不受网页样式污染，不重复展示原样结果且窄屏和恢复正常', async ({ extension }, testInfo) => {
+test('深色导航显示紧凑双语，浅深正文译文紧随原文且不受网页样式污染，不重复展示原样结果且窄屏和恢复正常', async ({ extension }, testInfo) => {
   const { page, server, toggle } = extension;
   await page.goto(`${server.url}/reading-design`);
   const original = await page.locator('main').innerHTML();
@@ -9,12 +9,13 @@ test('深色导航保持原样，浅深正文译文紧随原文且不受网页�
   await toggle();
   await expect(page.locator('h1 > [data-state="done"]')).toContainText('给思考留一点空间');
   await expect(page.locator('#dark-copy > [data-state="done"]')).toContainText('无论明暗');
-  await expect(page.locator('nav [data-cloudys-gloss]')).toHaveCount(0);
-  await expect(page.locator('nav')).toHaveJSProperty('innerHTML', navMarkup);
+  await expect(page.locator('nav a > [data-state=done]')).toHaveCount(6);
+  await expect(page.getByRole('link', { name: 'Store', exact: true })).toHaveAttribute('href', '#');
   const navAfter = (await page.locator('nav').boundingBox())!;
-  expect(navAfter).toMatchObject({ x: navBefore!.x, y: navBefore!.y, height: navBefore!.height });
+  expect(navAfter).toMatchObject({ x: navBefore!.x, y: navBefore!.y });
+  expect(navAfter.height).toBeGreaterThanOrEqual(navBefore!.height);
   expect(navAfter.width).toBe(await page.evaluate(() => document.documentElement.clientWidth));
-  expect(server.calls.flatMap((call) => call.texts ?? []).some((text) => text.includes('Store'))).toBe(false);
+  expect(server.calls.flatMap((call) => call.texts ?? [])).toContain('Store');
   await expect(page.locator('#linked-copy > [data-state="done"]')).toContainText('原文链接');
   await expect(page.locator('#linked-copy > a')).toHaveAttribute('href', '#original');
   await expect(page.locator('figcaption > [data-state="done"]')).toContainText('细小的文字');
@@ -34,7 +35,7 @@ test('深色导航保持原样，浅深正文译文紧随原文且不受网页�
   }
   await page.locator('#unchanged').scrollIntoViewIfNeeded();
   await expect(page.locator('#unchanged > [data-state="done"]')).toHaveCSS('display', 'none');
-  await expect(page.locator('#actions [data-cloudys-gloss]')).toHaveCount(0);
+  await expect(page.locator('#actions a > [data-state=done]')).toHaveCount(2);
   expect(server.calls.flatMap((call) => call.texts ?? [])).not.toContain('Learn more Buy');
   await page.evaluate(() => window.scrollTo(0, 0));
   await page.screenshot({ animations: 'disabled', fullPage: true, path: testInfo.outputPath('bilingual-mixed.png') });
@@ -47,4 +48,5 @@ test('深色导航保持原样，浅深正文译文紧随原文且不受网页�
   await page.screenshot({ animations: 'disabled', fullPage: true, path: testInfo.outputPath('bilingual-mobile.png') });
   await toggle();
   await expect(page.locator('main')).toHaveJSProperty('innerHTML', original);
+  await expect(page.locator('nav')).toHaveJSProperty('innerHTML', navMarkup);
 });

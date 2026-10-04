@@ -1,10 +1,10 @@
 # Cloudy’s Gloss
 
-轻量双语阅读扩展：全文双语翻译、划词词卡、贴边悬浮球。WXT + TypeScript + Preact，同一套代码支持 Chrome/Chromium 和 Firefox；默认连接本地 mlx-serve，也支持 Ollama 与 OpenAI-compatible API。
+轻量双语阅读扩展：全文与组件双语翻译、划词词卡、贴边悬浮球、PDF 逐页阅读。WXT + TypeScript + Preact，同一套代码支持 Chrome/Chromium 和 Firefox；默认连接本地 mlx-serve，也支持 Ollama 与 OpenAI-compatible API。
 
 ## 快速开始
 
-需要 Node.js 22.12+、pnpm 10；本地 mlx-serve 需要 Apple Silicon、macOS 26.2+、Python 3.12+ 和 uv。
+需要 Node.js 24 或 22.13+、pnpm 10；本地 mlx-serve 需要 Apple Silicon、macOS 26.2+、Python 3.12+ 和 uv。
 
 ```sh
 pnpm install
@@ -20,6 +20,7 @@ pnpm dev       # Chrome / Chromium
 
 - [文档目录](docs/README.md)
 - [安装与使用](docs/guides/getting-started.md)
+- [PDF 文件与在线链接双语阅读](docs/guides/pdf.md)
 - [模型配置](docs/guides/models.md)
 - [模型启动与 macOS 登录自启](docs/guides/model-service.md)
 - [版本下载](https://github.com/vibe-ideas/cloudys-gloss/releases) · [自动发布流程](docs/development/releases.md)

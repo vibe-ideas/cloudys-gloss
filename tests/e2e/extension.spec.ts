@@ -1,7 +1,7 @@
 import { test, expect } from './fixtures';
 
 test('悬浮球：一键双语与恢复、拖动不误触、窄屏贴边、快捷菜单打开设置并支持本页隐藏', async ({ extension }, testInfo) => {
-  const { page, context, server } = extension;
+  const { page, options, server } = extension;
   const host = page.locator('[data-cloudys-gloss="floating-control"]');
   await expect(host).toHaveCount(1);
   const orb = host.getByRole('button', { name: '翻译当前网页', exact: true });
@@ -37,7 +37,7 @@ test('悬浮球：一键双语与恢复、拖动不误触、窄屏贴边、快�
   await page.screenshot({ animations: 'disabled', path: testInfo.outputPath('floating-control-dark.png') });
   await page.emulateMedia({ colorScheme: 'light' });
   await host.getByRole('button', { name: '模型设置', exact: true }).click();
-  await expect.poll(() => context.pages().some((tab) => tab.url().endsWith('/options.html'))).toBe(true);
+  await expect.poll(() => options.isActive()).toBe(true);
   await page.bringToFront();
   await host.locator('.dock').hover();
   await host.getByRole('button', { name: '翻译快捷菜单' }).click();
