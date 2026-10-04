@@ -6,7 +6,7 @@ import type { TranslationStatus } from './translator';
 const css = `
 :host{all:initial!important;position:fixed!important;inset:0!important;pointer-events:none!important;z-index:2147483646!important;color-scheme:light dark!important;overflow:clip!important}
 *{box-sizing:border-box}button{font:inherit;color:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent}button:focus-visible{outline:2px solid var(--accent);outline-offset:3px}svg{display:block;width:20px;height:20px;flex-shrink:0}
-.dock{--bg:#fff;--fg:#243a37;--muted:#7a8784;--line:#e7eeeb;--accent:#218675;--tint:#edf7f2;--hover:#f4f7f5;--error:#b9634c;--shadow:0 8px 28px #193c3212,0 2px 6px #193c320a;position:fixed;width:35px;height:46px;pointer-events:auto;font:13px/1.5 -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;color:var(--fg);isolation:isolate}
+.dock{--bg:#fff;--fg:#243a37;--muted:#62726c;--line:#e7eeeb;--accent:#1f806f;--tint:#edf7f2;--hover:#f4f7f5;--error:#b9634c;--shadow:0 8px 28px #193c3212,0 2px 6px #193c320a;position:fixed;width:35px;height:46px;pointer-events:auto;font:13px/1.5 -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;color:var(--fg);isolation:isolate}
 .dock.dark{--bg:#1e2726;--fg:#e3eeea;--muted:#99aba5;--line:#374540;--accent:#88d6bc;--tint:#293f36;--hover:#2a3530;--error:#edac93;--shadow:0 8px 28px #0003,0 2px 6px #0002}@media(prefers-color-scheme:dark){.dock.system{--bg:#1e2726;--fg:#e3eeea;--muted:#99aba5;--line:#374540;--accent:#88d6bc;--tint:#293f36;--hover:#2a3530;--error:#edac93;--shadow:0 8px 28px #0003,0 2px 6px #0002}}
 .capsule{position:absolute;top:0;display:flex;align-items:center;width:70px;height:46px;padding:3px;border:1px solid var(--line);border-radius:17px;background:var(--bg);box-shadow:var(--shadow);transition:transform .24s cubic-bezier(.2,.8,.2,1),opacity .2s;opacity:.72}
 .dock.right .capsule{right:0;transform:translateX(50%)}.dock.left .capsule{left:0;flex-direction:row-reverse;transform:translateX(-50%)}
@@ -57,10 +57,14 @@ export class FloatingControl {
     window.addEventListener('resize', () => this.draw(), { signal: this.controller.signal });
     document.addEventListener('pointerdown', (event) => {
       if (this.open && !event.composedPath().includes(this.host)) { this.open = false; this.draw(); }
-    }, { signal: this.controller.signal });
+    }, { signal: this.controller.signal, capture: true });
     document.addEventListener('keydown', (event) => {
-      if (event.key === 'Escape' && this.open) { this.open = false; this.draw(); }
-    }, { signal: this.controller.signal });
+      if (event.key === 'Escape' && this.open) {
+        const restoreFocus = this.mount.querySelector('.menu')?.contains(shadow.activeElement);
+        this.open = false; this.draw();
+        if (restoreFocus) this.mount.querySelector<HTMLButtonElement>('.more')?.focus({ preventScroll: true });
+      }
+    }, { signal: this.controller.signal, capture: true });
     this.draw();
   }
   update(status: TranslationStatus) { this.status = status; this.draw(); }

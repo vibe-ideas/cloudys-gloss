@@ -1,7 +1,9 @@
-import { OWN, blockText, excludedElement, semanticCandidates, semanticText, splitText } from './blocks';
+import { OWN, blockText, excludedElement, renderedSemanticText, semanticCandidates, semanticText, splitText } from './blocks';
 import { mountTranslationMotion, translationLoader } from './translation-motion';
 import { translationStyle } from './translation-style';
-type Block = { element: Element; text: string; chunks: string[]; translated: string[]; confirmed: boolean[]; next: number; near: boolean; visible: boolean; node?: HTMLElement; rendered?: string; failed: boolean; active: number };
+import { TranslationLayout } from './translation-layout';
+type Block = { element: Element; text: string; sourceText: string; chunks: string[]; translated: string[]; confirmed: boolean[]; next: number; near: boolean; visible: boolean; node?: HTMLElement; rendered?: string; failed: boolean; active: number; layout?: string | false; scroll?: ScrollRegion; scrollChecked?: boolean; localNear?: boolean };
+type ScrollRegion = { element: Element; observer: IntersectionObserver; near: boolean; blocks: Set<Block> };
 export type TranslationStatus = { enabled: boolean; translated: number; pending: number; error: string };
 type Work = { block: Block; index: number; text: string };
 export interface TranslationTransport { translate(id: string, texts: string[], onItem: (index: number, text: string, confirmed: boolean) => void): Promise<string[]>; cancel(id: string): void }
@@ -16,6 +18,8 @@ export class PageTranslator {
   private scanTimer?: ReturnType<typeof setTimeout>;
   private intersections?: IntersectionObserver;
   private viewport?: IntersectionObserver;
+  private scrollVisibility?: IntersectionObserver;
+  private scrollRegions = new Map<Element, ScrollRegion>();
   private mutations?: MutationObserver;
   private timer?: ReturnType<typeof setTimeout>;
   private running = false;
@@ -23,6 +27,7 @@ export class PageTranslator {
   private lastError = '';
   private removed = false;
   private motion?: HTMLStyleElement;
+  private layout = new TranslationLayout();
   constructor(private transport: TranslationTransport, private changed: () => void = () => {}) {}
   get status() { return { enabled: this.running, translated: this.complete.size, pending: this.requests.size, error: this.lastError }; }
   start() {
@@ -32,8 +37,10 @@ export class PageTranslator {
     this.intersections = new IntersectionObserver((entries) => {
       for (const entry of entries) {
         const block = this.blocks.get(entry.target); if (!block) continue;
-        block.near = entry.isIntersecting;
-        if (block.near) { this.nearby.add(block); this.dirty.add(block); } else this.nearby.delete(block);
+        if (entry.isIntersecting && !block.scrollChecked) this.discoverScrollRegion(block);
+        // A viewport-root observer clips at inner scrollports even with a large
+        // rootMargin. Let their local observer supply the prefetch distance.
+        if (!block.scroll) this.setNear(block, entry.isIntersecting);
       }
       this.schedule();
     }, { rootMargin: '500px 0px' });
@@ -63,9 +70,65 @@ export class PageTranslator {
   private closestTracked(element: Element) {
     for (let current: Element | null = element; current; current = current.parentElement) if (this.blocks.has(current)) return current;
   }
+  private setNear(block: Block, near: boolean) {
+    block.near = near;
+    if (near) { this.nearby.add(block); this.dirty.add(block); } else this.nearby.delete(block);
+  }
+  private knownScrollRegion(element: Element) {
+    for (let ancestor = element.parentElement; ancestor; ancestor = ancestor.parentElement) {
+      const region = this.scrollRegions.get(ancestor); if (region) return region;
+    }
+  }
+  private discoverScrollRegion(block: Block) {
+    block.scrollChecked = true;
+    for (let ancestor = block.element.parentElement; ancestor && ancestor !== document.body; ancestor = ancestor.parentElement) {
+      if (!['auto', 'scroll'].includes(getComputedStyle(ancestor).overflowY)) continue;
+      let region = this.scrollRegions.get(ancestor);
+      if (!region) {
+        this.scrollVisibility ??= new IntersectionObserver((entries) => {
+          for (const entry of entries) {
+            const region = this.scrollRegions.get(entry.target); if (!region) continue;
+            region.near = entry.isIntersecting;
+            for (const member of region.blocks) this.setNear(member, region.near && !!member.localNear);
+          }
+          this.schedule();
+        }, { rootMargin: '500px 0px' });
+        const observer = new IntersectionObserver((entries) => {
+          for (const entry of entries) {
+            const member = this.blocks.get(entry.target); if (!member || member.scroll !== region) continue;
+            member.localNear = entry.isIntersecting;
+            this.setNear(member, region!.near && entry.isIntersecting);
+          }
+          this.schedule();
+        }, { root: ancestor, rootMargin: '500px 0px' });
+        region = { element: ancestor, observer, near: true, blocks: new Set() };
+        this.scrollRegions.set(ancestor, region);
+        this.scrollVisibility.observe(ancestor);
+        // Reuse tracked blocks, not a new DOM scan. Late scan slices and SPA
+        // additions join an existing pool through ancestor map lookups below.
+        for (const member of this.blocks.values()) if (this.knownScrollRegion(member.element) === region) this.attachScrollRegion(member, region);
+      }
+      this.attachScrollRegion(block, region);
+      return;
+    }
+  }
+  private attachScrollRegion(block: Block, region: ScrollRegion) {
+    if (block.scroll === region) return;
+    this.detachScrollRegion(block);
+    block.scroll = region; block.localNear = false;
+    region.blocks.add(block); region.observer.observe(block.element);
+    this.setNear(block, false);
+  }
+  private detachScrollRegion(block: Block) {
+    const region = block.scroll; if (!region) return;
+    region.observer.unobserve(block.element); region.blocks.delete(block); block.scroll = undefined;
+    if (!region.blocks.size) {
+      region.observer.disconnect(); this.scrollVisibility?.unobserve(region.element); this.scrollRegions.delete(region.element);
+    }
+  }
   private invalidate(element: Element) {
     const block = this.blocks.get(element);
-    if (block) { block.node?.remove(); this.nearby.delete(block); this.dirty.delete(block); this.complete.delete(block); }
+    if (block) { block.node?.remove(); this.layout.release(element, block.node); this.detachScrollRegion(block); this.nearby.delete(block); this.dirty.delete(block); this.complete.delete(block); }
     this.intersections?.unobserve(element); this.viewport?.unobserve(element); this.blocks.delete(element);
   }
   private scan(root: Element) { this.scans.push(semanticCandidates(root)); this.scanSlice(); }
@@ -78,7 +141,9 @@ export class PageTranslator {
       const element = next.value;
       if (!element.isConnected || this.blocks.has(element)) continue;
       const text = semanticText(element); if (!text) continue;
-      this.blocks.set(element, { element, text, chunks: splitText(text, 900), translated: [], confirmed: [], next: 0, near: false, visible: false, failed: false, active: 0 });
+      const block: Block = { element, text, sourceText: text, chunks: splitText(text, 900), translated: [], confirmed: [], next: 0, near: false, visible: false, failed: false, active: 0 };
+      this.blocks.set(element, block);
+      const region = this.knownScrollRegion(element); if (region) this.attachScrollRegion(block, region);
       this.intersections?.observe(element); this.viewport?.observe(element);
     }
     if (this.scans.length) this.scanTimer = setTimeout(() => { this.scanTimer = undefined; this.scanSlice(); }, 0);
@@ -90,6 +155,13 @@ export class PageTranslator {
       const roots = [...this.roots].filter((root) => root.isConnected); this.roots.clear();
       for (const root of roots) if (!roots.some((other) => other !== root && other.contains(root))) this.scan(root);
       if (this.removed) { for (const [element] of this.blocks) if (!element.isConnected) this.invalidate(element); this.removed = false; }
+      // Read nearby typography/layout before the coalesced DOM write pass.
+      for (const block of this.nearby) if (block.layout === undefined) {
+        const text = renderedSemanticText(block.element);
+        if (!text) { block.layout = false; continue; }
+        block.text = text; block.chunks = splitText(text, 900);
+        block.layout = this.layout.prepare(block.element) ? translationStyle(block.element) : false;
+      }
       this.pump();
       // One coalesced write pass, no layout measurement on streamed updates.
       for (const block of this.dirty) if (this.blocks.get(block.element) === block && block.element.isConnected) this.paint(block);
@@ -97,12 +169,14 @@ export class PageTranslator {
     }, 24);
   }
   private paint(block: Block) {
+    if (!block.layout) return;
     if (!block.node) {
       block.node = document.createElement('span'); block.node.setAttribute(OWN, 'pending'); block.node.lang = 'zh-CN';
-      block.node.style.cssText = translationStyle(block.element);
+      block.node.style.cssText = block.layout;
       const content = document.createElement('span'); content.dataset.glossPart = 'text';
       block.node.append(content);
       block.element.append(block.node);
+      this.layout.watch(block.element, block.node);
     }
     let prefix = 0;
     while (prefix < block.chunks.length && block.translated[prefix]) prefix++;
@@ -134,6 +208,7 @@ export class PageTranslator {
       }
     }
     if (done) this.complete.add(block); else this.complete.delete(block);
+    this.layout.update(block.element);
   }
   private pump() {
     if (!this.running) return;
@@ -146,7 +221,7 @@ export class PageTranslator {
       const work: Work[] = []; let chars = 0;
       const candidates = [...this.nearby].sort((a, b) => Number(b.visible) - Number(a.visible));
       for (const block of candidates) {
-        if (block.failed || !block.element.isConnected) continue;
+        if (block.failed || block.layout === false || !block.element.isConnected) continue;
         while (block.next < block.chunks.length && work.length < 2) {
           if (block.confirmed[block.next]) { block.next++; continue; }
           const text = block.chunks[block.next]!;
@@ -163,7 +238,7 @@ export class PageTranslator {
         if (!this.running || generation !== this.generation || !this.requests.has(id)) return;
         const value = work[item]; if (!value) return;
         const { block, index } = value;
-        if (this.blocks.get(block.element) !== block || !block.element.isConnected || blockText(block.element, false) !== block.text) return;
+        if (this.blocks.get(block.element) !== block || !block.element.isConnected || blockText(block.element, false) !== block.sourceText) return;
         block.translated[index] = text; block.confirmed[index] = confirmed;
         this.dirty.add(block); this.schedule();
       };
@@ -183,10 +258,13 @@ export class PageTranslator {
     this.running = false; this.generation++;
     if (this.timer) clearTimeout(this.timer); this.timer = undefined;
     if (this.scanTimer) clearTimeout(this.scanTimer); this.scanTimer = undefined; this.scans = [];
-    this.mutations?.disconnect(); this.intersections?.disconnect(); this.viewport?.disconnect();
+    this.mutations?.disconnect(); this.intersections?.disconnect(); this.viewport?.disconnect(); this.scrollVisibility?.disconnect();
+    for (const region of this.scrollRegions.values()) region.observer.disconnect();
+    this.scrollRegions.clear(); this.scrollVisibility = undefined;
     for (const id of this.requests.keys()) this.transport.cancel(id);
     this.requests.clear(); this.roots.clear(); this.nearby.clear(); this.dirty.clear(); this.complete.clear();
     for (const block of this.blocks.values()) block.node?.remove();
+    this.layout.stop();
     this.motion?.remove(); this.motion = undefined;
     this.blocks.clear(); this.lastError = ''; this.removed = false; this.changed();
   }

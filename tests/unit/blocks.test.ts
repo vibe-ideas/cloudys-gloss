@@ -1,5 +1,5 @@
-import { beforeEach, describe, expect, it } from 'vitest';
-import { blockText, excludedElement, semanticBlocks, semanticText, splitText } from '../../src/blocks';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { blockText, excludedElement, renderedSemanticText, semanticBlocks, semanticText, splitText } from '../../src/blocks';
 describe('全文翻译语义块提取', () => {
   beforeEach(() => { document.body.innerHTML = ''; });
   it('段落含强调与链接时合并成一个请求单元并保留完整语义', () => {
@@ -45,6 +45,46 @@ describe('全文翻译语义块提取', () => {
   it('单个正文链接、含多个链接的正文和普通链接列表仍参与全文翻译', () => {
     document.body.innerHTML = '<div><a href="/story">The full story</a></div><section>Compare <a href="/first">first</a> with <a href="/second">second</a>.</section><div><a href="/first">First</a> <span>and</span> <a href="/second">second</a></div><ul><li><a href="/one">First chapter</a></li><li><a href="/two">Second chapter</a></li></ul>';
     expect(semanticBlocks(document.body).map(semanticText)).toEqual(['The full story', 'Compare first with second.', 'First and second', 'First chapter', 'Second chapter']);
+  });
+  it('链接按钮与嵌套切换标签保持原样，普通正文链接仍可翻译且控件可划词', () => {
+    document.body.innerHTML = '<div><a class="cta" href="/buy"><span>Buy</span></a></div><div role="tablist"><div role="tab"><span>Camera</span></div></div><a role="button"><div>Watch the film</div></a><div><a aria-controls="gallery">Colors</a></div><p>Read the <a href="/story">full story</a>.</p>';
+    expect(semanticBlocks(document.body).map(semanticText)).toEqual(['Read the full story.']);
+    expect(blockText(document.querySelector('.cta')!)).toBe('Buy');
+  });
+  it('折叠入口标签不被汇总成文章末尾译文，展开正文仍单独翻译', () => {
+    document.body.innerHTML = '<article><details open><summary>Read more</summary><p>The full background story.</p></details></article>';
+    expect(semanticBlocks(document.body).map(semanticText)).toEqual(['The full background story.']);
+    expect(blockText(document.querySelector('summary')!)).toBe('Read more');
+  });
+  it('搜索控件与表单标签不被抽成父容器译文，正文内的普通链接仍保留', () => {
+    document.body.innerHTML = '<div role="search"><a href="/search"><span>Search</span></a><input type="search"></div><div><label for="email"><span>Email address</span></label><input id="email"></div><p>Read the <a href="/guide">search guide</a>.</p>';
+    expect(semanticBlocks(document.body).map(semanticText)).toEqual(['Read the search guide.']);
+  });
+  it.each(['display:none', 'visibility:hidden', 'opacity:0', 'content-visibility:hidden'])('初扫遇到行内 %s 隐藏文本时不混入父级，不读取全页计算样式', (style) => {
+    document.body.innerHTML = `<div>Visible introduction. <span style="${style}"><a href="/donate">More ways to donate</a></span> Read on.</div>`;
+    const computed = vi.spyOn(window, 'getComputedStyle');
+    expect(semanticBlocks(document.body).map(semanticText)).toEqual(['Visible introduction. Read on.']);
+    expect(computed).not.toHaveBeenCalled();
+    computed.mockRestore();
+  });
+  it('附近正文经样式表隐藏的辅助文字不会送译，但显示中的链接和强调文字完整保留', () => {
+    document.body.innerHTML = '<style>.concealed-copy{display:none}.silent-copy{visibility:hidden}.transparent-copy{opacity:0}.clipped-copy{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0px,0px,0px,0px)}</style><p id="copy">Read <span class="concealed-copy">More ways to donate</span><span class="silent-copy">Hidden label</span><span class="transparent-copy">Invisible label</span><span class="clipped-copy">Screen reader hint</span>the <a href="/guide">complete guide</a> <strong>today</strong>.</p>';
+    expect(renderedSemanticText(document.querySelector('#copy')!)).toBe('Read the complete guide today.');
+  });
+  it('整个语义块位于样式表隐藏的祖先中时不生成附近译文', () => {
+    document.body.innerHTML = '<style>.concealed{display:none}</style><section class="concealed"><p>Hidden donor message.</p></section>';
+    expect(renderedSemanticText(document.querySelector('p')!)).toBe('');
+  });
+  it('旧式表格的导航工具条及同一行登录入口保持原样，其他行的单链接和短标题仍翻译', () => {
+    document.body.innerHTML = '<table><tbody><tr><td><span><b><a href="/">Community News</a></b> | <a href="/new">new</a> | <a href="/ask">ask</a> | <a href="/jobs">jobs</a></span></td><td id="toolbar-login"><a href="/login">login</a></td></tr><tr><td>Read <a href="/one">the first report</a>, compare <a href="/two">the second report</a>, then see <a href="/three">the discussion</a>.</td></tr><tr><td><a href="/login">login</a></td><td><a href="/story">Short story</a></td></tr></tbody></table>';
+    expect(semanticBlocks(document.body).map(semanticText)).toEqual(['Read the first report, compare the second report, then see the discussion.', 'login', 'Short story']);
+    expect(renderedSemanticText(document.querySelector('#toolbar-login')!)).toBe('');
+    expect(blockText(document.querySelector('#toolbar-login')!)).toBe('login');
+  });
+  it('表格内较长的文章链接即使用竖线分隔也保留为阅读内容', () => {
+    const title = 'Researchers explain how everyday observations improve city planning';
+    document.body.innerHTML = `<table><tbody><tr><td><span><a href="/one">${title}</a> | <a href="/two">Another detailed report</a> | <a href="/three">A third report</a></span></td></tr></tbody></table>`;
+    expect(semanticBlocks(document.body).map(semanticText)).toEqual([`${title} | Another detailed report | A third report`]);
   });
   it('超长段落按长度分段且不会丢失文本', () => {
     const text = 'a'.repeat(13000); const chunks = splitText(text);

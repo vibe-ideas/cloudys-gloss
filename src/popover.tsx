@@ -5,18 +5,31 @@ import type { Settings, WordCard } from './schema';
 
 type Anchor = { left: number; top: number; bottom: number };
 export function placePopover(anchor: Anchor, width: number, height: number, viewportWidth: number, viewportHeight: number) {
+  const below = Math.max(0, viewportHeight - anchor.bottom - 22);
+  const above = Math.max(0, anchor.top - 22);
+  const useBelow = height <= below || (height > above && below >= above);
+  const maxHeight = Math.min(viewportHeight - 24, useBelow ? below : above);
+  // A multi-line selection can occupy almost the entire viewport. In that
+  // exceptional case retain a usable, scrollable card within the screen.
+  if (maxHeight < 64) return {
+    left: Math.max(12, Math.min(anchor.left, viewportWidth - width - 12)),
+    top: 12,
+    maxHeight: Math.max(0, viewportHeight - 24),
+  };
+  const visibleHeight = Math.min(height, maxHeight);
   return {
     left: Math.max(12, Math.min(anchor.left, viewportWidth - width - 12)),
-    top: Math.max(12, Math.min(anchor.bottom + height + 20 <= viewportHeight ? anchor.bottom + 10 : anchor.top - height - 10, viewportHeight - height - 12)),
+    top: useBelow ? anchor.bottom + 10 : anchor.top - visibleHeight - 10,
+    maxHeight,
   };
 }
 export interface DictionaryTransport { lookup(id: string, word: string, context: string): Promise<WordCard>; cancel(id: string): void }
 const css = `
 :host{all:initial!important;position:fixed!important;inset:0!important;z-index:2147483647!important;pointer-events:none!important;color-scheme:light dark!important}
-*{box-sizing:border-box} .panel{--bg:#fff;--fg:#242238;--muted:#747186;--line:#eeecf5;--soft:#f5f4fb;--accent:#6f58d9;position:fixed;pointer-events:auto;width:360px;max-width:calc(100vw - 24px);max-height:calc(100dvh - 24px);overflow:auto;overscroll-behavior:contain;background:var(--bg);color:var(--fg);border:1px solid var(--line);border-radius:18px;padding:20px;box-shadow:0 14px 54px #19142f25;font:14px/1.6 -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;text-align:left;}
+*{box-sizing:border-box} .panel{--bg:#fff;--fg:#242238;--muted:#747186;--line:#eeecf5;--soft:#f5f4fb;--accent:#6f58d9;position:fixed;pointer-events:auto;width:360px;max-width:calc(100vw - 24px);max-height:calc(100dvh - 24px);overflow:auto;overflow-wrap:anywhere;overscroll-behavior:contain;background:var(--bg);color:var(--fg);border:1px solid var(--line);border-radius:18px;padding:20px;box-shadow:0 14px 54px #19142f25;font:14px/1.6 -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;text-align:left;}
 .panel.dark{--bg:#22212b;--fg:#f1eff9;--muted:#aaa5be;--line:#3b384a;--soft:#2c2939;--accent:#b4a3ff}
 @media(prefers-color-scheme:dark){.panel.system{--bg:#22212b;--fg:#f1eff9;--muted:#aaa5be;--line:#3b384a;--soft:#2c2939;--accent:#b4a3ff}}
-header{display:flex;align-items:center;justify-content:space-between;color:var(--muted);font-size:11px;letter-spacing:1.6px}button{font:inherit;cursor:pointer;background:var(--soft);color:var(--fg);border:0;border-radius:8px;padding:5px 9px}button:hover{color:var(--accent)}button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}h2{font-size:26px;line-height:1.2;margin:15px 0 12px;overflow-wrap:anywhere;letter-spacing:-.7px}p{margin:8px 0} .ipa{display:flex;flex-wrap:wrap;gap:7px}.ipa button{font-size:12px;color:var(--muted)}.sense{margin:15px 0;display:flex;align-items:baseline;gap:10px}.pos{font-size:11px;color:var(--accent);border-radius:5px;background:var(--soft);padding:2px 7px;flex-shrink:0}.context{padding:13px;border-radius:10px;background:var(--soft);margin-top:17px}.label{font-size:10px;font-weight:600;letter-spacing:1.4px;color:var(--accent)}.examples{border-top:1px solid var(--line);margin-top:17px;padding-top:14px}.zh,footer{color:var(--muted);font-size:12px}footer{margin-top:16px;font-size:10px}.skeleton{height:12px;background:var(--soft);border-radius:6px;margin:14px 0;animation:pulse 1.2s ease-in-out infinite}.error{color:#cf6475;overflow-wrap:anywhere}@keyframes pulse{50%{opacity:.45}}@media(prefers-reduced-motion:reduce){.skeleton{animation:none}}
+header{display:flex;align-items:center;justify-content:space-between;color:var(--muted);font-size:11px;letter-spacing:1.6px}button{font:inherit;cursor:pointer;background:var(--soft);color:var(--fg);border:0;border-radius:8px;padding:5px 9px}button:hover{color:var(--accent)}button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}h2{font-size:26px;line-height:1.2;margin:15px 0 12px;overflow-wrap:anywhere;letter-spacing:-.7px}p{margin:8px 0} .ipa{display:flex;flex-wrap:wrap;gap:7px}.ipa button{font-size:12px;color:var(--muted)}.sense{margin:15px 0;display:flex;align-items:baseline;gap:10px}.pos{font-size:11px;color:var(--accent);border-radius:5px;background:var(--soft);padding:2px 7px;flex-shrink:0}.context{padding:13px;border-radius:10px;background:var(--soft);margin-top:17px}.label{font-size:10px;font-weight:600;letter-spacing:1.4px;color:var(--accent)}.examples{border-top:1px solid var(--line);margin-top:17px;padding-top:14px}.zh,footer{color:var(--muted);font-size:12px}footer{margin-top:16px;font-size:10px}.skeleton{height:12px;background:var(--soft);border-radius:6px;margin:14px 0;animation:pulse 1.2s ease-in-out infinite}.error{color:#b2485b;overflow-wrap:anywhere}.panel.dark .error{color:#f0a3b1}@media(prefers-color-scheme:dark){.panel.system .error{color:#f0a3b1}}@keyframes pulse{50%{opacity:.45}}@media(prefers-reduced-motion:reduce){.skeleton{animation:none}}
 `;
 
 export function DictionaryCard({ card }: { card: WordCard }) {
@@ -47,7 +60,8 @@ export class SelectionPopover {
   private shadow?: ShadowRoot;
   private mount?: HTMLElement;
   private id?: string;
-  private anchor?: Anchor;
+  private sourceRange?: Range;
+  private returnFocus?: HTMLElement;
   private resize?: ResizeObserver;
   private timer?: ReturnType<typeof setTimeout>;
   private controller = new AbortController();
@@ -69,15 +83,15 @@ export class SelectionPopover {
     if (panel) panel.className = `panel ${theme}`;
   }
   private onKey = (event: KeyboardEvent) => {
-    if (event.key === 'Escape') { this.close(); return; }
+    if (event.key === 'Escape') { this.close(true); return; }
     if (event.shiftKey || event.key.startsWith('Arrow')) this.onSelection(event);
   };
   private onSelection = (event: Event) => {
     if (event.composedPath().some((node) => node instanceof Element && node.hasAttribute(OWN))) return;
     if (this.timer) clearTimeout(this.timer);
-    this.timer = setTimeout(() => this.readSelection(), 0);
+    this.timer = setTimeout(() => this.readSelection(event instanceof KeyboardEvent), 0);
   };
-  private readSelection() {
+  private readSelection(keyboard = false) {
     const selection = window.getSelection();
     if (!selection?.rangeCount || selection.isCollapsed) return;
     const word = selection.toString().trim();
@@ -85,13 +99,13 @@ export class SelectionPopover {
     const range = selection.getRangeAt(0);
     const parent = range.commonAncestorContainer instanceof Element ? range.commonAncestorContainer : range.commonAncestorContainer.parentElement;
     if (!parent || excludedElement(parent)) return;
-    const bounds = range.getBoundingClientRect();
     const context = blockText(parent.closest('p,li,td,blockquote,article') ?? parent).slice(0, 3000);
-    this.open(word, context, { left: bounds.left, top: bounds.top, bottom: bounds.bottom });
+    this.open(word, context, range.cloneRange(), keyboard);
   }
-  private open(word: string, context: string, anchor: Anchor) {
+  private open(word: string, context: string, range: Range, keyboard = false) {
     this.close();
-    this.anchor = anchor;
+    this.sourceRange = range;
+    this.returnFocus = document.activeElement instanceof HTMLElement ? document.activeElement : undefined;
     this.host = document.createElement('div'); this.host.setAttribute(OWN, 'popover');
     this.shadow = this.host.attachShadow({ mode: 'open' });
     const style = document.createElement('style'); style.textContent = css;
@@ -100,29 +114,40 @@ export class SelectionPopover {
     const id = crypto.randomUUID(); this.id = id;
     const show = (card?: WordCard, error?: string) => {
       if (this.id !== id) return;
-      render(<section class={`panel ${this.theme}`} role="dialog" aria-label="AI 单词卡" aria-busy={!card && !error}>
-        <header><span>☁ CLOUDY’S GLOSS</span><button aria-label="关闭词卡" onClick={() => this.close()}>×</button></header>
-        <div aria-live="polite">{card ? <DictionaryCard card={card} /> : <><h2>{word}</h2>{error ? <><p class="error" role="alert">{error}</p><button onClick={() => this.open(word, context, anchor)}>重试</button></> : <><p class="zh">正在理解上下文…</p><div class="skeleton" /><div class="skeleton" style={{ width: '72%' }} /><div class="skeleton" /></>}</>}</div>
+      render(<section class={`panel ${this.theme}`} role="dialog" tabIndex={-1} aria-label="AI 单词卡" aria-busy={!card && !error}>
+        <header><span>☁ CLOUDY’S GLOSS</span><button aria-label="关闭词卡" onClick={() => this.close(true)}>×</button></header>
+        <div aria-live="polite">{card ? <DictionaryCard card={card} /> : <><h2>{word}</h2>{error ? <><p class="error" role="alert">{error}</p><button onClick={() => this.open(word, context, range, keyboard)}>重试</button></> : <><p class="zh">正在理解上下文…</p><div class="skeleton" /><div class="skeleton" style={{ width: '72%' }} /><div class="skeleton" /></>}</>}</div>
       </section>, this.mount!);
       this.position();
     };
     show();
+    if (!this.mount) return;
+    if (keyboard) this.mount.querySelector<HTMLElement>('.panel')?.focus({ preventScroll: true });
     this.resize = new ResizeObserver(() => this.position()); this.resize.observe(this.mount.firstElementChild!);
     void this.transport.lookup(id, word, context).then((card) => show(card)).catch((error: unknown) => show(undefined, error instanceof Error ? error.message : '词卡生成失败'));
   }
   private position() {
     const panel = this.mount?.firstElementChild as HTMLElement | null;
-    if (!panel || !this.anchor) return;
+    if (!panel || !this.sourceRange) return;
+    if (!this.sourceRange.commonAncestorContainer.isConnected) { this.close(); return; }
+    const anchor = this.sourceRange.getBoundingClientRect();
+    if (anchor.bottom < 0 || anchor.top > window.innerHeight) { this.close(); return; }
     const { width, height } = panel.getBoundingClientRect();
-    const position = placePopover(this.anchor, width, height, window.innerWidth, window.innerHeight);
+    // Use full content height when deciding which side has room. A previously
+    // constrained panel must be able to expand again after viewport changes.
+    const position = placePopover(anchor, width, Math.max(height, panel.scrollHeight + 2), window.innerWidth, window.innerHeight);
+    panel.style.maxHeight = `${Math.max(0, position.maxHeight)}px`;
     panel.style.left = `${position.left}px`; panel.style.top = `${position.top}px`;
   }
-  close() {
+  close(restoreFocus = false) {
     if (this.timer) clearTimeout(this.timer); this.timer = undefined;
     if (this.id) this.transport.cancel(this.id); this.id = undefined;
     this.resize?.disconnect();
+    const focusInside = !!this.shadow?.activeElement;
     if (this.mount) render(null, this.mount);
-    this.host?.remove(); this.host = undefined; this.mount = undefined;
+    this.host?.remove(); this.host = undefined; this.mount = undefined; this.sourceRange = undefined;
+    if (restoreFocus && focusInside && this.returnFocus?.isConnected) this.returnFocus.focus({ preventScroll: true });
+    this.returnFocus = undefined;
     if ('speechSynthesis' in window) speechSynthesis.cancel();
   }
   destroy() { this.close(); this.controller.abort(); }

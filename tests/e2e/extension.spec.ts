@@ -130,6 +130,7 @@ test('悬浮球默认只露一半，移入展开、移出收起，键盘聚焦�
   await expect.poll(rightEdge).toBe(width - 10);
   await page.keyboard.press('Escape');
   await expect(host.locator('.menu')).toHaveCount(0);
+  await expect(page.locator('[contenteditable]')).toBeFocused();
   await expect.poll(rightEdge).toBe(width + 35);
 });
 

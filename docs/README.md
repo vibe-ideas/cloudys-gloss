@@ -17,6 +17,7 @@
 ## 体验设计
 
 - [全文双语排版与视觉回归](design/bilingual-reading.md)
+- [多样化网页体验测试与修复](design/2026-10-05-diverse-web-ux.md)
 - [Apple 产品页真实浏览验收与待修问题](design/2026-10-05-apple-product-review.md)
 
 ## 性能
