@@ -1,5 +1,6 @@
 import { OWN, blockText, excludedElement, semanticCandidates, semanticText, splitText } from './blocks';
 import { mountTranslationMotion, translationLoader } from './translation-motion';
+import { translationStyle } from './translation-style';
 type Block = { element: Element; text: string; chunks: string[]; translated: string[]; confirmed: boolean[]; next: number; near: boolean; visible: boolean; node?: HTMLElement; rendered?: string; failed: boolean; active: number };
 export type TranslationStatus = { enabled: boolean; translated: number; pending: number; error: string };
 type Work = { block: Block; index: number; text: string };
@@ -98,13 +99,17 @@ export class PageTranslator {
   private paint(block: Block) {
     if (!block.node) {
       block.node = document.createElement('span'); block.node.setAttribute(OWN, 'pending'); block.node.lang = 'zh-CN';
-      block.node.style.cssText = 'display:block!important;margin:0.45em 0!important;padding:0 0 0 0.7em!important;border-left:2px solid #69b4a1!important;font-size:0.94em!important;font-weight:400!important;line-height:1.65!important;color:inherit!important;opacity:0.85!important;';
+      block.node.style.cssText = translationStyle(block.element);
+      const content = document.createElement('span'); content.dataset.glossPart = 'text';
+      block.node.append(content);
       block.element.append(block.node);
     }
     let prefix = 0;
     while (prefix < block.chunks.length && block.translated[prefix]) prefix++;
     const text = block.translated.slice(0, prefix).join(' ');
     const done = block.chunks.every((_, index) => block.confirmed[index]);
+    const unchanged = done && text.normalize('NFKC').replace(/\s+/gu, ' ').trim() === block.text.normalize('NFKC').replace(/\s+/gu, ' ').trim();
+    block.node.style.setProperty('display', unchanged ? 'none' : 'block', 'important');
     const stateName = done ? 'done' : block.failed ? 'error' : text ? 'partial' : block.active ? 'translating' : 'queued';
     const rendered = JSON.stringify([stateName, text, block.failed && block.active > 0]);
     if (block.rendered === rendered) return;
@@ -112,8 +117,11 @@ export class PageTranslator {
     block.node.setAttribute(OWN, text ? 'translation' : 'pending');
     block.node.dataset.state = stateName;
     block.node.setAttribute('aria-busy', String(!done && !block.failed));
-    const content = document.createElement('span'); content.dataset.glossPart = 'text'; content.textContent = text;
-    block.node.replaceChildren(content);
+    const content = block.node.firstElementChild as HTMLElement;
+    content.textContent = text;
+    if (text) content.dataset.glossReveal = 'true';
+    // Keep the text element mounted: streamed chunks must not restart its fade-in.
+    while (content.nextSibling) content.nextSibling.remove();
     if (!done) {
       if (!block.failed) block.node.append(translationLoader(Boolean(text), Boolean(block.active)));
       if (block.failed) {

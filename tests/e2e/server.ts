@@ -1,5 +1,6 @@
 import { createServer } from 'node:http';
 import type { AddressInfo } from 'node:net';
+import { readingFixture, readingTranslations } from './reading-fixture';
 export async function startServer() {
   const calls: { texts?: string[]; word?: string; context?: string; example?: string }[] = [];
   let delay = 0; let invalid = false;
@@ -31,7 +32,7 @@ export async function startServer() {
       }
       const data = JSON.parse(requestBody.messages[1].content) as typeof calls[number]; calls.push(data);
       if (delay) await new Promise((resolve) => setTimeout(resolve, delay));
-      const content = invalid ? { broken: true } : data.texts ? { translations: data.texts.map((text) => `中文译文：${text}`) } : {
+      const content = invalid ? { broken: true } : data.texts ? { translations: data.texts.map((text) => readingTranslations[text] ?? `中文译文：${text}`) } : {
         word: data.word, ipa: { us: '/ˈklaʊdi/', uk: '/ˈklaʊdi/' },
         senses: [{ partOfSpeech: 'adjective', meaning: '多云的；不清晰的' }], contextMeaning: '在当前句子中表示多云的天气',
         examples: data.example ? [{ zh: '多云的早晨让人思绪宁静。' }]
@@ -56,6 +57,7 @@ export async function startServer() {
       response.writeHead(200, { 'Content-Type': 'application/json' }); response.end(JSON.stringify({ choices: [{ message: { content: JSON.stringify(content) } }] })); return;
     }
     response.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8', 'Content-Security-Policy': "default-src 'self'; script-src 'none'; connect-src 'none'; style-src 'unsafe-inline'" });
+    if (request.url === '/reading-design') { response.end(readingFixture); return; }
     if (request.url === '/large') {
       response.end(`<!doctype html><html><head><title>Long reading test</title><style>body{font:18px/1.8 system-ui;margin:40px;max-width:760px}p{min-height:90px;margin:24px 0}</style></head><body><main>${Array.from({ length: 2000 }, (_, index) => `<p id="row-${index}">Paragraph ${index}. Reading across languages should feel natural. A clear translation helps readers understand the ideas while keeping the original words in view.</p>`).join('')}</main></body></html>`); return;
     }

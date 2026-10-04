@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it } from 'vitest';
-import { blockText, semanticBlocks, splitText } from '../../src/blocks';
+import { blockText, excludedElement, semanticBlocks, semanticText, splitText } from '../../src/blocks';
 describe('全文翻译语义块提取', () => {
   beforeEach(() => { document.body.innerHTML = ''; });
   it('段落含强调与链接时合并成一个请求单元并保留完整语义', () => {
@@ -11,6 +11,40 @@ describe('全文翻译语义块提取', () => {
     document.body.innerHTML = '<pre><p>secret code</p></pre><div contenteditable>private input</div><p>Hello<span data-cloudys-gloss>你好</span></p>';
     const blocks = semanticBlocks(document.body);
     expect(blocks.map((element) => blockText(element))).toEqual(['Hello']);
+  });
+  it.each(['nav', 'div role="navigation"', 'div role="menu"', 'div role="menubar"', 'div role="toolbar"'])('全文扫描遇到 %s 导航区域时不为菜单文字创建翻译请求', (tag) => {
+    const name = tag.split(' ')[0];
+    document.body.innerHTML = `<${tag}><ul><li>Store</li><li>Accessories</li></ul></${name}><p>Read the full story.</p>`;
+    expect(semanticBlocks(document.body).map(semanticText)).toEqual(['Read the full story.']);
+    const item = document.querySelector('li')!;
+    expect(semanticBlocks(item)).toEqual([]);
+    expect(semanticText(item)).toBe('');
+  });
+  it('文章页眉标题、正文链接、普通列表和页脚说明仍参与全文翻译', () => {
+    document.body.innerHTML = '<article><header><h1>A brighter future</h1></header><p>Read our <a href="/story">full story</a>.</p><ul><li>First lesson</li><li>Second lesson</li></ul><footer><p>Written by the editorial team.</p></footer></article>';
+    expect(semanticBlocks(document.body).map(semanticText)).toEqual(['A brighter future', 'Read our full story.', 'First lesson', 'Second lesson', 'Written by the editorial team.']);
+  });
+  it('正文容器内嵌导航时只提取正文，不把导航标签串入父级译文', () => {
+    document.body.innerHTML = '<div>Article introduction. <nav><a>Store</a><span>Accessories</span></nav><span role="menu"><a>Account</a></span> More context.</div>';
+    const container = document.body.firstElementChild!;
+    expect(semanticBlocks(document.body).map(semanticText)).toEqual(['Article introduction. More context.']);
+    expect(blockText(container, false)).toBe('Article introduction. More context.');
+  });
+  it('用户主动划选导航单词时仍允许显示词卡并提取选区上下文', () => {
+    document.body.innerHTML = '<nav><ul><li><a>Accessories</a></li></ul></nav>';
+    const link = document.querySelector('a')!;
+    expect(excludedElement(link)).toBe(false);
+    expect(blockText(link.closest('li')!)).toBe('Accessories');
+  });
+  it.each(['div', 'section'])('全文翻译遇到只含多个操作链接的 %s 时不在链接组后追加译文', (tag) => {
+    document.body.innerHTML = `<${tag}>\n <a href="/learn">Learn more</a>\n <a href="/buy"><span>Buy</span></a> <!-- rendered controls --> <span data-cloudys-gloss>加载中</span></${tag}><p>Discover the next chapter.</p>`;
+    expect(semanticBlocks(document.body).map(semanticText)).toEqual(['Discover the next chapter.']);
+    expect(semanticText(document.body.firstElementChild!)).toBe('');
+    expect(blockText(document.querySelector('a')!)).toBe('Learn more');
+  });
+  it('单个正文链接、含多个链接的正文和普通链接列表仍参与全文翻译', () => {
+    document.body.innerHTML = '<div><a href="/story">The full story</a></div><section>Compare <a href="/first">first</a> with <a href="/second">second</a>.</section><div><a href="/first">First</a> <span>and</span> <a href="/second">second</a></div><ul><li><a href="/one">First chapter</a></li><li><a href="/two">Second chapter</a></li></ul>';
+    expect(semanticBlocks(document.body).map(semanticText)).toEqual(['The full story', 'Compare first with second.', 'First and second', 'First chapter', 'Second chapter']);
   });
   it('超长段落按长度分段且不会丢失文本', () => {
     const text = 'a'.repeat(13000); const chunks = splitText(text);
