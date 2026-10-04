@@ -1,0 +1,11 @@
+node_modules/
+.wxt/
+.output/
+test-results/
+playwright-report/
+.env*
+!.env.example
+artifacts/
+.DS_Store
+*.log
+!pnpm-lock.yaml

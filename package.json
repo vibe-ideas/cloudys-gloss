@@ -1,0 +1,44 @@
+{
+  "name": "cloudys-gloss",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@10.33.0",
+  "scripts": {
+    "dev": "wxt",
+    "dev:firefox": "wxt -b firefox",
+    "build": "wxt build",
+    "build:firefox": "wxt build -b firefox",
+    "zip": "wxt zip",
+    "zip:firefox": "wxt zip -b firefox",
+    "postinstall": "wxt prepare",
+    "lint": "eslint .",
+    "typecheck": "wxt prepare && tsc --noEmit",
+    "test": "vitest run",
+    "check": "pnpm lint && pnpm typecheck && pnpm test",
+    "test:e2e": "pnpm build && pnpm build:firefox && playwright test",
+    "smoke:live": "pnpm build && pnpm build:firefox && playwright test -c playwright.live.config.ts",
+    "model:mlx": "uv run --python 3.12 --with mlx-lm==0.32.0 mlx_lm.server --model mlx-community/Qwen2.5-3B-Instruct-4bit --host 127.0.0.1 --port 8080 --max-tokens 4096",
+    "smoke:mlx": "MODEL_BASE_URL=http://127.0.0.1:8080/v1 MODEL_NAME=mlx-community/Qwen2.5-3B-Instruct-4bit pnpm smoke:live"
+  },
+  "dependencies": {
+    "idb": "^8.0.3",
+    "preact": "^11.0.0",
+    "zod": "^4.6.5"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@playwright/test": "^1.63.0",
+    "@preact/preset-vite": "^2.10.6",
+    "@types/node": "^26.6.4",
+    "eslint": "^10.12.0",
+    "fake-indexeddb": "^6.2.5",
+    "globals": "^17.13.0",
+    "happy-dom": "^20.14.5",
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.71.0",
+    "vitest": "^5.0.3",
+    "web-ext": "^10.7.0",
+    "wxt": "^0.21.4"
+  }
+}

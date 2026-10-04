@@ -1,0 +1,26 @@
+import { test, expect } from './fixtures';
+test('2000 段大页面：同批第一段先显示、第二段显示动态占位；跳到页尾后取消旧任务，关闭恢复全部原文', async ({ extension }, testInfo) => {
+  const { page, server } = extension;
+  await page.goto(`${server.url}/large`);
+  const original = await page.locator('main').innerHTML();
+  server.holdStreams();
+  await page.getByRole('button', { name: '翻译当前网页', exact: true }).click();
+  await expect(page.locator('#row-0 [data-state="partial"]')).toContainText('中文译文：Paragraph 0');
+  await expect(page.locator('#row-1 [data-state="translating"]').getByRole('img', { name: '翻译中', exact: true })).toBeVisible();
+  await expect(page.locator('#row-1')).not.toContainText('翻译中');
+  const dot = page.locator('#row-1 [data-gloss-part="loader"] i').first();
+  expect(await dot.evaluate((node) => getComputedStyle(node).animationName)).toBe('cloudys-breathe');
+  expect(server.finishedStreams).toBe(0);
+  expect(server.calls.length).toBeLessThanOrEqual(2);
+  await expect(page.locator('#row-1999 [data-cloudys-gloss]')).toHaveCount(0);
+  await page.screenshot({ animations: 'disabled', path: testInfo.outputPath('large-page-progress.png') });
+  await page.locator('#row-1999').scrollIntoViewIfNeeded();
+  await expect.poll(() => server.abortedStreams).toBeGreaterThan(0);
+  await expect.poll(() => server.calls.some((call) => call.texts?.some((text) => (/Paragraph 199\d\./).test(text)))).toBe(true);
+  server.releaseStreams();
+  await expect(page.locator('#row-1999 [data-state="done"]')).toContainText('中文译文');
+  expect(server.calls.length).toBeLessThan(25);
+  await page.getByRole('button', { name: '恢复原文', exact: true }).click();
+  await expect(page.locator('main [data-cloudys-gloss]')).toHaveCount(0);
+  expect(await page.locator('main').innerHTML()).toBe(original);
+});

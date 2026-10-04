@@ -1,0 +1,64 @@
+import { test, expect } from '../tests/e2e/fixtures';
+test('真实 MLX / 网关：2000 段页面首段流式出现，滚到页尾继续翻译，记录首段与主线程响应间隔', async ({ extension }, testInfo) => {
+  const { options, page, server } = extension;
+  await options.fill('baseUrl', process.env.MODEL_BASE_URL!); await options.fill('model', process.env.MODEL_NAME!);
+  await options.fill('apiKey', process.env.MODEL_API_KEY ?? ''); await options.fill('concurrency', '1');
+  await options.fill('temperature', '0'); await options.fill('timeout', '120000');
+  await options.click('保存设置'); await expect.poll(() => options.status()).toContain('设置已保存');
+  await page.goto(`${server.url}/large`);
+  await expect(page.getByRole('button', { name: '翻译当前网页', exact: true })).toBeVisible();
+  const metrics = await page.evaluate(() => new Promise<{ firstMs: number; longestFrameMs: number; state: string | undefined }>((resolve, reject) => {
+    const start = performance.now(); let last = start; let longestFrameMs = 0; let frame = 0;
+    const tick = () => { const now = performance.now(); longestFrameMs = Math.max(longestFrameMs, now - last); last = now; frame = requestAnimationFrame(tick); };
+    const stop = () => { observer.disconnect(); cancelAnimationFrame(frame); clearTimeout(timer); };
+    const observer = new MutationObserver(() => {
+      const node = document.querySelector<HTMLElement>('#row-0 [data-cloudys-gloss="translation"]');
+      if (node) { stop(); resolve({ firstMs: Math.round(performance.now() - start), longestFrameMs: Math.round(longestFrameMs), state: node.dataset.state }); }
+    });
+    const timer = setTimeout(() => { stop(); reject(new Error('大页面首段翻译超时')); }, 120000);
+    observer.observe(document.body, { childList: true, subtree: true, attributes: true }); frame = requestAnimationFrame(tick);
+    document.querySelector('[data-cloudys-gloss="floating-control"]')!.shadowRoot!.querySelector<HTMLButtonElement>('.orb')!.click();
+  }));
+  await expect(page.locator('#row-0 [data-state="done"]')).toBeVisible();
+  const translatedAtTop = await page.locator('main [data-state="done"]').count();
+  expect(translatedAtTop).toBeLessThan(30);
+  await page.screenshot({ path: testInfo.outputPath('real-large-progress.png') });
+  await page.locator('#row-1999').scrollIntoViewIfNeeded();
+  await expect(page.locator('#row-1999 [data-state="done"]')).toBeVisible();
+  await page.getByRole('button', { name: '恢复原文', exact: true }).click();
+  await expect(page.locator('main [data-cloudys-gloss]')).toHaveCount(0);
+  console.log(`${testInfo.project.name}: 2000 paragraphs ${JSON.stringify(metrics)}, completed at first screen=${translatedAtTop}`);
+  await testInfo.attach('large-page-metrics', { body: JSON.stringify({ ...metrics, translatedAtTop, model: process.env.MODEL_NAME }), contentType: 'application/json' });
+});
+
+test('真实兼容网关：后台返回中文双语译文与通过 Zod 校验的完整词卡', async ({ extension }, testInfo) => {
+  const { options, page, toggle } = extension;
+  await options.fill('baseUrl', process.env.MODEL_BASE_URL!);
+  await options.fill('model', process.env.MODEL_NAME!);
+  await options.fill('apiKey', process.env.MODEL_API_KEY ?? '');
+  await options.fill('timeout', '120000');
+  await options.fill('concurrency', '1');
+  await options.fill('temperature', '0');
+  await options.click('保存设置');
+  await expect.poll(() => options.status()).toContain('设置已保存');
+  await page.locator('#second').evaluate((element) => { element.textContent = 'This domain is for use in documentation examples without needing permission. This is not a service; avoid relying on it for testing and monitoring purposes.'; });
+  const translationStart = Date.now();
+  await page.getByRole('button', { name: '翻译当前网页', exact: true }).click();
+  await expect(page.locator('#first > [data-cloudys-gloss="translation"]')).toContainText(/[\u4e00-\u9fff]/);
+  const translationMs = Date.now() - translationStart;
+  await expect(page.locator('#second > [data-state="done"]')).toContainText(/[\u4e00-\u9fff]/);
+  await page.screenshot({ path: testInfo.outputPath('real-bilingual.png') });
+  await toggle();
+  const cardStart = Date.now();
+  const bounds = (await page.locator('#first strong').boundingBox())!;
+  await page.mouse.move(bounds.x, bounds.y + bounds.height / 2); await page.mouse.down();
+  await page.mouse.move(bounds.x + bounds.width, bounds.y + bounds.height / 2, { steps: 8 }); await page.mouse.up();
+  await expect.poll(() => page.evaluate(() => getSelection()?.toString())).toBe('cloudy');
+  await expect(page.getByRole('button', { name: '美式发音' })).toBeVisible();
+  await expect(page.locator('[data-cloudys-gloss="popover"] .context')).toContainText(/[\u4e00-\u9fff]/);
+  await expect(page.locator('[data-cloudys-gloss="popover"] .examples .zh').first()).toContainText(/[\u4e00-\u9fff]/);
+  const cardMs = Date.now() - cardStart;
+  await page.screenshot({ path: testInfo.outputPath('real-word-card.png') });
+  console.log(`${testInfo.project.name}: ${process.env.MODEL_NAME} first translation=${translationMs}ms, word card=${cardMs}ms`);
+  await testInfo.attach('latency', { body: JSON.stringify({ model: process.env.MODEL_NAME, translationMs, cardMs }), contentType: 'application/json' });
+});
