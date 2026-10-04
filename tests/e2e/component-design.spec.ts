@@ -1,3 +1,4 @@
+import { writeFile } from 'node:fs/promises';
 import { test, expect } from './fixtures';
 
 test('常见组件：页眉、面包屑、按钮、表单标签和表头默认显示双语，窄屏无重叠且交互名称保持原样', async ({ extension }, testInfo) => {
@@ -90,7 +91,7 @@ test('折叠、标签面板和菜单只改变显隐属性时，展开后增量�
   await expect(page.locator('dialog')).not.toBeVisible();
 });
 
-test('固定与吸顶控件不撑开壳，译文提示仅一份，键盘、长译文滚动、离开和Esc均正常', async ({ extension }) => {
+test('固定与吸顶控件不撑开壳，键盘提示在缩窄与鼠标移出后保持可见，长译文滚动和Esc均正常', async ({ extension }, testInfo) => {
   const { page, server, toggle } = extension;
   await page.goto(`${server.url}/component-design`);
   const heights = await page.locator('.fixed-tools,.sticky-tools').evaluateAll(nodes => nodes.map(node => node.getBoundingClientRect().height));
@@ -109,13 +110,40 @@ test('固定与吸顶控件不撑开壳，译文提示仅一份，键盘、长�
   await page.setViewportSize({ width: 390, height: 640 });
   await page.locator('#long-help').focus();
   await expect(hint.locator('.tip')).toContainText('需要完整保留');
+  // Some engines deliver the resize/pointer exit after the control's focusin.
+  // Replay that ordering directly rather than hoping a CI machine reproduces it.
+  await page.locator('#long-help').evaluate(node => {
+    window.dispatchEvent(new Event('resize'));
+    node.dispatchEvent(new PointerEvent('pointerout', { bubbles: true, pointerType: 'mouse', relatedTarget: document.body }));
+  });
+  await expect(hint.locator('.tip')).toBeVisible();
+  await expect(page.locator('#long-help')).toBeFocused();
   const bounds = (await hint.locator('.tip').boundingBox())!;
   expect(bounds.x).toBeGreaterThanOrEqual(11); expect(bounds.y).toBeGreaterThanOrEqual(11);
   expect(bounds.x + bounds.width).toBeLessThanOrEqual(379); expect(bounds.y + bounds.height).toBeLessThanOrEqual(629);
   await hint.locator('.tip').evaluate(node => { node.scrollTop = node.scrollHeight; });
   await expect(hint).toBeVisible();
   await expect.poll(() => hint.locator('.tip').evaluate(node => node.scrollTop)).toBeGreaterThan(0);
+  await page.setViewportSize({ width: 360, height: 600 });
+  await expect(hint.locator('.tip')).toBeVisible();
+  await expect(page.locator('#long-help')).toBeFocused();
+  let resized: unknown;
+  try {
+    await expect.poll(async () => {
+      resized = await hint.locator('.tip').evaluate(node => {
+        const bounds = node.getBoundingClientRect();
+        return { inside: bounds.x >= 11 && bounds.y >= 11 && bounds.right <= innerWidth - 11 && bounds.bottom <= innerHeight - 11,
+          scrolled: node.scrollTop > 0, scrollTop: node.scrollTop, bounds: bounds.toJSON(), viewport: [innerWidth, innerHeight] };
+      });
+      return resized;
+    }).toMatchObject({ inside: true, scrolled: true });
+  } finally {
+    const geometryPath = testInfo.outputPath('hint-resize-geometry.json');
+    await writeFile(geometryPath, JSON.stringify(resized ?? { error: '提示几何尚不可读取' }, null, 2));
+    await testInfo.attach('hint-resize-geometry.json', { contentType: 'application/json', path: geometryPath });
+  }
   await expect(page.locator('[data-cloudys-gloss=component-hint]')).toHaveCount(1);
+  await page.screenshot({ animations: 'disabled', caret: 'initial', path: testInfo.outputPath('hint-resize-360.png') });
   await toggle(); await expect(hint).toHaveCount(0);
   await expect(page.locator('#fixed-help')).not.toHaveAttribute('aria-describedby');
 });

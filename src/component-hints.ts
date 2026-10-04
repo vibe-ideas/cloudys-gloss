@@ -16,6 +16,7 @@ export class ComponentHints {
   private applied?: string;
   private hold?: ReturnType<typeof setTimeout>;
   private leaveTimer?: ReturnType<typeof setTimeout>;
+  private resizeFrame?: number;
   private held?: { source: Element; until: number };
   private pressed?: { x: number; y: number };
   private listening = false;
@@ -35,10 +36,12 @@ export class ComponentHints {
       document.addEventListener('click', this.click, true);
       document.addEventListener('contextmenu', this.context);
       window.addEventListener('scroll', this.scroll, true);
-      window.addEventListener('resize', this.hide);
+      window.addEventListener('resize', this.resize);
     }
-    const focused = source === document.activeElement || source.contains(document.activeElement) || source instanceof HTMLLabelElement && source.control === document.activeElement;
-    if (this.dismissed !== source && (this.source === source || focused || source.matches(':hover'))) this.show(source);
+    if (this.dismissed !== source && (this.source === source || this.focused(source) || source.matches(':hover'))) this.show(source);
+  }
+  private focused(source: Element) {
+    return source === document.activeElement || source.contains(document.activeElement) || source instanceof HTMLLabelElement && source.control === document.activeElement;
   }
   private find(target: EventTarget | null) {
     for (let element = target instanceof Element ? target : null; element; element = element.parentElement) if (this.texts.has(element)) return element;
@@ -55,12 +58,30 @@ export class ComponentHints {
     if (!this.source || !(event.target instanceof Node) || !this.source.contains(event.target) && !this.descriptionTarget?.contains(event.target) && !this.host?.contains(event.target)) return;
     const next = (event as FocusEvent).relatedTarget;
     if (this.source && !(next instanceof Node && (this.source.contains(next) || this.descriptionTarget?.contains(next) || this.host?.contains(next)))) {
-      if (event.type === 'pointerout') { if (this.leaveTimer) clearTimeout(this.leaveTimer); this.leaveTimer = setTimeout(this.hide, 120); }
+      if (event.type === 'pointerout') {
+        if (this.focused(this.source)) return;
+        if (this.leaveTimer) clearTimeout(this.leaveTimer);
+        this.leaveTimer = setTimeout(() => {
+          this.leaveTimer = undefined;
+          if (!this.source || !this.focused(this.source)) this.hide();
+        }, 120);
+      }
       else this.hide();
     }
   };
   private key = (event: KeyboardEvent) => { if (event.key === 'Escape') this.hide(); };
   private scroll = (event: Event) => { if (!this.host || !event.composedPath().includes(this.host)) this.hide(); };
+  private resize = () => {
+    const source = this.source;
+    if (!source || !this.focused(source)) { this.hide(); return; }
+    if (this.resizeFrame !== undefined) return;
+    this.resizeFrame = requestAnimationFrame(() => {
+      this.resizeFrame = undefined;
+      if (this.source !== source) return;
+      if (!source.isConnected || !this.focused(source)) { this.hide(); return; }
+      this.position(source);
+    });
+  };
   private down = (event: PointerEvent) => {
     this.clearHold(); this.held = undefined;
     if (this.source && event.target instanceof Node && !this.source.contains(event.target) && !this.descriptionTarget?.contains(event.target) && !this.host?.contains(event.target)) this.hide();
@@ -93,7 +114,9 @@ export class ComponentHints {
       this.host.style.cssText = 'all:initial!important;position:fixed!important;inset:0!important;pointer-events:none!important;z-index:2147483646!important;';
       const shadow = this.host.attachShadow({ mode: 'open' });
       const style = document.createElement('style');
-      style.textContent = ':host{color-scheme:light dark}:host::backdrop{background:transparent;pointer-events:none}.tip{position:fixed;box-sizing:border-box;max-width:min(320px,calc(100vw - 24px));max-height:calc(100vh - 24px);overflow:auto;overscroll-behavior:contain;padding:9px 12px;border:1px solid light-dark(#d5d9df,#505860);border-radius:9px;background:light-dark(#fff,#20252b);color:light-dark(#202832,#f3f6fa);box-shadow:0 4px 18px #0003;font:13px/1.6 system-ui,sans-serif;overflow-wrap:anywhere;pointer-events:none}.tip small{display:block;font-size:10px;opacity:.72;margin-top:3px}';
+      // A fixed auto-width box can widen after left changes. Intrinsic width
+      // keeps the measured width stable while the viewport cap still wraps it.
+      style.textContent = ':host{color-scheme:light dark}:host::backdrop{background:transparent;pointer-events:none}.tip{position:fixed;box-sizing:border-box;width:max-content;max-width:min(320px,calc(100vw - 24px));max-height:calc(100vh - 24px);overflow:auto;overscroll-behavior:contain;padding:9px 12px;border:1px solid light-dark(#d5d9df,#505860);border-radius:9px;background:light-dark(#fff,#20252b);color:light-dark(#202832,#f3f6fa);box-shadow:0 4px 18px #0003;font:13px/1.6 system-ui,sans-serif;overflow-wrap:anywhere;pointer-events:none}.tip small{display:block;font-size:10px;opacity:.72;margin-top:3px}';
       this.panel = document.createElement('span'); this.panel.className = 'tip';
       shadow.append(style, this.panel); document.documentElement.append(this.host);
     }
@@ -112,6 +135,15 @@ export class ComponentHints {
     }
     this.panel!.replaceChildren(document.createTextNode(text));
     const note = document.createElement('small'); note.textContent = '译文 · Esc 关闭'; this.panel!.append(note);
+    this.position(source);
+    if (this.source !== source) {
+      this.source = source; this.descriptionTarget = source instanceof HTMLLabelElement ? source.control ?? source : source;
+      this.description = this.descriptionTarget.getAttribute('aria-describedby');
+      this.applied = [this.description, this.host.id].filter(Boolean).join(' ');
+      this.descriptionTarget.setAttribute('aria-describedby', this.applied);
+    }
+  }
+  private position(source: Element) {
     const bounds = source.getBoundingClientRect();
     const above = Math.max(0, bounds.top - 18); const below = Math.max(0, innerHeight - bounds.bottom - 18);
     const natural = this.panel!.scrollHeight + 2;
@@ -125,15 +157,10 @@ export class ComponentHints {
     this.panel!.style.pointerEvents = this.panel!.scrollHeight > this.panel!.clientHeight + 2 ? 'auto' : 'none';
     this.panel!.style.left = `${Math.min(Math.max(12, bounds.left), Math.max(12, innerWidth - panel.width - 12))}px`;
     this.panel!.style.top = `${full ? 12 : before ? Math.max(12, bounds.top - panel.height - 6) : bounds.bottom + 6}px`;
-    if (this.source !== source) {
-      this.source = source; this.descriptionTarget = source instanceof HTMLLabelElement ? source.control ?? source : source;
-      this.description = this.descriptionTarget.getAttribute('aria-describedby');
-      this.applied = [this.description, this.host.id].filter(Boolean).join(' ');
-      this.descriptionTarget.setAttribute('aria-describedby', this.applied);
-    }
   }
   private hide = () => {
     this.clearHold();
+    if (this.resizeFrame !== undefined) cancelAnimationFrame(this.resizeFrame); this.resizeFrame = undefined;
     if (this.leaveTimer) clearTimeout(this.leaveTimer); this.leaveTimer = undefined;
     if (this.host) { if (typeof this.host.hidePopover === 'function' && this.host.matches(':popover-open')) this.host.hidePopover(); this.host.style.setProperty('display', 'none', 'important'); }
     if (this.descriptionTarget && this.descriptionTarget.getAttribute('aria-describedby') === this.applied) {
@@ -158,6 +185,6 @@ export class ComponentHints {
     document.removeEventListener('pointermove', this.move); document.removeEventListener('pointerup', this.up);
     document.removeEventListener('pointercancel', this.cancel); document.removeEventListener('click', this.click, true);
     document.removeEventListener('contextmenu', this.context); window.removeEventListener('scroll', this.scroll, true);
-    window.removeEventListener('resize', this.hide); this.listening = false;
+    window.removeEventListener('resize', this.resize); this.listening = false;
   }
 }

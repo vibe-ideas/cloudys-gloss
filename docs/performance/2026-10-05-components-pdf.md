@@ -21,7 +21,7 @@ pnpm exec playwright test tests/e2e/performance.spec.ts --repeat-each=3
 
 ## 最终实测
 
-双浏览器各 3 次，共 6 次全部通过。逐次数据、无扩展对照和源码 SHA256 归档于 [tests/performance/baselines/2026-10-05-components-pdf.json](../../tests/performance/baselines/2026-10-05-components-pdf.json)。
+双浏览器各 3 次，共 6 次全部通过。采样构建为 `226222f`。逐次数据、无扩展对照和源码 SHA256 归档于 [tests/performance/baselines/2026-10-05-components-pdf.json](../../tests/performance/baselines/2026-10-05-components-pdf.json)。
 
 | 指标 | Chromium | Firefox |
 | --- | ---: | ---: |
@@ -58,7 +58,7 @@ node tests/performance/baseline-frames.ts
 ## PDF 的资源控制
 
 - PDF.js、解析 worker、字体与字符映射只从独立阅读器加载，不进入普通网页内容脚本；所有资源随包提供，无 CDN 请求。
-- 双端内容脚本均为 73,433 字节；PDF 字体、字符映射和解码器共 2,590,571 字节，完整扩展每端约 8.16 MB（未压缩）。包体积包含既有词典等资源，不等于运行内存。
+- 采样构建的双端内容脚本均为 73,433 字节；PDF 字体、字符映射和解码器共 2,590,571 字节，完整扩展每端约 8.16 MB（未压缩）。包体积包含既有词典等资源，不等于运行内存。
 - 文件最多 40 MB，下载在无 Content-Length 时仍执行流式大小上限；取消和超时会停止读取。
 - 同时仅保留一个活动页画布，最高 300 万像素。切页或关闭销毁旧页任务，关闭文档终止 worker。这个像素限制不是浏览器进程的总内存上限。
 - 当前页最多提取 200 段或 100,000 字符，最多 8 段 / 5000 字符一批，逐段回传；不会预先翻译整本 PDF。单页所有段落仍会依次请求，密集页可暂停。
