@@ -1,0 +1,32 @@
+[
+  {
+    "repo": "mlx-community/Qwen2.5-3B-Instruct-4bit",
+    "revision": "4f83f8f146fdf28b512a06562b671d7af4fab457",
+    "weightBytes": 1736293090,
+    "quantization": {
+      "group_size": 64,
+      "bits": 4
+    },
+    "modelType": "qwen2"
+  },
+  {
+    "repo": "mlx-community/Qwen2.5-1.5B-Instruct-4bit",
+    "revision": "8b403126fc14f14cfc99bb4cfa72ecbc129ea677",
+    "weightBytes": 868628559,
+    "quantization": {
+      "group_size": 64,
+      "bits": 4
+    },
+    "modelType": "qwen2"
+  },
+  {
+    "repo": "Qwen/Qwen3-1.7B-MLX-4bit",
+    "revision": "21457c6f51ed54a7c16e988c0844db973815c137",
+    "weightBytes": 914316100,
+    "quantization": {
+      "group_size": 128,
+      "bits": 4
+    },
+    "modelType": "qwen3"
+  }
+]

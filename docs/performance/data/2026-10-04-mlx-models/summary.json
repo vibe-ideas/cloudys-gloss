@@ -1,0 +1,251 @@
+[
+  {
+    "model": "mlx-community/Qwen2.5-3B-Instruct-4bit",
+    "samples": 6,
+    "decodeTpsMedian": 101.50675764053743,
+    "decodeTpsRange": [
+      100.03318809417436,
+      102.60368610155047
+    ],
+    "ttftMsMedian": 243.94622899999968,
+    "totalMsMedian": 1426.5461665000003,
+    "endToEndTpsMedian": 84.82081017268169,
+    "completionTokens": [
+      121
+    ],
+    "scenarios": [
+      {
+        "id": "reading",
+        "n": 2,
+        "success": 2,
+        "medianMs": 682.4779789999975,
+        "firstMs": 463.855271000004,
+        "requests": [
+          1,
+          1
+        ]
+      },
+      {
+        "id": "technical",
+        "n": 2,
+        "success": 2,
+        "medianMs": 1970.5470209999976,
+        "firstMs": 920.9926044999947,
+        "requests": [
+          3,
+          3
+        ]
+      },
+      {
+        "id": "article",
+        "n": 2,
+        "success": 2,
+        "medianMs": 1590.437666499999,
+        "firstMs": 967.5168540000013,
+        "requests": [
+          1,
+          1
+        ]
+      },
+      {
+        "id": "cloudy",
+        "n": 2,
+        "success": 2,
+        "medianMs": 1228.8789164999962,
+        "firstMs": null,
+        "requests": [
+          1,
+          1
+        ]
+      },
+      {
+        "id": "bank",
+        "n": 2,
+        "success": 2,
+        "medianMs": 995.519374999998,
+        "firstMs": null,
+        "requests": [
+          1,
+          1
+        ]
+      },
+      {
+        "id": "light",
+        "n": 2,
+        "success": 0,
+        "medianMs": 2342.577125499998,
+        "firstMs": null,
+        "requests": [
+          2,
+          2
+        ]
+      }
+    ]
+  },
+  {
+    "model": "mlx-community/Qwen2.5-1.5B-Instruct-4bit",
+    "samples": 6,
+    "decodeTpsMedian": 168.85637539542813,
+    "decodeTpsRange": [
+      164.7427071933731,
+      175.76542657525053
+    ],
+    "ttftMsMedian": 126.20968749999884,
+    "totalMsMedian": 456.9497085000021,
+    "endToEndTpsMedian": 124.75028082254643,
+    "completionTokens": [
+      57
+    ],
+    "scenarios": [
+      {
+        "id": "reading",
+        "n": 2,
+        "success": 2,
+        "medianMs": 858.1307290000022,
+        "firstMs": 656.6985414999999,
+        "requests": [
+          3,
+          3
+        ]
+      },
+      {
+        "id": "technical",
+        "n": 2,
+        "success": 2,
+        "medianMs": 509.3703124999938,
+        "firstMs": 302.2690619999994,
+        "requests": [
+          1,
+          1
+        ]
+      },
+      {
+        "id": "article",
+        "n": 2,
+        "success": 2,
+        "medianMs": 881.795208500007,
+        "firstMs": 507.4478750000035,
+        "requests": [
+          1,
+          1
+        ]
+      },
+      {
+        "id": "cloudy",
+        "n": 2,
+        "success": 0,
+        "medianMs": 473.8490624999977,
+        "firstMs": null,
+        "requests": [
+          2,
+          2
+        ]
+      },
+      {
+        "id": "bank",
+        "n": 2,
+        "success": 0,
+        "medianMs": 785.1527499999975,
+        "firstMs": null,
+        "requests": [
+          2,
+          2
+        ]
+      },
+      {
+        "id": "light",
+        "n": 2,
+        "success": 0,
+        "medianMs": 754.3729375000003,
+        "firstMs": null,
+        "requests": [
+          2,
+          2
+        ]
+      }
+    ]
+  },
+  {
+    "model": "Qwen/Qwen3-1.7B-MLX-4bit",
+    "samples": 6,
+    "decodeTpsMedian": 175.22447123440736,
+    "decodeTpsRange": [
+      174.63412105146043,
+      175.87768806030948
+    ],
+    "ttftMsMedian": 152.67316650000066,
+    "totalMsMedian": 883.2961455000004,
+    "endToEndTpsMedian": 146.04408287090388,
+    "completionTokens": [
+      129
+    ],
+    "scenarios": [
+      {
+        "id": "reading",
+        "n": 2,
+        "success": 2,
+        "medianMs": 461.78081250000105,
+        "firstMs": 316.2390415000009,
+        "requests": [
+          1,
+          1
+        ]
+      },
+      {
+        "id": "technical",
+        "n": 2,
+        "success": 2,
+        "medianMs": 548.3154584999975,
+        "firstMs": 354.8185620000004,
+        "requests": [
+          1,
+          1
+        ]
+      },
+      {
+        "id": "article",
+        "n": 2,
+        "success": 2,
+        "medianMs": 958.851312499999,
+        "firstMs": 585.9725209999997,
+        "requests": [
+          1,
+          1
+        ]
+      },
+      {
+        "id": "cloudy",
+        "n": 2,
+        "success": 0,
+        "medianMs": 1626.945979,
+        "firstMs": null,
+        "requests": [
+          2,
+          2
+        ]
+      },
+      {
+        "id": "bank",
+        "n": 2,
+        "success": 0,
+        "medianMs": 7435.356686999996,
+        "firstMs": null,
+        "requests": [
+          2,
+          2
+        ]
+      },
+      {
+        "id": "light",
+        "n": 2,
+        "success": 0,
+        "medianMs": 1593.2391250000037,
+        "firstMs": null,
+        "requests": [
+          2,
+          2
+        ]
+      }
+    ]
+  }
+]

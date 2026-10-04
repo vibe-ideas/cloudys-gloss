@@ -1,0 +1,458 @@
+[
+  {
+    "mode": "uncached",
+    "scenario": "reading",
+    "engine": "mlx",
+    "n": 4,
+    "schemaSuccess": 4,
+    "medianMs": 704.0,
+    "rangeMs": [
+      685,
+      717
+    ],
+    "firstMs": 481.5,
+    "requestCount": [
+      1,
+      1,
+      1,
+      1
+    ]
+  },
+  {
+    "mode": "uncached",
+    "scenario": "reading",
+    "engine": "llama",
+    "n": 4,
+    "schemaSuccess": 4,
+    "medianMs": 816.5,
+    "rangeMs": [
+      791,
+      835
+    ],
+    "firstMs": 511.0,
+    "requestCount": [
+      1,
+      1,
+      1,
+      1
+    ]
+  },
+  {
+    "mode": "uncached",
+    "scenario": "technical",
+    "engine": "mlx",
+    "n": 4,
+    "schemaSuccess": 4,
+    "medianMs": 1957.0,
+    "rangeMs": [
+      1941,
+      2002
+    ],
+    "firstMs": 920.0,
+    "requestCount": [
+      3,
+      3,
+      3,
+      3
+    ]
+  },
+  {
+    "mode": "uncached",
+    "scenario": "technical",
+    "engine": "llama",
+    "n": 4,
+    "schemaSuccess": 4,
+    "medianMs": 2020.0,
+    "rangeMs": [
+      1990,
+      2107
+    ],
+    "firstMs": 1005.5,
+    "requestCount": [
+      3,
+      3,
+      3,
+      3
+    ]
+  },
+  {
+    "mode": "uncached",
+    "scenario": "article",
+    "engine": "mlx",
+    "n": 4,
+    "schemaSuccess": 4,
+    "medianMs": 1589.0,
+    "rangeMs": [
+      1578,
+      1679
+    ],
+    "firstMs": 969.0,
+    "requestCount": [
+      1,
+      1,
+      1,
+      1
+    ]
+  },
+  {
+    "mode": "uncached",
+    "scenario": "article",
+    "engine": "llama",
+    "n": 4,
+    "schemaSuccess": 4,
+    "medianMs": 1717.5,
+    "rangeMs": [
+      1689,
+      1723
+    ],
+    "firstMs": 1060.0,
+    "requestCount": [
+      1,
+      1,
+      1,
+      1
+    ]
+  },
+  {
+    "mode": "uncached",
+    "scenario": "cloudy",
+    "engine": "mlx",
+    "n": 4,
+    "schemaSuccess": 4,
+    "medianMs": 1269.0,
+    "rangeMs": [
+      1232,
+      1326
+    ],
+    "firstMs": null,
+    "requestCount": [
+      1,
+      1,
+      1,
+      1
+    ]
+  },
+  {
+    "mode": "uncached",
+    "scenario": "cloudy",
+    "engine": "llama",
+    "n": 4,
+    "schemaSuccess": 4,
+    "medianMs": 1580.5,
+    "rangeMs": [
+      1563,
+      1589
+    ],
+    "firstMs": null,
+    "requestCount": [
+      1,
+      1,
+      1,
+      1
+    ]
+  },
+  {
+    "mode": "uncached",
+    "scenario": "bank",
+    "engine": "mlx",
+    "n": 4,
+    "schemaSuccess": 4,
+    "medianMs": 1009.5,
+    "rangeMs": [
+      993,
+      1038
+    ],
+    "firstMs": null,
+    "requestCount": [
+      1,
+      1,
+      1,
+      1
+    ]
+  },
+  {
+    "mode": "uncached",
+    "scenario": "bank",
+    "engine": "llama",
+    "n": 4,
+    "schemaSuccess": 4,
+    "medianMs": 1117.5,
+    "rangeMs": [
+      1104,
+      1125
+    ],
+    "firstMs": null,
+    "requestCount": [
+      1,
+      1,
+      1,
+      1
+    ]
+  },
+  {
+    "mode": "uncached",
+    "scenario": "light",
+    "engine": "mlx",
+    "n": 4,
+    "schemaSuccess": 0,
+    "medianMs": 2412.5,
+    "rangeMs": [
+      2362,
+      2451
+    ],
+    "firstMs": null,
+    "requestCount": [
+      2,
+      2,
+      2,
+      2
+    ]
+  },
+  {
+    "mode": "uncached",
+    "scenario": "light",
+    "engine": "llama",
+    "n": 4,
+    "schemaSuccess": 4,
+    "medianMs": 1495.5,
+    "rangeMs": [
+      1471,
+      1583
+    ],
+    "firstMs": null,
+    "requestCount": [
+      1,
+      1,
+      1,
+      1
+    ]
+  },
+  {
+    "mode": "cached",
+    "scenario": "reading",
+    "engine": "mlx",
+    "n": 4,
+    "schemaSuccess": 4,
+    "medianMs": 552.5,
+    "rangeMs": [
+      507,
+      617
+    ],
+    "firstMs": 340.0,
+    "requestCount": [
+      1,
+      1,
+      1,
+      1
+    ]
+  },
+  {
+    "mode": "cached",
+    "scenario": "reading",
+    "engine": "llama",
+    "n": 4,
+    "schemaSuccess": 4,
+    "medianMs": 703.0,
+    "rangeMs": [
+      647,
+      863
+    ],
+    "firstMs": 403.0,
+    "requestCount": [
+      1,
+      1,
+      1,
+      1
+    ]
+  },
+  {
+    "mode": "cached",
+    "scenario": "technical",
+    "engine": "mlx",
+    "n": 4,
+    "schemaSuccess": 4,
+    "medianMs": 1625.0,
+    "rangeMs": [
+      1449,
+      1767
+    ],
+    "firstMs": 758.0,
+    "requestCount": [
+      3,
+      3,
+      3,
+      3
+    ]
+  },
+  {
+    "mode": "cached",
+    "scenario": "technical",
+    "engine": "llama",
+    "n": 4,
+    "schemaSuccess": 4,
+    "medianMs": 1858.0,
+    "rangeMs": [
+      1618,
+      2087
+    ],
+    "firstMs": 943.5,
+    "requestCount": [
+      3,
+      3,
+      3,
+      3
+    ]
+  },
+  {
+    "mode": "cached",
+    "scenario": "article",
+    "engine": "mlx",
+    "n": 4,
+    "schemaSuccess": 4,
+    "medianMs": 1416.5,
+    "rangeMs": [
+      1338,
+      1507
+    ],
+    "firstMs": 799.5,
+    "requestCount": [
+      1,
+      1,
+      1,
+      1
+    ]
+  },
+  {
+    "mode": "cached",
+    "scenario": "article",
+    "engine": "llama",
+    "n": 4,
+    "schemaSuccess": 4,
+    "medianMs": 1557.5,
+    "rangeMs": [
+      1471,
+      1783
+    ],
+    "firstMs": 892.5,
+    "requestCount": [
+      1,
+      1,
+      1,
+      1
+    ]
+  },
+  {
+    "mode": "cached",
+    "scenario": "cloudy",
+    "engine": "mlx",
+    "n": 4,
+    "schemaSuccess": 4,
+    "medianMs": 1191.0,
+    "rangeMs": [
+      1040,
+      1276
+    ],
+    "firstMs": null,
+    "requestCount": [
+      1,
+      1,
+      1,
+      1
+    ]
+  },
+  {
+    "mode": "cached",
+    "scenario": "cloudy",
+    "engine": "llama",
+    "n": 4,
+    "schemaSuccess": 4,
+    "medianMs": 1515.0,
+    "rangeMs": [
+      1390,
+      1682
+    ],
+    "firstMs": null,
+    "requestCount": [
+      1,
+      1,
+      1,
+      1
+    ]
+  },
+  {
+    "mode": "cached",
+    "scenario": "bank",
+    "engine": "mlx",
+    "n": 4,
+    "schemaSuccess": 4,
+    "medianMs": 867.0,
+    "rangeMs": [
+      809,
+      1041
+    ],
+    "firstMs": null,
+    "requestCount": [
+      1,
+      1,
+      1,
+      1
+    ]
+  },
+  {
+    "mode": "cached",
+    "scenario": "bank",
+    "engine": "llama",
+    "n": 4,
+    "schemaSuccess": 4,
+    "medianMs": 1001.5,
+    "rangeMs": [
+      958,
+      1022
+    ],
+    "firstMs": null,
+    "requestCount": [
+      1,
+      1,
+      1,
+      1
+    ]
+  },
+  {
+    "mode": "cached",
+    "scenario": "light",
+    "engine": "mlx",
+    "n": 4,
+    "schemaSuccess": 0,
+    "medianMs": 1901.0,
+    "rangeMs": [
+      1838,
+      1998
+    ],
+    "firstMs": null,
+    "requestCount": [
+      2,
+      2,
+      2,
+      2
+    ]
+  },
+  {
+    "mode": "cached",
+    "scenario": "light",
+    "engine": "llama",
+    "n": 4,
+    "schemaSuccess": 4,
+    "medianMs": 1402.0,
+    "rangeMs": [
+      1383,
+      1447
+    ],
+    "firstMs": null,
+    "requestCount": [
+      1,
+      1,
+      1,
+      1
+    ]
+  }
+]

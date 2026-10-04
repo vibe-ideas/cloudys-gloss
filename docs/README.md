@@ -1,0 +1,25 @@
+# 文档目录
+
+## 使用指南
+
+- [安装、开发启动与网页操作](guides/getting-started.md)
+- [MLX、Ollama 与兼容 API 配置](guides/models.md)
+
+## 开发维护
+
+- [架构与性能设计](development/architecture.md)
+- [单元测试、浏览器 E2E 与真实模型测试](development/testing.md)
+- [数据与权限](reference/privacy.md)
+
+## 性能
+
+- [报告索引、指标口径与模型选择](performance/README.md)
+- [M4 Pro：MLX 与 llama.cpp 对比](performance/2026-10-04-backends.md)
+- [M4 Pro：MLX 模型 TPS 与内存对比](performance/2026-10-04-mlx-models.md)
+- [2000 段大页面实测](performance/2026-10-04-large-page.md)
+
+## 维护约定
+
+README 只保留项目简介、最短启动步骤和文档入口。使用说明放 `guides/`，开发说明放 `development/`，权限等参考信息放 `reference/`，性能报告按日期放 `performance/`。
+
+可公开、用于支撑结论的基准输入、结果和环境摘要放 `performance/data/` 并提交 Git；原始机器日志、浏览器截图、临时 HTML 和模型文件保留在被忽略的 `artifacts/` 或本机模型缓存中。归档前去掉本机用户名、凭据和私有请求内容。新增报告必须说明设备、模型版本、缓存、重复次数、统计方式和限制，并更新索引。

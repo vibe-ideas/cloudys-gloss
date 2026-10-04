@@ -1,0 +1,98 @@
+[
+  {
+    "mode": "uncached",
+    "engine": "mlx",
+    "kind": "translation",
+    "count": 12,
+    "successes": 12,
+    "extraRequests": 8,
+    "medianTotalMs": 1589,
+    "medianFirstTranslationMs": 920,
+    "minTotalMs": 685,
+    "maxTotalMs": 2002
+  },
+  {
+    "mode": "uncached",
+    "engine": "mlx",
+    "kind": "dictionary",
+    "count": 12,
+    "successes": 8,
+    "extraRequests": 4,
+    "medianTotalMs": 1269,
+    "medianFirstTranslationMs": null,
+    "minTotalMs": 993,
+    "maxTotalMs": 2451
+  },
+  {
+    "mode": "uncached",
+    "engine": "llama",
+    "kind": "translation",
+    "count": 12,
+    "successes": 12,
+    "extraRequests": 8,
+    "medianTotalMs": 1717.5,
+    "medianFirstTranslationMs": 1005.5,
+    "minTotalMs": 791,
+    "maxTotalMs": 2107
+  },
+  {
+    "mode": "uncached",
+    "engine": "llama",
+    "kind": "dictionary",
+    "count": 12,
+    "successes": 12,
+    "extraRequests": 0,
+    "medianTotalMs": 1495.5,
+    "medianFirstTranslationMs": null,
+    "minTotalMs": 1104,
+    "maxTotalMs": 1589
+  },
+  {
+    "mode": "cached",
+    "engine": "mlx",
+    "kind": "translation",
+    "count": 12,
+    "successes": 12,
+    "extraRequests": 8,
+    "medianTotalMs": 1402,
+    "medianFirstTranslationMs": 724.5,
+    "minTotalMs": 507,
+    "maxTotalMs": 1767
+  },
+  {
+    "mode": "cached",
+    "engine": "mlx",
+    "kind": "dictionary",
+    "count": 12,
+    "successes": 8,
+    "extraRequests": 4,
+    "medianTotalMs": 1191,
+    "medianFirstTranslationMs": null,
+    "minTotalMs": 809,
+    "maxTotalMs": 1998
+  },
+  {
+    "mode": "cached",
+    "engine": "llama",
+    "kind": "translation",
+    "count": 12,
+    "successes": 12,
+    "extraRequests": 8,
+    "medianTotalMs": 1557.5,
+    "medianFirstTranslationMs": 828,
+    "minTotalMs": 647,
+    "maxTotalMs": 2087
+  },
+  {
+    "mode": "cached",
+    "engine": "llama",
+    "kind": "dictionary",
+    "count": 12,
+    "successes": 12,
+    "extraRequests": 0,
+    "medianTotalMs": 1394,
+    "medianFirstTranslationMs": null,
+    "minTotalMs": 958,
+    "maxTotalMs": 1682
+  }
+]

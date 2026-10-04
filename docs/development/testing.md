@@ -1,0 +1,28 @@
+# 校验与浏览器测试
+
+性能测试的方法、输入和结果见 [性能文档目录](../performance/README.md)。浏览器 E2E 使用可控模型夹具验证行为；真实模型 smoke 和 TPS benchmark 单独运行，避免把模型不稳定性混入普通测试。
+
+## 校验与浏览器测试
+
+```sh
+pnpm check           # ESLint + TypeScript + Vitest
+pnpm build
+pnpm build:firefox
+pnpm exec playwright install chromium firefox
+pnpm test:e2e
+```
+
+E2E 使用本地 HTTP 模型夹具和真实扩展后台，不模拟 `runtime.sendMessage`，也不让内容脚本请求模型。页面夹具的 CSP 禁止页面网络请求。验证 2000 段页面在第二段响应被暂停时已经显示第一段、快速跳页尾取消旧流、关闭恢复原文，以及悬浮球切换、拖动不误触、窄屏边界、隐藏与恢复、语义 batching、视口延迟翻译、SPA 增量变化、恢复原文、缓存、词卡结构、CSS 隔离、明暗主题、窄屏位置和设置错误。
+
+Chromium 用 Playwright 持久上下文加载生产构建。Firefox 用 Playwright 的 Firefox BiDi 和 Mozilla `web-ext` RDP 临时安装生产构建；由于 BiDi 不暴露扩展页面的执行上下文，测试副本附加打开设置页与 DOM 操作桥接脚本，操作实际设置页并经真实 runtime messaging 访问 background；发布构建不包含这些脚本。网页交互和断言仍由 Playwright 驱动。Firefox 设置页不生成截图。macOS 优先检测 Firefox Developer Edition，也可指定 `FIREFOX_BINARY`。所有测试均使用独立临时配置，不修改日常浏览器配置。
+
+真实网关测试需要显式配置，可能产生服务用量：
+
+```sh
+MODEL_BASE_URL=http://127.0.0.1:3425/v1 \
+MODEL_NAME=qoder-plugin/qmodel \
+pnpm smoke:live
+# 可选 MODEL_API_KEY、FIREFOX_BINARY
+```
+
+真实测试还会在 2000 段页面记录首段显示时间及首段出现前的最大 rAF 回调间隔（仅为响应性采样，不是完整性能分析），验证滚到页尾继续翻译，再验证中文译文、IPA 按钮、上下文释义与双语例句，并在 `artifacts/live` 保存截图。普通 E2E 截图与 HTML 报告位于 `test-results`、`playwright-report`。

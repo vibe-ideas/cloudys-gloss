@@ -1,0 +1,62 @@
+[
+  {
+    "file": "0-Qwen--Qwen3-1.7B-MLX-4bit-memory.txt",
+    "summary": [
+      "Physical footprint:         1.4G",
+      "Physical footprint (peak):  1.7G",
+      "mapped file                      121.7M    1280K       0K       0K       0K       0K       0K       12 ",
+      "TOTAL                            388.9G     1.8G     1.4G       0K       0K     1.0G       0K     3751 ",
+      "TOTAL                             127.9M      88.8M      88.8M         0K     437983      68.4M      20.4M     23%      36"
+    ]
+  },
+  {
+    "file": "0-mlx-community--Qwen2.5-1.5B-Instruct-4bit-memory.txt",
+    "summary": [
+      "Physical footprint:         1.2G",
+      "Physical footprint (peak):  1.4G",
+      "mapped file                      121.3M    1296K       0K       0K       0K       0K       0K        7 ",
+      "TOTAL                            388.7G     1.6G     1.2G       0K       0K   884.0M       0K     3657 ",
+      "TOTAL                             143.3M      98.4M      98.4M         0K     438392      75.9M      22.5M     23%      38"
+    ]
+  },
+  {
+    "file": "0-mlx-community--Qwen2.5-3B-Instruct-4bit-memory.txt",
+    "summary": [
+      "Physical footprint:         2.0G",
+      "Physical footprint (peak):  2.2G",
+      "mapped file                      121.3M    1296K       0K       0K       0K       0K       0K        7 ",
+      "TOTAL                            389.5G     2.4G     2.0G       0K       0K     1.7G       0K     4064 ",
+      "TOTAL                             139.3M     100.8M     100.8M         0K     442380      77.2M      23.6M     24%      37"
+    ]
+  },
+  {
+    "file": "1-Qwen--Qwen3-1.7B-MLX-4bit-memory.txt",
+    "summary": [
+      "Physical footprint:         1.4G",
+      "Physical footprint (peak):  1.7G",
+      "mapped file                      121.6M    1280K       0K       0K       0K       0K       0K        7 ",
+      "TOTAL                            388.9G     1.8G     1.4G       0K       0K     1.1G       0K     3782 ",
+      "TOTAL                             135.9M      88.3M      88.3M         0K     438264      68.5M      19.8M     23%      37"
+    ]
+  },
+  {
+    "file": "1-mlx-community--Qwen2.5-1.5B-Instruct-4bit-memory.txt",
+    "summary": [
+      "Physical footprint:         1.2G",
+      "Physical footprint (peak):  1.4G",
+      "mapped file                      121.6M    1296K       0K       0K       0K       0K       0K        7 ",
+      "TOTAL                            388.7G     1.6G     1.2G       0K       0K   884.4M       0K     3662 ",
+      "TOTAL                             143.3M      99.8M      99.8M         0K     438547      75.9M      23.9M     24%      38"
+    ]
+  },
+  {
+    "file": "1-mlx-community--Qwen2.5-3B-Instruct-4bit-memory.txt",
+    "summary": [
+      "Physical footprint:         2.0G",
+      "Physical footprint (peak):  2.2G",
+      "mapped file                      121.6M    1296K       0K       0K       0K       0K       0K        7 ",
+      "TOTAL                            389.5G     2.4G     2.0G       0K       0K     1.7G       0K     4056 ",
+      "TOTAL                             147.3M      96.9M      96.9M         0K     442463      77.1M      19.8M     21%      39"
+    ]
+  }
+]
