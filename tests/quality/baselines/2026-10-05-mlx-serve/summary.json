@@ -1,0 +1,72 @@
+[
+  {
+    "model": "Qwen2.5-3B-mlx-lm-0.32.0",
+    "samples": 18,
+    "automaticPassed": 18,
+    "reviewed": 18,
+    "acceptedCases": 12,
+    "cases": 18,
+    "byCase": {
+      "T01": true,
+      "T02": false,
+      "T03": false,
+      "T04": false,
+      "T05": true,
+      "T06": false,
+      "T07": true,
+      "T08": true,
+      "T09": true,
+      "T10": true,
+      "T11": false,
+      "T12": true,
+      "T13": true,
+      "T14": true,
+      "T15": true,
+      "T16": true,
+      "T17": true,
+      "T18": false
+    },
+    "criticalCases": 1,
+    "medianMs": 686.014353999999,
+    "meanReview": {
+      "adequacy": 3.2777777777777777,
+      "completeness": 3.888888888888889,
+      "fluency": 2.9444444444444446
+    }
+  },
+  {
+    "model": "Qwen2.5-3B-mlx-serve-26.10.1",
+    "samples": 18,
+    "automaticPassed": 18,
+    "reviewed": 18,
+    "acceptedCases": 12,
+    "cases": 18,
+    "byCase": {
+      "T01": true,
+      "T02": false,
+      "T03": false,
+      "T04": false,
+      "T05": true,
+      "T06": false,
+      "T07": true,
+      "T08": true,
+      "T09": true,
+      "T10": true,
+      "T11": false,
+      "T12": true,
+      "T13": true,
+      "T14": true,
+      "T15": true,
+      "T16": true,
+      "T17": true,
+      "T18": false
+    },
+    "criticalCases": 1,
+    "medianMs": 396.5952295000002,
+    "meanReview": {
+      "adequacy": 3.2777777777777777,
+      "completeness": 3.888888888888889,
+      "fluency": 2.9444444444444446
+    }
+  }
+]

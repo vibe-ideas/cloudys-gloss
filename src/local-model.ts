@@ -4,6 +4,7 @@ import type { Settings } from './schema';
 export const NATIVE_HOST = 'com.cloudys_gloss.mlx';
 export const LocalModelStatusSchema = z.object({
   installed: z.boolean(), running: z.boolean(), autostart: z.boolean(), model: z.string(), baseUrl: z.string(),
+  runtime: z.string().default('MLX'),
 });
 export type LocalModelStatus = z.infer<typeof LocalModelStatusSchema>;
 export type ModelAction = 'status' | 'start' | 'stop' | 'restart' | 'autostart';

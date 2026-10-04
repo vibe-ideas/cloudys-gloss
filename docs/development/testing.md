@@ -31,7 +31,7 @@ pnpm smoke:live
 
 ## 本地助手与真实模型启停回归
 
-Apple Silicon Mac 安装模型和助手后运行：
+Apple Silicon Mac（macOS 26.2+）使用 `pnpm model:install` 安装 mlx-serve 后运行：
 
 ```sh
 pnpm model:bridge

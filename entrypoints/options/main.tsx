@@ -27,11 +27,11 @@ function Options() {
     <form onSubmit={(event) => { event.preventDefault(); void perform('save'); }}>
       <section class="card"><h2>模型连接</h2><p class="muted">所有模型请求均由扩展后台发起。选择预设，或连接自己的兼容服务。</p>
         <div class="presets">
-          <button type="button" onClick={() => setSettings({ ...defaults, theme: settings.theme })}>MLX-LM · 默认</button>
+          <button type="button" onClick={() => setSettings({ ...defaults, theme: settings.theme })}>mlx-serve · 默认</button>
           <button type="button" onClick={() => setSettings({ ...settings, baseUrl: 'http://localhost:11434/v1', model: 'qwen2.5:7b' })}>Ollama</button>
           <span class="muted" style={{ padding: '9px 4px', fontSize: 12 }}>Magpie / 其他兼容服务：填写下方地址</span>
         </div>
-        <p class="muted" style={{ fontSize: 12 }}>默认使用本地 MLX。安装本地助手后可按需启动，或使用下方服务管理按钮。已有配置会保留；切换时选择 MLX-LM 并保存设置。</p>
+        <p class="muted" style={{ fontSize: 12 }}>默认使用本地 mlx-serve。安装本地助手后可按需启动，或使用下方服务管理按钮。已有配置会保留；切换时选择 mlx-serve 并保存设置。</p>
         <div class="grid">
           <label class="full">Base URL<input name="baseUrl" type="url" required value={settings.baseUrl} onInput={(event) => update('baseUrl', event.currentTarget.value)} /><small>例如 http://127.0.0.1:8080/v1；也支持完整 /chat/completions 地址。</small></label>
           <label>API Key<input name="apiKey" type="password" autoComplete="off" placeholder="本地服务通常可留空" value={settings.apiKey} onInput={(event) => update('apiKey', event.currentTarget.value)} /></label>

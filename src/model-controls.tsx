@@ -14,14 +14,14 @@ export function ModelControls() {
       const value = await send<LocalModelStatus>({ type: 'model:control', action, enabled });
       setModel(value);
       setMessage(!value.installed ? '请先运行 pnpm model:install 安装模型服务。'
-        : `MLX ${value.running ? '已启动' : '已停止'} · 登录自启${value.autostart ? '开启' : '关闭'}`);
+        : `MLX ${value.running ? '已启动' : '已停止'} · 登录自启${value.autostart ? '开启' : '关闭'} · ${value.runtime}`);
     } catch (reason) { setError(true); setMessage(reason instanceof Error ? reason.message : '操作失败'); }
     finally { setBusy(false); }
   };
   useEffect(() => { void control('status'); }, []);
   return <section class="card" aria-label="本地模型服务">
     <h2>本地模型服务</h2>
-    <p class="muted">Apple Silicon Mac 上管理默认 MLX。首次运行一次 pnpm model:bridge 安装浏览器助手，之后可以在这里启停。</p>
+    <p class="muted">Apple Silicon Mac 上管理默认 mlx-serve。首次运行一次 pnpm model:bridge 安装浏览器助手，之后可以在这里启停。</p>
     <p class={`status ${error ? 'error' : ''}`} data-testid="model-status" aria-live="polite">{message}</p>
     <div class="actions">
       <button disabled={busy || !model?.installed} onClick={() => void control('start')}>启动模型</button>

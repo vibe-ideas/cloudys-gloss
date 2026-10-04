@@ -43,7 +43,7 @@ def manifests(home):
 
 def install(home):
     data, plist, _ = service.paths(home)
-    python = data / "mlx-venv/bin/python"
+    python = data / "bridge-venv/bin/python"
     if not python.exists():
         raise RuntimeError("请先运行 pnpm model:install 安装 MLX 环境和模型")
     # Provision the executable launch configuration during explicit installation.
@@ -96,9 +96,10 @@ def configure(home, enabled):
 
 def status(home):
     data, plist, _ = service.paths(home)
-    return {"installed": plist.exists() and (data / "mlx-venv/bin/python").exists(),
+    return {"installed": plist.exists() and service.installed(home),
             "running": bool(re.search(r"^\s*state = running$", service.run("launchctl", "print", service.target(), check=False).stdout, re.M)),
             "autostart": bool(autostart(home)),
+            "runtime": f"mlx-serve {service.VERSION}",
             "model": service.MODEL, "baseUrl": f"http://127.0.0.1:{service.PORT}/v1"}
 
 

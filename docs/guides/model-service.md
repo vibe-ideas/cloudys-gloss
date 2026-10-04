@@ -6,7 +6,7 @@
 
 ## 安装前准备
 
-需要 Apple Silicon macOS、Python 3（运行管理脚本）、Node.js 22.12+、pnpm 10、uv。已有 Homebrew 时可安装工具：
+需要 Apple Silicon Mac、macOS 26.2+、Python 3.12+（运行管理脚本）、Node.js 22.12+、pnpm 10、uv。已有 Homebrew 时可安装工具：
 
 ```sh
 brew install uv python@3.12 node pnpm
@@ -15,29 +15,31 @@ pnpm install
 
 所有 `pnpm` 命令都在项目目录中运行。不使用 Homebrew 时，uv 的其他安装方式见 [官方安装指南](https://docs.astral.sh/uv/getting-started/installation/)；Node.js / pnpm 按各自官方指南安装。
 
-## 方式一：终端手动启动
-
-```sh
-pnpm model:mlx
-```
-
-第一次会安装 MLX 依赖并下载模型，需联网并等待完成；后续复用缓存。此终端需保持打开，Ctrl+C 停止。再开一个终端运行 `pnpm dev:firefox` 或 `pnpm dev`。
-
-若已安装下面的自启服务，不要再运行 `pnpm model:mlx`，两者默认都占用 8080 端口。
-
-## 方式二：安装后台服务并登录自启
-
-先用 Ctrl+C 停止之前手动启动的服务，然后运行：
+## 安装 mlx-serve（含从 mlx-lm 迁移）
 
 ```sh
 pnpm model:install
+pnpm model:bridge
 ```
 
-这个命令会安装独立环境（mlx-lm 0.32.0、mlx 0.32.3）、预下载默认模型、写入 LaunchAgent、立即启动并发送一次真实生成请求验证。已经安装时再次执行只恢复服务，不重复创建自启项。首次安装需要网络；成功后登录启动使用本地缓存，即使离线也可运行。
+安装器固定使用 [ddalcu/mlx-serve v26.10.1](https://github.com/ddalcu/mlx-serve/releases/tag/v26.10.1) 的 macOS arm64 官方程序，校验安装包 SHA256，复用本地 Qwen2.5 3B 权重；缺少权重时才下载。推理由原生程序承担，Python 仅用于安装、管理和一次性浏览器助手，不再安装 mlx-lm 推理依赖。
 
-服务直接使用独立环境的绝对路径，不依赖项目目录、开发服务器、终端 PATH 或 uv 的临时运行环境。关闭终端、关闭浏览器或移动项目目录都不会停止它。独立环境使用的 uv 管理 Python 也应保留，不要手动删除其安装目录。
+已有旧版服务也执行这两条命令。安装器先准备程序和权重，再切换 LaunchAgent，保留原登录自启偏好，发送真实生成请求验证；失败时尝试恢复旧配置与原运行状态。旧配置备份为 `~/Library/LaunchAgents/com.cloudys-gloss.mlx.before-mlx-serve.plist`，旧 `mlx-venv` 不删除。迁移后 Base URL、模型 ID 和扩展 API 配置不变。若之前在终端手动启动旧服务，请先 Ctrl+C，避免占用 8080。
 
-模型常驻会占用内存，当前默认在本机短上下文测试中约 2 GiB；更长上下文可能增加占用。自启并不是按需加载或空闲自动卸载。[内存实测](../performance/2026-10-04-mlx-models.md)
+首次安装默认登录自启。服务使用程序和本地权重的绝对路径，不依赖项目目录、开发服务器或终端 PATH。关闭终端、关闭浏览器或移动项目目录都不会停止它；不要删除正在使用的 Hugging Face 缓存和 uv 管理的助手 Python。
+
+当前默认限制上下文 8192 tokens、输出最多 4096 tokens、并发 1、前缀缓存 1 条 / 128MB、buffer pool 256MiB，并关闭 drafter。这些是缓存和请求参数，**不是进程内存硬上限**；模型权重、KV cache 和临时张量仍占内存。具体实测与局限见 [mlx-serve 迁移报告](../performance/2026-10-05-mlx-serve.md)。
+
+## 终端前台运行
+
+已安装后，如需查看前台日志：
+
+```sh
+pnpm model:stop  # 先停后台服务并暂停登录自启
+pnpm model:mlx   # 前台运行已安装的 mlx-serve，Ctrl+C 停止
+```
+
+恢复后台运行和登录自启使用 `pnpm model:start`。同一端口只能有一个服务；管理脚本不会结束未知进程。
 
 ## 在浏览器中启动（推荐）
 
@@ -67,13 +69,13 @@ pnpm model:bridge
 | `pnpm model:status` | 查看自启文件、launchd 状态、PID、禁用状态及日志位置 |
 | `pnpm model:stop` | 停止服务并暂停登录自启，释放模型进程内存 |
 | `pnpm model:start` | 恢复登录自启、启动服务并验证真实生成 |
-| `pnpm model:uninstall` | 停止并移除自启配置；保留模型缓存、独立环境和日志 |
+| `pnpm model:uninstall` | 停止并移除自启配置；保留模型缓存、程序、助手环境和日志 |
 
 开启登录自启时，异常退出由 launchd 重新启动，重启频率受 30 秒节流限制。主动停止请用 `model:stop`，直接结束进程会触发自动重启。`status` 中 `disabled` 表示已暂停自启，`enabled` 表示已启用；部分 macOS 版本分别显示为 `true` / `false`，没有记录时使用系统默认状态。
 
 ## 扩展配置与验证
 
-在扩展的模型设置中选择 **MLX-LM · 默认**，保存以下配置并点击“测试连接”：
+在扩展的模型设置中选择 **mlx-serve · 默认**，保存以下配置并点击“测试连接”：
 
 | 配置 | 值 |
 | --- | --- |
@@ -95,7 +97,9 @@ curl --fail http://127.0.0.1:8080/v1/models
 ## 位置与排障
 
 - 自启文件：`~/Library/LaunchAgents/com.cloudys-gloss.mlx.plist`
-- 独立环境：`~/Library/Application Support/CloudysGloss/mlx-venv`
+- 推理程序：`~/Library/Application Support/CloudysGloss/mlx-serve/26.10.1/mlx-serve`
+- 一次性助手环境：`~/Library/Application Support/CloudysGloss/bridge-venv`
+- 默认权重入口：`~/Library/Application Support/CloudysGloss/models/Qwen2.5-3B-Instruct-4bit`（指向本地 snapshot）
 - 日志：`~/Library/Logs/CloudysGloss/mlx.stdout.log`、`mlx.stderr.log`
 - 服务模型缓存：固定使用 `~/.cache/huggingface/hub`，安装和登录启动使用同一路径。
 
@@ -109,7 +113,7 @@ tail -n 80 ~/Library/Logs/CloudysGloss/mlx.stderr.log
 
 **开机后没有启动**：确认已登录安装服务的账户，并查看“系统设置 → 通用 → 登录项与扩展”中是否禁止了该后台项目。执行 `pnpm model:start` 恢复并检查日志。
 
-**启动报找不到模型**：自启刻意使用离线模式。不要清理正在使用的模型缓存；需要重新下载时先 `pnpm model:uninstall`，再 `pnpm model:install`。卸载自启不会删除缓存。
+**启动报找不到模型**：自启刻意使用离线模式。不要清理正在使用的模型缓存；需要重新下载时再次运行 `pnpm model:install`。卸载自启不会删除缓存。
 
 **切换模型**：当前管理命令固定管理默认 Qwen2.5 3B。测试其他模型使用独立端口，或先停止本服务再按 [模型配置](models.md) 手动启动。不要只修改扩展的 Model 字段就假定后台已经切换到对应模型。
 

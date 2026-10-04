@@ -1,0 +1,19 @@
+{
+  "date": "2026-10-04T15:55:43.096Z",
+  "model": "Qwen2.5-3B-mlx-serve-26.10.1",
+  "modelRevision": "4f83f8f146fdf28b512a06562b671d7af4fab457",
+  "corpusVersion": "1.0.1",
+  "corpusHash": "66299cbae34ac48e49061dc0edea8ef7e94d1ab07a23c09aa0bfb8de7e309794",
+  "providerHash": "99fdd64b55ca5591859a23ba02fe805881473199faf6fcf1495faad427b24895",
+  "repetitions": 1,
+  "temperature": 0,
+  "concurrency": 1,
+  "chip": "Apple M4 Pro",
+  "route": "OpenAICompatibleProvider.translate with streaming callback, validation and fallback",
+  "runtime": "mlx-serve-26.10.1",
+  "promptCache": "1 entry / 128MB",
+  "enableThinking": "unrecorded",
+  "cache": "no extension result cache",
+  "reviewPolicy": "Automatic guards are not a semantic quality score; reviews.json records the current review status",
+  "migrationNotes": "Same cached snapshot verified locally. New server probe used prefix cache 1/128MB and upstream default buffer pool, before the managed service 256MiB cap. Revision recorded after the run from the verified local snapshot."
+}

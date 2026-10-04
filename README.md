@@ -1,14 +1,15 @@
 # Cloudy’s Gloss
 
-轻量双语阅读扩展：全文双语翻译、划词词卡、贴边悬浮球。WXT + TypeScript + Preact，同一套代码支持 Chrome/Chromium 和 Firefox；默认连接本地 MLX，也支持 Ollama 与 OpenAI-compatible API。
+轻量双语阅读扩展：全文双语翻译、划词词卡、贴边悬浮球。WXT + TypeScript + Preact，同一套代码支持 Chrome/Chromium 和 Firefox；默认连接本地 mlx-serve，也支持 Ollama 与 OpenAI-compatible API。
 
 ## 快速开始
 
-需要 Node.js 22.12+、pnpm 10；本地 MLX 需要 Apple Silicon 和 uv。
+需要 Node.js 22.12+、pnpm 10；本地 mlx-serve 需要 Apple Silicon、macOS 26.2+、Python 3.12+ 和 uv。
 
 ```sh
 pnpm install
-pnpm model:mlx  # 单独终端，保持运行
+pnpm model:install  # 安装并启动本地 mlx-serve
+pnpm model:bridge   # 允许插件按需启动模型
 pnpm dev       # Chrome / Chromium
 # 或 pnpm dev:firefox
 ```

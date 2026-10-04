@@ -2,14 +2,15 @@
 
 ## 先启动本地模型
 
-扩展本身不包含模型。Apple Silicon Mac 安装 uv 后，在项目目录执行：
+扩展本身不包含模型。Apple Silicon Mac（macOS 26.2+）安装 uv 和 Python 3.12+ 后，在项目目录执行：
 
 ```sh
 pnpm install
-pnpm model:mlx  # 手动启动，保持此终端运行
+pnpm model:install  # 安装并启动 mlx-serve
+pnpm model:bridge   # 注册浏览器启停助手
 ```
 
-模型准备好后，再打开另一终端启动下方的浏览器扩展。希望关闭终端后仍可翻译、登录 macOS 后自动启动，可先停止手动服务，再运行 `pnpm model:install`。完整依赖安装、状态检查、停止和卸载步骤见 [模型启动与登录自启](model-service.md)。其他平台见 [Ollama 与模型配置](models.md)。
+模型准备好后，启动下方的浏览器扩展。服务默认登录 macOS 后自动启动；也可以在扩展设置里关闭登录自启，改为翻译时按需启动。完整安装、迁移、停止和卸载步骤见 [模型启动与登录自启](model-service.md)。其他平台见 [Ollama 与模型配置](models.md)。
 
 ## 开发
 

@@ -25,6 +25,7 @@ test('真实 MLX / 网关：2000 段页面首段流式出现，滚到页尾继�
   await page.screenshot({ path: testInfo.outputPath('real-large-progress.png') });
   await page.locator('#row-1999').scrollIntoViewIfNeeded();
   await expect(page.locator('#row-1999 [data-state="done"]')).toBeVisible();
+  await page.locator('[data-cloudys-gloss="floating-control"] .dock').hover();
   await page.getByRole('button', { name: '恢复原文', exact: true }).click();
   await expect(page.locator('main [data-cloudys-gloss]')).toHaveCount(0);
   console.log(`${testInfo.project.name}: 2000 paragraphs ${JSON.stringify(metrics)}, completed at first screen=${translatedAtTop}`);

@@ -2,7 +2,7 @@
 
 质量用例、运行器、自动检查和审阅基线统一放在 `tests/`；本页说明使用方法。不要把 Zod 通过、输出含中文或 TPS 更高写成翻译质量合格。
 
-运行环境为项目的 Node.js / pnpm，加 Python 3（报告工具仅用标准库）。本机 MLX 横向比较另外需要已安装 mlx-lm 的 Python；任意兼容 API 的单模型评测不需要安装 MLX。
+运行环境为项目的 Node.js / pnpm，加 Python 3（报告工具仅用标准库）。本机 MLX 横向比较默认使用 `pnpm model:install` 安装的 mlx-serve；任意兼容 API 的单模型评测不需要安装 MLX。
 
 ## 目录
 
@@ -64,16 +64,17 @@ pnpm test:quality
 预先下载模型后：
 
 ```sh
-MLX_PYTHON=/path/to/mlx-env/bin/python \
 QUALITY_OUTPUT=artifacts/quality/my-comparison \
 pnpm test:quality:mlx
 ```
 
-默认顺序测试 Qwen2.5 3B、Qwen2.5 1.5B、Qwen3 1.7B 的 MLX 4-bit 版本；可用 `QUALITY_MODELS` 传入逗号分隔的其他仓库 ID。`QUALITY_PORT` 默认 18082。启动时固定本机 snapshot 路径并记录 revision，禁止下载混入计时；模型缺失时先下载，不把联网失败当质量失败。关闭 prompt cache、关闭 thinking、并发 1，服务预热后测量。
+默认顺序测试 Qwen2.5 3B、Qwen2.5 1.5B、Qwen3 1.7B 的 MLX 4-bit 版本；可用 `QUALITY_MODELS` 传入逗号分隔的其他仓库 ID。`QUALITY_PORT` 默认 18082。启动时固定本机 snapshot 路径并记录 revision，禁止下载混入计时；模型缺失时先下载，不把联网失败当质量失败。mlx-serve 固定并发 1、前缀缓存 1 条 / 128MB、buffer pool 256MiB，默认关闭 thinking，服务预热后测量。测试其他架构前应核对上游支持列表。
 
 只停止测试自身启动的服务，不修改插件默认配置和 8080 服务。普通后台应用可能影响耗时，因此质量比较中的时延只是辅助指标；TPS 方法见 [性能测试](../performance/2026-10-04-mlx-models.md)。
 
-始终思考的模型可显式设置 `QUALITY_THINKING=enabled`，运行器将传入 `enable_thinking=true` 并记录配置。默认仍为 `disabled`。该参数是否受支持必须核对模型模板，不能仅凭传参就声称实际关闭了思考；例如 LFM2.5-2.6B 的模板始终开启思考，应使用 `enabled`，单独标注延迟比较的差异。
+复现历史 mlx-lm 结果时，额外设置 `QUALITY_BACKEND=mlx-lm MLX_PYTHON=/path/to/mlx-env/bin/python`；该路径关闭 prompt cache，保留旧环境即可，不用于默认部署。
+
+始终思考的模型可显式设置 `QUALITY_THINKING=enabled`，运行器将记录配置：mlx-serve 使用 `--reasoning-budget -1`（禁用时为 `0`），历史 mlx-lm 使用 `enable_thinking=true`。默认仍为 `disabled`。该参数是否受支持必须核对模型模板，不能仅凭传参就声称实际关闭了思考；例如 LFM2.5-2.6B 的模板始终开启思考，应使用 `enabled`，单独标注延迟比较的差异。
 
 ## 审阅与比较
 
@@ -109,3 +110,5 @@ pnpm quality:report path/to/candidate --baseline path/to/approved-baseline
 - 本轮曾把 Retry 的“重新尝试”误报为失败；v1.0.1 扩展了合理同义表达，并允许“AbortController 的 abort() 方法”的可识别 API 表述。三模型随后全部重跑，不沿用旧规则的通过率。
 
 本轮对照结论见 [2026-10-04 翻译质量报告](../performance/2026-10-04-translation-quality.md)。
+
+服务迁移对照见 [mlx-serve 性能与质量](../performance/2026-10-05-mlx-serve.md)，18 例逐条输出与审阅已归档到 `tests/quality/baselines/2026-10-05-mlx-serve/`。

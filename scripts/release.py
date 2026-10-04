@@ -55,7 +55,7 @@ def prepare(root, version):
 
 ## 本地模型
 
-扩展不包含模型权重，也不会自动启动模型。Apple Silicon Mac 可在源码目录运行 `pnpm model:mlx` 手动启动，或 `pnpm model:install` 安装登录自启服务。
+扩展不包含模型权重。Apple Silicon Mac（macOS 26.2+）可在源码目录运行 `pnpm model:install` 安装并启动 mlx-serve，再运行 `pnpm model:bridge` 启用浏览器按需启动。
 
 默认地址 `http://127.0.0.1:8080/v1`，模型 `mlx-community/Qwen2.5-3B-Instruct-4bit`，API Key 留空。
 
