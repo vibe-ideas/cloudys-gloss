@@ -8,4 +8,6 @@ playwright-report/
 artifacts/
 .DS_Store
 *.log
+__pycache__/
+*.pyc
 !pnpm-lock.yaml

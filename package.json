@@ -22,6 +22,11 @@
     "test:e2e": "pnpm build && pnpm build:firefox && playwright test",
     "smoke:live": "pnpm build && pnpm build:firefox && playwright test -c playwright.live.config.ts",
     "model:mlx": "uv run --python 3.12 --with mlx-lm==0.32.0 mlx_lm.server --model mlx-community/Qwen2.5-3B-Instruct-4bit --host 127.0.0.1 --port 8080 --max-tokens 4096",
+    "model:install": "python3 scripts/mlx-service.py install",
+    "model:start": "python3 scripts/mlx-service.py start",
+    "model:stop": "python3 scripts/mlx-service.py stop",
+    "model:status": "python3 scripts/mlx-service.py status",
+    "model:uninstall": "python3 scripts/mlx-service.py uninstall",
     "smoke:mlx": "MODEL_BASE_URL=http://127.0.0.1:8080/v1 MODEL_NAME=mlx-community/Qwen2.5-3B-Instruct-4bit pnpm smoke:live"
   },
   "dependencies": {

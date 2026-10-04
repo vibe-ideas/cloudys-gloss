@@ -4,6 +4,7 @@
 
 - [安装、开发启动与网页操作](guides/getting-started.md)
 - [MLX、Ollama 与兼容 API 配置](guides/models.md)
+- [模型启动、macOS 登录自启与停止卸载](guides/model-service.md)
 
 ## 开发维护
 

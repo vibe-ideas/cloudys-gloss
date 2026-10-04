@@ -2,6 +2,8 @@
 
 默认选择与实测依据见 [模型 TPS、内存和质量对比](../performance/2026-10-04-mlx-models.md)。本页维护连接方式；性能结果统一维护在 `docs/performance/`。
 
+首次安装请先看 [模型启动与 macOS 登录自启](model-service.md)：`pnpm model:mlx` 手动启动，`pnpm model:install` 安装后台自启服务。启动扩展不会自动启动模型。
+
 ## 连接模型
 
 | 服务 | Base URL 示例 | Model |
