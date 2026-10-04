@@ -34,12 +34,28 @@ export function* semanticCandidates(root: Element): Generator<Element> {
   while (walker.nextNode()) yield walker.currentNode as Element;
 }
 export function splitText(text: string, max = 6000) {
+  if (text.length <= max) return text ? [text] : [];
+  // Walk sentence boundaries once, keeping a condition or clause together when
+  // the full sentence fits the request budget. Short blocks avoid this work.
+  const sentences = new Intl.Segmenter('en', { granularity: 'sentence' }).segment(text)[Symbol.iterator]();
+  let next = sentences.next();
+  let start = 0;
   const parts: string[] = [];
-  while (text.length > max) {
-    const space = text.lastIndexOf(' ', max);
-    const cut = space > max / 2 ? space : max;
-    parts.push(text.slice(0, cut)); text = text.slice(cut).trimStart();
+  while (text.length - start > max) {
+    const limit = start + max;
+    let sentenceEnd = start;
+    while (!next.done) {
+      const end = next.value.index + next.value.segment.trimEnd().length;
+      if (end > limit) break;
+      if (end > start) sentenceEnd = end;
+      next = sentences.next();
+    }
+    const space = text.lastIndexOf(' ', limit);
+    const cut = sentenceEnd > start ? sentenceEnd : space > start + max / 2 ? space : limit;
+    parts.push(text.slice(start, cut));
+    start = cut;
+    while (start < text.length && /\s/u.test(text[start]!)) start++;
   }
-  if (text) parts.push(text);
+  if (start < text.length) parts.push(text.slice(start));
   return parts;
 }

@@ -1,14 +1,31 @@
 import { defineBackground } from 'wxt/utils/define-background';
 import { browser } from 'wxt/browser';
 import { defaults, RequestSchema, SettingsSchema, type Response } from '../src/schema';
+import { OfflinePronunciationDictionary } from '../src/pronunciation';
 import { TranslationService } from '../src/service';
-import { LocalModelManager, NATIVE_HOST } from '../src/local-model';
+import { LocalModelManager, NATIVE_HOST, migrateManagedPreset } from '../src/local-model';
 
 export default defineBackground(() => {
   const localModel = new LocalModelManager((message) => browser.runtime.sendNativeMessage(NATIVE_HOST, message));
-  const service = new TranslationService(undefined, (config, signal) => localModel.ensure(config, signal));
+  const pronunciation = new OfflinePronunciationDictionary(async (dialect) => {
+    const url = dialect === 'us' ? browser.runtime.getURL('/dictionaries/us.tsv') : browser.runtime.getURL('/dictionaries/uk.tsv');
+    const response = await fetch(url, { signal: AbortSignal.timeout(5000) });
+    if (!response.ok) throw new Error('离线音标词典无法加载');
+    return response.text();
+  });
+  const service = new TranslationService(undefined, (config, signal) => localModel.ensure(config, signal), pronunciation);
   const pending = new Map<string, { controller: AbortController; tabId?: number }>();
-  const settings = async () => SettingsSchema.parse((await browser.storage.local.get('settings')).settings ?? defaults);
+  const presetReady = (async () => {
+    const stored = await browser.storage.local.get(['settings', 'modelPresetVersion']);
+    if (stored.modelPresetVersion !== 2) {
+      const current = SettingsSchema.parse(stored.settings ?? defaults);
+      await browser.storage.local.set({ settings: migrateManagedPreset(current), modelPresetVersion: 2 });
+    }
+  })();
+  const settings = async () => {
+    await presetReady;
+    return SettingsSchema.parse((await browser.storage.local.get('settings')).settings ?? defaults);
+  };
   // Extension API activity keeps MV3 alive during slow local inference.
   const keepalive = setInterval(() => { if (pending.size) void browser.runtime.getPlatformInfo(); }, 20000);
   void keepalive;
@@ -56,7 +73,7 @@ export default defineBackground(() => {
         if (request.type === 'preferences') { const value = await settings(); return { ok: true, data: { theme: value.theme } }; }
         if (request.type === 'settings:get') return { ok: true, data: await settings() };
         if (request.type === 'settings:open') { await browser.runtime.openOptionsPage(); return { ok: true, data: null }; }
-        if (request.type === 'settings:save') { await browser.storage.local.set({ settings: request.settings }); return { ok: true, data: null }; }
+        if (request.type === 'settings:save') { await presetReady; await browser.storage.local.set({ settings: request.settings }); return { ok: true, data: null }; }
         if (request.type === 'cache:clear') { await service.clear(); return { ok: true, data: null }; }
         if (request.type === 'model:control') return { ok: true, data: await localModel.control(request.action, request.enabled) };
         const key = `${owner}:${request.id}`;

@@ -1,0 +1,73 @@
+{
+  "rows": 24,
+  "uniqueOutputs": 12,
+  "repetitions": 2,
+  "counts": {
+    "meaning": {
+      "passed": 22,
+      "total": 24,
+      "rate": 0.9166666666666666
+    },
+    "partOfSpeech": {
+      "passed": 24,
+      "total": 24,
+      "rate": 1.0
+    },
+    "contextMeaning": {
+      "passed": 24,
+      "total": 24,
+      "rate": 1.0
+    },
+    "examples": {
+      "passed": 24,
+      "total": 24,
+      "rate": 1.0
+    },
+    "semanticAcceptable": {
+      "passed": 22,
+      "total": 24,
+      "rate": 0.9166666666666666
+    },
+    "ipaComplete": {
+      "passed": 20,
+      "total": 24,
+      "rate": 0.8333333333333334
+    },
+    "wholeCardAcceptable": {
+      "passed": 18,
+      "total": 24,
+      "rate": 0.75
+    }
+  },
+  "requests": {
+    "total": 36,
+    "rowsByRequestCount": {
+      "3": 6,
+      "1": 18
+    },
+    "groundedInitial": 24,
+    "groundedRepair": 6,
+    "generatedFallbackInitial": 6,
+    "generatedFallbackRepair": 0,
+    "generatedFallbackCases": [
+      "D01",
+      "D07",
+      "D08"
+    ],
+    "perLookupBound": 4,
+    "stageDerivation": "All 12 inputs contain one eligible sentence; captured pipeline has two grounded attempts followed only on StructuredOutputError by up to two generated attempts. Six rows made 3 requests; other 18 made 1."
+  },
+  "semanticFailures": [
+    "D08 in both rounds: definition conflates formal accusation with punishment"
+  ],
+  "missingIpa": [
+    "D11/D12 in both rounds: no attested whole-phrase entries"
+  ],
+  "knownMinorIssues": [
+    "D01: surprise/concession nuance weakened",
+    "D04: yesterday omitted",
+    "D05/D09/D10: awkward Chinese",
+    "D12: within ten minutes versus after ten minutes"
+  ],
+  "interpretation": "91.7% means acceptable core semantics on this 12-case corpus repeated twice, not perfect translations or 91.7% complete cards. Whole-card acceptance including both pronunciations is 75%. No claim of general population accuracy."
+}

@@ -1,0 +1,51 @@
+{
+  "model": "Qwen/Qwen3-1.7B-MLX-4bit",
+  "revision": "21457c6f51ed54a7c16e988c0844db973815c137",
+  "sourceSha256": {
+    "src/provider.ts": "45ab8cb2316a1072fbc33048b6a7ad0e88221f26422f6ffedf23fa89c1ea9296",
+    "src/service.ts": "b035a1d2e2b87c15f7ea479ff18d08b28cbed67cd908c79175aa5e7bf3680acb"
+  },
+  "command": "pnpm smoke:mlx",
+  "passed": 4,
+  "total": 4,
+  "largePage": {
+    "paragraphs": 2000,
+    "chromium": {
+      "firstMs": 631,
+      "longestFrameMs": 18,
+      "firstState": "partial",
+      "completedAtFirstScreen": 2
+    },
+    "firefox": {
+      "firstMs": 648,
+      "longestFrameMs": 10,
+      "firstState": "partial",
+      "completedAtFirstScreen": 2
+    }
+  },
+  "cardPage": {
+    "chromium": {
+      "firstTranslationMs": 5967,
+      "wordCardMs": 8991
+    },
+    "firefox": {
+      "firstTranslationMs": 5977,
+      "wordCardMs": 7991
+    }
+  },
+  "notes": "One browser run each. Translation/card times include guard-triggered retries; no semantic pass-rate inferred.",
+  "nativeService": {
+    "command": "pnpm test:native",
+    "passed": 2,
+    "total": 2,
+    "chromium": {
+      "manualStartMs": 1880,
+      "translateFromStoppedMs": 7841
+    },
+    "firefox": {
+      "manualStartMs": 2002,
+      "translateFromStoppedMs": 7851
+    },
+    "autostartPreferenceRestored": true
+  }
+}

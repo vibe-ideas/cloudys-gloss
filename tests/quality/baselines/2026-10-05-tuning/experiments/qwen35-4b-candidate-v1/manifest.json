@@ -1,0 +1,8 @@
+[
+  {
+    "model": "mlx-community/Qwen3.5-4B-4bit",
+    "revision": "0e7ffd5c629ef7719d4cbc04069232580bfa9d9c",
+    "directory": "0-mlx-community--Qwen3.5-4B-4bit",
+    "exitCode": 1
+  }
+]

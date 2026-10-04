@@ -22,7 +22,7 @@ WXT background → 输入 Zod 校验 → IndexedDB cache
 - **取消**：关闭翻译、关闭词卡、页面离开和标签关闭时取消任务；快速滚动到远处时取消全部已离开预取区域的批次，让新视口进入队列；队列中的任务也支持取消。以请求代次与原文快照拒绝迟到结果。
 - **缓存**：idb / IndexedDB，最多 1,500 条，30 天过期。模型、地址、温度、凭据、文本/上下文均参与哈希键，不跨配置复用。存储不可用时仍可翻译。
 - **词卡**：单页面单实例 Shadow DOM；Light / Dark / 系统主题；边缘避让、可滚动、加载态、错误与重试；所有模型字符串通过文本渲染。
-- **词典扩展点**：`DictionaryProvider` 接口，可在后台组合本地词典与 LLM。当前 IPA 由 LLM 生成，可能不准确；发音使用浏览器 SpeechSynthesis，优先匹配本地 US / UK 系统语音。
+- **词典扩展点**：`DictionaryProvider` 接口，可在后台组合本地词典与 LLM。IPA 通过 `PronunciationProvider` 从内置 US / UK 词典精确查询，缺失留空，多读音并列；发音使用浏览器 SpeechSynthesis，优先匹配本地 US / UK 系统语音。
 
 全文关闭会移除扩展插入的节点，不重写或替换原文 HTML。SPA 中保留的段落沿用缓存，新增/变化的段落增量处理。第一版不遍历网页自身的 Shadow DOM、iframe 或虚拟化编辑器。
 

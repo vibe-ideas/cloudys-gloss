@@ -7,3 +7,5 @@ HTTP(S) host permissions 用于网页注入和用户自行配置的模型地址�
 实现参考：[WXT 浏览器目标](https://wxt.dev/guide/essentials/target-different-browsers)、[Playwright 扩展测试](https://playwright.dev/docs/chrome-extensions)、[Firefox 数据传输声明](https://extensionworkshop.com/documentation/develop/firefox-builtin-data-consent/)。
 
 `nativeMessaging` 权限用于与用户安装的本地 MLX 助手通信。助手仅允许本扩展 ID，接受固定的状态、启停、重启和自启开关操作；不接受任意命令、模型路径或网页内容。手动管理消息只允许扩展页面发出，网页内容脚本不能直接控制服务。自动启动仅用于用户配置的默认本地 MLX。
+
+词卡音标查找使用扩展随包的离线 US / UK 词典，不请求第三方词典服务；释义与例句仍由配置的模型生成。词典来源、许可与覆盖限制见 [离线音标说明](../development/offline-pronunciation.md)。

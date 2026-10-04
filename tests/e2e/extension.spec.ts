@@ -78,9 +78,10 @@ test('划词词卡：立即显示加载态，展示音标释义例句，隔离�
   };
   await select(); await expect(page.getByRole('dialog')).toBeVisible(); await expect(page.getByText('正在理解上下文…')).toBeVisible();
   await expect(page.getByText('多云的；不清晰的')).toBeVisible();
-  await expect(page.getByRole('button', { name: '美式发音' })).toContainText('/ˈklaʊdi/');
-  await expect(page.getByText('adjective', { exact: true })).toBeVisible(); await expect(page.getByText('It is a cloudy morning.')).toBeVisible();
-  await expect(page.getByText('这是一个多云的早晨。')).toBeVisible();
+  await expect(page.getByRole('button', { name: '美式发音' })).toContainText('/ˈkɫaʊdi/');
+  await expect(page.getByRole('button', { name: '英式发音' })).toContainText('/klˈaʊdi/');
+  await expect(page.getByText('adjective', { exact: true })).toBeVisible(); await expect(page.locator('[data-cloudys-gloss="popover"]').getByText('A cloudy morning brings quiet thoughts.', { exact: true })).toBeVisible();
+  await expect(page.getByText('多云的早晨让人思绪宁静。')).toBeVisible();
   const font = await page.getByRole('button', { name: '美式发音' }).evaluate((element) => getComputedStyle(element).fontSize); expect(font).toBe('12px');
   await page.screenshot({ path: testInfo.outputPath('word-card-light.png') });
   await page.emulateMedia({ colorScheme: 'dark' }); await page.screenshot({ path: testInfo.outputPath('word-card-dark.png') });
@@ -167,7 +168,7 @@ test('网页拦截鼠标事件时，拖选单词仍展示词卡，点击卡外�
   await page.mouse.move(bounds.x + bounds.width, bounds.y + bounds.height / 2, { steps: 8 }); await page.mouse.up();
   await expect.poll(() => page.evaluate(() => getSelection()?.toString())).toBe('cloudy');
   await expect(page.getByRole('dialog', { name: 'AI 单词卡' })).toBeVisible({ timeout: 3000 });
-  await expect(page.getByRole('button', { name: '美式发音' })).toContainText('/ˈklaʊdi/');
+  await expect(page.getByRole('button', { name: '美式发音' })).toContainText('/ˈkɫaʊdi/');
   await page.locator('h1').click();
   await expect(page.getByRole('dialog')).toHaveCount(0);
 });

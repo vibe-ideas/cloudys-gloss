@@ -1,0 +1,50 @@
+{
+  "rows": 24,
+  "uniqueOutputs": 14,
+  "repetitions": 2,
+  "counts": {
+    "meaning": {
+      "passed": 22,
+      "total": 24,
+      "rate": 0.9166666666666666
+    },
+    "partOfSpeech": {
+      "passed": 24,
+      "total": 24,
+      "rate": 1.0
+    },
+    "contextMeaning": {
+      "passed": 22,
+      "total": 24,
+      "rate": 0.9166666666666666
+    },
+    "examples": {
+      "passed": 24,
+      "total": 24,
+      "rate": 1.0
+    },
+    "semanticAcceptable": {
+      "passed": 20,
+      "total": 24,
+      "rate": 0.8333333333333334
+    },
+    "ipaComplete": {
+      "passed": 20,
+      "total": 24,
+      "rate": 0.8333333333333334
+    },
+    "wholeCardAcceptable": {
+      "passed": 16,
+      "total": 24,
+      "rate": 0.6666666666666666
+    }
+  },
+  "semanticFailures": [
+    "D05 cloudy: contextMeaning opposite meaning, both repetitions",
+    "D08 charge: definition adds punishment, both repetitions"
+  ],
+  "missingIpa": [
+    "D11 give up: both dialects absent, both repetitions",
+    "D12 take off: both dialects absent, both repetitions"
+  ]
+}

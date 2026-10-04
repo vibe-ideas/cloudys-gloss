@@ -1,0 +1,126 @@
+{
+  "corpusHash": "ab52dba90e523b934b244b4e2b0d528dcb1d4120086fb8e3635be2bfa7fa912d",
+  "providerHash": "047aa04c3358864ca254dd918b96a4030db1af1dbe5a79b2693e1eb02b15d49b",
+  "model": "Qwen/Qwen3-1.7B-MLX-4bit",
+  "reviewer": "Codex evaluation_expert（验收语料作者，独立于生产提示词修改的子代理）",
+  "method": "模型和全文提示冻结后，新 acceptance 语料首次运行；对照原文、参考译文与 requirements 逐例审阅两轮全部输出，沿用仓库既有 0–4 三轴及 critical 标准。相同 outputHash 复用评分；不改题目、规则或评分门槛。评分者为语料作者，非人类盲评。",
+  "reviews": [
+    {
+      "id": "A01",
+      "outputHash": "f552e6deea154b2129905684d17dec1105692d0f73f3f85d8adac07f2d2f8179",
+      "adequacy": 4,
+      "completeness": 4,
+      "fluency": 3,
+      "critical": false,
+      "notes": "每人一件、不超过 7.5 公斤、额外行李 24.80 SGD 和付费不增加单件限重均保留；两轮币种前后位置不同均合理。“一个…行李”量词略生硬。"
+    },
+    {
+      "id": "A02",
+      "outputHash": "806a5d0e9028d5d27f22d2d6e73f77f09fc15b14e17a935edae269f9d192c426",
+      "adequacy": 4,
+      "completeness": 4,
+      "fluency": 2,
+      "critical": false,
+      "notes": "消防人员许可前不得进入、警报停止也不能替代许可及安静不证明检查完成均准确；“你必须在…之前不得…”叠用情态词较生硬，但禁止与例外关系清楚。"
+    },
+    {
+      "id": "A03",
+      "outputHash": "3fefe85edb499bec297bef461a3c6a8212a9283210c4df9cd2f67b16d1e9b02e",
+      "adequacy": 4,
+      "completeness": 4,
+      "fluency": 3,
+      "critical": false,
+      "notes": "完全冷却之后装盒、次日早晨取货而非烘焙当天均正确；“收集这些箱子”有翻译腔，最后“它们被烘焙”指代不够自然但按场景可理解为面包。"
+    },
+    {
+      "id": "A04",
+      "outputHash": "52a249cc3fb191007797631a45eee5db45c5b6ca56e5256690dba27d567473fb",
+      "adequacy": 4,
+      "completeness": 4,
+      "fluency": 3,
+      "critical": false,
+      "notes": "并非全部海滩关闭的否定范围、北部允许散步而仍禁止游泳均准确；语序和“步行者”稍有翻译腔。"
+    },
+    {
+      "id": "A05",
+      "outputHash": "2b1af379171fda3dc38f70b9303128f8e9c0a459eed4d91278f4521ca5613069",
+      "adequacy": 3,
+      "completeness": 3,
+      "fluency": 2,
+      "critical": false,
+      "notes": "两个 draft 分别译成冷风和“第一稿信件”，后者虽未命中草稿/初稿正则，语义合理，并非漏译；信尚未寄出也保留。第一段未明确门下方、毛巾用于抵住缝隙被概括为放在那里，“一张…毛巾”量词不当。"
+    },
+    {
+      "id": "A06",
+      "outputHash": "af3e1abdaa100e1ed68d6b5c50b7cca1344172a3e9f0bb89376c26a1bb3345d1",
+      "adequacy": 3,
+      "completeness": 3,
+      "fluency": 4,
+      "critical": false,
+      "notes": "final leg 正确为接力最后一段，终点前超过两队准确；exhausted 被弱化为疲惫，未伤到腿概括为没有受伤，损失部位限定但未反转否定。"
+    },
+    {
+      "id": "A07",
+      "outputHash": "e935c92f876aace24ea3564b83defdc994b8e86fe73e82d0d0d768a8f964eeae",
+      "adequacy": 3,
+      "completeness": 3,
+      "fluency": 2,
+      "critical": false,
+      "notes": "犹豫、画质好、换电池费用几乎等于旧机身这条主要成本比较仍可理解；“和用旧机身一样”把二手机身说得含混且价格比较对象省略较重，有明显翻译腔，尚未改成续航或断言电池更贵。"
+    },
+    {
+      "id": "A08",
+      "outputHash": "7cf64f5637550f0c501dc46ec98b2ab8834436e31ba66d8b56c766b055b2042a",
+      "adequacy": 3,
+      "completeness": 3,
+      "fluency": 3,
+      "critical": false,
+      "notes": "付额外费用却面对砖墙与首尾称赞形成反讽，未凭空描写真实美景；遗漏 only 的唯一窗户限定，挖苦语气偏直译，但主要抱怨仍可识别。"
+    },
+    {
+      "id": "A09",
+      "outputHash": "f37a52362f45c3d8081d8dacf817982edd91ee959423116753000cd8dd1a4880",
+      "adequacy": 2,
+      "completeness": 3,
+      "fluency": 2,
+      "critical": false,
+      "notes": "两段、1920–1945、九个月、培训人员限制、部分信件保密、未销毁/不出售、资金条件和预约目录等保留。但 acid-free folders 是无酸文件夹，译成防酸文件夹，把不含酸材质变成抵御酸性物质，改变文物保存要求。“以不确定的姓名精确地记录下来”也未清楚表达按原文照录，文字生硬。"
+    },
+    {
+      "id": "A10",
+      "outputHash": "2be09ed74d6e975101699443c030c6f1e59a1ca1fc131964a839d541f2e63a35",
+      "adequacy": 2,
+      "completeness": 4,
+      "fluency": 2,
+      "critical": false,
+      "notes": "原命令 atlas sync --dry-run 被译成 atlas 同步 --dry-run，sync 是必须保留的子命令，不是可替换中文的说明词；这是真实代码标识改写，不是空格或格式差异。路径、试运行不写入、移除标志才正式更新及先后关系均保留，但给出的命令不可原样执行。"
+    },
+    {
+      "id": "A11",
+      "outputHash": "efc717ffddbad1e5025b6edfaf16135b18aca329722691a17b538b9984fb4385",
+      "adequacy": 3,
+      "completeness": 2,
+      "fluency": 4,
+      "critical": false,
+      "notes": "只剩18人作答的信息，原文240名受邀者的总数整项遗漏，无法看到18/240的响应比例；不是中文数字或格式变体。多数答卷者偏好晚间课程与样本可能不具代表性的警告均保留，未捏造新的数字。"
+    },
+    {
+      "id": "A12",
+      "outputHash": "338f43f946e13593b3f089993ac17b695705f96126013e2f713ea98d5ca6f739",
+      "adequacy": 3,
+      "completeness": 3,
+      "fluency": 3,
+      "critical": false,
+      "notes": "失物所有人、发现者、保管者和次日亲自领取的角色均正确；called her 译成“叫她”，没有明确电话告知，“去收集”表达领取稍生硬，主要通知时序与物品流转保留。"
+    },
+    {
+      "id": "A01",
+      "outputHash": "788d4930b5bb0b083507fc199bbf99fbb2cb3123ac44cebec5c7f16f86e88480",
+      "adequacy": 4,
+      "completeness": 4,
+      "fluency": 3,
+      "critical": false,
+      "notes": "每人一件、不超过 7.5 公斤、额外行李 24.80 SGD 和付费不增加单件限重均保留；两轮币种前后位置不同均合理。“一个…行李”量词略生硬。"
+    }
+  ]
+}

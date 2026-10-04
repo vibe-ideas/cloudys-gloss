@@ -1,10 +1,32 @@
 import 'fake-indexeddb/auto';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { ResultCache } from '../../src/cache';
+import { cacheKey, ResultCache } from '../../src/cache';
 import { TranslationService } from '../../src/service';
 import { defaults } from '../../src/schema';
 afterEach(() => vi.unstubAllGlobals());
 describe('跨页面翻译缓存', () => {
+  it('已缓存词卡的词典恢复后补齐音标，不重新请求或唤醒模型', async () => {
+    const card = { word: 'light', ipa: { us: '', uk: '' }, senses: [{ partOfSpeech: 'adjective', meaning: '轻的' }], contextMeaning: '轻的', examples: [{ en: 'A light bag.', zh: '一个轻包。' }] };
+    const fetcher = vi.fn().mockImplementation(async () => new Response(JSON.stringify({ choices: [{ message: { content: JSON.stringify(card) } }] })));
+    vi.stubGlobal('fetch', fetcher);
+    const dictionary = { lookup: vi.fn().mockResolvedValueOnce({ us: '', uk: '' }).mockResolvedValue({ us: '/laɪt/', uk: '/laɪt/' }) };
+    const ensureModel = vi.fn().mockResolvedValue(undefined);
+    const service = new TranslationService(new ResultCache(crypto.randomUUID()), ensureModel, dictionary);
+    expect((await service.dictionary(defaults, 'light', '', new AbortController().signal)).ipa.us).toBe('');
+    expect((await service.dictionary(defaults, 'light', '', new AbortController().signal)).ipa.us).toBe('/laɪt/');
+    expect(fetcher).toHaveBeenCalledTimes(1); expect(ensureModel).toHaveBeenCalledTimes(1);
+  });
+  it('提示词升级后不再读取旧版错误译文，新结果写入后可正常命中', async () => {
+    const cache = new ResultCache(crypto.randomUUID());
+    const oldKey = await cacheKey([defaults.baseUrl, defaults.model, defaults.temperature, defaults.apiKey, 'zh-CN', 'translation-v2', 'Hello']);
+    await cache.set(oldKey, '旧版错误译文');
+    const fetcher = vi.fn().mockImplementation(async () => new Response(JSON.stringify({ choices: [{ message: { content: '{"translations":["你好"]}' } }] })));
+    vi.stubGlobal('fetch', fetcher);
+    const service = new TranslationService(cache);
+    expect(await service.translate(defaults, ['Hello'], new AbortController().signal)).toEqual(['你好']);
+    expect(await service.translate(defaults, ['Hello'], new AbortController().signal)).toEqual(['你好']);
+    expect(fetcher).toHaveBeenCalledTimes(1);
+  });
   it('连接检测遇到小模型错误 JSON 时使用网页翻译的回退流程，获得中文后才成功', async () => {
     const fetcher = vi.fn()
       .mockResolvedValueOnce(new Response(JSON.stringify({ choices: [{ message: { content: '{"translations":["wrong","length"]}' } }] })))

@@ -1,0 +1,64 @@
+{
+  "summary": [
+    {
+      "model": "Qwen/Qwen3-1.7B-MLX-4bit",
+      "providerHash": "047aa04c3358864ca254dd918b96a4030db1af1dbe5a79b2693e1eb02b15d49b",
+      "repetitions": 2,
+      "samples": 24,
+      "automaticPassed": 20,
+      "reviewed": 24,
+      "acceptedCases": 9,
+      "cases": 12,
+      "byCase": {
+        "A01": true,
+        "A02": true,
+        "A03": true,
+        "A04": true,
+        "A05": true,
+        "A06": true,
+        "A07": true,
+        "A08": true,
+        "A09": false,
+        "A10": false,
+        "A11": false,
+        "A12": true
+      },
+      "acceptedRate": 0.75,
+      "criticalCases": 0,
+      "medianMs": 264.8132914999999,
+      "meanReview": {
+        "adequacy": 3.1666666666666665,
+        "completeness": 3.3333333333333335,
+        "fluency": 2.75
+      }
+    }
+  ],
+  "regressions": [],
+  "pipelineChanged": false,
+  "gateFailures": [
+    "Qwen/Qwen3-1.7B-MLX-4bit: accepted case rate 75.0% is below 90.0%"
+  ],
+  "report": "docs/performance/2026-10-05-tuning-final-acceptance.md",
+  "exitCode": 1,
+  "command": [
+    "python3",
+    "tests/quality/report.py",
+    "tests/quality/baselines/2026-10-05-tuning/final-acceptance",
+    "--corpus",
+    "tests/quality/baselines/2026-10-05-tuning/final-acceptance/corpus.json",
+    "--summary",
+    "tests/quality/baselines/2026-10-05-tuning/final-acceptance/summary.json",
+    "--output",
+    "docs/performance/2026-10-05-tuning-final-acceptance.md",
+    "--min-pass-rate",
+    "0.9",
+    "--no-critical",
+    "--min-repetitions",
+    "2"
+  ],
+  "criteria": {
+    "minPassRate": 0.9,
+    "noCritical": true,
+    "minRepetitions": 2
+  }
+}

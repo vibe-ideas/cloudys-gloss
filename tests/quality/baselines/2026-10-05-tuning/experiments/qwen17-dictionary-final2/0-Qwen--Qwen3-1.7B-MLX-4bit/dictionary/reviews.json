@@ -1,0 +1,365 @@
+{
+  "kind": "dictionary",
+  "corpusHash": "dbef3d029f4c2a230b22a6fa2ddc0c00cf4da4458559a65c0bdfc0af7063d818",
+  "providerHash": "39e1e186dac5673c6775e8bc9d0522bdec2b110b9a6154e065cbf142346d4d99",
+  "model": "Qwen/Qwen3-1.7B-MLX-4bit",
+  "reviewer": "dictionary_expert — independent AI-assisted bilingual review",
+  "method": "Read every final card in both rounds against the fixed source context and the same acceptance policy used for qwen17-current-dictionary. Validate selected word/part-of-speech consistency in examples. Inspect failed raw responses without treating them as delivered cards. Missing IPA remains missing; Zod/keyword results are not quality scores.",
+  "rubric": {
+    "adequacy": "0–4: contextual sense and part of speech",
+    "completeness": "0–4: required card content including pronunciation",
+    "fluency": "0–4: natural Chinese and bilingual example",
+    "ipa": "correct / incorrect / missing / uncertain; expert review, never inferred from Zod"
+  },
+  "reviews": [
+    {
+      "id": "D01",
+      "outputHash": "0c5244ebae3d2bfde54d344cb6147de0ae030276d3fb6e2c29d7d9f001f76137",
+      "adequacy": 3,
+      "completeness": 3,
+      "fluency": 3,
+      "critical": false,
+      "ipaUs": "correct",
+      "ipaUk": "correct",
+      "notes": "轻重义项、形容词和例句正确。第一轮英文例句稍生硬；第二轮 surprisingly 的惊讶语气弱化为“非常”，沿用上一轮标准记轻微完整性问题。",
+      "aspects": {
+        "meaning": true,
+        "partOfSpeech": true,
+        "contextMeaning": true,
+        "examples": true
+      },
+      "semanticAcceptable": true,
+      "ipaComplete": true,
+      "wholeCardAcceptable": true
+    },
+    {
+      "id": "D02",
+      "outputHash": "0b31075bf3707c692db4cf98100eb2abc98866d30c7fe41fe522d74c89d2be7c",
+      "adequacy": 0,
+      "completeness": 0,
+      "fluency": 0,
+      "critical": true,
+      "ipaUs": "missing",
+      "ipaUk": "missing",
+      "notes": "首轮连续两次生成无引号的 examples 属性名，不是合法 JSON；最终没有可展示卡片。原始响应的含义正确不能代替用户收到有效词卡。",
+      "aspects": {
+        "meaning": false,
+        "partOfSpeech": false,
+        "contextMeaning": false,
+        "examples": false
+      },
+      "semanticAcceptable": false,
+      "ipaComplete": false,
+      "wholeCardAcceptable": false
+    },
+    {
+      "id": "D03",
+      "outputHash": "dcc48b32e558070fc7c8863f08aaa268bdb657ccf408dcd60b067c46c46810ac",
+      "adequacy": 4,
+      "completeness": 4,
+      "fluency": 4,
+      "critical": false,
+      "ipaUs": "correct",
+      "ipaUk": "correct",
+      "notes": "河岸义项、词性、语境短释义与例句翻译一致；上轮重复表达已改善。",
+      "aspects": {
+        "meaning": true,
+        "partOfSpeech": true,
+        "contextMeaning": true,
+        "examples": true
+      },
+      "semanticAcceptable": true,
+      "ipaComplete": true,
+      "wholeCardAcceptable": true
+    },
+    {
+      "id": "D04",
+      "outputHash": "2f28fe8829f565a22a8941b9e36e00644d07a0809421cd02a07ecff30970f5a0",
+      "adequacy": 3,
+      "completeness": 3,
+      "fluency": 2,
+      "critical": false,
+      "ipaUs": "correct",
+      "ipaUk": "correct",
+      "notes": "银行义项正确。例句中译“她把存钱放在了银行”生硬且漏 yesterday；按此前允许非核心轻微遗漏的统一标准仍可接受，但记完整性与自然度扣分，不能称为完整准确的优秀译文。",
+      "aspects": {
+        "meaning": true,
+        "partOfSpeech": true,
+        "contextMeaning": true,
+        "examples": true
+      },
+      "semanticAcceptable": true,
+      "ipaComplete": true,
+      "wholeCardAcceptable": true
+    },
+    {
+      "id": "D05",
+      "outputHash": "a6c3b2a46f319b243194125e5b5ba6883d5424f5565a9652517fd464d91f6eb3",
+      "adequacy": 4,
+      "completeness": 4,
+      "fluency": 2,
+      "critical": false,
+      "ipaUs": "correct",
+      "ipaUk": "correct",
+      "notes": "语境含义已改为多云的，修复先前晴朗反义错误。例句译文“它是…没有雨预期”仍生硬，但多云/预计无雨语义可理解。",
+      "aspects": {
+        "meaning": true,
+        "partOfSpeech": true,
+        "contextMeaning": true,
+        "examples": true
+      },
+      "semanticAcceptable": true,
+      "ipaComplete": true,
+      "wholeCardAcceptable": true
+    },
+    {
+      "id": "D06",
+      "outputHash": "df2c42b5336ef7e4103e73d4121871322baf90b170fc81054439190ec872ed66",
+      "adequacy": 4,
+      "completeness": 4,
+      "fluency": 4,
+      "critical": false,
+      "ipaUs": "correct",
+      "ipaUk": "correct",
+      "notes": "运行程序的动词义项、语境释义和例句一致。US /ə/ 与 UK /ɐ/ 保留来源转写约定。",
+      "aspects": {
+        "meaning": true,
+        "partOfSpeech": true,
+        "contextMeaning": true,
+        "examples": true
+      },
+      "semanticAcceptable": true,
+      "ipaComplete": true,
+      "wholeCardAcceptable": true
+    },
+    {
+      "id": "D07",
+      "outputHash": "6a1319578ee7a0abb3cf0b58f5ed5cf4f61c37d2238c0487d38cda2693556043",
+      "adequacy": 4,
+      "completeness": 4,
+      "fluency": 3,
+      "critical": false,
+      "ipaUs": "correct",
+      "ipaUk": "correct",
+      "notes": "收取停车费义项与及物动词正确，二十美元保留；“对停车费收取20美元”略重复。",
+      "aspects": {
+        "meaning": true,
+        "partOfSpeech": true,
+        "contextMeaning": true,
+        "examples": true
+      },
+      "semanticAcceptable": true,
+      "ipaComplete": true,
+      "wholeCardAcceptable": true
+    },
+    {
+      "id": "D08",
+      "outputHash": "aa8b9f99f9d6227bf9b58cf6b62a28e0e48b8cf7f87b4ed40adf9fbc090048a6",
+      "adequacy": 3,
+      "completeness": 4,
+      "fluency": 3,
+      "critical": false,
+      "ipaUs": "correct",
+      "ipaUk": "correct",
+      "notes": "去掉了先前错误的“处罚”。当前起诉/指控表达正式控告，可按普通英语学习卡接受；不是表示已定罪或施加处罚。例句译为提出盗窃指控，义项一致。",
+      "aspects": {
+        "meaning": true,
+        "partOfSpeech": true,
+        "contextMeaning": true,
+        "examples": true
+      },
+      "semanticAcceptable": true,
+      "ipaComplete": true,
+      "wholeCardAcceptable": true
+    },
+    {
+      "id": "D09",
+      "outputHash": "a4cc15e6c29700b16c27426a7b1499fb55fde274b77de25638be357918e77f38",
+      "adequacy": 2,
+      "completeness": 3,
+      "fluency": 4,
+      "critical": true,
+      "ipaUs": "correct",
+      "ipaUk": "correct",
+      "notes": "释义和词性正确，但例句把 fine 替换为 good，完全没有所选词，不能作为 fine 的用法示例。两轮均复现。",
+      "aspects": {
+        "meaning": true,
+        "partOfSpeech": true,
+        "contextMeaning": true,
+        "examples": false
+      },
+      "semanticAcceptable": false,
+      "ipaComplete": true,
+      "wholeCardAcceptable": false
+    },
+    {
+      "id": "D10",
+      "outputHash": "10c7c90cdac62c4e4666bcc0fb2fdcbd3f674003a02078f61081aac973a53896",
+      "adequacy": 2,
+      "completeness": 3,
+      "fluency": 4,
+      "critical": true,
+      "ipaUs": "correct",
+      "ipaUk": "correct",
+      "notes": "释义和语境为罚款名词，但例句 He was fined 使用被动动词，不匹配所选词在原句 paid a fine 中的名词用法。两轮均复现。",
+      "aspects": {
+        "meaning": true,
+        "partOfSpeech": true,
+        "contextMeaning": true,
+        "examples": false
+      },
+      "semanticAcceptable": false,
+      "ipaComplete": true,
+      "wholeCardAcceptable": false
+    },
+    {
+      "id": "D11",
+      "outputHash": "498420ea0d19255fd375208d42a260686ab62491839d6579e295831bbeabe431",
+      "adequacy": 4,
+      "completeness": 2,
+      "fluency": 4,
+      "critical": false,
+      "ipaUs": "missing",
+      "ipaUk": "missing",
+      "notes": "放弃的短语动词义项和例句正确。US/UK 整短语音标均缺失；不能记为correct。",
+      "aspects": {
+        "meaning": true,
+        "partOfSpeech": true,
+        "contextMeaning": true,
+        "examples": true
+      },
+      "semanticAcceptable": true,
+      "ipaComplete": false,
+      "wholeCardAcceptable": false
+    },
+    {
+      "id": "D12",
+      "outputHash": "43d294983fa98548a2094ca954e6f81a2f0354e3aec13fd29f4b6767d1efc523",
+      "adequacy": 4,
+      "completeness": 2,
+      "fluency": 4,
+      "critical": false,
+      "ipaUs": "missing",
+      "ipaUk": "missing",
+      "notes": "飞机起飞义项和例句正确。US/UK 整短语音标均缺失，单独统计完整性。",
+      "aspects": {
+        "meaning": true,
+        "partOfSpeech": true,
+        "contextMeaning": true,
+        "examples": true
+      },
+      "semanticAcceptable": true,
+      "ipaComplete": false,
+      "wholeCardAcceptable": false
+    },
+    {
+      "id": "D01",
+      "outputHash": "9e5ec6b4a8507dbb0f2ec2539b9e518a801ae88e449f6ed2ec2f87cba5e048bc",
+      "adequacy": 3,
+      "completeness": 3,
+      "fluency": 3,
+      "critical": false,
+      "ipaUs": "correct",
+      "ipaUk": "correct",
+      "notes": "轻重义项、形容词和例句正确。第一轮英文例句稍生硬；第二轮 surprisingly 的惊讶语气弱化为“非常”，沿用上一轮标准记轻微完整性问题。",
+      "aspects": {
+        "meaning": true,
+        "partOfSpeech": true,
+        "contextMeaning": true,
+        "examples": true
+      },
+      "semanticAcceptable": true,
+      "ipaComplete": true,
+      "wholeCardAcceptable": true
+    },
+    {
+      "id": "D02",
+      "outputHash": "ee3bb58581a37a78b32bcb749ea4a9cc29a5999e3943f031365c8b9d194303ba",
+      "adequacy": 4,
+      "completeness": 4,
+      "fluency": 4,
+      "critical": false,
+      "ipaUs": "correct",
+      "ipaUk": "correct",
+      "notes": "第二轮点燃义项、动词与例句正确。",
+      "aspects": {
+        "meaning": true,
+        "partOfSpeech": true,
+        "contextMeaning": true,
+        "examples": true
+      },
+      "semanticAcceptable": true,
+      "ipaComplete": true,
+      "wholeCardAcceptable": true
+    }
+  ],
+  "acceptancePolicy": {
+    "semantic": "meaning, partOfSpeech, contextMeaning and examples all acceptable; minor stylistic awkwardness or nonessential omission is allowed but wrong meanings/polarity, omitted selected word, wrong example part of speech and undelivered cards are rejected",
+    "ipaComplete": "both US and UK nonempty in a delivered card and individually reviewed correct under the source transcription conventions",
+    "wholeCard": "semantic acceptable AND IPA complete AND adequacy >= 3 AND completeness >= 3 AND fluency >= 2 AND no critical error"
+  },
+  "summary": {
+    "rows": 24,
+    "uniqueOutputs": 14,
+    "repetitions": 2,
+    "counts": {
+      "meaning": {
+        "passed": 23,
+        "total": 24,
+        "rate": 0.9583333333333334
+      },
+      "partOfSpeech": {
+        "passed": 23,
+        "total": 24,
+        "rate": 0.9583333333333334
+      },
+      "contextMeaning": {
+        "passed": 23,
+        "total": 24,
+        "rate": 0.9583333333333334
+      },
+      "examples": {
+        "passed": 19,
+        "total": 24,
+        "rate": 0.7916666666666666
+      },
+      "semanticAcceptable": {
+        "passed": 19,
+        "total": 24,
+        "rate": 0.7916666666666666
+      },
+      "ipaComplete": {
+        "passed": 19,
+        "total": 24,
+        "rate": 0.7916666666666666
+      },
+      "wholeCardAcceptable": {
+        "passed": 15,
+        "total": 24,
+        "rate": 0.625
+      }
+    },
+    "semanticFailures": [
+      "D09 both rounds: example omits selected word fine",
+      "D10 both rounds: noun card uses verb fined in example"
+    ],
+    "deliveryFailures": [
+      "D02 repetition 1: two invalid JSON outputs, unquoted examples property"
+    ],
+    "missingIpa": [
+      "D11/D12 both rounds: whole-phrase entries absent",
+      "D02 repetition 1: no delivered card, not an offline dictionary coverage failure"
+    ],
+    "comparison": {
+      "priorSemanticPassed": 20,
+      "currentSemanticPassed": 19,
+      "priorWholeCardPassed": 16,
+      "currentWholeCardPassed": 15,
+      "recommendation": "Revert this prompt candidate; retain results as regression evidence. Cloudy/charge improvements do not offset example/delivery regressions."
+    }
+  },
+  "references": [
+    "https://dictionary.cambridge.org/dictionary/english-chinese-simplified/charge",
+    "https://downloads.bbc.co.uk/learningenglish/features/qanda/bbc_qanda_charge.pdf"
+  ]
+}

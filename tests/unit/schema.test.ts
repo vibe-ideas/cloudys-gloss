@@ -4,7 +4,7 @@ describe('模型设置', () => {
   it('新安装默认连接本地 MLX，使用单并发和 120 秒超时', () => {
     expect(SettingsSchema.parse(defaults)).toEqual({
       baseUrl: 'http://127.0.0.1:8080/v1',
-      model: 'mlx-community/Qwen2.5-3B-Instruct-4bit',
+      model: 'Qwen/Qwen3-1.7B-MLX-4bit',
       apiKey: '', temperature: 0, concurrency: 1, timeout: 120000, theme: 'system', autoStartLocalModel: true,
     });
   });

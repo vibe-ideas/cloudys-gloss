@@ -30,7 +30,7 @@
     "model:bridge": "python3 scripts/native-host.py --install",
     "model:bridge:uninstall": "python3 scripts/native-host.py --uninstall",
     "test:native": "pnpm build && pnpm build:firefox && playwright test -c playwright.native.config.ts",
-    "smoke:mlx": "MODEL_BASE_URL=http://127.0.0.1:8080/v1 MODEL_NAME=mlx-community/Qwen2.5-3B-Instruct-4bit pnpm smoke:live"
+    "smoke:mlx": "MODEL_BASE_URL=http://127.0.0.1:8080/v1 MODEL_NAME=Qwen/Qwen3-1.7B-MLX-4bit pnpm smoke:live"
   },
   "dependencies": {
     "idb": "^8.0.3",

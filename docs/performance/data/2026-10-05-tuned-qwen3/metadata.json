@@ -1,0 +1,33 @@
+{
+  "date": "2026-10-04T18:04:42.368Z",
+  "chip": "Apple M4 Pro",
+  "model": "Qwen/Qwen3-1.7B-MLX-4bit",
+  "services": [
+    {
+      "name": "mlx-serve-qwen3-1.7b",
+      "baseUrl": "http://127.0.0.1:8080/v1"
+    }
+  ],
+  "order": [
+    [
+      "mlx-serve-qwen3-1.7b"
+    ],
+    [
+      "mlx-serve-qwen3-1.7b"
+    ]
+  ],
+  "temperature": 0,
+  "notes": [
+    "Two reverse-order blocks, three measured requests per block after a warmup.",
+    "Server prompt caches retain their configured settings. No extension result cache.",
+    "HTTP decode TPS = (completion_tokens - 1) / seconds from first content to finish event; not kernel throughput.",
+    "Ordinary desktop apps remain open. Provider success only checks structure, not semantic quality."
+  ],
+  "modelRevision": "21457c6f51ed54a7c16e988c0844db973815c137",
+  "runtime": "mlx-serve 26.10.1",
+  "client": "Bun",
+  "reasoningBudget": 0,
+  "bufferPoolBytes": 268435456,
+  "prefixCache": "1 / 128MB",
+  "providerHash": "f6b3c33f3fa57ce4d055242c2007bc1d3214aa71313dca60d221c8e6613b4af4"
+}

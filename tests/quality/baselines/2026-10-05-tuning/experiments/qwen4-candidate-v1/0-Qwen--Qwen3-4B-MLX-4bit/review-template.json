@@ -1,0 +1,171 @@
+{
+  "corpusHash": "66299cbae34ac48e49061dc0edea8ef7e94d1ab07a23c09aa0bfb8de7e309794",
+  "providerHash": "517238cfad0b91af8135b938251f8c7d377df8d6720d1f78b20ad1478d65a9b7",
+  "model": "Qwen/Qwen3-4B-MLX-4bit",
+  "reviewer": null,
+  "method": null,
+  "reviews": [
+    {
+      "id": "T01",
+      "outputHash": "098a3f8671293c547aa901b2ab1285cf420b1e5f9d446843aa933c428cc434dd",
+      "adequacy": null,
+      "completeness": null,
+      "fluency": null,
+      "critical": null,
+      "notes": null
+    },
+    {
+      "id": "T02",
+      "outputHash": "79424984d2ed5c4c7ebc61ffc1bd35e70fd2772db152fa4e0a4e3842894bb6b5",
+      "adequacy": null,
+      "completeness": null,
+      "fluency": null,
+      "critical": null,
+      "notes": null
+    },
+    {
+      "id": "T03",
+      "outputHash": "b5f02a67fe059b23f66a3bce63f36b4d025a5eb60217d96cd88d85187838d135",
+      "adequacy": null,
+      "completeness": null,
+      "fluency": null,
+      "critical": null,
+      "notes": null
+    },
+    {
+      "id": "T04",
+      "outputHash": "9e32fa8e17e9cd02822cc763016045f3a0c3c7d46c9782cf9871900402285c8d",
+      "adequacy": null,
+      "completeness": null,
+      "fluency": null,
+      "critical": null,
+      "notes": null
+    },
+    {
+      "id": "T05",
+      "outputHash": "02b049411da180b4aa2ecebdde0aa929b8c2e292e2e1857802f175b48cf8b0d9",
+      "adequacy": null,
+      "completeness": null,
+      "fluency": null,
+      "critical": null,
+      "notes": null
+    },
+    {
+      "id": "T06",
+      "outputHash": "79ce044b921ba5253ee675fb92d03e51ddcbbf5aed6149700dd1f9f87f1e05cb",
+      "adequacy": null,
+      "completeness": null,
+      "fluency": null,
+      "critical": null,
+      "notes": null
+    },
+    {
+      "id": "T07",
+      "outputHash": "062c354b948fb8dc84f072bf958f06acee7044cd29ae59cc5514ed428747c5f7",
+      "adequacy": null,
+      "completeness": null,
+      "fluency": null,
+      "critical": null,
+      "notes": null
+    },
+    {
+      "id": "T08",
+      "outputHash": "1f0e99f58faa727b3a534134dbce631a5a314b2ab549ba44596ec1409dafc227",
+      "adequacy": null,
+      "completeness": null,
+      "fluency": null,
+      "critical": null,
+      "notes": null
+    },
+    {
+      "id": "T09",
+      "outputHash": "f7d476369ed8f2dc64f62d12734bd5ee5226cd076af172c6f2816c8dec2d314c",
+      "adequacy": null,
+      "completeness": null,
+      "fluency": null,
+      "critical": null,
+      "notes": null
+    },
+    {
+      "id": "T10",
+      "outputHash": "a7b94d00c8ac49a6b634133a9634dbda5e76d8f0bbd4e2dbb9bb0a4b5dab6118",
+      "adequacy": null,
+      "completeness": null,
+      "fluency": null,
+      "critical": null,
+      "notes": null
+    },
+    {
+      "id": "T11",
+      "outputHash": "b2e8a39397d12136c9a942d92feb2a5d81ffb7b100a68f5ef6abc064905cb8ba",
+      "adequacy": null,
+      "completeness": null,
+      "fluency": null,
+      "critical": null,
+      "notes": null
+    },
+    {
+      "id": "T12",
+      "outputHash": "69a8b70511452d56591fa33e3b1ed9de7ff32bb5c8757eda072c73e445d14d42",
+      "adequacy": null,
+      "completeness": null,
+      "fluency": null,
+      "critical": null,
+      "notes": null
+    },
+    {
+      "id": "T13",
+      "outputHash": "990f4dcdef1698ba920647bc45eea62666c5264f9f6d4cdcf666fe3943b5e05e",
+      "adequacy": null,
+      "completeness": null,
+      "fluency": null,
+      "critical": null,
+      "notes": null
+    },
+    {
+      "id": "T14",
+      "outputHash": "dfbcce937fc273e3e482c71dfebb183410c80e11c6ba1a78a3fdf19d4b1af970",
+      "adequacy": null,
+      "completeness": null,
+      "fluency": null,
+      "critical": null,
+      "notes": null
+    },
+    {
+      "id": "T15",
+      "outputHash": "940653629d26a9c2a827402848f1fef66f75d5431e6af3b19845da617afac687",
+      "adequacy": null,
+      "completeness": null,
+      "fluency": null,
+      "critical": null,
+      "notes": null
+    },
+    {
+      "id": "T16",
+      "outputHash": "3b73d374c30334d0f2067c8ffdbd862055dba49a1e176129a7dedb1acb877cb1",
+      "adequacy": null,
+      "completeness": null,
+      "fluency": null,
+      "critical": null,
+      "notes": null
+    },
+    {
+      "id": "T17",
+      "outputHash": "faa909afc15bd3529026343eff010a8423ad39284f6dc36936f13a240aac1c8b",
+      "adequacy": null,
+      "completeness": null,
+      "fluency": null,
+      "critical": null,
+      "notes": null
+    },
+    {
+      "id": "T18",
+      "outputHash": "fa007790b8b3b51e1f7c82c6a08f5ca6cf8d8b110f49218643a8ae813d66fe56",
+      "adequacy": null,
+      "completeness": null,
+      "fluency": null,
+      "critical": null,
+      "notes": null
+    }
+  ]
+}

@@ -1,0 +1,161 @@
+{
+  "version": "1.0.0",
+  "cases": [
+    {
+      "id": "D01",
+      "title": "light 描述背包重量时解释为轻的形容词",
+      "word": "light",
+      "context": "This backpack is surprisingly light, even with a laptop and two books inside.",
+      "expectedPartOfSpeech": "adjective",
+      "meaningPattern": "轻",
+      "requirements": [
+        "说明重量轻，不是光线或颜色浅。",
+        "美式和英式音标须人工逐项核查；空音标代表缺失，不计作发音正确。",
+        "英文例句应体现同一语境义项，中文例句翻译应完整准确。"
+      ]
+    },
+    {
+      "id": "D02",
+      "title": "light 描述点燃蜡烛时解释为动词",
+      "word": "light",
+      "context": "Please light the candle before the guests arrive.",
+      "expectedPartOfSpeech": "verb",
+      "meaningPattern": "点|燃",
+      "requirements": [
+        "词性是动词，说明点燃蜡烛。",
+        "美式和英式音标须人工逐项核查；空音标代表缺失，不计作发音正确。",
+        "英文例句应体现同一语境义项，中文例句翻译应完整准确。"
+      ]
+    },
+    {
+      "id": "D03",
+      "title": "bank 出现在河边语境时解释为河岸",
+      "word": "bank",
+      "context": "We sat on the bank of the river and watched the ducks.",
+      "expectedPartOfSpeech": "noun",
+      "meaningPattern": "岸",
+      "requirements": [
+        "指河岸，不是金融机构。",
+        "美式和英式音标须人工逐项核查；空音标代表缺失，不计作发音正确。",
+        "英文例句应体现同一语境义项，中文例句翻译应完整准确。"
+      ]
+    },
+    {
+      "id": "D04",
+      "title": "bank 出现在存款语境时解释为银行",
+      "word": "bank",
+      "context": "She deposited her savings at the bank yesterday.",
+      "expectedPartOfSpeech": "noun",
+      "meaningPattern": "银行",
+      "requirements": [
+        "指接受存款的银行，不是河岸。",
+        "美式和英式音标须人工逐项核查；空音标代表缺失，不计作发音正确。",
+        "英文例句应体现同一语境义项，中文例句翻译应完整准确。"
+      ]
+    },
+    {
+      "id": "D05",
+      "title": "cloudy 描述天气时解释为多云的形容词",
+      "word": "cloudy",
+      "context": "It was a cloudy morning, but no rain was expected.",
+      "expectedPartOfSpeech": "adjective",
+      "meaningPattern": "云|阴",
+      "requirements": [
+        "说明天气多云或阴，不是含糊不清。",
+        "美式和英式音标须人工逐项核查；空音标代表缺失，不计作发音正确。",
+        "英文例句应体现同一语境义项，中文例句翻译应完整准确。"
+      ]
+    },
+    {
+      "id": "D06",
+      "title": "run 描述执行程序时解释为运行的动词",
+      "word": "run",
+      "context": "Click this button to run the program on your computer.",
+      "expectedPartOfSpeech": "verb",
+      "meaningPattern": "运行|执行|启动",
+      "requirements": [
+        "指执行计算机程序，不是跑步。",
+        "美式和英式音标须人工逐项核查；空音标代表缺失，不计作发音正确。",
+        "英文例句应体现同一语境义项，中文例句翻译应完整准确。"
+      ]
+    },
+    {
+      "id": "D07",
+      "title": "charge 描述收取费用时解释为收费的动词",
+      "word": "charge",
+      "context": "The hotel will charge you twenty dollars for parking.",
+      "expectedPartOfSpeech": "verb",
+      "meaningPattern": "收|费",
+      "requirements": [
+        "指酒店收取停车费，不是充电或指控。",
+        "美式和英式音标须人工逐项核查；空音标代表缺失，不计作发音正确。",
+        "英文例句应体现同一语境义项，中文例句翻译应完整准确。"
+      ]
+    },
+    {
+      "id": "D08",
+      "title": "charge 描述法律指控时解释为指控的动词",
+      "word": "charge",
+      "context": "The police will charge him with theft.",
+      "expectedPartOfSpeech": "verb",
+      "meaningPattern": "指控|控告|起诉",
+      "requirements": [
+        "指被指控盗窃，不是收费或充电。",
+        "美式和英式音标须人工逐项核查；空音标代表缺失，不计作发音正确。",
+        "英文例句应体现同一语境义项，中文例句翻译应完整准确。"
+      ]
+    },
+    {
+      "id": "D09",
+      "title": "fine 描述身体状态时解释为良好的形容词",
+      "word": "fine",
+      "context": "I feel fine now after a good night of sleep.",
+      "expectedPartOfSpeech": "adjective",
+      "meaningPattern": "好|健康|舒适|正常|舒服",
+      "requirements": [
+        "说明身体状态良好，不是罚款。",
+        "美式和英式音标须人工逐项核查；空音标代表缺失，不计作发音正确。",
+        "英文例句应体现同一语境义项，中文例句翻译应完整准确。"
+      ]
+    },
+    {
+      "id": "D10",
+      "title": "fine 描述停车处罚时解释为罚款的名词",
+      "word": "fine",
+      "context": "He paid a fine for parking in front of the fire exit.",
+      "expectedPartOfSpeech": "noun",
+      "meaningPattern": "罚",
+      "requirements": [
+        "指金钱处罚，词性是名词。",
+        "美式和英式音标须人工逐项核查；空音标代表缺失，不计作发音正确。",
+        "英文例句应体现同一语境义项，中文例句翻译应完整准确。"
+      ]
+    },
+    {
+      "id": "D11",
+      "title": "give up 描述停止尝试时解释为放弃的短语动词",
+      "word": "give up",
+      "context": "The puzzle is difficult, but please do not give up.",
+      "expectedPartOfSpeech": "verb",
+      "meaningPattern": "放弃",
+      "requirements": [
+        "解释整个短语为放弃，不逐词解释 give 和 up。",
+        "美式和英式音标须人工逐项核查；空音标代表缺失，不计作发音正确。",
+        "英文例句应体现同一语境义项，中文例句翻译应完整准确。"
+      ]
+    },
+    {
+      "id": "D12",
+      "title": "take off 描述飞机离地时解释为起飞的短语动词",
+      "word": "take off",
+      "context": "The plane will take off in ten minutes.",
+      "expectedPartOfSpeech": "verb",
+      "meaningPattern": "起飞",
+      "requirements": [
+        "解释整个短语为飞机起飞，不是脱下衣物。",
+        "美式和英式音标须人工逐项核查；空音标代表缺失，不计作发音正确。",
+        "英文例句应体现同一语境义项，中文例句翻译应完整准确。"
+      ]
+    }
+  ]
+}

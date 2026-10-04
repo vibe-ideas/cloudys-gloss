@@ -1,0 +1,34 @@
+[
+  {
+    "model": "Qwen/Qwen3-1.7B-MLX-4bit",
+    "providerHash": "047aa04c3358864ca254dd918b96a4030db1af1dbe5a79b2693e1eb02b15d49b",
+    "repetitions": 2,
+    "samples": 24,
+    "automaticPassed": 20,
+    "reviewed": 24,
+    "acceptedCases": 9,
+    "cases": 12,
+    "byCase": {
+      "A01": true,
+      "A02": true,
+      "A03": true,
+      "A04": true,
+      "A05": true,
+      "A06": true,
+      "A07": true,
+      "A08": true,
+      "A09": false,
+      "A10": false,
+      "A11": false,
+      "A12": true
+    },
+    "acceptedRate": 0.75,
+    "criticalCases": 0,
+    "medianMs": 264.8132914999999,
+    "meanReview": {
+      "adequacy": 3.1666666666666665,
+      "completeness": 3.3333333333333335,
+      "fluency": 2.75
+    }
+  }
+]

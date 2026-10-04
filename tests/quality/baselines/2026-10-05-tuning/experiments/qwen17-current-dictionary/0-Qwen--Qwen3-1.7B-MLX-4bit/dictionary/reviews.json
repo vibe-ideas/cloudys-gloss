@@ -1,0 +1,351 @@
+{
+  "kind": "dictionary",
+  "corpusHash": "dbef3d029f4c2a230b22a6fa2ddc0c00cf4da4458559a65c0bdfc0af7063d818",
+  "providerHash": "67f97ba509b32c0832ab0c7b604df27f21bc7d91558523fdfbf9c09cbda97d52",
+  "model": "Qwen/Qwen3-1.7B-MLX-4bit",
+  "reviewer": "dictionary_expert — independent AI-assisted bilingual review",
+  "method": "Read every final card in both rounds against the fixed source context and requirements; compare meanings, part of speech, contextual meaning and bilingual examples. Check IPA against the pinned dialect-specific data and its stated phonemic conventions. Missing IPA remains missing; automatic Zod/keyword results are not quality scores.",
+  "rubric": {
+    "adequacy": "0–4: contextual sense and part of speech",
+    "completeness": "0–4: required card content including pronunciation",
+    "fluency": "0–4: natural Chinese and bilingual example",
+    "ipa": "correct / incorrect / missing / uncertain; expert review, never inferred from Zod"
+  },
+  "reviews": [
+    {
+      "id": "D01",
+      "outputHash": "c39692f49a59ff0fc7e59639933bcae97fdd5c730a200bc8c453391fcef1a9b4",
+      "adequacy": 3,
+      "completeness": 3,
+      "fluency": 3,
+      "critical": false,
+      "ipaUs": "correct",
+      "ipaUk": "correct",
+      "notes": "轻重义项与形容词正确，例句同义项。surprisingly/even 的惊讶与让步语气弱化为“非常轻”；第二轮释义“轻的，轻的”重复。属于轻微完整性/表达问题，不改变目标义项。",
+      "aspects": {
+        "meaning": true,
+        "partOfSpeech": true,
+        "contextMeaning": true,
+        "examples": true
+      },
+      "semanticAcceptable": true,
+      "ipaComplete": true,
+      "wholeCardAcceptable": true
+    },
+    {
+      "id": "D02",
+      "outputHash": "01d5f781028107371d3dc633cb15efa90a2fc732d603aa43f2e8d372f651c29d",
+      "adequacy": 4,
+      "completeness": 4,
+      "fluency": 4,
+      "critical": false,
+      "ipaUs": "correct",
+      "ipaUk": "correct",
+      "notes": "点燃义项与动词正确；短例句保持点燃蜡烛语义，译文匹配。",
+      "aspects": {
+        "meaning": true,
+        "partOfSpeech": true,
+        "contextMeaning": true,
+        "examples": true
+      },
+      "semanticAcceptable": true,
+      "ipaComplete": true,
+      "wholeCardAcceptable": true
+    },
+    {
+      "id": "D03",
+      "outputHash": "12854298def0b4a6d0d862e54d834dc2707985876a3e76bf33b03fb2435ac726",
+      "adequacy": 4,
+      "completeness": 4,
+      "fluency": 3,
+      "critical": false,
+      "ipaUs": "correct",
+      "ipaUk": "correct",
+      "notes": "河岸义项、词性、例句对应正确。“名词（名词）”和“河边的岸边”重复，记表达问题。",
+      "aspects": {
+        "meaning": true,
+        "partOfSpeech": true,
+        "contextMeaning": true,
+        "examples": true
+      },
+      "semanticAcceptable": true,
+      "ipaComplete": true,
+      "wholeCardAcceptable": true
+    },
+    {
+      "id": "D04",
+      "outputHash": "79fb6bbe885278e19361a1af345c8207d2800aa4277003ac4823b97e06ee437b",
+      "adequacy": 4,
+      "completeness": 4,
+      "fluency": 3,
+      "critical": false,
+      "ipaUs": "correct",
+      "ipaUk": "correct",
+      "notes": "银行义项正确，缩短例句仍保留存款行为；重复“她把她的”略生硬。",
+      "aspects": {
+        "meaning": true,
+        "partOfSpeech": true,
+        "contextMeaning": true,
+        "examples": true
+      },
+      "semanticAcceptable": true,
+      "ipaComplete": true,
+      "wholeCardAcceptable": true
+    },
+    {
+      "id": "D05",
+      "outputHash": "f82db58a0afa0fb789f5fec930ad6abee994a1785ad1433723a29d4f0cc01d49",
+      "adequacy": 1,
+      "completeness": 3,
+      "fluency": 2,
+      "critical": true,
+      "ipaUs": "correct",
+      "ipaUk": "correct",
+      "notes": "contextMeaning 将 cloudy 反译为“天气晴朗”，与原文多云相反，是实质语义错误。词性/释义正确，例句译文仍含多云和预期无雨，但“它是…没有雨预期”生硬。离线 IPA 修复了先前 /oʊ/ 错音，不能抵消语境反译。",
+      "aspects": {
+        "meaning": true,
+        "partOfSpeech": true,
+        "contextMeaning": false,
+        "examples": true
+      },
+      "semanticAcceptable": false,
+      "ipaComplete": true,
+      "wholeCardAcceptable": false
+    },
+    {
+      "id": "D06",
+      "outputHash": "4cb6d3abc98950952e8f2c3dcd13422738c385568239114b1f944a5322b75193",
+      "adequacy": 4,
+      "completeness": 4,
+      "fluency": 4,
+      "critical": false,
+      "ipaUs": "correct",
+      "ipaUk": "correct",
+      "notes": "运行程序的动词义项正确，短例句与中译对应。US /ə/ 与 UK /ɐ/ 保留来源的音位转写约定，不因不同于传统教学 /ʌ/ 就判错。",
+      "aspects": {
+        "meaning": true,
+        "partOfSpeech": true,
+        "contextMeaning": true,
+        "examples": true
+      },
+      "semanticAcceptable": true,
+      "ipaComplete": true,
+      "wholeCardAcceptable": true
+    },
+    {
+      "id": "D07",
+      "outputHash": "2a1010e6fdc363e8b3de3a9659acf496fb318a3004dc6d873a7f1abefb362982",
+      "adequacy": 4,
+      "completeness": 4,
+      "fluency": 3,
+      "critical": false,
+      "ipaUs": "correct",
+      "ipaUk": "correct",
+      "notes": "收取费用义项、动词与酒店停车收费例句正确。US 卷舌与 UK 非卷舌由独立词典给出，末尾 /dʒ/ 完整。",
+      "aspects": {
+        "meaning": true,
+        "partOfSpeech": true,
+        "contextMeaning": true,
+        "examples": true
+      },
+      "semanticAcceptable": true,
+      "ipaComplete": true,
+      "wholeCardAcceptable": true
+    },
+    {
+      "id": "D08",
+      "outputHash": "103eb1fd2ace8c968f088f25283290ad17c306ca134583a137f26e8f57d183d4",
+      "adequacy": 2,
+      "completeness": 3,
+      "fluency": 3,
+      "critical": true,
+      "ipaUs": "correct",
+      "ipaUk": "correct",
+      "notes": "释义“指控；处罚”把 charge 的指控义混入惩罚结果；本句并未表示处罚或定罪，学习者可能被误导。语境说明和例句保留指控盗窃，词性正确，但不能据此抵消释义错误。",
+      "aspects": {
+        "meaning": false,
+        "partOfSpeech": true,
+        "contextMeaning": true,
+        "examples": true
+      },
+      "semanticAcceptable": false,
+      "ipaComplete": true,
+      "wholeCardAcceptable": false
+    },
+    {
+      "id": "D09",
+      "outputHash": "961a7ffdd2c50dc716685ae081b29da7a257f25ae59e364d68c76ea641c46f95",
+      "adequacy": 4,
+      "completeness": 4,
+      "fluency": 2,
+      "critical": false,
+      "ipaUs": "correct",
+      "ipaUk": "correct",
+      "notes": "身体状态良好的形容词义项与例句正确；“因为有好一夜的睡眠”语序生硬但含义可理解。",
+      "aspects": {
+        "meaning": true,
+        "partOfSpeech": true,
+        "contextMeaning": true,
+        "examples": true
+      },
+      "semanticAcceptable": true,
+      "ipaComplete": true,
+      "wholeCardAcceptable": true
+    },
+    {
+      "id": "D10",
+      "outputHash": "4082645c43ba2c61349ac804ab63201cf89dc304c6ae1b90c92c510c1711132b",
+      "adequacy": 4,
+      "completeness": 4,
+      "fluency": 3,
+      "critical": false,
+      "ipaUs": "correct",
+      "ipaUk": "correct",
+      "notes": "罚款名词正确，例句 paid a fine 与词性一致，消防出口前违规停车处罚语境保留。",
+      "aspects": {
+        "meaning": true,
+        "partOfSpeech": true,
+        "contextMeaning": true,
+        "examples": true
+      },
+      "semanticAcceptable": true,
+      "ipaComplete": true,
+      "wholeCardAcceptable": true
+    },
+    {
+      "id": "D11",
+      "outputHash": "2666369df89aaaa4ac11056ae0f29e23d456f21a74f6efe869e26b39d0065383",
+      "adequacy": 4,
+      "completeness": 2,
+      "fluency": 4,
+      "critical": false,
+      "ipaUs": "missing",
+      "ipaUk": "missing",
+      "notes": "放弃的短语动词义项与例句正确。US/UK 整短语音标均缺失；不能将缺失标作正确，也不据单词读音拼出未经核验的短语 IPA。",
+      "aspects": {
+        "meaning": true,
+        "partOfSpeech": true,
+        "contextMeaning": true,
+        "examples": true
+      },
+      "semanticAcceptable": true,
+      "ipaComplete": false,
+      "wholeCardAcceptable": false
+    },
+    {
+      "id": "D12",
+      "outputHash": "b12e00dbe631aba8fc51c2780a883ff6e034f4ef2c32fee08baecece8b0ac9d2",
+      "adequacy": 4,
+      "completeness": 2,
+      "fluency": 4,
+      "critical": false,
+      "ipaUs": "missing",
+      "ipaUk": "missing",
+      "notes": "飞机起飞的短语动词义项与例句正确。US/UK 整短语音标均缺失；语义通过与整卡完整性分开统计。",
+      "aspects": {
+        "meaning": true,
+        "partOfSpeech": true,
+        "contextMeaning": true,
+        "examples": true
+      },
+      "semanticAcceptable": true,
+      "ipaComplete": false,
+      "wholeCardAcceptable": false
+    },
+    {
+      "id": "D01",
+      "outputHash": "8a642cab7182f2d8d86ee5233b858fb03dec122b24a9b17e6a91cdd44648a302",
+      "adequacy": 3,
+      "completeness": 3,
+      "fluency": 3,
+      "critical": false,
+      "ipaUs": "correct",
+      "ipaUk": "correct",
+      "notes": "轻重义项与形容词正确，例句同义项。surprisingly/even 的惊讶与让步语气弱化为“非常轻”；第二轮释义“轻的，轻的”重复。属于轻微完整性/表达问题，不改变目标义项。",
+      "aspects": {
+        "meaning": true,
+        "partOfSpeech": true,
+        "contextMeaning": true,
+        "examples": true
+      },
+      "semanticAcceptable": true,
+      "ipaComplete": true,
+      "wholeCardAcceptable": true
+    },
+    {
+      "id": "D02",
+      "outputHash": "22112bd0d77eccb30f50a37d4afa4b0985a135cb970f672f3c757890b90e0b20",
+      "adequacy": 4,
+      "completeness": 4,
+      "fluency": 4,
+      "critical": false,
+      "ipaUs": "correct",
+      "ipaUk": "correct",
+      "notes": "点燃义项与动词正确；短例句保持点燃蜡烛语义，译文匹配。",
+      "aspects": {
+        "meaning": true,
+        "partOfSpeech": true,
+        "contextMeaning": true,
+        "examples": true
+      },
+      "semanticAcceptable": true,
+      "ipaComplete": true,
+      "wholeCardAcceptable": true
+    }
+  ],
+  "acceptancePolicy": {
+    "semantic": "meaning, partOfSpeech, contextMeaning and examples all acceptable; minor stylistic awkwardness or nonessential shortening is allowed but wrong meanings/polarity are rejected",
+    "ipaComplete": "both US and UK nonempty and individually reviewed correct under the source transcription conventions",
+    "wholeCard": "semantic acceptable AND IPA complete AND adequacy >= 3 AND completeness >= 3 AND fluency >= 2 AND no critical error"
+  },
+  "summary": {
+    "rows": 24,
+    "uniqueOutputs": 14,
+    "repetitions": 2,
+    "counts": {
+      "meaning": {
+        "passed": 22,
+        "total": 24,
+        "rate": 0.9166666666666666
+      },
+      "partOfSpeech": {
+        "passed": 24,
+        "total": 24,
+        "rate": 1.0
+      },
+      "contextMeaning": {
+        "passed": 22,
+        "total": 24,
+        "rate": 0.9166666666666666
+      },
+      "examples": {
+        "passed": 24,
+        "total": 24,
+        "rate": 1.0
+      },
+      "semanticAcceptable": {
+        "passed": 20,
+        "total": 24,
+        "rate": 0.8333333333333334
+      },
+      "ipaComplete": {
+        "passed": 20,
+        "total": 24,
+        "rate": 0.8333333333333334
+      },
+      "wholeCardAcceptable": {
+        "passed": 16,
+        "total": 24,
+        "rate": 0.6666666666666666
+      }
+    },
+    "semanticFailures": [
+      "D05 cloudy: contextMeaning opposite meaning, both repetitions",
+      "D08 charge: definition adds punishment, both repetitions"
+    ],
+    "missingIpa": [
+      "D11 give up: both dialects absent, both repetitions",
+      "D12 take off: both dialects absent, both repetitions"
+    ]
+  }
+}

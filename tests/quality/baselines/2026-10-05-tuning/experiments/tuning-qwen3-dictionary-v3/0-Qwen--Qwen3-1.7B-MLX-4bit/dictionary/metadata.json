@@ -1,0 +1,18 @@
+{
+  "date": "2026-10-04T16:35:11.438Z",
+  "kind": "dictionary",
+  "model": "Qwen/Qwen3-1.7B-MLX-4bit",
+  "modelRevision": "21457c6f51ed54a7c16e988c0844db973815c137",
+  "corpusVersion": "1.0.0",
+  "corpusHash": "dbef3d029f4c2a230b22a6fa2ddc0c00cf4da4458559a65c0bdfc0af7063d818",
+  "providerHash": "c94a74a7dbb6035c318a5b318d3e0f24475e69e127bfebf23166ffd66bd459a9",
+  "repetitions": 1,
+  "temperature": 0,
+  "concurrency": 1,
+  "chip": "Apple M4 Pro",
+  "route": "OpenAICompatibleProvider.lookup with original Zod validation and bounded repair",
+  "runtime": "mlx-serve 26.10.1",
+  "promptCache": "1 entry / 128MB",
+  "cache": "no extension result cache",
+  "reviewPolicy": "JSON/Zod and coarse lexical guards do not establish semantic or IPA accuracy. Review each unique output; empty IPA is missing pronunciation."
+}

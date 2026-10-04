@@ -9,6 +9,9 @@
 ```text
 tests/
   quality/
+    holdout.json         # 第一组未参与初始调参的验收题，失败后作为回归集
+    acceptance.json      # 第二组独立验收题，候选冻结后执行
+    dictionary-cases.json # 词卡语境、词性与释义要求
     cases.json           # 版本化固定语料、参考译文、语义要求和规则
     corpus.ts            # Zod 校验与确定性检查
     live.test.ts         # Vitest 调用真实 provider，保存原文对应结果
@@ -55,9 +58,11 @@ QUALITY_OUTPUT=artifacts/quality/my-candidate \
 pnpm test:quality
 ```
 
-可选 `MODEL_API_KEY`、`MODEL_REVISION`、`QUALITY_REPEATS=2`、`QUALITY_RUNTIME`、`QUALITY_PROMPT_CACHE`、`QUALITY_THINKING`。后三项记录实际服务配置，**不会替你修改服务参数**。温度固定 0、串行、超时 120 秒。自选远程接口可能产生费用，但只发送仓库固定合成文本；不读取私人网页。结果不保存 API Key。
+可选 `QUALITY_CORPUS=tests/quality/holdout.json` 选择另一组固定语料（哈希按实际文件计算），`QUALITY_TASK=dictionary` 单独执行词卡检查；结果输出到 `QUALITY_OUTPUT/dictionary`。
 
-输出目录不得已有 `results.json`，避免混合两次运行。输出包含 `metadata.json`、`results.json`、`review-template.json`；记录语料哈希、provider 哈希、模型 revision（未设置则标为 unrecorded）、每次译文、回退请求数和耗时。失败样本也保留，测试继续执行其余用例。中断产生的不完整结果不能通过报告校验。
+可选 `MODEL_API_KEY`、`MODEL_REVISION`、`QUALITY_REPEATS=2`、`QUALITY_RUNTIME`、`QUALITY_PROMPT_CACHE`、`QUALITY_THINKING`。`QUALITY_RUNTIME` 与 `QUALITY_PROMPT_CACHE` 记录已运行服务的实际配置。`QUALITY_THINKING=enabled` 且运行时为 mlx-serve 时会向请求注入思考开关和预算，这是实验管线，不能冒充默认生产请求。温度固定 0、串行、超时 120 秒。自选远程接口可能产生费用，但只发送仓库固定合成文本；不读取私人网页。结果不保存 API Key。
+
+输出目录不得已有 `results.json`，避免混合两次运行。输出包含 `metadata.json`、`results.json`、`review-template.json` 和 `pipeline.json`（代码与额外请求参数快照）；记录语料哈希、provider 哈希、模型 revision（未设置则标为 unrecorded）、每次译文、回退请求数和耗时。失败样本也保留，测试继续执行其余用例。中断产生的不完整结果不能通过报告校验。
 
 ## 本机三模型对照
 
@@ -74,7 +79,7 @@ pnpm test:quality:mlx
 
 复现历史 mlx-lm 结果时，额外设置 `QUALITY_BACKEND=mlx-lm MLX_PYTHON=/path/to/mlx-env/bin/python`；该路径关闭 prompt cache，保留旧环境即可，不用于默认部署。
 
-始终思考的模型可显式设置 `QUALITY_THINKING=enabled`，运行器将记录配置：mlx-serve 使用 `--reasoning-budget -1`（禁用时为 `0`），历史 mlx-lm 使用 `enable_thinking=true`。默认仍为 `disabled`。该参数是否受支持必须核对模型模板，不能仅凭传参就声称实际关闭了思考；例如 LFM2.5-2.6B 的模板始终开启思考，应使用 `enabled`，单独标注延迟比较的差异。
+始终思考的模型可显式设置 `QUALITY_THINKING=enabled`，运行器将记录配置：mlx-serve 使用 `--reasoning-budget -1`（禁用时为 `0`），也可用 `QUALITY_REASONING_BUDGET` 指定预算；相同预算同时传给请求，额外请求参数纳入 providerHash，历史 mlx-lm 使用 `enable_thinking=true`。默认仍为 `disabled`。该参数是否受支持必须核对模型模板，不能仅凭传参就声称实际关闭了思考；例如 LFM2.5-2.6B 的模板始终开启思考，应使用 `enabled`，单独标注延迟比较的差异。
 
 ## 审阅与比较
 
@@ -99,16 +104,30 @@ pnpm quality:report path/to/candidate --gate
 pnpm quality:report path/to/candidate --baseline path/to/approved-baseline
 ```
 
-报告默认只生成比较；`--gate` 是全量达标门槛，`--baseline` 是无退步门槛，两者可合用。已有基线可以记录已知缺陷，**记录基线不等于批准发布**。provider 版本不同拒绝冒充纯模型对比，应分别评估管线改动。
+报告默认只生成比较；`--gate` 是全量达标门槛，`--baseline` 是无退步门槛，两者可合用。已有基线可以记录已知缺陷，**记录基线不等于批准发布**。provider 版本不同默认拒绝冒充纯模型对比。提示词或管线优化时可以显式传 `--allow-provider-change`，报告会标注管线变化及各版本哈希。
 
 ## 维护约定
 
 - 普通 `pnpm check` 验证质量检查器、报告门槛与参考译文，不启动模型，且不因模型质量差而长期变红。
 - 真实模型测试失败要保留具体错误与输出，修模型/配置/实现后重新跑；不要删除困难用例来提高通过率。
 - 修改语料、参考答案或规则时提升 version。历史运行连同当时的 `cases.json` 快照存入 `tests/quality/baselines/<日期>/`；历史报告可用 `--corpus` 指向快照复现。不同语料版本不能直接计算无退步。
-- 提交经过审阅的结果、评分及摘要；日志、未审阅探索轮次保留在被忽略的 `artifacts/`。质量文档放 `docs/`，可执行用例和基线只在 `tests/` 维护。
+- 提交经过审阅的结果、评分及摘要；失败探索的原始结果可另存 `baselines/<日期>/experiments/` 并标注未审阅，不能算合格基线。日志与下载文件保留在被忽略的 `artifacts/`。质量文档放 `docs/`，可执行用例和基线只在 `tests/` 维护。
 - 本轮曾把 Retry 的“重新尝试”误报为失败；v1.0.1 扩展了合理同义表达，并允许“AbortController 的 abort() 方法”的可识别 API 表述。三模型随后全部重跑，不沿用旧规则的通过率。
 
 本轮对照结论见 [2026-10-04 翻译质量报告](../performance/2026-10-04-translation-quality.md)。
 
 服务迁移对照见 [mlx-serve 性能与质量](../performance/2026-10-05-mlx-serve.md)，18 例逐条输出与审阅已归档到 `tests/quality/baselines/2026-10-05-mlx-serve/`。
+
+## 90% 目标与独立验收
+
+单条评分标准不变；按“所有重复轮次都合格”的用例数计算比例，不能以请求数或自动检查通过率代替语义质量。比如 18 例需至少 17 例通过，12 例需至少 11 例通过。
+
+```sh
+pnpm quality:report path/to/candidate \
+  --baseline path/to/baseline --allow-provider-change \
+  --min-pass-rate 0.9 --no-critical --min-repetitions 2
+```
+
+任何待审阅结果仍然失败；`--no-critical` 单独阻断严重错误，`--gate` 仍要求 100%。未参与提示词选择的题目才能叫独立验收集；一旦看过结果并据此继续选择模型或调参，就应将其转为回归集并另出新题。固定小样本的通过率不能外推为所有网页准确率。
+
+词卡的 Zod 通过、词性/释义粗规则通过与专家内容评分分别统计；IPA 缺失不是错误音标，但也不能计成内容完整。内置音标词典按 US / UK 精确查词，多读音并列，未收录的口音或整短语留空。来源与可复现构建见 [离线音标](offline-pronunciation.md)。

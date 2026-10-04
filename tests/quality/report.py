@@ -14,6 +14,8 @@ def digest(value):
 def load_run(directory, corpus, corpus_hash):
     metadata = json.loads((directory / "metadata.json").read_text())
     rows = json.loads((directory / "results.json").read_text())
+    if type(metadata.get("repetitions")) is not int or metadata["repetitions"] < 1:
+        raise ValueError(f"{directory}: repetitions must be a positive integer")
     if metadata["corpusHash"] != corpus_hash:
         raise ValueError(f"{directory}: corpus changed; rerun instead of reusing stale scores")
     expected = {(case["id"], repeat) for case in corpus["cases"] for repeat in range(1, metadata["repetitions"] + 1)}
@@ -53,17 +55,23 @@ def summary(run, corpus):
     rows = run["rows"]
     reviewed = [row for row in rows if row["review"]]
     by_case = {case["id"]: all(row["accepted"] for row in rows if row["id"] == case["id"]) for case in corpus["cases"]}
-    return {"model": run["metadata"]["model"], "samples": len(rows),
+    return {"model": run["metadata"]["model"], "providerHash": run["metadata"]["providerHash"],
+            "repetitions": run["metadata"]["repetitions"], "samples": len(rows),
             "automaticPassed": sum(row["assessment"]["automaticPassed"] for row in rows),
             "reviewed": len(reviewed), "acceptedCases": sum(by_case.values()), "cases": len(by_case), "byCase": by_case,
+            "acceptedRate": sum(by_case.values()) / len(by_case),
             "criticalCases": len({row["id"] for row in reviewed if row["review"]["critical"]}),
             "medianMs": statistics.median(row["elapsedMs"] for row in rows),
             "meanReview": {axis: statistics.mean(row["review"][axis] for row in reviewed) if reviewed else None for axis in ("adequacy", "completeness", "fluency")}}
 
 
-def render(runs, corpus):
+def render(runs, corpus, pipeline_sources=None):
     lines = ["# 固定语料翻译质量对比", "", "自动检查不等于语义质量。评分来自署名逐例审阅，非独立盲评；同一输出的重复请求复用评分。", "",
              "| 模型 | 自动检查 | 已审阅请求 | 全部轮次可接受的用例 | 严重错误用例 |", "| --- | ---: | ---: | ---: | ---: |"]
+    if pipeline_sources:
+        lines[4:4] = ["本报告包含翻译管线/提示词变化，已显式允许不同 providerHash 比较；结果不能归因为模型本身的变化。", ""] + [
+            f"- {html.escape(model)}：`{provider_hash}`" for model, provider_hash in pipeline_sources
+        ] + [""]
     for run in runs:
         item = summary(run, corpus)
         lines.append(f"| {item['model']} | {item['automaticPassed']}/{item['samples']} | {item['reviewed']}/{item['samples']} | {item['acceptedCases']}/{item['cases']} | {item['criticalCases']} |")
@@ -90,6 +98,26 @@ def render(runs, corpus):
     return "\n".join(line.rstrip() for line in "\n".join(lines).splitlines()) + "\n"
 
 
+def pass_rate(value):
+    try:
+        rate = float(value)
+    except ValueError as error:
+        raise argparse.ArgumentTypeError("Pass rate must be a number between 0 and 1") from error
+    if not 0 <= rate <= 1:
+        raise argparse.ArgumentTypeError("Pass rate must be a number between 0 and 1")
+    return rate
+
+
+def positive_integer(value):
+    try:
+        number = int(value)
+    except ValueError as error:
+        raise argparse.ArgumentTypeError("Minimum repetitions must be a positive integer") from error
+    if number < 1:
+        raise argparse.ArgumentTypeError("Minimum repetitions must be a positive integer")
+    return number
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("runs", nargs="+", type=Path)
@@ -98,32 +126,46 @@ def main():
     parser.add_argument("--corpus", type=Path, default=Path("tests/quality/cases.json"), help="Use an archived corpus only when reproducing its matching historical runs")
     parser.add_argument("--baseline", type=Path, help="Reject regressions from previously accepted baseline cases")
     parser.add_argument("--gate", action="store_true", help="Require every case to be reviewed and acceptable")
+    parser.add_argument("--allow-provider-change", action="store_true", help="Explicitly compare pipeline/prompt changes, not a model-only comparison")
+    parser.add_argument("--min-pass-rate", type=pass_rate, help="Require this fraction of cases to pass every repetition; all results must be reviewed")
+    parser.add_argument("--min-repetitions", type=positive_integer, help="Require each candidate run to contain at least this many complete repetitions; omitted for historical single-run comparisons")
+    parser.add_argument("--no-critical", action="store_true", help="Reject any reviewed critical error")
     args = parser.parse_args()
     corpus_text = args.corpus.read_text()
     corpus = json.loads(corpus_text)
     runs = [load_run(directory, corpus, digest(corpus_text)) for directory in args.runs]
-    if len({run["metadata"]["providerHash"] for run in runs}) != 1:
-        raise ValueError("Provider versions differ; do not present this as a model-only comparison")
+    baseline_run = load_run(args.baseline, corpus, digest(corpus_text)) if args.baseline else None
+    compared_runs = runs + ([baseline_run] if baseline_run else [])
+    pipeline_changed = len({run["metadata"]["providerHash"] for run in compared_runs}) != 1
+    if pipeline_changed and not args.allow_provider_change:
+        raise ValueError("Provider versions differ; use --allow-provider-change for an explicit pipeline comparison, not a model-only comparison")
+    pipeline_sources = list(dict.fromkeys((run["metadata"]["model"], run["metadata"]["providerHash"]) for run in compared_runs)) if pipeline_changed else None
     summaries = [summary(run, corpus) for run in runs]
     args.output.parent.mkdir(parents=True, exist_ok=True)
-    args.output.write_text(render(runs, corpus))
+    args.output.write_text(render(runs, corpus, pipeline_sources))
     summary_path = args.summary or args.output.with_suffix(".json")
     summary_path.parent.mkdir(parents=True, exist_ok=True)
     summary_path.write_text(json.dumps(summaries, ensure_ascii=False, indent=2) + "\n")
     regressions = []
-    if args.baseline:
-        baseline_run = load_run(args.baseline, corpus, digest(corpus_text))
-        if any(run["metadata"]["providerHash"] != baseline_run["metadata"]["providerHash"] for run in runs):
-            raise ValueError("Baseline provider differs; compare the pipeline change separately")
+    if baseline_run:
         baseline = summary(baseline_run, corpus)
         if baseline["reviewed"] != baseline["samples"]:
             raise ValueError("Baseline reviews are incomplete")
         for item in summaries:
             regressions.extend(f"{item['model']}: {case}" for case, accepted in baseline["byCase"].items() if accepted and not item["byCase"][case])
-    print(json.dumps({"summary": summaries, "regressions": regressions, "report": str(args.output)}, ensure_ascii=False, indent=2))
+    gate_failures = []
+    for item in summaries:
+        if args.min_repetitions is not None and item["repetitions"] < args.min_repetitions:
+            gate_failures.append(f"{item['model']}: {item['repetitions']} repetitions is below required minimum {args.min_repetitions}")
+        if args.min_pass_rate is not None and item["acceptedRate"] < args.min_pass_rate:
+            gate_failures.append(f"{item['model']}: accepted case rate {item['acceptedRate']:.1%} is below {args.min_pass_rate:.1%}")
+        if args.no_critical and item["criticalCases"]:
+            gate_failures.append(f"{item['model']}: {item['criticalCases']} cases contain critical errors")
+    print(json.dumps({"summary": summaries, "regressions": regressions, "pipelineChanged": pipeline_changed,
+                      "gateFailures": gate_failures, "report": str(args.output)}, ensure_ascii=False, indent=2))
     pending = any(item["reviewed"] != item["samples"] for item in summaries)
     failed_gate = args.gate and any(item["acceptedCases"] != item["cases"] for item in summaries)
-    raise SystemExit(1 if regressions or pending or failed_gate else 0)
+    raise SystemExit(1 if regressions or pending or failed_gate or gate_failures else 0)
 
 
 if __name__ == "__main__":

@@ -25,7 +25,7 @@ pnpm dev       # Chrome / Chromium
 - [版本下载](https://github.com/vibe-ideas/cloudys-gloss/releases) · [自动发布流程](docs/development/releases.md)
 - [架构](docs/development/architecture.md) · [开发与测试](docs/development/testing.md)
 - [性能实测与模型选择](docs/performance/README.md)
-- [翻译质量对比](docs/performance/2026-10-04-translation-quality.md) · [质量回归用例](docs/development/translation-quality.md)
+- [最新质量调优与独立验收](docs/performance/2026-10-05-quality-tuning.md) · [质量回归用例](docs/development/translation-quality.md)
 - [数据与权限](docs/reference/privacy.md)
 
 详细说明、测试方法和性能报告统一在 `docs/` 分类维护；`artifacts/` 仅保留本地临时产物。

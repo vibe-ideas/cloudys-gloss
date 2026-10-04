@@ -1,0 +1,560 @@
+{
+  "version": "1.0.0",
+  "cases": [
+    {
+      "id": "A01",
+      "title": "随身行李重量上限和额外收费适用对象不得混淆",
+      "tags": [
+        "精确数字",
+        "单位",
+        "条件"
+      ],
+      "texts": [
+        "Each passenger may carry one bag weighing no more than 7.5 kg. An additional bag costs SGD 24.80; the fee does not increase the weight limit for either bag."
+      ],
+      "referenceZh": [
+        "每名乘客可携带一件重量不超过 7.5 千克的行李。增加一件行李需支付 24.80 新加坡元；付费不会提高任何一件行李的重量上限。"
+      ],
+      "requirements": [
+        "7.5 千克是单件上限，可携带一件；24.80 新加坡元用于多带一件行李，不是购买超重额度。",
+        "额外付费不提高任何一件行李的限重，不能译成付费后可超重。"
+      ],
+      "checks": [
+        {
+          "id": "A01-1",
+          "block": 0,
+          "description": "重量 7.5 保留小数",
+          "pattern": "7\\.5|七点五",
+          "kind": "required",
+          "severity": "error"
+        },
+        {
+          "id": "A01-2",
+          "block": 0,
+          "description": "重量单位不能改成斤",
+          "pattern": "千克|公斤|kg",
+          "kind": "required",
+          "severity": "error"
+        },
+        {
+          "id": "A01-3",
+          "block": 0,
+          "description": "附加费用 24.80 不变",
+          "pattern": "24\\.8(?:0)?(?!\\d)",
+          "kind": "required",
+          "severity": "error"
+        },
+        {
+          "id": "A01-4",
+          "block": 0,
+          "description": "币种保留新加坡元",
+          "pattern": "SGD|新加坡元|新币|新加坡币",
+          "kind": "required",
+          "severity": "error"
+        }
+      ]
+    },
+    {
+      "id": "A02",
+      "title": "撤离后重新进入建筑必须等待授权而非仅等警报停止",
+      "tags": [
+        "否定",
+        "条件"
+      ],
+      "texts": [
+        "You must not re-enter the building until the fire officer gives permission, even if the alarm has stopped. Do not assume that silence means the inspection is complete."
+      ],
+      "referenceZh": [
+        "即使警报已经停止，在消防负责人允许之前也不得重新进入建筑。不要以为没有警报声就表示检查已经完成。"
+      ],
+      "requirements": [
+        "禁止重新进入持续到消防负责人授权；警报停止不能替代授权。",
+        "没有警报声不等于检查完成，必须保留否定推断，不能改成检查必然结束。"
+      ],
+      "checks": [
+        {
+          "id": "A02-1",
+          "block": 0,
+          "description": "保留消防授权主体",
+          "pattern": "消防",
+          "kind": "required",
+          "severity": "error"
+        },
+        {
+          "id": "A02-2",
+          "block": 0,
+          "description": "保留警报对象",
+          "pattern": "警报|报警",
+          "kind": "required",
+          "severity": "error"
+        },
+        {
+          "id": "A02-3",
+          "block": 0,
+          "description": "保留禁止或不能推断的表达",
+          "pattern": "不|禁止|未|勿",
+          "kind": "required",
+          "severity": "review"
+        }
+      ]
+    },
+    {
+      "id": "A03",
+      "title": "烘焙步骤中先冷却再装盒且取货发生在次日",
+      "tags": [
+        "时序",
+        "动作"
+      ],
+      "texts": [
+        "After the loaves had cooled completely, the baker packed them into boxes. The courier collected the boxes the following morning, not on the day they were baked."
+      ],
+      "referenceZh": [
+        "面包完全冷却后，面包师才把它们装进盒子。快递员在第二天早上取走这些盒子，而不是烘焙当天。"
+      ],
+      "requirements": [
+        "完全冷却在前、装盒在后；不能把装盒后冷却当成原文顺序。",
+        "取货时间是烘焙次日早晨，不是当天，也不是送到收件人的时间。"
+      ],
+      "checks": [
+        {
+          "id": "A03-1",
+          "block": 0,
+          "description": "必须保留冷却步骤",
+          "pattern": "冷却|凉透|放凉",
+          "kind": "required",
+          "severity": "error"
+        },
+        {
+          "id": "A03-2",
+          "block": 0,
+          "description": "必须保留次日关系",
+          "pattern": "第二天|次日|翌日|隔天",
+          "kind": "required",
+          "severity": "review"
+        },
+        {
+          "id": "A03-3",
+          "block": 0,
+          "description": "早晨取货时间",
+          "pattern": "早上|早晨|上午|清晨",
+          "kind": "required",
+          "severity": "review"
+        }
+      ]
+    },
+    {
+      "id": "A04",
+      "title": "并非所有海滩关闭不能译为全部开放或全部关闭",
+      "tags": [
+        "否定范围",
+        "限定"
+      ],
+      "texts": [
+        "Not all beaches on the island are closed. The northern beach is open to walkers, but swimming there is still prohibited."
+      ],
+      "referenceZh": [
+        "岛上的海滩并非全部关闭。北部海滩允许人们散步，但仍禁止在那里游泳。"
+      ],
+      "requirements": [
+        "并非全部关闭不等于全部开放；不能扩大为每处海滩都可进入。",
+        "北部海滩可散步但不可游泳，地点和两类活动的许可必须区分。"
+      ],
+      "checks": [
+        {
+          "id": "A04-1",
+          "block": 0,
+          "description": "保留北部地点",
+          "pattern": "北",
+          "kind": "required",
+          "severity": "error"
+        },
+        {
+          "id": "A04-2",
+          "block": 0,
+          "description": "保留步行活动",
+          "pattern": "散步|步行|行走",
+          "kind": "required",
+          "severity": "review"
+        },
+        {
+          "id": "A04-3",
+          "block": 0,
+          "description": "保留游泳活动",
+          "pattern": "游泳",
+          "kind": "required",
+          "severity": "error"
+        }
+      ]
+    },
+    {
+      "id": "A05",
+      "title": "draft 在门缝冷风与编辑稿件两段中应采用不同词义",
+      "tags": [
+        "语境",
+        "多义词",
+        "多段"
+      ],
+      "texts": [
+        "A cold draft came through the gap under the door, so I placed a rolled towel against it.",
+        "On my desk lay the first draft of a letter that I had not yet sent."
+      ],
+      "referenceZh": [
+        "一股冷风从门下的缝隙吹进来，于是我用卷起的毛巾堵住了缝隙。",
+        "桌上放着一封信的初稿，我还没有把信寄出去。"
+      ],
+      "requirements": [
+        "第一段 draft 为冷风，毛巾用于挡住门缝，不能把它译成草稿。",
+        "第二段 draft 为信件初稿；信尚未寄出，不能混成窗边气流或已寄出的信。"
+      ],
+      "checks": [
+        {
+          "id": "A05-1",
+          "block": 0,
+          "description": "门缝处应出现风的语义",
+          "pattern": "风|气流",
+          "kind": "required",
+          "severity": "review"
+        },
+        {
+          "id": "A05-2",
+          "block": 0,
+          "description": "门缝处不应出现稿件",
+          "pattern": "草稿|初稿",
+          "kind": "forbidden",
+          "severity": "error"
+        },
+        {
+          "id": "A05-3",
+          "block": 1,
+          "description": "书桌处应出现稿件语义",
+          "pattern": "草稿|初稿",
+          "kind": "required",
+          "severity": "review"
+        }
+      ]
+    },
+    {
+      "id": "A06",
+      "title": "接力赛中的 final leg 指最后一棒而非身体受伤",
+      "tags": [
+        "语境",
+        "体育"
+      ],
+      "texts": [
+        "Amir ran the final leg of the relay and overtook two teams before the finish. He was exhausted but had not injured his leg."
+      ],
+      "referenceZh": [
+        "阿米尔跑接力赛的最后一棒，并在终点前超过了两支队伍。他筋疲力尽，但腿没有受伤。"
+      ],
+      "requirements": [
+        "final leg 为接力赛最后一棒或最后一段，不是最后一条腿。",
+        "超过两队发生在到终点前；人虽疲惫但腿未受伤，不能反转否定。"
+      ],
+      "checks": [
+        {
+          "id": "A06-1",
+          "block": 0,
+          "description": "保留接力比赛语境",
+          "pattern": "接力",
+          "kind": "required",
+          "severity": "error"
+        },
+        {
+          "id": "A06-2",
+          "block": 0,
+          "description": "保留超过两支队伍",
+          "pattern": "(?:2|两|二)\\s*(?:支|个)?\\s*(?:队|团队)",
+          "kind": "required",
+          "severity": "review"
+        },
+        {
+          "id": "A06-3",
+          "block": 0,
+          "description": "不能把赛段译成最后一条腿",
+          "pattern": "最后.{0,3}条腿",
+          "kind": "forbidden",
+          "severity": "error"
+        }
+      ]
+    },
+    {
+      "id": "A07",
+      "title": "产品选择中的 on the fence 表示犹豫而非坐在围栏上",
+      "tags": [
+        "习语",
+        "自然度"
+      ],
+      "texts": [
+        "I am still on the fence about buying the camera. The image quality is excellent, but replacing the battery would cost almost as much as a used body."
+      ],
+      "referenceZh": [
+        "我还在犹豫要不要买这台相机。画质确实出色，但更换电池的费用几乎赶得上一台二手机身。"
+      ],
+      "requirements": [
+        "on the fence 是尚未决定、犹豫，并非坐在栅栏上。",
+        "画质是优点；换电池成本几乎等于二手机身，不是电池续航接近或必然比机身贵。"
+      ],
+      "checks": [
+        {
+          "id": "A07-1",
+          "block": 0,
+          "description": "保留电池对象",
+          "pattern": "电池",
+          "kind": "required",
+          "severity": "error"
+        },
+        {
+          "id": "A07-2",
+          "block": 0,
+          "description": "保留二手机身比较对象",
+          "pattern": "二手|旧机|用过的",
+          "kind": "required",
+          "severity": "review"
+        },
+        {
+          "id": "A07-3",
+          "block": 0,
+          "description": "不应引入物理围栏场景",
+          "pattern": "围栏|栅栏|篱笆",
+          "kind": "forbidden",
+          "severity": "review"
+        }
+      ]
+    },
+    {
+      "id": "A08",
+      "title": "付费景观房面对砖墙时的称赞应保留抱怨语气",
+      "tags": [
+        "反讽",
+        "语境"
+      ],
+      "texts": [
+        "What a spectacular view! We paid extra for a room whose only window faces a brick wall. Money well spent, obviously."
+      ],
+      "referenceZh": [
+        "这景色可真壮观！我们多花了钱住进这间房，唯一的窗户却对着一堵砖墙。显然，这钱花得可真“值”。"
+      ],
+      "requirements": [
+        "额外付费、房间唯一窗户和砖墙必须保留，不能凭空出现真实美景。",
+        "开头和结尾为反讽抱怨，允许中文通过语气或事实反差表达，不要求固定引号或措辞。"
+      ],
+      "checks": [
+        {
+          "id": "A08-1",
+          "block": 0,
+          "description": "保留砖墙景观对象",
+          "pattern": "砖墙|砖砌.{0,3}墙",
+          "kind": "required",
+          "severity": "review"
+        },
+        {
+          "id": "A08-2",
+          "block": 0,
+          "description": "保留窗户对象",
+          "pattern": "窗",
+          "kind": "required",
+          "severity": "error"
+        }
+      ]
+    },
+    {
+      "id": "A09",
+      "title": "档案数字化长文保留文物保护、开放限制和下一阶段条件",
+      "tags": [
+        "长文",
+        "多段",
+        "完整性"
+      ],
+      "texts": [
+        "The county archive began digitizing letters donated by local families. Staff photographed each page under soft lighting and stored the originals in acid-free folders. They recorded uncertain names exactly as written instead of silently correcting them. Volunteers could help transcribe the images, but only trained staff were allowed to handle the fragile originals. The first stage covered material from 1920 to 1945 and took nine months.\n\nThe online collection is free to browse, although some letters remain private at the donors' request. The archive has not destroyed the paper originals and does not plan to sell them. A second stage will include diaries, provided that enough funding is secured. Until then, visitors can consult a printed catalogue in the reading room by appointment."
+      ],
+      "referenceZh": [
+        "县档案馆开始对当地家庭捐赠的信件进行数字化。工作人员在柔和光线下拍摄每一页，并将原件存放在无酸文件夹中。对于无法确定的姓名，他们按原文记录，不会擅自更正。志愿者可以协助转录图像，但只有受过培训的工作人员才可接触脆弱的原件。第一阶段处理了 1920 年至 1945 年的材料，历时九个月。\n\n网上馆藏可免费浏览，不过应捐赠者要求，部分信件仍不公开。档案馆没有销毁纸质原件，也不打算出售它们。如果获得足够资金，第二阶段将纳入日记。在此之前，访客可以预约到阅览室查阅纸质目录。"
+      ],
+      "requirements": [
+        "完整保留拍摄光线、无酸保存、疑似姓名照录不擅改、志愿者可转录但仅培训员工可接触原件、1920–1945 年范围与九个月工期。",
+        "不能漏掉第二段；免费浏览不等于全部信件公开；隐私限制来自捐赠者要求。",
+        "原件未销毁且无出售计划；纳入日记须资金足够，纸质目录可在预约后于阅览室查阅。"
+      ],
+      "checks": [
+        {
+          "id": "A09-1",
+          "block": 0,
+          "description": "起始年份 1920",
+          "pattern": "1920",
+          "kind": "required",
+          "severity": "error"
+        },
+        {
+          "id": "A09-2",
+          "block": 0,
+          "description": "终止年份 1945",
+          "pattern": "1945",
+          "kind": "required",
+          "severity": "error"
+        },
+        {
+          "id": "A09-3",
+          "block": 0,
+          "description": "工期九个月",
+          "pattern": "(?:9|九)\\s*(?:个)?月",
+          "kind": "required",
+          "severity": "error"
+        },
+        {
+          "id": "A09-4",
+          "block": 0,
+          "description": "第二段保留日记规划",
+          "pattern": "日记",
+          "kind": "required",
+          "severity": "review"
+        },
+        {
+          "id": "A09-5",
+          "block": 0,
+          "description": "第二段保留预约条件",
+          "pattern": "预约",
+          "kind": "required",
+          "severity": "review"
+        }
+      ]
+    },
+    {
+      "id": "A10",
+      "title": "命令行试运行标志和输出路径应原样保留且不误称已改文件",
+      "tags": [
+        "代码",
+        "技术",
+        "否定"
+      ],
+      "texts": [
+        "Run atlas sync --dry-run before making changes to /var/data/catalog.json. The --dry-run flag prints the proposed actions without writing the file; removing it enables the actual update."
+      ],
+      "referenceZh": [
+        "在修改 /var/data/catalog.json 之前，先运行 atlas sync --dry-run。--dry-run 标志会打印计划执行的操作而不写入文件；移除该标志后才会实际更新。"
+      ],
+      "requirements": [
+        "完整保留命令、--dry-run 标志及文件路径；试运行先于正式更改。",
+        "带标志仅显示计划、不写文件；移除标志才实际更新，不能把两者行为颠倒。"
+      ],
+      "checks": [
+        {
+          "id": "A10-1",
+          "block": 0,
+          "description": "完整试运行命令",
+          "pattern": "atlas\\s+sync\\s+--dry-run",
+          "kind": "required",
+          "severity": "error"
+        },
+        {
+          "id": "A10-2",
+          "block": 0,
+          "description": "完整文件路径",
+          "pattern": "/var/data/catalog\\.json",
+          "kind": "required",
+          "severity": "error"
+        }
+      ]
+    },
+    {
+      "id": "A11",
+      "title": "自愿问卷的少数样本发现不能推广为全体居民结论",
+      "tags": [
+        "限定",
+        "统计",
+        "不确定性"
+      ],
+      "texts": [
+        "Only 18 of the 240 residents invited to the survey responded. Most respondents preferred evening classes, but the authors warned that these volunteers might not represent the wider community."
+      ],
+      "referenceZh": [
+        "受邀参加调查的 240 名居民中，只有 18 人作答。大多数答卷者偏好晚间课程，但作者提醒，这些自愿参与者可能无法代表更广泛的社区居民。"
+      ],
+      "requirements": [
+        "受邀者 240 人、实际作答 18 人，两类人群不能交换；大多数仅修饰作答者。",
+        "对自愿样本代表性的警告和可能性应保留，不能断言全体居民偏好夜课或样本一定没有代表性。"
+      ],
+      "checks": [
+        {
+          "id": "A11-1",
+          "block": 0,
+          "description": "受邀人数 240",
+          "pattern": "240|二百四十|两百四十",
+          "kind": "required",
+          "severity": "error"
+        },
+        {
+          "id": "A11-2",
+          "block": 0,
+          "description": "作答人数 18",
+          "pattern": "18|十八",
+          "kind": "required",
+          "severity": "error"
+        },
+        {
+          "id": "A11-3",
+          "block": 0,
+          "description": "保留晚间课程时段",
+          "pattern": "晚|夜",
+          "kind": "required",
+          "severity": "review"
+        },
+        {
+          "id": "A11-4",
+          "block": 0,
+          "description": "保留代表性这一限制",
+          "pattern": "代表",
+          "kind": "required",
+          "severity": "review"
+        }
+      ]
+    },
+    {
+      "id": "A12",
+      "title": "失物报告中的发现者、保管者和所有人需要各自对应",
+      "tags": [
+        "指代",
+        "关系",
+        "多段"
+      ],
+      "texts": [
+        "Ravi found Elena's scarf on the train and handed it to the station clerk. Elena did not know it was missing until Ravi called her.",
+        "The clerk kept it at the station overnight. Elena collected it herself the next day and thanked Ravi for reporting it."
+      ],
+      "referenceZh": [
+        "拉维在火车上发现了埃琳娜的围巾，并把它交给车站工作人员。直到拉维打电话给她，埃琳娜才知道围巾丢了。",
+        "工作人员把围巾在车站保管了一夜。第二天，埃琳娜亲自领取了围巾，并感谢拉维报告这件事。"
+      ],
+      "requirements": [
+        "围巾属于 Elena，发现和报告者为 Ravi，暂时保管者为车站工作人员，不能互换人物职责。",
+        "Elena 在电话告知后才发现丢失；围巾过夜存于车站，第二天由 Elena 自己领取，不是 Ravi 代领。"
+      ],
+      "checks": [
+        {
+          "id": "A12-1",
+          "block": 0,
+          "description": "失物必须仍为围巾",
+          "pattern": "围巾",
+          "kind": "required",
+          "severity": "error"
+        },
+        {
+          "id": "A12-2",
+          "block": 1,
+          "description": "保留过夜保管时长",
+          "pattern": "一夜|过夜|整夜|晚上|夜间",
+          "kind": "required",
+          "severity": "review"
+        },
+        {
+          "id": "A12-3",
+          "block": 1,
+          "description": "保留次日领取关系",
+          "pattern": "第二天|次日|翌日|隔天",
+          "kind": "required",
+          "severity": "review"
+        }
+      ]
+    }
+  ]
+}

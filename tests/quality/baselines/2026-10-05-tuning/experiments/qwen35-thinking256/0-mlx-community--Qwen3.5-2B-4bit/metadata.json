@@ -1,0 +1,22 @@
+{
+  "date": "2026-10-04T17:25:58.353Z",
+  "model": "mlx-community/Qwen3.5-2B-4bit",
+  "modelRevision": "674aaa7240b91e8012fcad5d791b7dfe5ba90207",
+  "corpusVersion": "1.0.1",
+  "corpusHash": "66299cbae34ac48e49061dc0edea8ef7e94d1ab07a23c09aa0bfb8de7e309794",
+  "providerHash": "9135d683982fe6641c45013a78cd65c244e999cb797c4566b5e01e4356c0fb67",
+  "repetitions": 2,
+  "temperature": 0,
+  "concurrency": 1,
+  "requestOptions": {
+    "enable_thinking": true,
+    "reasoning_budget_tokens": 256
+  },
+  "chip": "Apple M4 Pro",
+  "route": "OpenAICompatibleProvider.translate with streaming callback, validation and fallback",
+  "runtime": "mlx-serve 26.10.1; reasoning budget 256",
+  "promptCache": "1 entry / 128MB",
+  "enableThinking": "enabled",
+  "cache": "no extension result cache",
+  "reviewPolicy": "Automatic guards are not a semantic quality score; reviews.json records the current review status"
+}

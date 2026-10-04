@@ -16,7 +16,7 @@ export const SettingsSchema = z.object({
 export type Settings = z.infer<typeof SettingsSchema>;
 export const defaults: Settings = SettingsSchema.parse({
   baseUrl: 'http://127.0.0.1:8080/v1',
-  model: 'mlx-community/Qwen2.5-3B-Instruct-4bit',
+  model: 'Qwen/Qwen3-1.7B-MLX-4bit',
   temperature: 0,
   timeout: 120000,
   concurrency: 1,

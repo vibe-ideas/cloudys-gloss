@@ -39,7 +39,7 @@ export function DictionaryCard({ card }: { card: WordCard }) {
     {card.senses.map((sense, i) => <div class="sense" key={i}><span class="pos">{sense.partOfSpeech}</span><span>{sense.meaning}</span></div>)}
     <div class="context"><div class="label">IN THIS CONTEXT · 此处含义</div><p>{card.contextMeaning}</p></div>
     <div class="examples"><div class="label">EXAMPLES · 例句</div>{card.examples.map((example, i) => <div key={i}><p>{example.en}</p><p class="zh">{example.zh}</p></div>)}</div>
-    <footer>AI 释义与音标仅供参考 · 系统语音发音</footer>
+    <footer>AI 释义 · 离线词典音标 · 系统语音发音</footer>
   </>;
 }
 export class SelectionPopover {

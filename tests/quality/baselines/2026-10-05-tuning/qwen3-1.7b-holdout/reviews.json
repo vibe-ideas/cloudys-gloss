@@ -1,0 +1,126 @@
+{
+  "corpusHash": "b280d83426fc2eb7295a5a98a83cdad0b90878af95e018be4a544a4495c2082e",
+  "providerHash": "7ba3d583817bd713e186ed1a8831ac2d2bcdac83198e4e0bbb02f73e0d668dd9",
+  "model": "Qwen/Qwen3-1.7B-MLX-4bit",
+  "reviewer": "Codex evaluation_expert（独立于生产提示词修改的子代理）",
+  "method": "提示词冻结后首次保留集评测；逐项对照 holdout 原文、参考译文和 requirements，以仓库既有 0–4 三轴尺度评审两轮全部输出；相同 outputHash 复用审阅。评分者也是保留集出题者，未参与生产提示词修改；非人类盲评。",
+  "reviews": [
+    {
+      "id": "H01",
+      "outputHash": "9a5c7829a73fac088fe13f05693432a050822b80bb3402e8fecca725fdf15bcf",
+      "adequacy": 4,
+      "completeness": 4,
+      "fluency": 3,
+      "critical": false,
+      "notes": "68.40、欧元（另一轮保留 EUR）、年度、两台设备及续订价格不保证不变均准确；“在折扣后”略有翻译腔。"
+    },
+    {
+      "id": "H02",
+      "outputHash": "083ddb062f66a09d4186a337cd13d2b6176336771dc247b55e8c4fcb6ebb7e99",
+      "adequacy": 3,
+      "completeness": 3,
+      "fluency": 4,
+      "critical": false,
+      "notes": "阀门完全关闭才可开盖、灯光状态不能证明压力归零的必要条件和否定保留；going dark 应为熄灭，译为“变暗”存在状态细节偏差，never 的强调也略弱。未反转安全条件。"
+    },
+    {
+      "id": "H03",
+      "outputHash": "1fdc49259c15c0feecd5ad891d7d1848a21e20c8e3df9dda2d52570dcd79e675",
+      "adequacy": 3,
+      "completeness": 3,
+      "fluency": 2,
+      "critical": false,
+      "notes": "周二联系时已经离仓、至今未送达和周五承诺均保留；“直到…时”生硬但后续“已经”仍表明此前离仓。“by Friday”截止含义被弱化成“在周五”，且“顾客被承诺”不自然。"
+    },
+    {
+      "id": "H04",
+      "outputHash": "cc9b6885114ca6c00517876fd0fc18eff5606f1e59e77570249ea838b390ce78",
+      "adequacy": 4,
+      "completeness": 4,
+      "fluency": 3,
+      "critical": false,
+      "notes": "10% 到 8% 的下降方向、两个百分点绝对变化与 20% 相对降幅均准确；“这是下降了”稍生硬。"
+    },
+    {
+      "id": "H05",
+      "outputHash": "d63c0c10a42931d42de63be7c0a1c900d16b046cbe8208b48cf14afe463c45c9",
+      "adequacy": 4,
+      "completeness": 4,
+      "fluency": 3,
+      "critical": false,
+      "notes": "charge 为电量，一周、寒冷加速耗电及备用电池使用前留室内均保留；“维持一周的电量”略有翻译腔但可理解。"
+    },
+    {
+      "id": "H06",
+      "outputHash": "3de1747fe3b9271f3e8e6a1f579ac083a2b462db2c44b224642787bc83f40800",
+      "adequacy": 3,
+      "completeness": 3,
+      "fluency": 4,
+      "critical": false,
+      "notes": "正确表达在山脊下方搭帐篷以避风，以及与炉灶保持距离；fabric 被概括为帐篷，布料这一具体对象略弱化，不改变主要动作或空间关系。"
+    },
+    {
+      "id": "H07",
+      "outputHash": "e35ef3439b0d843f3061056ff2dffb4cebd58180eeaf27f6f38316397a8edb65",
+      "adequacy": 3,
+      "completeness": 3,
+      "fluency": 2,
+      "critical": false,
+      "notes": "修订合同已发出、“轮到您了”表达下一步由对方回应，是否继续也保留；“已发送您”缺少介词，by Monday 的截止意味被弱化为“于本周一”，且原文未明确本周。"
+    },
+    {
+      "id": "H08",
+      "outputHash": "92c7970d6b5f371548e0283dba4488a2d6d38baeca9a852a7567329840da986a",
+      "adequacy": 3,
+      "completeness": 4,
+      "fluency": 2,
+      "critical": false,
+      "notes": "再次输出 200 张空白页及对节纸的夸赞并置，读者仍可从荒谬反差识别反讽；“生产…空白页”“多么巧妙的方式节省纸张”生硬，未另外出现实际节纸成功的结论。不因未加引号而判为失败。"
+    },
+    {
+      "id": "H09",
+      "outputHash": "f135d12767bfb3cb8c400406cbda857ebe05c25cfe06837b5c71901daf8cbdec",
+      "adequacy": 2,
+      "completeness": 3,
+      "fluency": 2,
+      "critical": false,
+      "notes": "前后两段、八个月、繁殖季关闭、教学限制、雨量减少和继续监测三年均保留；但 cannot attribute ... entirely 被译为“无法将改善归因于该恢复工作”，漏掉“完全”，把不能全归因改成不能归因，改变因果归属的限定。“主要小学”“抬高的路径”“更少地被淹”也有明显翻译腔。"
+    },
+    {
+      "id": "H10",
+      "outputHash": "1b600d82c7fbc8d2b6097fde27215fea3eb8fb44be7559b9be88c40b2b2170e6",
+      "adequacy": 4,
+      "completeness": 4,
+      "fluency": 3,
+      "critical": false,
+      "notes": "GET /v2/jobs、429 才重试、至少 15 秒、404 未找到、X-Request-ID 均保留；“保持…头”略生硬但仍可识别请求头保留要求。"
+    },
+    {
+      "id": "H11",
+      "outputHash": "0fc91af95472d0e9726eddca1829bdab7728f41abb63c37aa5f9f4df04245fc2",
+      "adequacy": 3,
+      "completeness": 3,
+      "fluency": 3,
+      "critical": false,
+      "notes": "自述较长睡眠与测试得分、观察研究不能证明因果及可能不适用于儿童均保留；tended to 的倾向限定未明确译出，中文读作群体得分比较，尚未直接断言人人如此或建立因果。"
+    },
+    {
+      "id": "H12",
+      "outputHash": "5d80ac6c9493ede55a4c29d6e2c47a65f129ac26d66090777224f7430322550a",
+      "adequacy": 1,
+      "completeness": 4,
+      "fluency": 3,
+      "critical": true,
+      "notes": "原文 Noah 在核对数字后发送草稿，译文明确说“发送了草稿…之后检查了数字”，把先核对后发送反转成先发送后核对，属于既有标准中的执行顺序严重错误。其余发现标题、要求补充、当晚修改与次日下午批准基本保留。"
+    },
+    {
+      "id": "H01",
+      "outputHash": "07d09a2be379d1a1c7988c07ea06b27f475044ccfc3f34ffc1e2803027370f41",
+      "adequacy": 4,
+      "completeness": 4,
+      "fluency": 3,
+      "critical": false,
+      "notes": "68.40、欧元（另一轮保留 EUR）、年度、两台设备及续订价格不保证不变均准确；“在折扣后”略有翻译腔。"
+    }
+  ]
+}

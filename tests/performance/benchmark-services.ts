@@ -1,5 +1,6 @@
 import { mkdirSync, readFileSync, writeFileSync, appendFileSync, existsSync } from 'node:fs';
 import { cpus } from 'node:os';
+import { OfflinePronunciationDictionary } from '../../src/pronunciation';
 import { OpenAICompatibleProvider } from '../../src/provider';
 import { SettingsSchema } from '../../src/schema';
 
@@ -9,7 +10,8 @@ if (services.length < 1 || services.some((s) => !['127.0.0.1', 'localhost'].incl
 const output = process.env.BENCH_OUTPUT!;
 if (!output || existsSync(output)) throw new Error('Set BENCH_OUTPUT to a fresh directory');
 mkdirSync(output, { recursive: true });
-const model = process.env.MODEL_NAME ?? 'mlx-community/Qwen2.5-3B-Instruct-4bit';
+const pronunciation = new OfflinePronunciationDictionary(async (dialect) => readFileSync(`public/dictionaries/${dialect}.tsv`, 'utf8'));
+const model = process.env.MODEL_NAME ?? 'Qwen/Qwen3-1.7B-MLX-4bit';
 type Scenario = { id: string; texts: string[] } | { id: string; word: string; context: string };
 const scenarios: Scenario[] = JSON.parse(readFileSync('tests/performance/scenarios.json', 'utf8'));
 const article = scenarios.find((s) => s.id === 'article');
@@ -61,7 +63,7 @@ for (const [block, order] of [services, [...services].reverse()].entries()) for 
     record({ kind: 'tps', service: service.name, block, repetition, ...result });
     console.log(service.name, 'TPS', result.decodeTps.toFixed(1));
   }
-  const provider = new OpenAICompatibleProvider(SettingsSchema.parse({ baseUrl: service.baseUrl, model, temperature: 0, timeout: 120000, concurrency: 1 }));
+  const provider = new OpenAICompatibleProvider(SettingsSchema.parse({ baseUrl: service.baseUrl, model, temperature: 0, timeout: 120000, concurrency: 1 }), undefined, pronunciation);
   for (const scenario of scenarios) {
     const start = performance.now();
     try {

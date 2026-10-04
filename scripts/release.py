@@ -57,7 +57,7 @@ def prepare(root, version):
 
 扩展不包含模型权重。Apple Silicon Mac（macOS 26.2+）可在源码目录运行 `pnpm model:install` 安装并启动 mlx-serve，再运行 `pnpm model:bridge` 启用浏览器按需启动。
 
-默认地址 `http://127.0.0.1:8080/v1`，模型 `mlx-community/Qwen2.5-3B-Instruct-4bit`，API Key 留空。
+默认地址 `http://127.0.0.1:8080/v1`，模型 `Qwen/Qwen3-1.7B-MLX-4bit`，API Key 留空。
 
 完整安装步骤见仓库 `docs/guides/getting-started.md` 和 `docs/guides/model-service.md`。
 

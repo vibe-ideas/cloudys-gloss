@@ -1,0 +1,180 @@
+{
+  "corpusHash": "66299cbae34ac48e49061dc0edea8ef7e94d1ab07a23c09aa0bfb8de7e309794",
+  "providerHash": "ba75f0113e5b3c9306f5a03266241b1f21b42a4eabc96106629b2b70421da4da",
+  "model": "mlx-community/Qwen3.5-4B-4bit",
+  "reviewer": "Codex translation expert",
+  "method": "独立代理对照原文、referenceZh及requirements逐例审阅两轮；非人工盲评，已知模型及调优目标。沿用既有0–4尺度、自动硬性规则及严重错误标准，不因90%目标调整。相同id和outputHash复用评分，不同输出分别覆盖；未读取独立验收集。T05明确区分自动时间格式误报与真实日期遗漏。",
+  "reviews": [
+    {
+      "id": "T01",
+      "outputHash": "c624eb5f1454cf0e7cbee0570a7554de9642b30ca263a4c6afa47532f7dc74b8",
+      "adequacy": 2,
+      "completeness": 3,
+      "fluency": 4,
+      "critical": false,
+      "notes": "多云早晨、思绪、开窗听雨及三本书两周均保留，但把making a cup of coffee改成“喝咖啡”，改变明确动作；第二段漏掉图书馆小的修饰。核心动作局部错义，未通过。"
+    },
+    {
+      "id": "T02",
+      "outputHash": "8c09fb5f7ffd5abc55b4b0b0d385cc7bf5d878a1007590c16331fc56dcbcd1b9",
+      "adequacy": 2,
+      "completeness": 4,
+      "fluency": 3,
+      "critical": false,
+      "notes": "后台进程、分批、逐段显示、取消及本地缓存完整，但把reader译成“阅读器”，改变触发取消的动作主体；与旧基线的读取器错误采用同一尺度。"
+    },
+    {
+      "id": "T03",
+      "outputHash": "ddc103c3dc426172a21b0accb30f73c0fedea899fd83e9f8ece4058505002fb4",
+      "adequacy": 4,
+      "completeness": 3,
+      "fluency": 4,
+      "critical": false,
+      "notes": "五年研究、成熟树木午后温度、三项变量与投入资金前收集本地数据及不能一概而论均准确；“数据”弱化测量性质。“投入大量资金”是投资的合理表达，自动review提示不构成错误。"
+    },
+    {
+      "id": "T04",
+      "outputHash": "89e93ab79994b9314b4886e580a8d153941e39043d2dffbd3eb3704d982ee901",
+      "adequacy": 4,
+      "completeness": 3,
+      "fluency": 4,
+      "critical": false,
+      "notes": "块内两段完整，五年跨度及生态、测量建议的主要信息准确；“当地数据”弱化测量性质，但“投入大量资金”准确表达投资，不能因未出现投资二字扣分。"
+    },
+    {
+      "id": "T05",
+      "outputHash": "2107c2446c661f2cbb69149ae670a604049eede9bbaa717eae1d4d55414e9dea",
+      "adequacy": 2,
+      "completeness": 2,
+      "fluency": 3,
+      "critical": true,
+      "notes": "18点30分与18:30等效，自动时间检查存在格式误报；真正问题是原2026年10月12日的12日完全遗漏，译成“2026年10月18点30分”，无法确定截止日期。按既有日期事实错误规则标严重，不因时间格式可接受而放过日期遗漏。"
+    },
+    {
+      "id": "T06",
+      "outputHash": "38b81a8f2724900df1885dfefb98ca90f58db40e82df81df54c8442cf84b659e",
+      "adequacy": 4,
+      "completeness": 4,
+      "fluency": 4,
+      "critical": false,
+      "notes": "成功上传的例外、禁止删除的主规则及100%并不一定成功均准确。"
+    },
+    {
+      "id": "T07",
+      "outputHash": "04e7dcc475e81ea25e20a479eeee5450b4e54bc8ffd39e85e770e4da500c4ae8",
+      "adequacy": 4,
+      "completeness": 4,
+      "fluency": 4,
+      "critical": false,
+      "notes": "3%到5%的增长准确，明确区分2个百分点与2%。"
+    },
+    {
+      "id": "T08",
+      "outputHash": "bfade3ad9ae011ad12d5822db6195f1cf9afe92b508d206af1669faded116572",
+      "adequacy": 4,
+      "completeness": 4,
+      "fluency": 4,
+      "critical": false,
+      "notes": "负五摄氏度、30分钟内升至12.5摄氏度、然后每十秒记录的数值和时序均准确，未将升温过程改成恒温等待。"
+    },
+    {
+      "id": "T09",
+      "outputHash": "47876431c1ecb3533188417c227d8e6d1084165c03526485bc92e6905d8e4cda",
+      "adequacy": 4,
+      "completeness": 4,
+      "fluency": 4,
+      "critical": false,
+      "notes": "过桥、坐河岸、看鸭子游过全部准确，未加入原文没有的草地。"
+    },
+    {
+      "id": "T10",
+      "outputHash": "044d1e317e1fc6894ccc089ca19982c81223c5659b3097a6fe514d208a27b95d",
+      "adequacy": 4,
+      "completeness": 4,
+      "fluency": 4,
+      "critical": false,
+      "notes": "银行批准贷款及协议尚未签署准确。"
+    },
+    {
+      "id": "T11",
+      "outputHash": "0c40f9b8ed55a3dc393448fe477f505f2e48d30e752df54db13bdfff3f1eabce",
+      "adequacy": 3,
+      "completeness": 3,
+      "fluency": 1,
+      "critical": false,
+      "notes": "重量轻、电脑、两本书及让步关系准确，但surprisingly残留英文，未形成完整自然中文；沿用旧基线同类残留词的自然度1分。"
+    },
+    {
+      "id": "T12",
+      "outputHash": "f5f9e0b58674280c7656a356e712255b2bfde8e39fcaecd3c3428b9363d6bda5",
+      "adequacy": 3,
+      "completeness": 4,
+      "fluency": 3,
+      "critical": false,
+      "notes": "人物、会前讲笑话和缓和气氛的用途可理解；“打破僵局”比打破冷场偏重，沿用既有候选的同类评分。"
+    },
+    {
+      "id": "T13",
+      "outputHash": "4596e04e7b3a14f59c0d10cc8c13850b11b1dc4a1404ed70a585e680db20a5ce",
+      "adequacy": 4,
+      "completeness": 4,
+      "fluency": 4,
+      "critical": false,
+      "notes": "相机主人、忘带者、借出归还方向及第二天早上全部准确。"
+    },
+    {
+      "id": "T14",
+      "outputHash": "17eca90459b676c20d4b6722df3b81d59f59915720145c7a17461660f1c797db",
+      "adequacy": 4,
+      "completeness": 4,
+      "fluency": 3,
+      "critical": false,
+      "notes": "Firefox、完整API和路径准确，执行顺序及缓存不是备份的区别保留；两个在略重复。"
+    },
+    {
+      "id": "T15",
+      "outputHash": "230099cc94af9b9a176c0a5f6ff11ed2d3b291b64dd8082c432abe4777ea0552",
+      "adequacy": 4,
+      "completeness": 4,
+      "fluency": 4,
+      "critical": false,
+      "notes": "保留引用边界、字面标记BANANA和编辑的示例说明，未执行输入中的指令。"
+    },
+    {
+      "id": "T16",
+      "outputHash": "ef963763fa46cbc85d7a06a2682b5a5b0013af51d5828462e889b4a7f9b24331",
+      "adequacy": 3,
+      "completeness": 3,
+      "fluency": 4,
+      "critical": false,
+      "notes": "三项独立且顺序准确，无扩写；Getting started简化成“开始”，弱化入门/使用含义，但可理解为入口标题。"
+    },
+    {
+      "id": "T17",
+      "outputHash": "960279769fb06a3ff8985aed0f401caddcd7edbeb8acdf882abfccd86e2661ba",
+      "adequacy": 4,
+      "completeness": 4,
+      "fluency": 4,
+      "critical": false,
+      "notes": "可能、部分患者、未证明对所有人有效、四周及未观察到严重不良反应的限定均保留。"
+    },
+    {
+      "id": "T18",
+      "outputHash": "7e6481f78f790d405889938ea0285d5a042668bfbca830530eacc1ce440658da",
+      "adequacy": 3,
+      "completeness": 4,
+      "fluency": 3,
+      "critical": false,
+      "notes": "再次延误两小时、错过转机及反话结构均保留；中文讽刺语气仍偏直译，但可以识别为抱怨，沿用前一个4B候选的同类尺度。"
+    },
+    {
+      "id": "T02",
+      "outputHash": "4a0ec62735a4ab693da1c972c555a3eda7073dd0ae4539ab69a314ea34efd3cd",
+      "adequacy": 2,
+      "completeness": 4,
+      "fluency": 3,
+      "critical": false,
+      "notes": "后台进程、分批、逐段显示、取消及本地缓存完整，但把reader译成“阅读器”，改变触发取消的动作主体；与旧基线的读取器错误采用同一尺度。"
+    }
+  ]
+}

@@ -1,10 +1,15 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { LocalModelManager } from '../../src/local-model';
+import { LocalModelManager, migrateManagedPreset } from '../../src/local-model';
 import { defaults } from '../../src/schema';
 
 const state = { installed: true, running: true, autostart: false, model: defaults.model, baseUrl: defaults.baseUrl };
 afterEach(() => vi.unstubAllGlobals());
 describe('浏览器按需启动本地 MLX', () => {
+  it('升级默认模型时只迁移旧本机预设，保留主题、并发和用户自定义接口', () => {
+    const old = { ...defaults, model: 'mlx-community/Qwen2.5-3B-Instruct-4bit', concurrency: 2, theme: 'dark' as const };
+    expect(migrateManagedPreset(old)).toEqual({ ...old, model: defaults.model });
+    for (const custom of [{ ...old, baseUrl: 'https://api.example.com/v1' }, { ...old, baseUrl: 'http://127.0.0.1:9090/v1' }, { ...old, model: 'my-model' }]) expect(migrateManagedPreset(custom)).toEqual(custom);
+  });
   it('两个页面同时遇到服务停止时只启动一次，随后都能继续翻译', async () => {
     vi.stubGlobal('fetch', vi.fn().mockRejectedValue(new TypeError('offline')));
     let complete!: (value: unknown) => void;

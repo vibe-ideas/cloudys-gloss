@@ -1,0 +1,76 @@
+[
+  {
+    "model": "Qwen2.5-3B-mlx-serve-26.10.1",
+    "providerHash": "99fdd64b55ca5591859a23ba02fe805881473199faf6fcf1495faad427b24895",
+    "samples": 18,
+    "automaticPassed": 18,
+    "reviewed": 18,
+    "acceptedCases": 12,
+    "cases": 18,
+    "byCase": {
+      "T01": true,
+      "T02": false,
+      "T03": false,
+      "T04": false,
+      "T05": true,
+      "T06": false,
+      "T07": true,
+      "T08": true,
+      "T09": true,
+      "T10": true,
+      "T11": false,
+      "T12": true,
+      "T13": true,
+      "T14": true,
+      "T15": true,
+      "T16": true,
+      "T17": true,
+      "T18": false
+    },
+    "acceptedRate": 0.6666666666666666,
+    "criticalCases": 1,
+    "medianMs": 396.5952295000002,
+    "meanReview": {
+      "adequacy": 3.2777777777777777,
+      "completeness": 3.888888888888889,
+      "fluency": 2.9444444444444446
+    }
+  },
+  {
+    "model": "Qwen/Qwen3-1.7B-MLX-4bit",
+    "providerHash": "7ba3d583817bd713e186ed1a8831ac2d2bcdac83198e4e0bbb02f73e0d668dd9",
+    "samples": 36,
+    "automaticPassed": 36,
+    "reviewed": 36,
+    "acceptedCases": 17,
+    "cases": 18,
+    "byCase": {
+      "T01": true,
+      "T02": true,
+      "T03": true,
+      "T04": true,
+      "T05": true,
+      "T06": true,
+      "T07": true,
+      "T08": true,
+      "T09": true,
+      "T10": true,
+      "T11": true,
+      "T12": true,
+      "T13": true,
+      "T14": true,
+      "T15": true,
+      "T16": true,
+      "T17": true,
+      "T18": false
+    },
+    "acceptedRate": 0.9444444444444444,
+    "criticalCases": 0,
+    "medianMs": 316.76564600000074,
+    "meanReview": {
+      "adequacy": 3.6666666666666665,
+      "completeness": 3.8333333333333335,
+      "fluency": 3.2222222222222223
+    }
+  }
+]

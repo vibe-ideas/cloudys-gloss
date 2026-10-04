@@ -1,0 +1,117 @@
+{
+  "corpusHash": "b280d83426fc2eb7295a5a98a83cdad0b90878af95e018be4a544a4495c2082e",
+  "providerHash": "ba75f0113e5b3c9306f5a03266241b1f21b42a4eabc96106629b2b70421da4da",
+  "model": "mlx-community/Qwen3.5-4B-4bit",
+  "reviewer": "Codex evaluation_expert（独立于生产提示词修改的子代理）",
+  "method": "对照冻结的 holdout 原文、参考译文和 requirements，沿用仓库 0–4 忠实度/完整性/自然度及 critical 判定标准，逐例审阅两轮原始输出。相同 outputHash 复用评分。本语料已在此前模型测试中公开，现为回归集；非人类盲评。",
+  "reviews": [
+    {
+      "id": "H01",
+      "outputHash": "105caca2cf71a901a2fccdcb10239612301ee3b149025b539772c6773bdb31e3",
+      "adequacy": 2,
+      "completeness": 4,
+      "fluency": 4,
+      "critical": true,
+      "notes": "annual subscription 是年费，译文却写“两年订阅费”，把 68.40 欧元的计费周期翻倍，改变价格事实，按原数字/期限事实错误标准标记 critical。币种、两台设备及续费不保证保持价格均保留。"
+    },
+    {
+      "id": "H02",
+      "outputHash": "3f483104031b92daf00241caf74f6b034fb2cd9f6d3e4018b874d94e2871a67c",
+      "adequacy": 4,
+      "completeness": 4,
+      "fluency": 4,
+      "critical": false,
+      "notes": "阀门完全关闭才可开盖的必要条件、切勿打开的禁止强度、指示灯熄灭不证明压力归零均准确。"
+    },
+    {
+      "id": "H03",
+      "outputHash": "da7ff5ab854f0eac4d90ce4f9021b7eb1941f3a35abadd7d8f039167c84e2264",
+      "adequacy": 2,
+      "completeness": 4,
+      "fluency": 3,
+      "critical": false,
+      "notes": "周二来电前已离仓、至今未达保留；但 who was promised delivery 译为“客户原本承诺周五送达”，把得到承诺的客户改成作出承诺的人，改变角色关系。by Friday 的最迟期限也弱化为周五当天。"
+    },
+    {
+      "id": "H04",
+      "outputHash": "fa45741e671d5efc83711e16c5628e937db6b9f32db16fa9bddfc3038cdb511e",
+      "adequacy": 4,
+      "completeness": 4,
+      "fluency": 4,
+      "critical": false,
+      "notes": "次品占比 10% 到 8% 的下降、两个百分点与 20% 相对降幅均准确且流畅。"
+    },
+    {
+      "id": "H05",
+      "outputHash": "10e02d3cba08467002cda6707a16eed0b501bceeebf517a0eb3db601811e9d85",
+      "adequacy": 2,
+      "completeness": 4,
+      "fluency": 3,
+      "critical": false,
+      "notes": "hold a charge for a week 是电量可维持一周，译成“可充电一周”，把续航时长错误地解释为充电时长；低温加快耗电、备用电池使用前存室内正确。"
+    },
+    {
+      "id": "H06",
+      "outputHash": "b98e55c7167361d2227994dfd845fb1ef97218148c914ad7797cb192866407d7",
+      "adequacy": 4,
+      "completeness": 4,
+      "fluency": 4,
+      "critical": false,
+      "notes": "帐篷搭在山脊下方、避风目的及帐篷布料与炉子的距离均准确，未将 pitch 理解为投掷。"
+    },
+    {
+      "id": "H07",
+      "outputHash": "39dfd89e6919629a2f02d4a3e6c3627a3c6243644bfb96f147a1150571360958",
+      "adequacy": 4,
+      "completeness": 4,
+      "fluency": 4,
+      "critical": false,
+      "notes": "修订合同已发给对方，“轮到您了”表达由对方作决定；周一之前反馈是否继续的期限和选择均准确。"
+    },
+    {
+      "id": "H08",
+      "outputHash": "c9fdd62622ba6e8bd16e82276872d4dd4374591d6d022a4ed93b43e25224544a",
+      "adequacy": 4,
+      "completeness": 4,
+      "fluency": 4,
+      "critical": false,
+      "notes": "再次打印 200 张空白页的事实与“节约纸张的妙法啊”的称赞形成明显反讽，原文的抱怨语气保留。无需固定引号。"
+    },
+    {
+      "id": "H09",
+      "outputHash": "b55d11dcaa83b043bdd5ebae56200d9675a3fd8973870fd7f52c9a254bc26a53",
+      "adequacy": 4,
+      "completeness": 4,
+      "fluency": 3,
+      "critical": false,
+      "notes": "两段全部主要信息及八个月、繁殖季关闭、不得采蛋扰巢、较少降雨、无法完全归因、继续监测三年再决定推广均保留。“一所城镇”量词不当、“重复该项目”有翻译腔，但未改变核心关系。"
+    },
+    {
+      "id": "H10",
+      "outputHash": "7f74587275e707a68e8c6eb4eb7f6410df4ca47fd145a4e2a8a269245a576630",
+      "adequacy": 4,
+      "completeness": 4,
+      "fluency": 4,
+      "critical": false,
+      "notes": "GET /v2/jobs、429 才重试、至少 15 秒、404 未找到与 X-Request-ID 请求头保留要求均准确。"
+    },
+    {
+      "id": "H11",
+      "outputHash": "2a4d1ada70dd9c5b23236e19a4dd4d125e425e2129d99bca6bb71f79b4232cb1",
+      "adequacy": 3,
+      "completeness": 3,
+      "fluency": 4,
+      "critical": false,
+      "notes": "观察性研究不能证明因果、结果可能不适用于儿童均保留；遗漏 reported 的自述来源和 tended to 的倾向表达，将其概括成群体得分比较，弱化限定，但未进一步断言人人有效或建立因果。"
+    },
+    {
+      "id": "H12",
+      "outputHash": "8d6505391c2ed46659b296cc91c68f9acaa16af8ec13dfef03e54ff0233911b3",
+      "adequacy": 4,
+      "completeness": 4,
+      "fluency": 4,
+      "critical": false,
+      "notes": "先核对后发送、阿达发现并要求补标题、发送客户前补齐、当晚修改和次日下午批准均准确，两段代词角色对应正确。"
+    }
+  ]
+}

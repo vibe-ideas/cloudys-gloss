@@ -1,0 +1,171 @@
+{
+  "corpusHash": "66299cbae34ac48e49061dc0edea8ef7e94d1ab07a23c09aa0bfb8de7e309794",
+  "providerHash": "517238cfad0b91af8135b938251f8c7d377df8d6720d1f78b20ad1478d65a9b7",
+  "model": "Qwen/Qwen3-4B-MLX-4bit",
+  "reviewer": "Codex translation expert",
+  "method": "独立代理逐例对照原文、referenceZh与requirements审阅两轮输出；非人工盲评，已知模型与目标。沿用原评分及严重错误规则，接受条件为自动硬性检查通过、adequacy>=3、completeness>=3、fluency>=2且critical=false，不因90%目标调整尺度；同id同outputHash复用评分。",
+  "reviews": [
+    {
+      "id": "T01",
+      "outputHash": "098a3f8671293c547aa901b2ab1285cf420b1e5f9d446843aa933c428cc434dd",
+      "adequacy": 4,
+      "completeness": 4,
+      "fluency": 4,
+      "critical": false,
+      "notes": "阴沉早晨、宁静思绪、开窗听雨与泡咖啡的同时关系及借阅三本书两周均准确，中文自然。"
+    },
+    {
+      "id": "T02",
+      "outputHash": "79424984d2ed5c4c7ebc61ffc1bd35e70fd2772db152fa4e0a4e3842894bb6b5",
+      "adequacy": 4,
+      "completeness": 4,
+      "fluency": 3,
+      "critical": false,
+      "notes": "后台进程、分批、逐段立即显示、读者触发取消及本地缓存均保留；“每个翻译的段落”“一个AbortController”略生硬。"
+    },
+    {
+      "id": "T03",
+      "outputHash": "b5f02a67fe059b23f66a3bce63f36b4d025a5eb60217d96cd88d85187838d135",
+      "adequacy": 4,
+      "completeness": 4,
+      "fluency": 3,
+      "critical": false,
+      "notes": "植树只是部分方案、土壤根系树种、居民与长期生态，以及五年研究、三项变量、测量数据和不能一概而论均保留；“水的可及性”偏书面。"
+    },
+    {
+      "id": "T04",
+      "outputHash": "9e32fa8e17e9cd02822cc763016045f3a0c3c7d46c9782cf9871900402285c8d",
+      "adequacy": 4,
+      "completeness": 4,
+      "fluency": 3,
+      "critical": false,
+      "notes": "块内两段完整，无后半篇漏译；五年时间范围和全部关键生态及投资信息准确；少数术语生硬但不妨碍理解。"
+    },
+    {
+      "id": "T05",
+      "outputHash": "02b049411da180b4aa2ecebdde0aa929b8c2e292e2e1857802f175b48cf8b0d9",
+      "adequacy": 2,
+      "completeness": 2,
+      "fluency": 4,
+      "critical": true,
+      "notes": "金额、月费、人数和月日时刻保留，但漏掉截止年份2026，将明确的完整截止日期变为无年份日期，未满足日期准确保留要求；按既有日期事实错误规则标严重。"
+    },
+    {
+      "id": "T06",
+      "outputHash": "79ce044b921ba5253ee675fb92d03e51ddcbbf5aed6149700dd1f9f87f1e05cb",
+      "adequacy": 4,
+      "completeness": 4,
+      "fluency": 4,
+      "critical": false,
+      "notes": "除非上传成功否则禁止删除，以及100%不必然代表成功均准确清楚，没有条件反转。"
+    },
+    {
+      "id": "T07",
+      "outputHash": "062c354b948fb8dc84f072bf958f06acee7044cd29ae59cc5514ed428747c5f7",
+      "adequacy": 1,
+      "completeness": 3,
+      "fluency": 3,
+      "critical": true,
+      "notes": "前半句3%升至5%及2个百分点正确，但结尾把not 2 percent错译成“而不是2个百分点”，形成自相矛盾并丢失百分点与百分比的核心区分；属于统计事实和否定对象错误，自动规则未捕获。"
+    },
+    {
+      "id": "T08",
+      "outputHash": "1f0e99f58faa727b3a534134dbce631a5a314b2ab549ba44596ec1409dafc227",
+      "adequacy": 4,
+      "completeness": 4,
+      "fluency": 4,
+      "critical": false,
+      "notes": "负温、小数、三十分钟升温及之后每十秒记录的数值、单位和顺序全部准确。"
+    },
+    {
+      "id": "T09",
+      "outputHash": "f7d476369ed8f2dc64f62d12734bd5ee5226cd076af172c6f2816c8dec2d314c",
+      "adequacy": 3,
+      "completeness": 4,
+      "fluency": 4,
+      "critical": false,
+      "notes": "bank正确为河岸，过桥、坐下和鸭子游过均保留；“游过河面”将从眼前游过的视点轻微弱化，主场景不变。"
+    },
+    {
+      "id": "T10",
+      "outputHash": "a7b94d00c8ac49a6b634133a9634dbda5e76d8f0bbd4e2dbb9bb0a4b5dab6118",
+      "adequacy": 4,
+      "completeness": 4,
+      "fluency": 4,
+      "critical": false,
+      "notes": "银行批准贷款和协议尚未签署均准确。"
+    },
+    {
+      "id": "T11",
+      "outputHash": "b2e8a39397d12136c9a942d92feb2a5d81ffb7b100a68f5ef6abc064905cb8ba",
+      "adequacy": 4,
+      "completeness": 4,
+      "fluency": 4,
+      "critical": false,
+      "notes": "重量轻、出人意料、即使装着电脑和两本书的让步关系全部准确，无英文残留。"
+    },
+    {
+      "id": "T12",
+      "outputHash": "69a8b70511452d56591fa33e3b1ed9de7ff32bb5c8757eda072c73e445d14d42",
+      "adequacy": 3,
+      "completeness": 4,
+      "fluency": 3,
+      "critical": false,
+      "notes": "人物、会议前时间、讲笑话及缓和气氛的用途可理解；“打破僵局”比打破冷场偏重，沿用1.7B相同输出的评分。"
+    },
+    {
+      "id": "T13",
+      "outputHash": "990f4dcdef1698ba920647bc45eea62666c5264f9f6d4cdcf666fe3943b5e05e",
+      "adequacy": 4,
+      "completeness": 4,
+      "fluency": 4,
+      "critical": false,
+      "notes": "相机主人、忘带者、借出与归还方向和次日早晨均准确；“自己的”可清楚回指相机。"
+    },
+    {
+      "id": "T14",
+      "outputHash": "dfbcce937fc273e3e482c71dfebb183410c80e11c6ba1a78a3fdf19d4b1af970",
+      "adequacy": 4,
+      "completeness": 4,
+      "fluency": 3,
+      "critical": false,
+      "notes": "浏览器、API与完整路径保留，先调用后删除及缓存不是备份的区别准确；连续两个“在”稍冗余。"
+    },
+    {
+      "id": "T15",
+      "outputHash": "940653629d26a9c2a827402848f1fef66f75d5431e6af3b19845da617afac687",
+      "adequacy": 2,
+      "completeness": 3,
+      "fluency": 4,
+      "critical": false,
+      "notes": "没有执行被引用指令，文章和编辑说明完整，但将引用中的字面输出标记BANANA改为“香蕉”，不满足原用例对标记不可替换的硬性要求。"
+    },
+    {
+      "id": "T16",
+      "outputHash": "3b73d374c30334d0f2067c8ffdbd862055dba49a1e176129a7dedb1acb877cb1",
+      "adequacy": 4,
+      "completeness": 4,
+      "fluency": 4,
+      "critical": false,
+      "notes": "三个短界面文本独立且顺序准确，无扩写。"
+    },
+    {
+      "id": "T17",
+      "outputHash": "faa909afc15bd3529026343eff010a8423ad39284f6dc36936f13a240aac1c8b",
+      "adequacy": 4,
+      "completeness": 4,
+      "fluency": 4,
+      "critical": false,
+      "notes": "可能、某些患者、未证明对所有人有效、四周试验和未观察到严重副作用的限定均完整准确。"
+    },
+    {
+      "id": "T18",
+      "outputHash": "fa007790b8b3b51e1f7c82c6a08f5ca6cf8d8b110f49218643a8ae813d66fe56",
+      "adequacy": 3,
+      "completeness": 4,
+      "fluency": 3,
+      "critical": false,
+      "notes": "再次延误两小时和错过转机保留，交通语境的connection已正确理解；“好…需要的”保留可辨认的反话结构，但中文抱怨语气仍较弱。"
+    }
+  ]
+}

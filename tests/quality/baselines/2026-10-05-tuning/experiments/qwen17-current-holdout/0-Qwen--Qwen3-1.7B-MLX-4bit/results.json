@@ -1,0 +1,412 @@
+[
+  {
+    "id": "H01",
+    "title": "年费和设备数量保留原值且不能把折后价当作折扣额",
+    "repetition": 1,
+    "translations": [
+      "在折扣之后，年订阅费用为68.40欧元，适用于两台设备。续订价格不保证保持不变。"
+    ],
+    "outputHash": "96277970b7af93c495af4ed49ac10f3046225108598fc6502862482a9432d87e",
+    "elapsedMs": 555.37725,
+    "firstMs": 555.152666,
+    "requests": 2,
+    "assessment": {
+      "errors": [],
+      "review": [],
+      "automaticPassed": true
+    }
+  },
+  {
+    "id": "H02",
+    "title": "打开检修盖前必须关闭阀门且灯灭不能证明安全",
+    "repetition": 1,
+    "translations": [
+      "除非阀门完全关闭，否则不要打开检查盖。指示灯变暗并不意味着压力已经降至零。"
+    ],
+    "outputHash": "083ddb062f66a09d4186a337cd13d2b6176336771dc247b55e8c4fcb6ebb7e99",
+    "elapsedMs": 259.53091699999993,
+    "firstMs": 248.09920799999998,
+    "requests": 1,
+    "assessment": {
+      "errors": [],
+      "review": [],
+      "automaticPassed": true
+    }
+  },
+  {
+    "id": "H03",
+    "title": "过去时间点的已发货和至今未送达不能混淆",
+    "repetition": 1,
+    "translations": [
+      "直到周二我打电话时，包裹已经离开了仓库。它仍然没有到达顾客手中，顾客原本承诺在周五前送达。"
+    ],
+    "outputHash": "7884ad75f41d56f2aa0ae84664439833289781ddcc2df0671f9589a48f9172a8",
+    "elapsedMs": 239.6334999999999,
+    "firstMs": 233.05029100000002,
+    "requests": 1,
+    "assessment": {
+      "errors": [],
+      "review": [],
+      "automaticPassed": true
+    }
+  },
+  {
+    "id": "H04",
+    "title": "次品率下降时百分点与相对降幅必须区分",
+    "repetition": 1,
+    "translations": [
+      "缺陷品占比从10%下降至8%，这是下降了两个百分点，相当于相对减少20%。"
+    ],
+    "outputHash": "e011cfe0df32484c7553d8c08590df63f7a3404cac1d7713f4b9723717fc1489",
+    "elapsedMs": 252.12229200000002,
+    "firstMs": 245.88462500000014,
+    "requests": 1,
+    "assessment": {
+      "errors": [],
+      "review": [],
+      "automaticPassed": true
+    }
+  },
+  {
+    "id": "H05",
+    "title": "电池语境中的 charge 表达电量而不是收费或起诉",
+    "repetition": 1,
+    "translations": [
+      "电池可以维持一周的电量，但寒冷的天气会更快地耗尽电量。请将备用电池存放在室内直到需要使用的时候。"
+    ],
+    "outputHash": "a7554c3b6ce02812e8ca6a1ceb51d925c0c50a6172b9949bcb80cfce85daadfc",
+    "elapsedMs": 469.5575000000001,
+    "firstMs": 469.3784169999999,
+    "requests": 2,
+    "assessment": {
+      "errors": [],
+      "review": [],
+      "automaticPassed": true
+    }
+  },
+  {
+    "id": "H06",
+    "title": "野营语境中 pitch a tent 表达搭帐篷并保留空间限制",
+    "repetition": 1,
+    "translations": [
+      "我们把帐篷放在山脊下方，以便避开风，留有足够的空间在帐篷和炉灶之间。"
+    ],
+    "outputHash": "bff9a670aed1507ddd69dce33b76819a15a40b1792172f0ed469011085fe1d29",
+    "elapsedMs": 386.7247080000002,
+    "firstMs": 386.3626250000002,
+    "requests": 2,
+    "assessment": {
+      "errors": [],
+      "review": [],
+      "automaticPassed": true
+    }
+  },
+  {
+    "id": "H07",
+    "title": "合同语境中的 the ball is in your court 表示下一步由对方决定",
+    "repetition": 1,
+    "translations": [
+      "我们已发送您修订后的合同，现在轮到您了。请于周一告知是否希望继续进行。"
+    ],
+    "outputHash": "d38a564514426fbfb42edc7371269c0f7df713be9c442e800705dc2fa072d660",
+    "elapsedMs": 261.8303329999999,
+    "firstMs": 255.66508299999987,
+    "requests": 1,
+    "assessment": {
+      "errors": [],
+      "review": [],
+      "automaticPassed": true
+    }
+  },
+  {
+    "id": "H08",
+    "title": "打印机故障后的赞叹语应传达反讽而不是肯定节纸",
+    "repetition": 1,
+    "translations": [
+      "美妙的——打印机又生产了200张空白页。多么巧妙的方式节省纸张。"
+    ],
+    "outputHash": "38982b10a557876945abc7760c58b0375338738e81a1cd64dd5bcbede112dac5",
+    "elapsedMs": 398.5116250000001,
+    "firstMs": 398.375458,
+    "requests": 2,
+    "assessment": {
+      "errors": [],
+      "review": [],
+      "automaticPassed": true
+    }
+  },
+  {
+    "id": "H09",
+    "title": "同一块内的湿地长文保留前后段结论和不同地点的限制",
+    "repetition": 1,
+    "translations": [
+      "一座城镇修复了其主要小学旁的小湿地。志愿者清理了垃圾，种植了原生的芦苇，并建造了一条抬高的人行道，以便孩子们可以观察鸟类而不踩到脆弱的植物。这项工作持续了八个月，人行道在繁殖季节期间仍然关闭。教师利用该地点进行教学，但不允许学生收集蛋或打扰巢穴。\n\n在接下来的冬季，附近花园比之前更少地被淹没。然而，那个冬季也降雨较少，因此市政委员会无法将改善归因于修复工作。他们计划在另外三年内监测降雨量和水位，以决定是否在其他地方重复该项目。"
+    ],
+    "outputHash": "db55fbd026cf1643712b7ef0ef02bc7446df8b929a7281102fb6760f8979b38c",
+    "elapsedMs": 948.6705829999996,
+    "firstMs": 941.7957499999998,
+    "requests": 1,
+    "assessment": {
+      "errors": [],
+      "review": [],
+      "automaticPassed": true
+    }
+  },
+  {
+    "id": "H10",
+    "title": "HTTP 重试规则保留状态码条件和请求标识符",
+    "repetition": 1,
+    "translations": [
+      "对于GET /v2/jobs的请求，仅在收到HTTP 429响应后重新尝试，并等待至少15秒。404响应表示该任务未找到；在报告问题时，保持X-Request-ID头。"
+    ],
+    "outputHash": "de381364623f7a3bb0062998172c9730678d164522716fcf2deb8d01084c3ac0",
+    "elapsedMs": 378.4401670000002,
+    "firstMs": 372.0825840000002,
+    "requests": 1,
+    "assessment": {
+      "errors": [],
+      "review": [],
+      "automaticPassed": true
+    }
+  },
+  {
+    "id": "H11",
+    "title": "观察性研究的相关性不能夸大为因果或保证",
+    "repetition": 1,
+    "translations": [
+      "报告睡眠时间更长的人在记忆测试中得分更高。由于这项研究是观察性的，因此不能证明睡眠时间更长导致了更高的分数，而且这些结果可能不适用于儿童。"
+    ],
+    "outputHash": "41ef9a0a96709fb5844ce5ed9fcc1aa5e37df77d0076e806e298a24bd8d9db54",
+    "elapsedMs": 367.30562499999996,
+    "firstMs": 361.0862499999994,
+    "requests": 1,
+    "assessment": {
+      "errors": [],
+      "review": [],
+      "automaticPassed": true
+    }
+  },
+  {
+    "id": "H12",
+    "title": "两段工作交接中的责任主体和先后顺序不应颠倒",
+    "repetition": 1,
+    "translations": [
+      "Noah 发送了草稿给 Ada，之后检查了数字。Ada 发现了标题缺失，要求 Noah 在将文件发送给客户之前添加它。",
+      "他当晚做出了更改，但她直到第二天下午才批准了最终版本。"
+    ],
+    "outputHash": "8863f8d0a19dcbcbc4afb8723fed903504eeaebbd751739ea0a1d50d27454c14",
+    "elapsedMs": 386.5021660000002,
+    "firstMs": 291.32995800000026,
+    "requests": 1,
+    "assessment": {
+      "errors": [],
+      "review": [],
+      "automaticPassed": true
+    }
+  },
+  {
+    "id": "H01",
+    "title": "年费和设备数量保留原值且不能把折后价当作折扣额",
+    "repetition": 2,
+    "translations": [
+      "在折扣之后，年订阅费用为68.40欧元，适用于两台设备。续订价格不保证保持不变。"
+    ],
+    "outputHash": "96277970b7af93c495af4ed49ac10f3046225108598fc6502862482a9432d87e",
+    "elapsedMs": 402.90620800000033,
+    "firstMs": 402.66849999999977,
+    "requests": 2,
+    "assessment": {
+      "errors": [],
+      "review": [],
+      "automaticPassed": true
+    }
+  },
+  {
+    "id": "H02",
+    "title": "打开检修盖前必须关闭阀门且灯灭不能证明安全",
+    "repetition": 2,
+    "translations": [
+      "除非阀门完全关闭，否则不要打开检查盖。指示灯变暗并不意味着压力已经降至零。"
+    ],
+    "outputHash": "083ddb062f66a09d4186a337cd13d2b6176336771dc247b55e8c4fcb6ebb7e99",
+    "elapsedMs": 266.9735419999997,
+    "firstMs": 255.11158299999988,
+    "requests": 1,
+    "assessment": {
+      "errors": [],
+      "review": [],
+      "automaticPassed": true
+    }
+  },
+  {
+    "id": "H03",
+    "title": "过去时间点的已发货和至今未送达不能混淆",
+    "repetition": 2,
+    "translations": [
+      "直到周二我打电话时，包裹已经离开了仓库。它仍然没有到达顾客手中，顾客原本承诺在周五前送达。"
+    ],
+    "outputHash": "7884ad75f41d56f2aa0ae84664439833289781ddcc2df0671f9589a48f9172a8",
+    "elapsedMs": 258.10804199999984,
+    "firstMs": 252.11024999999972,
+    "requests": 1,
+    "assessment": {
+      "errors": [],
+      "review": [],
+      "automaticPassed": true
+    }
+  },
+  {
+    "id": "H04",
+    "title": "次品率下降时百分点与相对降幅必须区分",
+    "repetition": 2,
+    "translations": [
+      "缺陷品占比从10%下降至8%，这是下降了两个百分点，相当于相对减少20%。"
+    ],
+    "outputHash": "e011cfe0df32484c7553d8c08590df63f7a3404cac1d7713f4b9723717fc1489",
+    "elapsedMs": 235.25266699999975,
+    "firstMs": 229.00687500000004,
+    "requests": 1,
+    "assessment": {
+      "errors": [],
+      "review": [],
+      "automaticPassed": true
+    }
+  },
+  {
+    "id": "H05",
+    "title": "电池语境中的 charge 表达电量而不是收费或起诉",
+    "repetition": 2,
+    "translations": [
+      "电池可以维持一周的电量，但寒冷的天气会更快地耗尽电量。请将备用电池存放在室内直到需要使用的时候。"
+    ],
+    "outputHash": "a7554c3b6ce02812e8ca6a1ceb51d925c0c50a6172b9949bcb80cfce85daadfc",
+    "elapsedMs": 472.2649999999994,
+    "firstMs": 472.0602920000001,
+    "requests": 2,
+    "assessment": {
+      "errors": [],
+      "review": [],
+      "automaticPassed": true
+    }
+  },
+  {
+    "id": "H06",
+    "title": "野营语境中 pitch a tent 表达搭帐篷并保留空间限制",
+    "repetition": 2,
+    "translations": [
+      "我们把帐篷放在山脊下方，以便避开风，留有足够的空间在帐篷和炉灶之间。"
+    ],
+    "outputHash": "bff9a670aed1507ddd69dce33b76819a15a40b1792172f0ed469011085fe1d29",
+    "elapsedMs": 417.74245900000005,
+    "firstMs": 417.50008400000024,
+    "requests": 2,
+    "assessment": {
+      "errors": [],
+      "review": [],
+      "automaticPassed": true
+    }
+  },
+  {
+    "id": "H07",
+    "title": "合同语境中的 the ball is in your court 表示下一步由对方决定",
+    "repetition": 2,
+    "translations": [
+      "我们已发送您修订后的合同，现在轮到您了。请于周一告知是否希望继续进行。"
+    ],
+    "outputHash": "d38a564514426fbfb42edc7371269c0f7df713be9c442e800705dc2fa072d660",
+    "elapsedMs": 260.5305410000001,
+    "firstMs": 254.34470799999963,
+    "requests": 1,
+    "assessment": {
+      "errors": [],
+      "review": [],
+      "automaticPassed": true
+    }
+  },
+  {
+    "id": "H08",
+    "title": "打印机故障后的赞叹语应传达反讽而不是肯定节纸",
+    "repetition": 2,
+    "translations": [
+      "美妙的——打印机又生产了200张空白页。多么巧妙的方式节省纸张。"
+    ],
+    "outputHash": "38982b10a557876945abc7760c58b0375338738e81a1cd64dd5bcbede112dac5",
+    "elapsedMs": 397.7564169999996,
+    "firstMs": 397.62466700000004,
+    "requests": 2,
+    "assessment": {
+      "errors": [],
+      "review": [],
+      "automaticPassed": true
+    }
+  },
+  {
+    "id": "H09",
+    "title": "同一块内的湿地长文保留前后段结论和不同地点的限制",
+    "repetition": 2,
+    "translations": [
+      "一座城镇修复了其主要小学旁的小湿地。志愿者清理了垃圾，种植了原生的芦苇，并建造了一条抬高的人行道，以便孩子们可以观察鸟类而不踩到脆弱的植物。这项工作持续了八个月，人行道在繁殖季节期间仍然关闭。教师利用该地点进行教学，但不允许学生收集蛋或打扰巢穴。\n\n在接下来的冬季，附近花园比之前更少地被淹没。然而，那个冬季也降雨较少，因此市政委员会无法将改善归因于修复工作。他们计划在另外三年内监测降雨量和水位，以决定是否在其他地方重复该项目。"
+    ],
+    "outputHash": "db55fbd026cf1643712b7ef0ef02bc7446df8b929a7281102fb6760f8979b38c",
+    "elapsedMs": 940.5128329999998,
+    "firstMs": 933.8733330000005,
+    "requests": 1,
+    "assessment": {
+      "errors": [],
+      "review": [],
+      "automaticPassed": true
+    }
+  },
+  {
+    "id": "H10",
+    "title": "HTTP 重试规则保留状态码条件和请求标识符",
+    "repetition": 2,
+    "translations": [
+      "对于GET /v2/jobs的请求，仅在收到HTTP 429响应后重新尝试，并等待至少15秒。404响应表示该任务未找到；在报告问题时，保持X-Request-ID头。"
+    ],
+    "outputHash": "de381364623f7a3bb0062998172c9730678d164522716fcf2deb8d01084c3ac0",
+    "elapsedMs": 381.13287499999933,
+    "firstMs": 374.9577499999996,
+    "requests": 1,
+    "assessment": {
+      "errors": [],
+      "review": [],
+      "automaticPassed": true
+    }
+  },
+  {
+    "id": "H11",
+    "title": "观察性研究的相关性不能夸大为因果或保证",
+    "repetition": 2,
+    "translations": [
+      "报告睡眠时间更长的人在记忆测试中得分更高。由于这项研究是观察性的，因此不能证明睡眠时间更长导致了更高的分数，而且这些结果可能不适用于儿童。"
+    ],
+    "outputHash": "41ef9a0a96709fb5844ce5ed9fcc1aa5e37df77d0076e806e298a24bd8d9db54",
+    "elapsedMs": 314.3032920000005,
+    "firstMs": 308.282459,
+    "requests": 1,
+    "assessment": {
+      "errors": [],
+      "review": [],
+      "automaticPassed": true
+    }
+  },
+  {
+    "id": "H12",
+    "title": "两段工作交接中的责任主体和先后顺序不应颠倒",
+    "repetition": 2,
+    "translations": [
+      "Noah 发送了草稿给 Ada，之后检查了数字。Ada 发现了标题缺失，要求 Noah 在将文件发送给客户之前添加它。",
+      "他当晚做出了更改，但她直到第二天下午才批准了最终版本。"
+    ],
+    "outputHash": "8863f8d0a19dcbcbc4afb8723fed903504eeaebbd751739ea0a1d50d27454c14",
+    "elapsedMs": 370.26450000000114,
+    "firstMs": 278.0794160000005,
+    "requests": 1,
+    "assessment": {
+      "errors": [],
+      "review": [],
+      "automaticPassed": true
+    }
+  }
+]

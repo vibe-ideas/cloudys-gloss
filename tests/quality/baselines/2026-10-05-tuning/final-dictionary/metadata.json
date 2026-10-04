@@ -1,0 +1,84 @@
+{
+  "date": "2026-10-04T18:02:50.448Z",
+  "kind": "dictionary",
+  "model": "Qwen/Qwen3-1.7B-MLX-4bit",
+  "modelRevision": "21457c6f51ed54a7c16e988c0844db973815c137",
+  "corpusVersion": "1.0.0",
+  "corpusHash": "dbef3d029f4c2a230b22a6fa2ddc0c00cf4da4458559a65c0bdfc0af7063d818",
+  "providerHash": "f6b3c33f3fa57ce4d055242c2007bc1d3214aa71313dca60d221c8e6613b4af4",
+  "repetitions": 2,
+  "temperature": 0,
+  "concurrency": 1,
+  "chip": "Apple M4 Pro",
+  "route": "OpenAICompatibleProvider.lookup with original Zod validation, bounded repair and offline US/UK pronunciation",
+  "pronunciationData": {
+    "format": "sorted UTF-8 TSV, lowercase NFC headword, all pronunciations preserved",
+    "version": 1,
+    "sources": {
+      "us": {
+        "repository": "https://github.com/open-dict-data/ipa-dict",
+        "revision": "43c3570eb3553bdd19fccd2bd0091534889af023",
+        "source": "https://raw.githubusercontent.com/open-dict-data/ipa-dict/43c3570eb3553bdd19fccd2bd0091534889af023/data/en_US.txt",
+        "sha256": "2af6f154a5c363275f052d1f85acedef38ed185ca9745aa4314be77f6b70de67"
+      },
+      "uk": {
+        "repository": "https://github.com/JoseLlarena/Britfone",
+        "revision": "1062be14adc96c358f2087ac5449d72130c7a6f4",
+        "source": "https://raw.githubusercontent.com/JoseLlarena/Britfone/1062be14adc96c358f2087ac5449d72130c7a6f4/britfone.main.3.0.1.csv",
+        "sha256": "59f197e98520856d1cc88e380beb54e4314d8712efc4d588b6778819c502d920"
+      },
+      "ipa-dict-license": {
+        "repository": "https://github.com/open-dict-data/ipa-dict",
+        "revision": "43c3570eb3553bdd19fccd2bd0091534889af023",
+        "source": "https://raw.githubusercontent.com/open-dict-data/ipa-dict/43c3570eb3553bdd19fccd2bd0091534889af023/LICENSE",
+        "sha256": "2c6a7e4c71f834a8fc0114fa4f65ca85e80bc4b4dc7ed08746963a09a7b0d177"
+      },
+      "britfone-license": {
+        "repository": "https://github.com/JoseLlarena/Britfone",
+        "revision": "1062be14adc96c358f2087ac5449d72130c7a6f4",
+        "source": "https://raw.githubusercontent.com/JoseLlarena/Britfone/1062be14adc96c358f2087ac5449d72130c7a6f4/LICENSE.txt",
+        "sha256": "ec93e71cd6fcdced20da7a0137bdfc1ff5fd8ea420d1fab332f95804668f9c49"
+      },
+      "cmudict-ipa-license": {
+        "repository": "https://github.com/lingz/cmudict-ipa",
+        "revision": "629483e9a7fa5b9ff11bb83e3fda6dcc25c5c511",
+        "source": "https://raw.githubusercontent.com/lingz/cmudict-ipa/629483e9a7fa5b9ff11bb83e3fda6dcc25c5c511/LICENSE",
+        "sha256": "a504bede5a50d1ac19c38984d9bb33371927f72e714946a963bf40bb2de21188"
+      },
+      "syllabify-license": {
+        "repository": "https://github.com/kylebgorman/syllabify",
+        "revision": "d816db784436e9de87ec1ef9bd11b8e229853710",
+        "source": "https://raw.githubusercontent.com/kylebgorman/syllabify/d816db784436e9de87ec1ef9bd11b8e229853710/syllabify.py",
+        "sha256": "a9b35ed0bf2c1ef0b51396e9f6eb000904095b6cbac728f17dad6ad7663a96d6"
+      },
+      "cmudict-license": {
+        "repository": "https://github.com/cmusphinx/cmudict",
+        "revision": "74790861f652b15e4ac49015a90074ad62a27690",
+        "source": "https://raw.githubusercontent.com/cmusphinx/cmudict/74790861f652b15e4ac49015a90074ad62a27690/LICENSE",
+        "sha256": "bd4ce8e44170a5f9f481310ca85c51de3c4f851a65e679b40e603b143bd3542a"
+      }
+    },
+    "assets": {
+      "us": {
+        "file": "us.tsv",
+        "entries": 125927,
+        "bytes": 3180267,
+        "gzipBytes": 872402,
+        "sha256": "1a543aaf742b628dd6e59791e3c0d25b94dc208c2f9b0bb9377a4cea53adad55",
+        "dialect": "General American"
+      },
+      "uk": {
+        "file": "uk.tsv",
+        "entries": 15212,
+        "bytes": 358650,
+        "gzipBytes": 105792,
+        "sha256": "28d12aaaa350ada8c595c97408e6ef44804aa8a204fc9b448aed0ed261c04cb5",
+        "dialect": "RP / Standard Southern British"
+      }
+    }
+  },
+  "runtime": "mlx-serve 26.10.1; reasoning budget 0",
+  "promptCache": "1 entry / 128MB",
+  "cache": "no extension result cache",
+  "reviewPolicy": "JSON/Zod and coarse lexical guards do not establish semantic or IPA accuracy. Review each unique output; empty IPA is missing pronunciation."
+}

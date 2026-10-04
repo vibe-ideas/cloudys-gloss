@@ -1,0 +1,426 @@
+[
+  {
+    "id": "A01",
+    "title": "随身行李重量上限和额外收费适用对象不得混淆",
+    "repetition": 1,
+    "translations": [
+      "每位乘客可携带一个不超过7.5公斤的行李。额外行李费用为SGD 24.80；费用不增加任何行李的重量限制。"
+    ],
+    "outputHash": "f552e6deea154b2129905684d17dec1105692d0f73f3f85d8adac07f2d2f8179",
+    "elapsedMs": 417.59445800000003,
+    "firstMs": 409.45329100000004,
+    "requests": 1,
+    "assessment": {
+      "errors": [],
+      "review": [],
+      "automaticPassed": true
+    }
+  },
+  {
+    "id": "A02",
+    "title": "撤离后重新进入建筑必须等待授权而非仅等警报停止",
+    "repetition": 1,
+    "translations": [
+      "你必须在消防员允许之前不得重新进入大楼，即使警报已经停止。不要假设安静意味着检查已经完成。"
+    ],
+    "outputHash": "806a5d0e9028d5d27f22d2d6e73f77f09fc15b14e17a935edae269f9d192c426",
+    "elapsedMs": 247.75933400000008,
+    "firstMs": 236.04204200000004,
+    "requests": 1,
+    "assessment": {
+      "errors": [],
+      "review": [],
+      "automaticPassed": true
+    }
+  },
+  {
+    "id": "A03",
+    "title": "烘焙步骤中先冷却再装盒且取货发生在次日",
+    "repetition": 1,
+    "translations": [
+      "当面包完全冷却后，面包师将它们装进箱子里。快递员第二天早晨收集这些箱子，而不是在它们被烘焙的那天。"
+    ],
+    "outputHash": "3fefe85edb499bec297bef461a3c6a8212a9283210c4df9cd2f67b16d1e9b02e",
+    "elapsedMs": 263.317458,
+    "firstMs": 257.186375,
+    "requests": 1,
+    "assessment": {
+      "errors": [],
+      "review": [],
+      "automaticPassed": true
+    }
+  },
+  {
+    "id": "A04",
+    "title": "并非所有海滩关闭不能译为全部开放或全部关闭",
+    "repetition": 1,
+    "translations": [
+      "并非所有岛上的海滩都关闭。北部的海滩对步行者开放，但在那里游泳仍被禁止。"
+    ],
+    "outputHash": "52a249cc3fb191007797631a45eee5db45c5b6ca56e5256690dba27d567473fb",
+    "elapsedMs": 207.60220800000002,
+    "firstMs": 201.55437500000016,
+    "requests": 1,
+    "assessment": {
+      "errors": [],
+      "review": [],
+      "automaticPassed": true
+    }
+  },
+  {
+    "id": "A05",
+    "title": "draft 在门缝冷风与编辑稿件两段中应采用不同词义",
+    "repetition": 1,
+    "translations": [
+      "一阵冷风穿过门缝，我于是把一张卷起的毛巾放在了那里。",
+      "我桌上的第一稿信件尚未送出。"
+    ],
+    "outputHash": "2b1af379171fda3dc38f70b9303128f8e9c0a459eed4d91278f4521ca5613069",
+    "elapsedMs": 259.36179100000004,
+    "firstMs": 194.86808300000007,
+    "requests": 1,
+    "assessment": {
+      "errors": [],
+      "review": [
+        "A05-3: 书桌处应出现稿件语义"
+      ],
+      "automaticPassed": true
+    }
+  },
+  {
+    "id": "A06",
+    "title": "接力赛中的 final leg 指最后一棒而非身体受伤",
+    "repetition": 1,
+    "translations": [
+      "Amir完成了接力赛的最后一段，并在终点前超过了两支队伍。他感到疲惫，但没有受伤。"
+    ],
+    "outputHash": "af3e1abdaa100e1ed68d6b5c50b7cca1344172a3e9f0bb89376c26a1bb3345d1",
+    "elapsedMs": 227.97566700000016,
+    "firstMs": 221.640584,
+    "requests": 1,
+    "assessment": {
+      "errors": [],
+      "review": [],
+      "automaticPassed": true
+    }
+  },
+  {
+    "id": "A07",
+    "title": "产品选择中的 on the fence 表示犹豫而非坐在围栏上",
+    "repetition": 1,
+    "translations": [
+      "我还在犹豫是否购买相机。图像质量很好，但更换电池的成本几乎和用旧机身一样。"
+    ],
+    "outputHash": "e935c92f876aace24ea3564b83defdc994b8e86fe73e82d0d0d768a8f964eeae",
+    "elapsedMs": 216.16858399999978,
+    "firstMs": 210.13275,
+    "requests": 1,
+    "assessment": {
+      "errors": [],
+      "review": [],
+      "automaticPassed": true
+    }
+  },
+  {
+    "id": "A08",
+    "title": "付费景观房面对砖墙时的称赞应保留抱怨语气",
+    "repetition": 1,
+    "translations": [
+      "多么壮观的景色！我们为一间窗户朝向砖墙的房间多付了钱。显然这笔钱花得值得。"
+    ],
+    "outputHash": "7cf64f5637550f0c501dc46ec98b2ab8834436e31ba66d8b56c766b055b2042a",
+    "elapsedMs": 442.8827919999999,
+    "firstMs": 442.6629579999999,
+    "requests": 2,
+    "assessment": {
+      "errors": [],
+      "review": [],
+      "automaticPassed": true
+    }
+  },
+  {
+    "id": "A09",
+    "title": "档案数字化长文保留文物保护、开放限制和下一阶段条件",
+    "repetition": 1,
+    "translations": [
+      "县档案馆开始对当地家庭捐赠的信件进行数字化。工作人员在柔和的灯光下拍摄每页，并将原件存入防酸的文件夹中。他们以不确定的姓名精确地记录下来，而不是随意更正。志愿者可以协助转录图像，但只有经过培训的工作人员才能处理脆弱的原件。第一阶段涵盖了1920年至1945年的材料，耗时九个月。\n\n在线收藏免费浏览，但一些信件在捐赠者请求下仍保持隐私。档案馆并未销毁纸质原件，也不计划出售它们。第二阶段将包括日记，前提是能够获得足够的资金。在此之前，访客可以预约时间在阅览室查阅印刷的目录。"
+    ],
+    "outputHash": "f37a52362f45c3d8081d8dacf817982edd91ee959423116753000cd8dd1a4880",
+    "elapsedMs": 1013.4859590000001,
+    "firstMs": 1007.2739590000001,
+    "requests": 1,
+    "assessment": {
+      "errors": [],
+      "review": [],
+      "automaticPassed": true
+    }
+  },
+  {
+    "id": "A10",
+    "title": "命令行试运行标志和输出路径应原样保留且不误称已改文件",
+    "repetition": 1,
+    "translations": [
+      "运行 atlas 同步 --dry-run 在对 /var/data/catalog.json 进行修改前。--dry-run 标志会打印出拟进行的操作而不写入文件；去掉它则启用实际更新。"
+    ],
+    "outputHash": "2be09ed74d6e975101699443c030c6f1e59a1ca1fc131964a839d541f2e63a35",
+    "elapsedMs": 345.0582919999997,
+    "firstMs": 338.7502089999998,
+    "requests": 1,
+    "assessment": {
+      "errors": [
+        "A10-1: 完整试运行命令"
+      ],
+      "review": [],
+      "automaticPassed": false
+    }
+  },
+  {
+    "id": "A11",
+    "title": "自愿问卷的少数样本发现不能推广为全体居民结论",
+    "repetition": 1,
+    "translations": [
+      "仅18名受邀居民参加了调查。大多数受访者更喜欢晚间课程，但作者警告说，这些志愿者可能并不代表整个社区。"
+    ],
+    "outputHash": "efc717ffddbad1e5025b6edfaf16135b18aca329722691a17b538b9984fb4385",
+    "elapsedMs": 251.72108400000025,
+    "firstMs": 245.7477090000002,
+    "requests": 1,
+    "assessment": {
+      "errors": [
+        "A11-1: 受邀人数 240"
+      ],
+      "review": [],
+      "automaticPassed": false
+    }
+  },
+  {
+    "id": "A12",
+    "title": "失物报告中的发现者、保管者和所有人需要各自对应",
+    "repetition": 1,
+    "translations": [
+      "Ravi在火车上发现了埃莉娜的围巾，将其交给车站的职员。埃莉娜直到Ravi叫她才知道围巾不见了。",
+      "职员将围巾留放在车站一整夜。埃莉娜第二天自己去收集，并感谢Ravi报告此事。"
+    ],
+    "outputHash": "338f43f946e13593b3f089993ac17b695705f96126013e2f713ea98d5ca6f739",
+    "elapsedMs": 419.2457079999999,
+    "firstMs": 271.2616659999999,
+    "requests": 1,
+    "assessment": {
+      "errors": [],
+      "review": [],
+      "automaticPassed": true
+    }
+  },
+  {
+    "id": "A01",
+    "title": "随身行李重量上限和额外收费适用对象不得混淆",
+    "repetition": 2,
+    "translations": [
+      "每位乘客可携带一个不超过7.5公斤的行李。额外行李费用为24.80 SGD，该费用不增加任何行李的重量限制。"
+    ],
+    "outputHash": "788d4930b5bb0b083507fc199bbf99fbb2cb3123ac44cebec5c7f16f86e88480",
+    "elapsedMs": 293.8420420000002,
+    "firstMs": 282.35549999999967,
+    "requests": 1,
+    "assessment": {
+      "errors": [],
+      "review": [],
+      "automaticPassed": true
+    }
+  },
+  {
+    "id": "A02",
+    "title": "撤离后重新进入建筑必须等待授权而非仅等警报停止",
+    "repetition": 2,
+    "translations": [
+      "你必须在消防员允许之前不得重新进入大楼，即使警报已经停止。不要假设安静意味着检查已经完成。"
+    ],
+    "outputHash": "806a5d0e9028d5d27f22d2d6e73f77f09fc15b14e17a935edae269f9d192c426",
+    "elapsedMs": 245.98920799999996,
+    "firstMs": 234.54608299999927,
+    "requests": 1,
+    "assessment": {
+      "errors": [],
+      "review": [],
+      "automaticPassed": true
+    }
+  },
+  {
+    "id": "A03",
+    "title": "烘焙步骤中先冷却再装盒且取货发生在次日",
+    "repetition": 2,
+    "translations": [
+      "当面包完全冷却后，面包师将它们装进箱子里。快递员第二天早晨收集这些箱子，而不是在它们被烘焙的那天。"
+    ],
+    "outputHash": "3fefe85edb499bec297bef461a3c6a8212a9283210c4df9cd2f67b16d1e9b02e",
+    "elapsedMs": 271.5471670000006,
+    "firstMs": 265.357833,
+    "requests": 1,
+    "assessment": {
+      "errors": [],
+      "review": [],
+      "automaticPassed": true
+    }
+  },
+  {
+    "id": "A04",
+    "title": "并非所有海滩关闭不能译为全部开放或全部关闭",
+    "repetition": 2,
+    "translations": [
+      "并非所有岛上的海滩都关闭。北部的海滩对步行者开放，但在那里游泳仍被禁止。"
+    ],
+    "outputHash": "52a249cc3fb191007797631a45eee5db45c5b6ca56e5256690dba27d567473fb",
+    "elapsedMs": 208.34370899999976,
+    "firstMs": 202.4533339999998,
+    "requests": 1,
+    "assessment": {
+      "errors": [],
+      "review": [],
+      "automaticPassed": true
+    }
+  },
+  {
+    "id": "A05",
+    "title": "draft 在门缝冷风与编辑稿件两段中应采用不同词义",
+    "repetition": 2,
+    "translations": [
+      "一阵冷风穿过门缝，我于是把一张卷起的毛巾放在了那里。",
+      "我桌上的第一稿信件尚未送出。"
+    ],
+    "outputHash": "2b1af379171fda3dc38f70b9303128f8e9c0a459eed4d91278f4521ca5613069",
+    "elapsedMs": 266.30912499999977,
+    "firstMs": 198.58616600000005,
+    "requests": 1,
+    "assessment": {
+      "errors": [],
+      "review": [
+        "A05-3: 书桌处应出现稿件语义"
+      ],
+      "automaticPassed": true
+    }
+  },
+  {
+    "id": "A06",
+    "title": "接力赛中的 final leg 指最后一棒而非身体受伤",
+    "repetition": 2,
+    "translations": [
+      "Amir完成了接力赛的最后一段，并在终点前超过了两支队伍。他感到疲惫，但没有受伤。"
+    ],
+    "outputHash": "af3e1abdaa100e1ed68d6b5c50b7cca1344172a3e9f0bb89376c26a1bb3345d1",
+    "elapsedMs": 234.551375,
+    "firstMs": 228.1304170000003,
+    "requests": 1,
+    "assessment": {
+      "errors": [],
+      "review": [],
+      "automaticPassed": true
+    }
+  },
+  {
+    "id": "A07",
+    "title": "产品选择中的 on the fence 表示犹豫而非坐在围栏上",
+    "repetition": 2,
+    "translations": [
+      "我还在犹豫是否购买相机。图像质量很好，但更换电池的成本几乎和用旧机身一样。"
+    ],
+    "outputHash": "e935c92f876aace24ea3564b83defdc994b8e86fe73e82d0d0d768a8f964eeae",
+    "elapsedMs": 218.84712499999932,
+    "firstMs": 212.7484999999997,
+    "requests": 1,
+    "assessment": {
+      "errors": [],
+      "review": [],
+      "automaticPassed": true
+    }
+  },
+  {
+    "id": "A08",
+    "title": "付费景观房面对砖墙时的称赞应保留抱怨语气",
+    "repetition": 2,
+    "translations": [
+      "多么壮观的景色！我们为一间窗户朝向砖墙的房间多付了钱。显然这笔钱花得值得。"
+    ],
+    "outputHash": "7cf64f5637550f0c501dc46ec98b2ab8834436e31ba66d8b56c766b055b2042a",
+    "elapsedMs": 457.43408400000044,
+    "firstMs": 456.9862499999999,
+    "requests": 2,
+    "assessment": {
+      "errors": [],
+      "review": [],
+      "automaticPassed": true
+    }
+  },
+  {
+    "id": "A09",
+    "title": "档案数字化长文保留文物保护、开放限制和下一阶段条件",
+    "repetition": 2,
+    "translations": [
+      "县档案馆开始对当地家庭捐赠的信件进行数字化。工作人员在柔和的灯光下拍摄每页，并将原件存入防酸的文件夹中。他们以不确定的姓名精确地记录下来，而不是随意更正。志愿者可以协助转录图像，但只有经过培训的工作人员才能处理脆弱的原件。第一阶段涵盖了1920年至1945年的材料，耗时九个月。\n\n在线收藏免费浏览，但一些信件在捐赠者请求下仍保持隐私。档案馆并未销毁纸质原件，也不计划出售它们。第二阶段将包括日记，前提是能够获得足够的资金。在此之前，访客可以预约时间在阅览室查阅印刷的目录。"
+    ],
+    "outputHash": "f37a52362f45c3d8081d8dacf817982edd91ee959423116753000cd8dd1a4880",
+    "elapsedMs": 1000.9870840000003,
+    "firstMs": 994.4048339999999,
+    "requests": 1,
+    "assessment": {
+      "errors": [],
+      "review": [],
+      "automaticPassed": true
+    }
+  },
+  {
+    "id": "A10",
+    "title": "命令行试运行标志和输出路径应原样保留且不误称已改文件",
+    "repetition": 2,
+    "translations": [
+      "运行 atlas 同步 --dry-run 在对 /var/data/catalog.json 进行修改前。--dry-run 标志会打印出拟进行的操作而不写入文件；去掉它则启用实际更新。"
+    ],
+    "outputHash": "2be09ed74d6e975101699443c030c6f1e59a1ca1fc131964a839d541f2e63a35",
+    "elapsedMs": 348.183,
+    "firstMs": 342.054709,
+    "requests": 1,
+    "assessment": {
+      "errors": [
+        "A10-1: 完整试运行命令"
+      ],
+      "review": [],
+      "automaticPassed": false
+    }
+  },
+  {
+    "id": "A11",
+    "title": "自愿问卷的少数样本发现不能推广为全体居民结论",
+    "repetition": 2,
+    "translations": [
+      "仅18名受邀居民参加了调查。大多数受访者更喜欢晚间课程，但作者警告说，这些志愿者可能并不代表整个社区。"
+    ],
+    "outputHash": "efc717ffddbad1e5025b6edfaf16135b18aca329722691a17b538b9984fb4385",
+    "elapsedMs": 253.1431250000005,
+    "firstMs": 246.84945899999911,
+    "requests": 1,
+    "assessment": {
+      "errors": [
+        "A11-1: 受邀人数 240"
+      ],
+      "review": [],
+      "automaticPassed": false
+    }
+  },
+  {
+    "id": "A12",
+    "title": "失物报告中的发现者、保管者和所有人需要各自对应",
+    "repetition": 2,
+    "translations": [
+      "Ravi在火车上发现了埃莉娜的围巾，将其交给车站的职员。埃莉娜直到Ravi叫她才知道围巾不见了。",
+      "职员将围巾留放在车站一整夜。埃莉娜第二天自己去收集，并感谢Ravi报告此事。"
+    ],
+    "outputHash": "338f43f946e13593b3f089993ac17b695705f96126013e2f713ea98d5ca6f739",
+    "elapsedMs": 409.44145799999933,
+    "firstMs": 265.3246249999993,
+    "requests": 1,
+    "assessment": {
+      "errors": [],
+      "review": [],
+      "automaticPassed": true
+    }
+  }
+]

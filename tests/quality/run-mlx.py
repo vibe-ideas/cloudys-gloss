@@ -23,11 +23,18 @@ def main():
     thinking = os.environ.get("QUALITY_THINKING", "disabled")
     if thinking not in ("enabled", "disabled"):
         raise SystemExit("QUALITY_THINKING must be enabled or disabled")
+    reasoning_budget = int(os.environ.get("QUALITY_REASONING_BUDGET", "-1" if thinking == "enabled" else "0"))
+    if reasoning_budget < -1 or (thinking == "disabled" and reasoning_budget != 0):
+        raise SystemExit("Reasoning budget must be -1 or nonnegative, and 0 when thinking is disabled")
     models = os.environ.get("QUALITY_MODELS", "mlx-community/Qwen2.5-3B-Instruct-4bit,mlx-community/Qwen2.5-1.5B-Instruct-4bit,Qwen/Qwen3-1.7B-MLX-4bit").split(",")
+    pinned_revision = os.environ.get("QUALITY_REVISION")
+    if pinned_revision and len(models) != 1:
+        raise SystemExit("QUALITY_REVISION requires exactly one model")
     output = Path(os.environ.get("QUALITY_OUTPUT", f"artifacts/quality/{datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%SZ')}"))
     output.mkdir(parents=True, exist_ok=False)
     port = int(os.environ.get("QUALITY_PORT", "18082"))
     with socket.socket() as probe:
+        probe.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         probe.bind(("127.0.0.1", port))
     versions = f"mlx-serve {service.VERSION}" if backend == "mlx-serve" else subprocess.check_output(
         [python, "-c", 'import importlib.metadata as m; print("mlx",m.version("mlx"),"mlx-lm",m.version("mlx-lm"))'], text=True).strip()
@@ -35,7 +42,7 @@ def main():
     for index, model in enumerate(models):
         # Require an existing snapshot so download latency cannot masquerade as inference latency.
         cache = Path.home() / ".cache/huggingface/hub" / ("models--" + model.replace("/", "--"))
-        model_path = str(cache / "snapshots" / (cache / "refs/main").read_text().strip())
+        model_path = str(cache / "snapshots" / (pinned_revision or (cache / "refs/main").read_text().strip()))
         if not (Path(model_path) / "config.json").exists():
             raise RuntimeError(f"Download {model} before benchmarking")
         revision = Path(model_path).name
@@ -47,7 +54,7 @@ def main():
         if backend == "mlx-serve":
             command = service.server_args(Path.home(), port)
             command[command.index("--model") + 1] = model_path
-            command += ["--reasoning-budget", "-1" if thinking == "enabled" else "0"]
+            command[command.index("--reasoning-budget") + 1] = str(reasoning_budget)
         with (model_output / "server.log").open("w") as log:
             server = subprocess.Popen(command, stdout=log, stderr=log, env={**os.environ, "MLX_SERVE_CACHE_LIMIT": str(256 * 1024 * 1024)})
             try:
@@ -70,7 +77,7 @@ def main():
                     response.read()
                 env = {**os.environ, "MODEL_BASE_URL": base, "MODEL_NAME": model_path, "MODEL_LABEL": model,
                        "MODEL_API_KEY": "", "MODEL_REVISION": revision, "QUALITY_OUTPUT": str(model_output),
-                       "QUALITY_RUNTIME": versions, "QUALITY_PROMPT_CACHE": "1 entry / 128MB" if backend == "mlx-serve" else "disabled", "QUALITY_THINKING": thinking}
+                       "QUALITY_RUNTIME": versions + (f"; reasoning budget {reasoning_budget}" if backend == "mlx-serve" else ""), "QUALITY_PROMPT_CACHE": "1 entry / 128MB" if backend == "mlx-serve" else "disabled", "QUALITY_THINKING": thinking, "QUALITY_REASONING_BUDGET": str(reasoning_budget)}
                 print(f"Evaluating {model} @ {revision}", flush=True)
                 result = subprocess.run(["pnpm", "test:quality"], env=env, check=False)
                 manifest.append({"model": model, "revision": revision, "directory": model_output.name, "exitCode": result.returncode})

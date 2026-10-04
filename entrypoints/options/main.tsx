@@ -48,7 +48,7 @@ function Options() {
     </form>
     <ModelControls />
     <section class="card"><h2>留在本地的阅读记忆</h2><p class="muted">译文和词卡缓存在当前浏览器，最多 1,500 条，30 天过期。模型、地址或温度变更后自动使用独立缓存。</p><button disabled={busy || !ready} onClick={() => void perform('clear')}>清空缓存</button></section>
-    <p class="footer">只有开启翻译或划词时，相关文本才会发送到你配置的服务。<br />API Key 保存在本机扩展存储中，不同步到云端。音标由 AI 生成，发音使用浏览器系统语音。</p>
+    <p class="footer">只有开启翻译或划词时，相关文本才会发送到你配置的服务。<br />API Key 保存在本机扩展存储中，不同步到云端。音标来自内置离线词典，缺失时留空；多读音会并列显示。发音使用浏览器系统语音。</p>
   </main>;
 }
 render(<Options />, document.getElementById('app')!);

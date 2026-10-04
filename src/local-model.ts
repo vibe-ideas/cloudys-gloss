@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import type { Settings } from './schema';
+import { defaults, type Settings } from './schema';
 
 export const NATIVE_HOST = 'com.cloudys_gloss.mlx';
 export const LocalModelStatusSchema = z.object({
@@ -14,7 +14,14 @@ export function isManagedModel(settings: Settings) {
   const url = new URL(settings.baseUrl);
   return url.protocol === 'http:' && ['127.0.0.1', 'localhost'].includes(url.hostname) && url.port === '8080'
     && ['/v1', '/v1/', '/v1/chat/completions'].includes(url.pathname)
-    && settings.model === 'mlx-community/Qwen2.5-3B-Instruct-4bit';
+    && settings.model === defaults.model;
+}
+
+// Only migrate the old bundled local preset. Remote/custom services retain their model.
+export function migrateManagedPreset(settings: Settings): Settings {
+  if (settings.model === 'mlx-community/Qwen2.5-3B-Instruct-4bit'
+    && isManagedModel({ ...settings, model: defaults.model })) return { ...settings, model: defaults.model };
+  return settings;
 }
 
 export class LocalModelManager {

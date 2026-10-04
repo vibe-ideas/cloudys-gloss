@@ -1,0 +1,316 @@
+{
+  "kind": "dictionary",
+  "corpusHash": "dbef3d029f4c2a230b22a6fa2ddc0c00cf4da4458559a65c0bdfc0af7063d818",
+  "providerHash": "940b0097b41f10eb82bdb3c25197f0ea618fd975b6682e17943d57f982547d1b",
+  "model": "Qwen/Qwen3-1.7B-MLX-4bit",
+  "reviewer": "dictionary_expert — independent AI-assisted bilingual review",
+  "method": "Review every final delivered card in both rounds using the same contextual sense, example alignment and IPA completeness policy as prior candidates. English text copied into zh is an untranslated example, not a Chinese translation. Original source examples are guaranteed by assembly, but their Chinese translations still require review.",
+  "rubric": {
+    "adequacy": "0–4: contextual sense and part of speech",
+    "completeness": "0–4: required card content including pronunciation",
+    "fluency": "0–4: natural Chinese and bilingual example",
+    "ipa": "correct / incorrect / missing / uncertain; expert review, never inferred from Zod"
+  },
+  "reviews": [
+    {
+      "id": "D01",
+      "outputHash": "a6e1cdb57c7d2ae34fd5ebc36dfe61f6b309a88c4f7fd2001bee69c6a2613966",
+      "adequacy": 2,
+      "completeness": 1,
+      "fluency": 1,
+      "critical": true,
+      "ipaUs": "correct",
+      "ipaUk": "correct",
+      "notes": "轻重义项、形容词和英文原句正确，但 examples.zh 完全复制英文，没有提供中文翻译。两轮一致，属于未翻译的硬性失败。",
+      "aspects": {
+        "meaning": true,
+        "partOfSpeech": true,
+        "contextMeaning": true,
+        "examples": false
+      },
+      "semanticAcceptable": false,
+      "ipaComplete": true,
+      "wholeCardAcceptable": false
+    },
+    {
+      "id": "D02",
+      "outputHash": "ac2f3675f11262b8dbe03c574df185c2d0657d7a4af1861d8a0ff8499f90d5d2",
+      "adequacy": 4,
+      "completeness": 4,
+      "fluency": 4,
+      "critical": false,
+      "ipaUs": "correct",
+      "ipaUk": "correct",
+      "notes": "点燃义项、动词、语境释义和原句中译对应正确。",
+      "aspects": {
+        "meaning": true,
+        "partOfSpeech": true,
+        "contextMeaning": true,
+        "examples": true
+      },
+      "semanticAcceptable": true,
+      "ipaComplete": true,
+      "wholeCardAcceptable": true
+    },
+    {
+      "id": "D03",
+      "outputHash": "1e2e5b1dbfc8aa543aab34c04068e496c4bc7a021b0c09cf6e6900250978fe41",
+      "adequacy": 4,
+      "completeness": 4,
+      "fluency": 4,
+      "critical": false,
+      "ipaUs": "correct",
+      "ipaUk": "correct",
+      "notes": "河岸义项、词性、语境和原句中译正确。",
+      "aspects": {
+        "meaning": true,
+        "partOfSpeech": true,
+        "contextMeaning": true,
+        "examples": true
+      },
+      "semanticAcceptable": true,
+      "ipaComplete": true,
+      "wholeCardAcceptable": true
+    },
+    {
+      "id": "D04",
+      "outputHash": "586aa234d8cbdea330f3423cbcede9818b0834bffca92b0cb15e5f4337f45a6b",
+      "adequacy": 3,
+      "completeness": 3,
+      "fluency": 4,
+      "critical": false,
+      "ipaUs": "correct",
+      "ipaUk": "correct",
+      "notes": "银行义项与中译主要意义正确；zh 漏掉 yesterday 的时间信息。按此前统一标准记轻微完整性缺失，不将其称为无遗漏译文。",
+      "aspects": {
+        "meaning": true,
+        "partOfSpeech": true,
+        "contextMeaning": true,
+        "examples": true
+      },
+      "semanticAcceptable": true,
+      "ipaComplete": true,
+      "wholeCardAcceptable": true
+    },
+    {
+      "id": "D05",
+      "outputHash": "8744d97166d1e8faee4981758ef6bfd65d9006e849098acf970cfea72fdd8362",
+      "adequacy": 4,
+      "completeness": 4,
+      "fluency": 2,
+      "critical": false,
+      "ipaUs": "correct",
+      "ipaUk": "correct",
+      "notes": "多云义项与语境正确，修复旧版晴朗反义问题。例句中译“它是…没有雨预期”生硬，但主要含义可理解。",
+      "aspects": {
+        "meaning": true,
+        "partOfSpeech": true,
+        "contextMeaning": true,
+        "examples": true
+      },
+      "semanticAcceptable": true,
+      "ipaComplete": true,
+      "wholeCardAcceptable": true
+    },
+    {
+      "id": "D06",
+      "outputHash": "10b7302ac05383a40ddf78fb0d5843537ca63dd9d999b09d64c19d953b3cfeee",
+      "adequacy": 4,
+      "completeness": 4,
+      "fluency": 4,
+      "critical": false,
+      "ipaUs": "correct",
+      "ipaUk": "correct",
+      "notes": "运行程序的动词义项、语境与完整例句中译正确。音标按独立 US/UK 数据源转写约定审核。",
+      "aspects": {
+        "meaning": true,
+        "partOfSpeech": true,
+        "contextMeaning": true,
+        "examples": true
+      },
+      "semanticAcceptable": true,
+      "ipaComplete": true,
+      "wholeCardAcceptable": true
+    },
+    {
+      "id": "D07",
+      "outputHash": "69f9c468398f3badebcfebdeda6356ab84d7b03d061ca0db8ab955c6aae94a11",
+      "adequacy": 2,
+      "completeness": 1,
+      "fluency": 1,
+      "critical": true,
+      "ipaUs": "correct",
+      "ipaUk": "correct",
+      "notes": "收费义项、动词、语境和英文原句正确，但 examples.zh 完全复制英文，未翻译。两轮一致。",
+      "aspects": {
+        "meaning": true,
+        "partOfSpeech": true,
+        "contextMeaning": true,
+        "examples": false
+      },
+      "semanticAcceptable": false,
+      "ipaComplete": true,
+      "wholeCardAcceptable": false
+    },
+    {
+      "id": "D08",
+      "outputHash": "fe975fad50f397c5f57b184f7bad06069559095db8e27de15b61670e507e05fa",
+      "adequacy": 1,
+      "completeness": 1,
+      "fluency": 1,
+      "critical": true,
+      "ipaUs": "correct",
+      "ipaUk": "correct",
+      "notes": "charge 的正式指控被解释成使承担法律责任/追究刑事责任，模糊指控与责任认定，未明确本句指控盗窃的核心义项；examples.zh 又完全复制英文。两轮一致。",
+      "aspects": {
+        "meaning": false,
+        "partOfSpeech": true,
+        "contextMeaning": false,
+        "examples": false
+      },
+      "semanticAcceptable": false,
+      "ipaComplete": true,
+      "wholeCardAcceptable": false
+    },
+    {
+      "id": "D09",
+      "outputHash": "589b3e825515470bbb407c2cb02e959ed99cc11699642003a621d787526d96de",
+      "adequacy": 4,
+      "completeness": 4,
+      "fluency": 2,
+      "critical": false,
+      "ipaUs": "correct",
+      "ipaUk": "correct",
+      "notes": "健康良好的形容词义项正确；原句保留 fine 用法，修复上一候选用 good 替换单词的问题。中译“经过一个好睡眠的夜晚”生硬但可理解。",
+      "aspects": {
+        "meaning": true,
+        "partOfSpeech": true,
+        "contextMeaning": true,
+        "examples": true
+      },
+      "semanticAcceptable": true,
+      "ipaComplete": true,
+      "wholeCardAcceptable": true
+    },
+    {
+      "id": "D10",
+      "outputHash": "aae6c2756cb59e5ffda785c1c20f3dc3aadcdc8e026edc1bbd990a6a9b5f6e86",
+      "adequacy": 4,
+      "completeness": 4,
+      "fluency": 3,
+      "critical": false,
+      "ipaUs": "correct",
+      "ipaUk": "correct",
+      "notes": "罚款名词和原句 paid a fine 保持一致，修复上一候选改为动词 fined 的问题；中文语序略生硬但含义正确。",
+      "aspects": {
+        "meaning": true,
+        "partOfSpeech": true,
+        "contextMeaning": true,
+        "examples": true
+      },
+      "semanticAcceptable": true,
+      "ipaComplete": true,
+      "wholeCardAcceptable": true
+    },
+    {
+      "id": "D11",
+      "outputHash": "e76061abac73354b9ffeb24eb7525899f8cf2e2baf54ceaa15323e8e64da031d",
+      "adequacy": 4,
+      "completeness": 2,
+      "fluency": 3,
+      "critical": false,
+      "ipaUs": "missing",
+      "ipaUk": "missing",
+      "notes": "放弃的短语动词与例句翻译正确，措辞“难题虽然困难”重复。两口音整短语 IPA 均缺失，不记为correct。",
+      "aspects": {
+        "meaning": true,
+        "partOfSpeech": true,
+        "contextMeaning": true,
+        "examples": true
+      },
+      "semanticAcceptable": true,
+      "ipaComplete": false,
+      "wholeCardAcceptable": false
+    },
+    {
+      "id": "D12",
+      "outputHash": "bbcc03618b6aa54b1b5fcfa27ddb2a492547b725d675c7f72ac04893fe66cda7",
+      "adequacy": 4,
+      "completeness": 2,
+      "fluency": 4,
+      "critical": false,
+      "ipaUs": "missing",
+      "ipaUk": "missing",
+      "notes": "飞机起飞义项与十分钟后起飞的例句中译正确；两口音整短语 IPA 均缺失，单独计完整性。",
+      "aspects": {
+        "meaning": true,
+        "partOfSpeech": true,
+        "contextMeaning": true,
+        "examples": true
+      },
+      "semanticAcceptable": true,
+      "ipaComplete": false,
+      "wholeCardAcceptable": false
+    }
+  ],
+  "acceptancePolicy": {
+    "semantic": "meaning, partOfSpeech, contextMeaning and bilingual examples all acceptable; minor stylistic awkwardness or nonessential omission may pass, but untranslated examples and material sense changes fail",
+    "ipaComplete": "both US and UK nonempty and individually reviewed correct under the pinned source transcription conventions",
+    "wholeCard": "semantic acceptable AND IPA complete AND adequacy >= 3 AND completeness >= 3 AND fluency >= 2 AND no critical error"
+  },
+  "summary": {
+    "rows": 24,
+    "uniqueOutputs": 12,
+    "repetitions": 2,
+    "counts": {
+      "meaning": {
+        "passed": 22,
+        "total": 24,
+        "rate": 0.9166666666666666
+      },
+      "partOfSpeech": {
+        "passed": 24,
+        "total": 24,
+        "rate": 1.0
+      },
+      "contextMeaning": {
+        "passed": 22,
+        "total": 24,
+        "rate": 0.9166666666666666
+      },
+      "examples": {
+        "passed": 18,
+        "total": 24,
+        "rate": 0.75
+      },
+      "semanticAcceptable": {
+        "passed": 18,
+        "total": 24,
+        "rate": 0.75
+      },
+      "ipaComplete": {
+        "passed": 20,
+        "total": 24,
+        "rate": 0.8333333333333334
+      },
+      "wholeCardAcceptable": {
+        "passed": 14,
+        "total": 24,
+        "rate": 0.5833333333333334
+      }
+    },
+    "semanticFailures": [
+      "D01/D07/D08 both rounds: examples.zh copies English unchanged",
+      "D08 both rounds: formal accusation meaning replaced by broad legal responsibility"
+    ],
+    "missingIpa": [
+      "D11/D12 both rounds: whole-phrase entries absent"
+    ],
+    "improvements": [
+      "Source-grounded English examples retain selected word and its original grammatical use",
+      "D05 context meaning no longer reverses cloudy to sunny",
+      "D02 no longer fails JSON delivery"
+    ],
+    "limitations": "Faster generation and 24/24 structural validity do not establish quality improvement. Bilingual examples need an explicit Chinese-output guard and then semantic review; dictionary overall remains below 90%."
+  }
+}

@@ -1,0 +1,106 @@
+{
+  "decodeTpsMedian": 136.44366219151266,
+  "decodeTpsRange": [
+    124.70673150007946,
+    148.83440400955783
+  ],
+  "firstMsMedian": 63.3506045000006,
+  "provider": [
+    {
+      "kind": "provider",
+      "service": "mlx-serve-qwen3-1.7b",
+      "block": 0,
+      "scenario": "reading",
+      "success": true,
+      "elapsedMs": 544.484042
+    },
+    {
+      "kind": "provider",
+      "service": "mlx-serve-qwen3-1.7b",
+      "block": 0,
+      "scenario": "technical",
+      "success": true,
+      "elapsedMs": 566.2211660000003
+    },
+    {
+      "kind": "provider",
+      "service": "mlx-serve-qwen3-1.7b",
+      "block": 0,
+      "scenario": "article",
+      "success": true,
+      "elapsedMs": 1053.8606250000003
+    },
+    {
+      "kind": "provider",
+      "service": "mlx-serve-qwen3-1.7b",
+      "block": 0,
+      "scenario": "cloudy",
+      "success": true,
+      "elapsedMs": 8624.905791000001
+    },
+    {
+      "kind": "provider",
+      "service": "mlx-serve-qwen3-1.7b",
+      "block": 0,
+      "scenario": "bank",
+      "success": true,
+      "elapsedMs": 924.3850000000002
+    },
+    {
+      "kind": "provider",
+      "service": "mlx-serve-qwen3-1.7b",
+      "block": 0,
+      "scenario": "light",
+      "success": true,
+      "elapsedMs": 5718.3685000000005
+    },
+    {
+      "kind": "provider",
+      "service": "mlx-serve-qwen3-1.7b",
+      "block": 1,
+      "scenario": "reading",
+      "success": true,
+      "elapsedMs": 623.3848330000001
+    },
+    {
+      "kind": "provider",
+      "service": "mlx-serve-qwen3-1.7b",
+      "block": 1,
+      "scenario": "technical",
+      "success": true,
+      "elapsedMs": 651.2833749999991
+    },
+    {
+      "kind": "provider",
+      "service": "mlx-serve-qwen3-1.7b",
+      "block": 1,
+      "scenario": "article",
+      "success": true,
+      "elapsedMs": 1104.5118750000001
+    },
+    {
+      "kind": "provider",
+      "service": "mlx-serve-qwen3-1.7b",
+      "block": 1,
+      "scenario": "cloudy",
+      "success": true,
+      "elapsedMs": 6509.147750000004
+    },
+    {
+      "kind": "provider",
+      "service": "mlx-serve-qwen3-1.7b",
+      "block": 1,
+      "scenario": "bank",
+      "success": true,
+      "elapsedMs": 910.1863329999978
+    },
+    {
+      "kind": "provider",
+      "service": "mlx-serve-qwen3-1.7b",
+      "block": 1,
+      "scenario": "light",
+      "success": true,
+      "elapsedMs": 6164.689624999999
+    }
+  ]
+}

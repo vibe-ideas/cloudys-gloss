@@ -1,0 +1,19 @@
+{
+  "model": "Qwen/Qwen3-1.7B-MLX-4bit",
+  "largePage": {
+    "paragraphs": 2000,
+    "chromium": {
+      "firstMs": 1541,
+      "longestFrameMs": 18,
+      "firstState": "partial",
+      "completedAtFirstScreen": 2
+    },
+    "firefox": {
+      "firstMs": 643,
+      "longestFrameMs": 10,
+      "firstState": "partial",
+      "completedAtFirstScreen": 2
+    }
+  },
+  "translationCardSmoke": "Initial Chromium and Firefox both failed: seven-word source copied unchanged and accepted. Not a successful card latency measurement."
+}

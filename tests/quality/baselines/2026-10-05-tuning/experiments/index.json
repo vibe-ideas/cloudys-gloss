@@ -1,0 +1,206 @@
+[
+  {
+    "experiment": "tuning-zh-v1",
+    "path": "tuning-zh-v1",
+    "reviewed": false,
+    "reviewStatus": "unreviewed-not-accepted",
+    "releaseQualified": false
+  },
+  {
+    "experiment": "tuning-en-v2",
+    "path": "tuning-en-v2",
+    "reviewed": false,
+    "reviewStatus": "unreviewed-not-accepted",
+    "releaseQualified": false
+  },
+  {
+    "experiment": "tuning-qwen3-v2",
+    "path": "tuning-qwen3-v2/0-Qwen--Qwen3-1.7B-MLX-4bit",
+    "reviewed": false,
+    "reviewStatus": "unreviewed-not-accepted",
+    "releaseQualified": false
+  },
+  {
+    "experiment": "tuning-qwen3-v3",
+    "path": "tuning-qwen3-v3/0-Qwen--Qwen3-1.7B-MLX-4bit",
+    "reviewed": false,
+    "reviewStatus": "unreviewed-not-accepted",
+    "releaseQualified": false
+  },
+  {
+    "experiment": "qwen4-candidate-v1",
+    "path": "qwen4-candidate-v1/0-Qwen--Qwen3-4B-MLX-4bit",
+    "reviewed": true,
+    "reviewStatus": "reviewed-exploration",
+    "releaseQualified": false
+  },
+  {
+    "experiment": "qwen4-candidate-v2",
+    "path": "qwen4-candidate-v2/0-Qwen--Qwen3-4B-MLX-4bit",
+    "reviewed": false,
+    "reviewStatus": "unreviewed-not-accepted",
+    "releaseQualified": false
+  },
+  {
+    "experiment": "qwen4-think128",
+    "path": "qwen4-think128/0-Qwen--Qwen3-4B-MLX-4bit",
+    "reviewed": false,
+    "reviewStatus": "unreviewed-not-accepted",
+    "releaseQualified": false
+  },
+  {
+    "experiment": "qwen4-think128-effective",
+    "path": "qwen4-think128-effective/0-Qwen--Qwen3-4B-MLX-4bit",
+    "reviewed": false,
+    "reviewStatus": "unreviewed-not-accepted",
+    "releaseQualified": false
+  },
+  {
+    "experiment": "qwen17-think128-effective",
+    "path": "qwen17-think128-effective/0-Qwen--Qwen3-1.7B-MLX-4bit",
+    "reviewed": false,
+    "reviewStatus": "unreviewed-not-accepted",
+    "releaseQualified": false
+  },
+  {
+    "experiment": "qwen35-candidate-v1",
+    "path": "qwen35-candidate-v1/0-mlx-community--Qwen3.5-2B-4bit",
+    "reviewed": false,
+    "reviewStatus": "unreviewed-not-accepted",
+    "releaseQualified": false
+  },
+  {
+    "experiment": "qwen35-thinking256",
+    "path": "qwen35-thinking256/0-mlx-community--Qwen3.5-2B-4bit",
+    "reviewed": false,
+    "reviewStatus": "unreviewed-not-accepted",
+    "releaseQualified": false
+  },
+  {
+    "experiment": "qwen35-4b-candidate-v1",
+    "path": "qwen35-4b-candidate-v1/0-mlx-community--Qwen3.5-4B-4bit",
+    "reviewed": true,
+    "reviewStatus": "reviewed-exploration",
+    "releaseQualified": false,
+    "corpusSnapshot": "cases.json",
+    "note": "仅保留已结束探索证据，不代表最终发布质量；未审阅结果不得计为语义合格。"
+  },
+  {
+    "experiment": "qwen35-4b-holdout-v1",
+    "path": "qwen35-4b-holdout-v1/0-mlx-community--Qwen3.5-4B-4bit",
+    "reviewed": true,
+    "reviewStatus": "reviewed-exploration",
+    "releaseQualified": false,
+    "corpusSnapshot": "holdout.json",
+    "note": "仅保留已结束探索证据，不代表最终发布质量；未审阅结果不得计为语义合格。"
+  },
+  {
+    "experiment": "qwen17-current-final",
+    "path": "qwen17-current-final/0-Qwen--Qwen3-1.7B-MLX-4bit",
+    "reviewed": true,
+    "reviewStatus": "reviewed-exploration",
+    "releaseQualified": false,
+    "corpusSnapshot": "cases.json",
+    "note": "仅保留已结束探索证据，不代表最终发布质量；未审阅结果不得计为语义合格。"
+  },
+  {
+    "experiment": "qwen17-current-holdout",
+    "path": "qwen17-current-holdout/0-Qwen--Qwen3-1.7B-MLX-4bit",
+    "reviewed": true,
+    "reviewStatus": "reviewed-exploration",
+    "releaseQualified": false,
+    "corpusSnapshot": "holdout.json",
+    "note": "仅保留已结束探索证据，不代表最终发布质量；未审阅结果不得计为语义合格。"
+  },
+  {
+    "experiment": "qwen17-json-mode",
+    "path": "qwen17-json-mode/0-Qwen--Qwen3-1.7B-MLX-4bit",
+    "reviewed": false,
+    "reviewStatus": "unreviewed-not-accepted",
+    "releaseQualified": false,
+    "corpusSnapshot": "cases.json",
+    "note": "仅保留已结束探索证据，不代表最终发布质量；未审阅结果不得计为语义合格。"
+  },
+  {
+    "experiment": "tuning-qwen3-dictionary-v3",
+    "path": "tuning-qwen3-dictionary-v3/0-Qwen--Qwen3-1.7B-MLX-4bit/dictionary",
+    "reviewed": false,
+    "reviewStatus": "unreviewed-not-accepted",
+    "releaseQualified": false,
+    "corpusSnapshot": "dictionary/cases.json",
+    "note": "仅保留已结束探索证据，不代表最终发布质量；未审阅结果不得计为语义合格。"
+  },
+  {
+    "experiment": "qwen17-current-dictionary",
+    "path": "qwen17-current-dictionary/0-Qwen--Qwen3-1.7B-MLX-4bit/dictionary",
+    "reviewed": true,
+    "reviewStatus": "reviewed-exploration",
+    "releaseQualified": false,
+    "corpusSnapshot": "dictionary/cases.json",
+    "note": "仅保留已结束探索证据，不代表最终发布质量；未审阅结果不得计为语义合格。"
+  },
+  {
+    "experiment": "qwen17-dictionary-final2",
+    "path": "qwen17-dictionary-final2/0-Qwen--Qwen3-1.7B-MLX-4bit/dictionary",
+    "reviewed": true,
+    "reviewStatus": "reviewed-exploration",
+    "releaseQualified": false,
+    "corpusSnapshot": "dictionary/cases.json",
+    "note": "仅保留已结束探索证据，不代表最终发布质量；未审阅结果不得计为语义合格。"
+  },
+  {
+    "experiment": "qwen17-plain-probe",
+    "path": "qwen17-plain-probe",
+    "reviewed": true,
+    "reviewStatus": "reviewed-exploration",
+    "releaseQualified": false,
+    "corpusSnapshot": "cases.json + holdout.json",
+    "note": "仅保留已结束探索证据，不代表最终发布质量；未审阅结果不得计为语义合格。"
+  },
+  {
+    "experiment": "qwen17-review-probe",
+    "path": "qwen17-review-probe",
+    "reviewed": false,
+    "reviewStatus": "unreviewed-not-accepted",
+    "releaseQualified": false,
+    "corpusSnapshot": "cases.json + holdout.json",
+    "note": "仅保留已结束探索证据，不代表最终发布质量；未审阅结果不得计为语义合格。 此阶段仅有原始响应，缺少冻结提示/运行配置，不用于可重复验收。",
+    "sanitization": {
+      "files": [
+        "results.json"
+      ],
+      "rule": "Replace local home directory with ${HOME}; raw model identifiers only, no translation or prompt edits."
+    }
+  },
+  {
+    "experiment": "review-experiment",
+    "path": "review-experiment",
+    "reviewed": false,
+    "reviewStatus": "unreviewed-not-accepted",
+    "releaseQualified": false,
+    "corpusSnapshot": "cases.json",
+    "note": "仅保留已结束探索证据，不代表最终发布质量；未审阅结果不得计为语义合格。 此阶段仅有原始响应，缺少冻结提示/运行配置，不用于可重复验收。",
+    "sanitization": {
+      "files": [
+        "results.json"
+      ],
+      "rule": "Replace local home directory with ${HOME}; raw model identifiers only, no translation or prompt edits."
+    }
+  },
+  {
+    "experiment": "dictionary-grounded-no-guard",
+    "path": "dictionary-grounded-no-guard",
+    "reviewed": true,
+    "reviewStatus": "reviewed-exploration",
+    "releaseQualified": false,
+    "note": "词卡修复前的失败探索，完整原始输出和逐项审阅保留，不作为最终合格结果。"
+  },
+  {
+    "experiment": "dictionary-grounded-guard-only",
+    "path": "dictionary-grounded-guard-only",
+    "reviewed": true,
+    "reviewStatus": "reviewed-exploration",
+    "releaseQualified": false,
+    "note": "词卡修复前的失败探索，完整原始输出和逐项审阅保留，不作为最终合格结果。"
+  }
+]

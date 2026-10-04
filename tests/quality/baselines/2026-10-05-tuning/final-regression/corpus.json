@@ -1,0 +1,531 @@
+{
+  "version": "1.0.0",
+  "cases": [
+    {
+      "id": "H01",
+      "title": "年费和设备数量保留原值且不能把折后价当作折扣额",
+      "tags": [
+        "数字",
+        "金额"
+      ],
+      "texts": [
+        "After the discount, the annual subscription is EUR 68.40 for two devices. The renewal price is not guaranteed to stay the same."
+      ],
+      "referenceZh": [
+        "折后年费为 68.40 欧元，可供两台设备使用。续订价格不保证保持不变。"
+      ],
+      "requirements": [
+        "68.40 欧元是折后总年费，不是每月价格或优惠金额；可用于两台设备。",
+        "不能把续订价格可能变化译为保证不变，也不能断言一定涨价。"
+      ],
+      "checks": [
+        {
+          "id": "H01-1",
+          "block": 0,
+          "description": "金额保留 68.40",
+          "pattern": "68\\.4(?:0)?(?!\\d)",
+          "kind": "required",
+          "severity": "error"
+        },
+        {
+          "id": "H01-2",
+          "block": 0,
+          "description": "币种为欧元",
+          "pattern": "欧元|EUR",
+          "kind": "required",
+          "severity": "error"
+        },
+        {
+          "id": "H01-3",
+          "block": 0,
+          "description": "年付周期不能变成月付",
+          "pattern": "年",
+          "kind": "required",
+          "severity": "review"
+        },
+        {
+          "id": "H01-4",
+          "block": 0,
+          "description": "设备数量为两台",
+          "pattern": "(?:2|两|二)\\s*(?:台|个|部)?\\s*设备",
+          "kind": "required",
+          "severity": "error"
+        }
+      ]
+    },
+    {
+      "id": "H02",
+      "title": "打开检修盖前必须关闭阀门且灯灭不能证明安全",
+      "tags": [
+        "否定",
+        "条件"
+      ],
+      "texts": [
+        "Never open the inspection cover unless the valve is fully closed. The indicator going dark does not prove that the pressure has fallen to zero."
+      ],
+      "referenceZh": [
+        "除非阀门已完全关闭，否则绝不能打开检修盖。指示灯熄灭并不能证明压力已降至零。"
+      ],
+      "requirements": [
+        "打开检修盖的必要条件是阀门完全关闭，不能反转条件或删除禁止。",
+        "灯灭不能推出压力归零；不能改成灯灭表示安全或阀门打开时才可检修。"
+      ],
+      "checks": [
+        {
+          "id": "H02-1",
+          "block": 0,
+          "description": "保留阀门这一条件对象",
+          "pattern": "阀",
+          "kind": "required",
+          "severity": "error"
+        },
+        {
+          "id": "H02-2",
+          "block": 0,
+          "description": "保留压力这一被否定的结论",
+          "pattern": "压力",
+          "kind": "required",
+          "severity": "error"
+        },
+        {
+          "id": "H02-3",
+          "block": 0,
+          "description": "必要条件与否定须人工检查",
+          "pattern": "不|勿|禁止|未|不能",
+          "kind": "required",
+          "severity": "review"
+        }
+      ]
+    },
+    {
+      "id": "H03",
+      "title": "过去时间点的已发货和至今未送达不能混淆",
+      "tags": [
+        "时序",
+        "否定"
+      ],
+      "texts": [
+        "By the time I called on Tuesday, the parcel had already left the warehouse. It still has not reached the customer, who was promised delivery by Friday."
+      ],
+      "referenceZh": [
+        "我周二打电话时，包裹早已离开仓库。但它至今仍未送到客户手中，而客户原本得到的承诺是最迟周五送达。"
+      ],
+      "requirements": [
+        "周二打电话前就已离仓，不是打电话后才发货。",
+        "截至叙述时仍未送达；周五是承诺的送达期限，不是已送达日期。"
+      ],
+      "checks": [
+        {
+          "id": "H03-1",
+          "block": 0,
+          "description": "保留周二联系时间",
+          "pattern": "周二|星期二|礼拜二",
+          "kind": "required",
+          "severity": "error"
+        },
+        {
+          "id": "H03-2",
+          "block": 0,
+          "description": "保留周五送达期限",
+          "pattern": "周五|星期五|礼拜五",
+          "kind": "required",
+          "severity": "error"
+        },
+        {
+          "id": "H03-3",
+          "block": 0,
+          "description": "未送达状态不可变成已送达",
+          "pattern": "未|没有|没能|还没",
+          "kind": "required",
+          "severity": "review"
+        }
+      ]
+    },
+    {
+      "id": "H04",
+      "title": "次品率下降时百分点与相对降幅必须区分",
+      "tags": [
+        "数字",
+        "统计"
+      ],
+      "texts": [
+        "The share of defective parts fell from 10% to 8%. This is a drop of two percentage points, equivalent to a 20% relative reduction."
+      ],
+      "referenceZh": [
+        "次品占比从 10% 降至 8%，下降了两个百分点，相当于相对减少 20%。"
+      ],
+      "requirements": [
+        "次品占比下降而非上升；起点终点分别为 10% 和 8%。",
+        "两个百分点是绝对变化，20% 是相对降幅，不得互换或描述为下降 20 个百分点。"
+      ],
+      "checks": [
+        {
+          "id": "H04-1",
+          "block": 0,
+          "description": "起点 10%",
+          "pattern": "10\\s*%",
+          "kind": "required",
+          "severity": "error"
+        },
+        {
+          "id": "H04-2",
+          "block": 0,
+          "description": "终点 8%",
+          "pattern": "8\\s*%",
+          "kind": "required",
+          "severity": "error"
+        },
+        {
+          "id": "H04-3",
+          "block": 0,
+          "description": "相对降幅 20%",
+          "pattern": "20\\s*%",
+          "kind": "required",
+          "severity": "error"
+        },
+        {
+          "id": "H04-4",
+          "block": 0,
+          "description": "保留百分点单位",
+          "pattern": "百分点",
+          "kind": "required",
+          "severity": "error"
+        }
+      ]
+    },
+    {
+      "id": "H05",
+      "title": "电池语境中的 charge 表达电量而不是收费或起诉",
+      "tags": [
+        "上下文",
+        "多义词"
+      ],
+      "texts": [
+        "The battery can hold a charge for a week, but cold weather drains it faster. Leave the spare battery indoors until you need it."
+      ],
+      "referenceZh": [
+        "这块电池充满电后能维持一周，但寒冷天气会让它耗电更快。备用电池在使用前应放在室内。"
+      ],
+      "requirements": [
+        "charge 在这里是储存的电量，不是收费、指控或冲锋。",
+        "一周续航和低温加快耗电均需保留；备用电池先放室内，不是使用完才拿进去。"
+      ],
+      "checks": [
+        {
+          "id": "H05-1",
+          "block": 0,
+          "description": "一周续航期限",
+          "pattern": "(?:1|一)\\s*(?:周|星期)|七天|7\\s*天",
+          "kind": "required",
+          "severity": "review"
+        },
+        {
+          "id": "H05-2",
+          "block": 0,
+          "description": "不要把 charge 译为法律或收费概念",
+          "pattern": "起诉|指控|收费|冲锋",
+          "kind": "forbidden",
+          "severity": "error"
+        }
+      ]
+    },
+    {
+      "id": "H06",
+      "title": "野营语境中 pitch a tent 表达搭帐篷并保留空间限制",
+      "tags": [
+        "上下文",
+        "动作"
+      ],
+      "texts": [
+        "We pitched our tent below the ridge to stay out of the wind, leaving enough space between the fabric and the stove."
+      ],
+      "referenceZh": [
+        "为避风，我们在山脊下方搭起帐篷，并在帐篷布与炉子之间留出足够的距离。"
+      ],
+      "requirements": [
+        "pitch 是搭建帐篷，不是投掷或推销；地点在山脊下方而非顶部。",
+        "避风目的和帐篷布与炉子保持距离的关系均需保留。"
+      ],
+      "checks": [
+        {
+          "id": "H06-1",
+          "block": 0,
+          "description": "保留帐篷对象",
+          "pattern": "帐篷",
+          "kind": "required",
+          "severity": "error"
+        },
+        {
+          "id": "H06-2",
+          "block": 0,
+          "description": "不能把搭帐篷变成投掷动作",
+          "pattern": "扔.{0,4}帐篷|投掷.{0,4}帐篷|推销.{0,4}帐篷",
+          "kind": "forbidden",
+          "severity": "review"
+        }
+      ]
+    },
+    {
+      "id": "H07",
+      "title": "合同语境中的 the ball is in your court 表示下一步由对方决定",
+      "tags": [
+        "习语",
+        "自然度"
+      ],
+      "texts": [
+        "We have sent you the revised contract, so the ball is now in your court. Let us know by Monday whether you want to proceed."
+      ],
+      "referenceZh": [
+        "修改后的合同已发给你，接下来就看你的决定了。请在周一之前告诉我们是否继续推进。"
+      ],
+      "requirements": [
+        "习语指接下来由收件方回应或决定，不能理解为体育场上的球。",
+        "合同已经发出；需在周一前反馈是否继续，而非周一再发合同或默认同意。"
+      ],
+      "checks": [
+        {
+          "id": "H07-1",
+          "block": 0,
+          "description": "保留合同对象",
+          "pattern": "合同|合约",
+          "kind": "required",
+          "severity": "error"
+        },
+        {
+          "id": "H07-2",
+          "block": 0,
+          "description": "保留周一期限",
+          "pattern": "周一|星期一|礼拜一",
+          "kind": "required",
+          "severity": "error"
+        },
+        {
+          "id": "H07-3",
+          "block": 0,
+          "description": "不应凭空出现球场",
+          "pattern": "球场|网球场|篮球场",
+          "kind": "forbidden",
+          "severity": "review"
+        }
+      ]
+    },
+    {
+      "id": "H08",
+      "title": "打印机故障后的赞叹语应传达反讽而不是肯定节纸",
+      "tags": [
+        "反讽",
+        "自然度"
+      ],
+      "texts": [
+        "Wonderful—the printer has produced 200 blank pages again. What a brilliant way to save paper."
+      ],
+      "referenceZh": [
+        "真行，打印机又吐出了 200 张白纸。这可真是个“节约纸张”的好办法。"
+      ],
+      "requirements": [
+        "again 表示再次故障，200 张白纸不可改成成功打印的有内容页面。",
+        "两句为抱怨和反讽，不能当成真心赞扬打印机节纸；允许多种中文反讽表达。"
+      ],
+      "checks": [
+        {
+          "id": "H08-1",
+          "block": 0,
+          "description": "保留 200 张数量",
+          "pattern": "200|两百|二百",
+          "kind": "required",
+          "severity": "error"
+        },
+        {
+          "id": "H08-2",
+          "block": 0,
+          "description": "保留空白输出含义",
+          "pattern": "白纸|空白",
+          "kind": "required",
+          "severity": "review"
+        }
+      ]
+    },
+    {
+      "id": "H09",
+      "title": "同一块内的湿地长文保留前后段结论和不同地点的限制",
+      "tags": [
+        "多段",
+        "完整性"
+      ],
+      "texts": [
+        "A town restored a small wetland beside its primary school. Volunteers removed litter, planted native reeds, and built a raised path so that children could watch birds without stepping on fragile plants. The work took eight months, and the path remained closed during the breeding season. Teachers used the site for lessons but did not allow pupils to collect eggs or disturb nests.\n\nDuring the following winter, nearby gardens flooded less often than before. However, that winter also had less rainfall, so the council could not attribute the improvement entirely to the restoration. It plans to monitor both rainfall and water levels for another three years before deciding whether to repeat the project elsewhere."
+      ],
+      "referenceZh": [
+        "一个小镇修复了小学旁的一片小湿地。志愿者清理垃圾、种植本地芦苇，并修建了架高的步道，让孩子们可以观鸟而不踩踏脆弱的植物。工程历时八个月，步道在繁殖季节关闭。老师会在这里授课，但不允许学生捡鸟蛋或惊扰鸟巢。\n\n接下来的冬天，附近花园的积水次数比以往减少了。不过，那个冬天的降雨也较少，因此镇议会不能把改善完全归因于湿地修复。议会计划继续监测降雨和水位三年，再决定是否在其他地方开展同类项目。"
+      ],
+      "requirements": [
+        "前段完整保留位置、清理垃圾/本地芦苇/架高步道三项工作、观鸟并保护植物的目的、八个月工期、繁殖季关闭以及不能捡蛋扰巢。",
+        "不能漏译块内第二段；保留随后冬季积水减少、降雨同样减少、因果归属不确定、继续监测降雨与水位三年、再决定推广。",
+        "不能宣称湿地修复必然防洪成功或已决定推广。"
+      ],
+      "checks": [
+        {
+          "id": "H09-1",
+          "block": 0,
+          "description": "前段工期八个月",
+          "pattern": "(?:8|八)\\s*(?:个)?月",
+          "kind": "required",
+          "severity": "error"
+        },
+        {
+          "id": "H09-2",
+          "block": 0,
+          "description": "后段三年监测期",
+          "pattern": "(?:3|三)\\s*年",
+          "kind": "required",
+          "severity": "error"
+        },
+        {
+          "id": "H09-3",
+          "block": 0,
+          "description": "后段必须保留降雨因素",
+          "pattern": "降雨|雨量|下雨",
+          "kind": "required",
+          "severity": "review"
+        },
+        {
+          "id": "H09-4",
+          "block": 0,
+          "description": "后段必须保留水位监测",
+          "pattern": "水位",
+          "kind": "required",
+          "severity": "review"
+        }
+      ]
+    },
+    {
+      "id": "H10",
+      "title": "HTTP 重试规则保留状态码条件和请求标识符",
+      "tags": [
+        "技术",
+        "条件",
+        "标识符"
+      ],
+      "texts": [
+        "For GET /v2/jobs, retry only after an HTTP 429 response and wait at least 15 seconds. A 404 response means the job was not found; keep the X-Request-ID header when reporting the problem."
+      ],
+      "referenceZh": [
+        "对 GET /v2/jobs 请求，只能在收到 HTTP 429 响应后重试，且至少等待 15 秒。404 响应表示未找到该任务；报告问题时请保留 X-Request-ID 请求头。"
+      ],
+      "requirements": [
+        "重试仅限 429，最少等待 15 秒；不能改成最多等待或让 404 同样重试。",
+        "404 表示任务未找到；GET、路径、状态码和 X-Request-ID 名称必须保留。"
+      ],
+      "checks": [
+        {
+          "id": "H10-1",
+          "block": 0,
+          "description": "请求方法与路径保留",
+          "pattern": "GET\\s*/v2/jobs",
+          "kind": "required",
+          "severity": "error"
+        },
+        {
+          "id": "H10-2",
+          "block": 0,
+          "description": "限流状态码保留",
+          "pattern": "429",
+          "kind": "required",
+          "severity": "error"
+        },
+        {
+          "id": "H10-3",
+          "block": 0,
+          "description": "未找到状态码保留",
+          "pattern": "404",
+          "kind": "required",
+          "severity": "error"
+        },
+        {
+          "id": "H10-4",
+          "block": 0,
+          "description": "等待时间 15 秒",
+          "pattern": "(?:15|十五)\\s*秒",
+          "kind": "required",
+          "severity": "error"
+        },
+        {
+          "id": "H10-5",
+          "block": 0,
+          "description": "请求头标识保留",
+          "pattern": "X-Request-ID",
+          "kind": "required",
+          "severity": "error"
+        }
+      ]
+    },
+    {
+      "id": "H11",
+      "title": "观察性研究的相关性不能夸大为因果或保证",
+      "tags": [
+        "不确定性",
+        "因果"
+      ],
+      "texts": [
+        "People who reported longer sleep tended to score higher on the memory test. Because the study was observational, it cannot show that sleeping longer caused the higher scores, and the findings may not apply to children."
+      ],
+      "referenceZh": [
+        "自述睡眠时间较长的人，记忆测试得分往往较高。由于这是一项观察性研究，它不能证明更长的睡眠导致了更高的分数，而且研究结果未必适用于儿童。"
+      ],
+      "requirements": [
+        "睡眠时间来自自述，得分更高是倾向而非人人如此。",
+        "观察性研究不能证明因果，不得声称多睡一定提高记忆力；结果对儿童适用性不确定，不是已经证明无效。"
+      ],
+      "checks": [
+        {
+          "id": "H11-1",
+          "block": 0,
+          "description": "保留儿童这一适用范围限制",
+          "pattern": "儿童|孩子",
+          "kind": "required",
+          "severity": "error"
+        },
+        {
+          "id": "H11-2",
+          "block": 0,
+          "description": "保留不能证实的限定",
+          "pattern": "不能|无法|并不|未能|不足以",
+          "kind": "required",
+          "severity": "review"
+        }
+      ]
+    },
+    {
+      "id": "H12",
+      "title": "两段工作交接中的责任主体和先后顺序不应颠倒",
+      "tags": [
+        "指代",
+        "多段",
+        "时序"
+      ],
+      "texts": [
+        "Noah sent Ada the draft after checking the figures. Ada noticed a missing heading and asked Noah to add it before the document went to the client.",
+        "He made the change that evening, but she did not approve the final version until the next afternoon."
+      ],
+      "referenceZh": [
+        "诺亚核对数字后将草稿发给了艾达。艾达发现少了一个标题，便请诺亚在把文档发给客户之前补上。",
+        "诺亚当晚做了修改，但艾达直到第二天下午才批准最终版本。"
+      ],
+      "requirements": [
+        "核对数字、发草稿和补标题的人为 Noah；发现遗漏、要求修改及最后批准的人为 Ada，不能交换。",
+        "先核对再发草稿，先补标题再交客户；当晚修改，直到次日下午才获批准。",
+        "第二段 he/she 指代承接第一段，不能凭空加入客户本人批准。"
+      ],
+      "checks": [
+        {
+          "id": "H12-1",
+          "block": 1,
+          "description": "批准时间为次日下午",
+          "pattern": "第二天|次日|翌日|隔天",
+          "kind": "required",
+          "severity": "review"
+        }
+      ]
+    }
+  ]
+}

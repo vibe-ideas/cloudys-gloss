@@ -1,0 +1,8 @@
+[
+  {
+    "model": "Qwen/Qwen3-1.7B-MLX-4bit",
+    "revision": "21457c6f51ed54a7c16e988c0844db973815c137",
+    "directory": "0-Qwen--Qwen3-1.7B-MLX-4bit",
+    "exitCode": 1
+  }
+]

@@ -1,0 +1,334 @@
+{
+  "kind": "dictionary",
+  "corpusHash": "dbef3d029f4c2a230b22a6fa2ddc0c00cf4da4458559a65c0bdfc0af7063d818",
+  "providerHash": "f6b3c33f3fa57ce4d055242c2007bc1d3214aa71313dca60d221c8e6613b4af4",
+  "model": "Qwen/Qwen3-1.7B-MLX-4bit",
+  "reviewer": "dictionary_expert — independent AI-assisted bilingual review",
+  "method": "Read all 24 final delivered cards against the fixed source contexts and requirements. Apply the same acceptance criteria as preceding candidates; inspect retries separately. Validate IPA against the pinned dialect-specific data and stated transcription conventions. Minor non-core omissions/awkwardness are scored, not silently described as perfect translation.",
+  "rubric": {
+    "adequacy": "0–4: contextual sense and part of speech",
+    "completeness": "0–4: required card content including pronunciation",
+    "fluency": "0–4: natural Chinese and bilingual example",
+    "ipa": "correct / incorrect / missing / uncertain; expert review, never inferred from Zod"
+  },
+  "reviews": [
+    {
+      "id": "D01",
+      "outputHash": "c39692f49a59ff0fc7e59639933bcae97fdd5c730a200bc8c453391fcef1a9b4",
+      "adequacy": 3,
+      "completeness": 3,
+      "fluency": 3,
+      "critical": false,
+      "ipaUs": "correct",
+      "ipaUk": "correct",
+      "notes": "有界回退后得到中译。轻重义项、形容词和例句正确；surprisingly/even 的惊讶/让步语气弱化为“非常”，按统一标准扣轻微完整性分，不再出现英文冒充中文。",
+      "aspects": {
+        "meaning": true,
+        "partOfSpeech": true,
+        "contextMeaning": true,
+        "examples": true
+      },
+      "semanticAcceptable": true,
+      "ipaComplete": true,
+      "wholeCardAcceptable": true
+    },
+    {
+      "id": "D02",
+      "outputHash": "ac2f3675f11262b8dbe03c574df185c2d0657d7a4af1861d8a0ff8499f90d5d2",
+      "adequacy": 4,
+      "completeness": 4,
+      "fluency": 4,
+      "critical": false,
+      "ipaUs": "correct",
+      "ipaUk": "correct",
+      "notes": "点燃义项、动词、语境释义和英文原句中译正确。",
+      "aspects": {
+        "meaning": true,
+        "partOfSpeech": true,
+        "contextMeaning": true,
+        "examples": true
+      },
+      "semanticAcceptable": true,
+      "ipaComplete": true,
+      "wholeCardAcceptable": true
+    },
+    {
+      "id": "D03",
+      "outputHash": "1e2e5b1dbfc8aa543aab34c04068e496c4bc7a021b0c09cf6e6900250978fe41",
+      "adequacy": 4,
+      "completeness": 4,
+      "fluency": 4,
+      "critical": false,
+      "ipaUs": "correct",
+      "ipaUk": "correct",
+      "notes": "河岸义项、名词、语境和例句中译正确。",
+      "aspects": {
+        "meaning": true,
+        "partOfSpeech": true,
+        "contextMeaning": true,
+        "examples": true
+      },
+      "semanticAcceptable": true,
+      "ipaComplete": true,
+      "wholeCardAcceptable": true
+    },
+    {
+      "id": "D04",
+      "outputHash": "586aa234d8cbdea330f3423cbcede9818b0834bffca92b0cb15e5f4337f45a6b",
+      "adequacy": 3,
+      "completeness": 3,
+      "fluency": 4,
+      "critical": false,
+      "ipaUs": "correct",
+      "ipaUk": "correct",
+      "notes": "银行义项及存款例句主要含义正确。中译漏 yesterday，按此前相同标准记轻微完整性问题；本项可接受不等于毫无遗漏。",
+      "aspects": {
+        "meaning": true,
+        "partOfSpeech": true,
+        "contextMeaning": true,
+        "examples": true
+      },
+      "semanticAcceptable": true,
+      "ipaComplete": true,
+      "wholeCardAcceptable": true
+    },
+    {
+      "id": "D05",
+      "outputHash": "a6c3b2a46f319b243194125e5b5ba6883d5424f5565a9652517fd464d91f6eb3",
+      "adequacy": 4,
+      "completeness": 4,
+      "fluency": 2,
+      "critical": false,
+      "ipaUs": "correct",
+      "ipaUk": "correct",
+      "notes": "多云义项与语境正确，原先晴朗反义错误已消失；“它是…没有雨预期”中文仍生硬，但主要语义可理解。",
+      "aspects": {
+        "meaning": true,
+        "partOfSpeech": true,
+        "contextMeaning": true,
+        "examples": true
+      },
+      "semanticAcceptable": true,
+      "ipaComplete": true,
+      "wholeCardAcceptable": true
+    },
+    {
+      "id": "D06",
+      "outputHash": "10b7302ac05383a40ddf78fb0d5843537ca63dd9d999b09d64c19d953b3cfeee",
+      "adequacy": 4,
+      "completeness": 4,
+      "fluency": 4,
+      "critical": false,
+      "ipaUs": "correct",
+      "ipaUk": "correct",
+      "notes": "程序运行的动词义项、语境和完整例句中译正确。保留来源的 US /ə/ 与 UK /ɐ/ 转写约定。",
+      "aspects": {
+        "meaning": true,
+        "partOfSpeech": true,
+        "contextMeaning": true,
+        "examples": true
+      },
+      "semanticAcceptable": true,
+      "ipaComplete": true,
+      "wholeCardAcceptable": true
+    },
+    {
+      "id": "D07",
+      "outputHash": "6215f4f8f803ee36fc1856fd2bafded9236e56736d98bbdf335df7ebdaff7cf6",
+      "adequacy": 4,
+      "completeness": 4,
+      "fluency": 4,
+      "critical": false,
+      "ipaUs": "correct",
+      "ipaUk": "correct",
+      "notes": "有界回退后收费义项与动词正确，生成例句和中译成对一致，20美元停车费保留。",
+      "aspects": {
+        "meaning": true,
+        "partOfSpeech": true,
+        "contextMeaning": true,
+        "examples": true
+      },
+      "semanticAcceptable": true,
+      "ipaComplete": true,
+      "wholeCardAcceptable": true
+    },
+    {
+      "id": "D08",
+      "outputHash": "c944aa5105d43cc8cdb5b485b5cd616845f9b82ddaf9bac39a26deb03ffb0237",
+      "adequacy": 2,
+      "completeness": 3,
+      "fluency": 2,
+      "critical": true,
+      "ipaUs": "correct",
+      "ipaUk": "correct",
+      "notes": "有界回退恢复中文例句，但释义仍为“指控；处罚”。本句只表示正式指控盗窃，不能把指控当作处罚结果；与此前相同标准判实质义项错误。语境和例句主要指控含义正确，“对他指控盗窃”语序生硬。",
+      "aspects": {
+        "meaning": false,
+        "partOfSpeech": true,
+        "contextMeaning": true,
+        "examples": true
+      },
+      "semanticAcceptable": false,
+      "ipaComplete": true,
+      "wholeCardAcceptable": false
+    },
+    {
+      "id": "D09",
+      "outputHash": "32292bf9dc060c8d3b36185325918529194076a81debaf1e0467806fbb7e338c",
+      "adequacy": 4,
+      "completeness": 4,
+      "fluency": 2,
+      "critical": false,
+      "ipaUs": "correct",
+      "ipaUk": "correct",
+      "notes": "健康/感觉良好的形容词义项正确，原句保留 fine 用法。中文“我感觉现在很好，经过一个好睡眠的夜晚”生硬，但可以理解。",
+      "aspects": {
+        "meaning": true,
+        "partOfSpeech": true,
+        "contextMeaning": true,
+        "examples": true
+      },
+      "semanticAcceptable": true,
+      "ipaComplete": true,
+      "wholeCardAcceptable": true
+    },
+    {
+      "id": "D10",
+      "outputHash": "aae6c2756cb59e5ffda785c1c20f3dc3aadcdc8e026edc1bbd990a6a9b5f6e86",
+      "adequacy": 4,
+      "completeness": 4,
+      "fluency": 3,
+      "critical": false,
+      "ipaUs": "correct",
+      "ipaUk": "correct",
+      "notes": "罚款名词与 paid a fine 例句一致，不再变为被动动词 fined；中文语序略生硬但主要含义正确。",
+      "aspects": {
+        "meaning": true,
+        "partOfSpeech": true,
+        "contextMeaning": true,
+        "examples": true
+      },
+      "semanticAcceptable": true,
+      "ipaComplete": true,
+      "wholeCardAcceptable": true
+    },
+    {
+      "id": "D11",
+      "outputHash": "e76061abac73354b9ffeb24eb7525899f8cf2e2baf54ceaa15323e8e64da031d",
+      "adequacy": 4,
+      "completeness": 2,
+      "fluency": 3,
+      "critical": false,
+      "ipaUs": "missing",
+      "ipaUk": "missing",
+      "notes": "放弃的短语动词和例句翻译可接受，中文“难题虽然困难”重复。整短语 US/UK IPA 都缺失，不记为correct。",
+      "aspects": {
+        "meaning": true,
+        "partOfSpeech": true,
+        "contextMeaning": true,
+        "examples": true
+      },
+      "semanticAcceptable": true,
+      "ipaComplete": false,
+      "wholeCardAcceptable": false
+    },
+    {
+      "id": "D12",
+      "outputHash": "43d294983fa98548a2094ca954e6f81a2f0354e3aec13fd29f4b6767d1efc523",
+      "adequacy": 3,
+      "completeness": 2,
+      "fluency": 3,
+      "critical": false,
+      "ipaUs": "missing",
+      "ipaUk": "missing",
+      "notes": "起飞的短语动词义项正确。例句中译将 in ten minutes 表为“十分钟内”，更准确应为“十分钟后”；按先前候选对同一表述的相同标准记时间精确性瑕疵，未改变目标词义。整短语 US/UK IPA 缺失。",
+      "aspects": {
+        "meaning": true,
+        "partOfSpeech": true,
+        "contextMeaning": true,
+        "examples": true
+      },
+      "semanticAcceptable": true,
+      "ipaComplete": false,
+      "wholeCardAcceptable": false
+    }
+  ],
+  "acceptancePolicy": {
+    "semantic": "meaning, partOfSpeech, contextMeaning and bilingual examples all acceptable; minor stylistic awkwardness or nonessential omission may pass, but wrong target sense, omitted selected word, wrong example grammar and untranslated examples fail",
+    "ipaComplete": "both US and UK nonempty and individually reviewed correct under the source conventions",
+    "wholeCard": "semantic acceptable AND IPA complete AND adequacy >= 3 AND completeness >= 3 AND fluency >= 2 AND no critical error"
+  },
+  "summary": {
+    "rows": 24,
+    "uniqueOutputs": 12,
+    "repetitions": 2,
+    "counts": {
+      "meaning": {
+        "passed": 22,
+        "total": 24,
+        "rate": 0.9166666666666666
+      },
+      "partOfSpeech": {
+        "passed": 24,
+        "total": 24,
+        "rate": 1.0
+      },
+      "contextMeaning": {
+        "passed": 24,
+        "total": 24,
+        "rate": 1.0
+      },
+      "examples": {
+        "passed": 24,
+        "total": 24,
+        "rate": 1.0
+      },
+      "semanticAcceptable": {
+        "passed": 22,
+        "total": 24,
+        "rate": 0.9166666666666666
+      },
+      "ipaComplete": {
+        "passed": 20,
+        "total": 24,
+        "rate": 0.8333333333333334
+      },
+      "wholeCardAcceptable": {
+        "passed": 18,
+        "total": 24,
+        "rate": 0.75
+      }
+    },
+    "requests": {
+      "total": 36,
+      "rowsByRequestCount": {
+        "3": 6,
+        "1": 18
+      },
+      "groundedInitial": 24,
+      "groundedRepair": 6,
+      "generatedFallbackInitial": 6,
+      "generatedFallbackRepair": 0,
+      "generatedFallbackCases": [
+        "D01",
+        "D07",
+        "D08"
+      ],
+      "perLookupBound": 4,
+      "stageDerivation": "All 12 inputs contain one eligible sentence; captured pipeline has two grounded attempts followed only on StructuredOutputError by up to two generated attempts. Six rows made 3 requests; other 18 made 1."
+    },
+    "semanticFailures": [
+      "D08 in both rounds: definition conflates formal accusation with punishment"
+    ],
+    "missingIpa": [
+      "D11/D12 in both rounds: no attested whole-phrase entries"
+    ],
+    "knownMinorIssues": [
+      "D01: surprise/concession nuance weakened",
+      "D04: yesterday omitted",
+      "D05/D09/D10: awkward Chinese",
+      "D12: within ten minutes versus after ten minutes"
+    ],
+    "interpretation": "91.7% means acceptable core semantics on this 12-case corpus repeated twice, not perfect translations or 91.7% complete cards. Whole-card acceptance including both pronunciations is 75%. No claim of general population accuracy."
+  }
+}

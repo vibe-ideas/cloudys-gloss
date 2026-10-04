@@ -2,7 +2,7 @@
 
 浏览器扩展和模型服务是两个独立程序。`pnpm dev`、`pnpm dev:firefox` 只启动扩展开发环境；安装本地助手后，扩展可以在翻译时按需启动模型，也可以在设置页手动启停。命中缓存的译文和词卡不需要启动模型。
 
-默认模型为 `mlx-community/Qwen2.5-3B-Instruct-4bit`，运行在 Apple Silicon Mac 上。本指南的自启方式使用用户级 LaunchAgent：**开机并登录当前 macOS 账户后启动**，不需要保持终端打开；不是登录前运行的系统守护进程，不需要 sudo。[Apple 官方说明](https://developer.apple.com/library/archive/documentation/MacOSX/Conceptual/BPSystemStartup/Chapters/CreatingLaunchdJobs.html)
+默认模型为 `Qwen/Qwen3-1.7B-MLX-4bit`，运行在 Apple Silicon Mac 上。本指南的自启方式使用用户级 LaunchAgent：**开机并登录当前 macOS 账户后启动**，不需要保持终端打开；不是登录前运行的系统守护进程，不需要 sudo。[Apple 官方说明](https://developer.apple.com/library/archive/documentation/MacOSX/Conceptual/BPSystemStartup/Chapters/CreatingLaunchdJobs.html)
 
 ## 安装前准备
 
@@ -22,7 +22,7 @@ pnpm model:install
 pnpm model:bridge
 ```
 
-安装器固定使用 [ddalcu/mlx-serve v26.10.1](https://github.com/ddalcu/mlx-serve/releases/tag/v26.10.1) 的 macOS arm64 官方程序，校验安装包 SHA256，复用本地 Qwen2.5 3B 权重；缺少权重时才下载。推理由原生程序承担，Python 仅用于安装、管理和一次性浏览器助手，不再安装 mlx-lm 推理依赖。
+安装器固定使用 [ddalcu/mlx-serve v26.10.1](https://github.com/ddalcu/mlx-serve/releases/tag/v26.10.1) 的 macOS arm64 官方程序，校验安装包 SHA256，复用本地 Qwen3 1.7B 权重；缺少权重时才下载。推理由原生程序承担，Python 仅用于安装、管理和一次性浏览器助手，不再安装 mlx-lm 推理依赖。
 
 已有旧版服务也执行这两条命令。安装器先准备程序和权重，再切换 LaunchAgent，保留原登录自启偏好，发送真实生成请求验证；失败时尝试恢复旧配置与原运行状态。旧配置备份为 `~/Library/LaunchAgents/com.cloudys-gloss.mlx.before-mlx-serve.plist`，旧 `mlx-venv` 不删除。迁移后 Base URL、模型 ID 和扩展 API 配置不变。若之前在终端手动启动旧服务，请先 Ctrl+C，避免占用 8080。
 
@@ -81,7 +81,7 @@ pnpm model:bridge
 | --- | --- |
 | Base URL | `http://127.0.0.1:8080/v1` |
 | API Key | 留空 |
-| Model | `mlx-community/Qwen2.5-3B-Instruct-4bit` |
+| Model | `Qwen/Qwen3-1.7B-MLX-4bit` |
 | Temperature | `0` |
 | Timeout | `120000` 毫秒 |
 | Concurrency | `1` |
@@ -99,7 +99,7 @@ curl --fail http://127.0.0.1:8080/v1/models
 - 自启文件：`~/Library/LaunchAgents/com.cloudys-gloss.mlx.plist`
 - 推理程序：`~/Library/Application Support/CloudysGloss/mlx-serve/26.10.1/mlx-serve`
 - 一次性助手环境：`~/Library/Application Support/CloudysGloss/bridge-venv`
-- 默认权重入口：`~/Library/Application Support/CloudysGloss/models/Qwen2.5-3B-Instruct-4bit`（指向本地 snapshot）
+- 默认权重入口：`~/Library/Application Support/CloudysGloss/models/Qwen3-1.7B-MLX-4bit`（指向本地 snapshot）
 - 日志：`~/Library/Logs/CloudysGloss/mlx.stdout.log`、`mlx.stderr.log`
 - 服务模型缓存：固定使用 `~/.cache/huggingface/hub`，安装和登录启动使用同一路径。
 
@@ -115,6 +115,6 @@ tail -n 80 ~/Library/Logs/CloudysGloss/mlx.stderr.log
 
 **启动报找不到模型**：自启刻意使用离线模式。不要清理正在使用的模型缓存；需要重新下载时再次运行 `pnpm model:install`。卸载自启不会删除缓存。
 
-**切换模型**：当前管理命令固定管理默认 Qwen2.5 3B。测试其他模型使用独立端口，或先停止本服务再按 [模型配置](models.md) 手动启动。不要只修改扩展的 Model 字段就假定后台已经切换到对应模型。
+**切换模型**：当前管理命令固定管理默认 Qwen3 1.7B。测试其他模型使用独立端口，或先停止本服务再按 [模型配置](models.md) 手动启动。不要只修改扩展的 Model 字段就假定后台已经切换到对应模型。
 
 模型自启不等于 Firefox 扩展永久安装：`about:debugging` 临时载入的扩展会在 Firefox 重启后消失，需重新加载；正式持久安装按 [安装与使用](getting-started.md) 的签名分发说明处理。

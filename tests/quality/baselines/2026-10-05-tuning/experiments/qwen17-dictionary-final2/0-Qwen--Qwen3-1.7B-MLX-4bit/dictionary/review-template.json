@@ -1,0 +1,170 @@
+{
+  "kind": "dictionary",
+  "corpusHash": "dbef3d029f4c2a230b22a6fa2ddc0c00cf4da4458559a65c0bdfc0af7063d818",
+  "providerHash": "39e1e186dac5673c6775e8bc9d0522bdec2b110b9a6154e065cbf142346d4d99",
+  "model": "Qwen/Qwen3-1.7B-MLX-4bit",
+  "reviewer": null,
+  "method": null,
+  "rubric": {
+    "adequacy": "0–4: contextual sense and part of speech",
+    "completeness": "0–4: required card content including pronunciation",
+    "fluency": "0–4: natural Chinese and bilingual example",
+    "ipa": "correct / incorrect / missing / uncertain; expert review, never inferred from Zod"
+  },
+  "reviews": [
+    {
+      "id": "D01",
+      "outputHash": "0c5244ebae3d2bfde54d344cb6147de0ae030276d3fb6e2c29d7d9f001f76137",
+      "adequacy": null,
+      "completeness": null,
+      "fluency": null,
+      "critical": null,
+      "ipaUs": null,
+      "ipaUk": null,
+      "notes": null
+    },
+    {
+      "id": "D02",
+      "outputHash": "0b31075bf3707c692db4cf98100eb2abc98866d30c7fe41fe522d74c89d2be7c",
+      "adequacy": null,
+      "completeness": null,
+      "fluency": null,
+      "critical": null,
+      "ipaUs": null,
+      "ipaUk": null,
+      "notes": null
+    },
+    {
+      "id": "D03",
+      "outputHash": "dcc48b32e558070fc7c8863f08aaa268bdb657ccf408dcd60b067c46c46810ac",
+      "adequacy": null,
+      "completeness": null,
+      "fluency": null,
+      "critical": null,
+      "ipaUs": null,
+      "ipaUk": null,
+      "notes": null
+    },
+    {
+      "id": "D04",
+      "outputHash": "2f28fe8829f565a22a8941b9e36e00644d07a0809421cd02a07ecff30970f5a0",
+      "adequacy": null,
+      "completeness": null,
+      "fluency": null,
+      "critical": null,
+      "ipaUs": null,
+      "ipaUk": null,
+      "notes": null
+    },
+    {
+      "id": "D05",
+      "outputHash": "a6c3b2a46f319b243194125e5b5ba6883d5424f5565a9652517fd464d91f6eb3",
+      "adequacy": null,
+      "completeness": null,
+      "fluency": null,
+      "critical": null,
+      "ipaUs": null,
+      "ipaUk": null,
+      "notes": null
+    },
+    {
+      "id": "D06",
+      "outputHash": "df2c42b5336ef7e4103e73d4121871322baf90b170fc81054439190ec872ed66",
+      "adequacy": null,
+      "completeness": null,
+      "fluency": null,
+      "critical": null,
+      "ipaUs": null,
+      "ipaUk": null,
+      "notes": null
+    },
+    {
+      "id": "D07",
+      "outputHash": "6a1319578ee7a0abb3cf0b58f5ed5cf4f61c37d2238c0487d38cda2693556043",
+      "adequacy": null,
+      "completeness": null,
+      "fluency": null,
+      "critical": null,
+      "ipaUs": null,
+      "ipaUk": null,
+      "notes": null
+    },
+    {
+      "id": "D08",
+      "outputHash": "aa8b9f99f9d6227bf9b58cf6b62a28e0e48b8cf7f87b4ed40adf9fbc090048a6",
+      "adequacy": null,
+      "completeness": null,
+      "fluency": null,
+      "critical": null,
+      "ipaUs": null,
+      "ipaUk": null,
+      "notes": null
+    },
+    {
+      "id": "D09",
+      "outputHash": "a4cc15e6c29700b16c27426a7b1499fb55fde274b77de25638be357918e77f38",
+      "adequacy": null,
+      "completeness": null,
+      "fluency": null,
+      "critical": null,
+      "ipaUs": null,
+      "ipaUk": null,
+      "notes": null
+    },
+    {
+      "id": "D10",
+      "outputHash": "10c7c90cdac62c4e4666bcc0fb2fdcbd3f674003a02078f61081aac973a53896",
+      "adequacy": null,
+      "completeness": null,
+      "fluency": null,
+      "critical": null,
+      "ipaUs": null,
+      "ipaUk": null,
+      "notes": null
+    },
+    {
+      "id": "D11",
+      "outputHash": "498420ea0d19255fd375208d42a260686ab62491839d6579e295831bbeabe431",
+      "adequacy": null,
+      "completeness": null,
+      "fluency": null,
+      "critical": null,
+      "ipaUs": null,
+      "ipaUk": null,
+      "notes": null
+    },
+    {
+      "id": "D12",
+      "outputHash": "43d294983fa98548a2094ca954e6f81a2f0354e3aec13fd29f4b6767d1efc523",
+      "adequacy": null,
+      "completeness": null,
+      "fluency": null,
+      "critical": null,
+      "ipaUs": null,
+      "ipaUk": null,
+      "notes": null
+    },
+    {
+      "id": "D01",
+      "outputHash": "9e5ec6b4a8507dbb0f2ec2539b9e518a801ae88e449f6ed2ec2f87cba5e048bc",
+      "adequacy": null,
+      "completeness": null,
+      "fluency": null,
+      "critical": null,
+      "ipaUs": null,
+      "ipaUk": null,
+      "notes": null
+    },
+    {
+      "id": "D02",
+      "outputHash": "ee3bb58581a37a78b32bcb749ea4a9cc29a5999e3943f031365c8b9d194303ba",
+      "adequacy": null,
+      "completeness": null,
+      "fluency": null,
+      "critical": null,
+      "ipaUs": null,
+      "ipaUk": null,
+      "notes": null
+    }
+  ]
+}

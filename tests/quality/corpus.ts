@@ -16,8 +16,12 @@ export const CaseSchema = z.object({
     try { new RegExp(check.pattern, 'iu'); } catch { ctx.addIssue({ code: 'custom', message: '无效的检查表达式' }); }
   }
 });
-export const corpus = z.object({ version: z.string(), cases: z.array(CaseSchema).min(1) }).parse(data);
-if (new Set(corpus.cases.map((item) => item.id)).size !== corpus.cases.length) throw new Error('质量用例 ID 必须唯一');
+export function parseCorpus(data: unknown) {
+  const parsed = z.object({ version: z.string(), cases: z.array(CaseSchema).min(1) }).parse(data);
+  if (new Set(parsed.cases.map((item) => item.id)).size !== parsed.cases.length) throw new Error('质量用例 ID 必须唯一');
+  return parsed;
+}
+export const corpus = parseCorpus(data);
 export type QualityCase = z.infer<typeof CaseSchema>;
 
 export function assess(testCase: QualityCase, translations: string[]) {

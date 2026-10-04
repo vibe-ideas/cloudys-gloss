@@ -17,7 +17,7 @@ import urllib.request
 from pathlib import Path
 
 LABEL = "com.cloudys-gloss.mlx"
-MODEL = "mlx-community/Qwen2.5-3B-Instruct-4bit"
+MODEL = "Qwen/Qwen3-1.7B-MLX-4bit"
 PORT = 8080
 VERSION = "26.10.1"
 ARCHIVE_SHA256 = "e53056e481364ff72188fafea8b3eb0aeb0b5b7cebcd6e6e7d26bf1ce4223873"
@@ -34,7 +34,7 @@ def executable(home):
 
 
 def model_path(home):
-    return paths(home)[0] / "models/Qwen2.5-3B-Instruct-4bit"
+    return paths(home)[0] / "models" / MODEL.split("/")[-1]
 
 
 def installed(home):
@@ -45,7 +45,7 @@ def server_args(home, port=PORT):
     return [str(executable(home)), "--model", str(model_path(home)), "--serve",
             "--host", "127.0.0.1", "--port", str(port), "--ctx-size", "8192",
             "--max-tokens", "4096", "--max-concurrent", "1",
-            "--prefix-cache-entries", "1", "--prefix-cache-mem", "128MB", "--no-drafter"]
+            "--prefix-cache-entries", "1", "--prefix-cache-mem", "128MB", "--no-drafter", "--reasoning-budget", "0"]
 
 
 def build_plist(home):
@@ -114,15 +114,16 @@ def assert_port_free():
 def verify_generation(timeout=120):
     deadline = time.monotonic() + timeout
     last_error = "服务尚未响应"
-    body = json.dumps({"model": MODEL, "max_tokens": 16, "temperature": 0,
-                       "messages": [{"role": "user", "content": "Say hello in Chinese."}]}).encode()
+    body = json.dumps({"model": MODEL, "max_tokens": 128, "temperature": 0,
+                       "messages": [{"role": "system", "content": "Translate into Simplified Chinese. Output only the translation."},
+                                    {"role": "user", "content": "Hello."}]}).encode()
     while time.monotonic() < deadline:
         try:
             request = urllib.request.Request(f"http://127.0.0.1:{PORT}/v1/chat/completions", data=body,
                                              headers={"Content-Type": "application/json"})
             with urllib.request.urlopen(request, timeout=min(10, max(1, deadline - time.monotonic()))) as response:
                 result = json.load(response)
-            if result["choices"][0]["message"]["content"].strip():
+            if result["choices"][0]["message"]["content"].strip() and result["choices"][0].get("finish_reason") != "length":
                 print("mlx-serve 已启动，并通过真实生成验证。Base URL: http://127.0.0.1:8080/v1", flush=True)
                 return
             last_error = "模型返回空内容"

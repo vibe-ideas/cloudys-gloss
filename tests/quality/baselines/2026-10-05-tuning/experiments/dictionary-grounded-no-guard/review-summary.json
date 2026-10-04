@@ -1,0 +1,55 @@
+{
+  "rows": 24,
+  "uniqueOutputs": 12,
+  "repetitions": 2,
+  "counts": {
+    "meaning": {
+      "passed": 22,
+      "total": 24,
+      "rate": 0.9166666666666666
+    },
+    "partOfSpeech": {
+      "passed": 24,
+      "total": 24,
+      "rate": 1.0
+    },
+    "contextMeaning": {
+      "passed": 22,
+      "total": 24,
+      "rate": 0.9166666666666666
+    },
+    "examples": {
+      "passed": 18,
+      "total": 24,
+      "rate": 0.75
+    },
+    "semanticAcceptable": {
+      "passed": 18,
+      "total": 24,
+      "rate": 0.75
+    },
+    "ipaComplete": {
+      "passed": 20,
+      "total": 24,
+      "rate": 0.8333333333333334
+    },
+    "wholeCardAcceptable": {
+      "passed": 14,
+      "total": 24,
+      "rate": 0.5833333333333334
+    }
+  },
+  "semanticFailures": [
+    "D01/D07/D08 both rounds: examples.zh copies English unchanged",
+    "D08 both rounds: formal accusation meaning replaced by broad legal responsibility"
+  ],
+  "missingIpa": [
+    "D11/D12 both rounds: whole-phrase entries absent"
+  ],
+  "improvements": [
+    "Source-grounded English examples retain selected word and its original grammatical use",
+    "D05 context meaning no longer reverses cloudy to sunny",
+    "D02 no longer fails JSON delivery"
+  ],
+  "limitations": "Faster generation and 24/24 structural validity do not establish quality improvement. Bilingual examples need an explicit Chinese-output guard and then semantic review; dictionary overall remains below 90%."
+}

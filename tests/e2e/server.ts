@@ -1,7 +1,7 @@
 import { createServer } from 'node:http';
 import type { AddressInfo } from 'node:net';
 export async function startServer() {
-  const calls: { texts?: string[]; word?: string; context?: string }[] = [];
+  const calls: { texts?: string[]; word?: string; context?: string; example?: string }[] = [];
   let delay = 0; let invalid = false;
   let streamGate: Promise<void> | undefined; let releaseStream: (() => void) | undefined;
   let finishedStreams = 0; let abortedStreams = 0;
@@ -34,7 +34,8 @@ export async function startServer() {
       const content = invalid ? { broken: true } : data.texts ? { translations: data.texts.map((text) => `中文译文：${text}`) } : {
         word: data.word, ipa: { us: '/ˈklaʊdi/', uk: '/ˈklaʊdi/' },
         senses: [{ partOfSpeech: 'adjective', meaning: '多云的；不清晰的' }], contextMeaning: '在当前句子中表示多云的天气',
-        examples: [{ en: 'It is a cloudy morning.', zh: '这是一个多云的早晨。' }],
+        examples: data.example ? [{ zh: '多云的早晨让人思绪宁静。' }]
+          : [{ en: 'It is a cloudy morning.', zh: '这是一个多云的早晨。' }],
       };
       if (requestBody.stream) {
         response.writeHead(200, { 'Content-Type': 'text/event-stream' });
