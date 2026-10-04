@@ -2,9 +2,11 @@ import { defineBackground } from 'wxt/utils/define-background';
 import { browser } from 'wxt/browser';
 import { defaults, RequestSchema, SettingsSchema, type Response } from '../src/schema';
 import { TranslationService } from '../src/service';
+import { LocalModelManager, NATIVE_HOST } from '../src/local-model';
 
 export default defineBackground(() => {
-  const service = new TranslationService();
+  const localModel = new LocalModelManager((message) => browser.runtime.sendNativeMessage(NATIVE_HOST, message));
+  const service = new TranslationService(undefined, (config, signal) => localModel.ensure(config, signal));
   const pending = new Map<string, { controller: AbortController; tabId?: number }>();
   const settings = async () => SettingsSchema.parse((await browser.storage.local.get('settings')).settings ?? defaults);
   // Extension API activity keeps MV3 alive during slow local inference.
@@ -47,7 +49,7 @@ export default defineBackground(() => {
     const privileged = !sender.tab && !!sender.url?.startsWith(browser.runtime.getURL('/'));
     return (async (): Promise<Response<unknown>> => {
       try {
-        if (['settings:get', 'settings:save', 'connection:test', 'cache:clear'].includes(request.type) && !privileged) {
+        if (['settings:get', 'settings:save', 'connection:test', 'cache:clear', 'model:control'].includes(request.type) && !privileged) {
           // Options tabs have a sender.tab on Firefox. Verify the extension origin too.
           if (!sender.url?.startsWith(browser.runtime.getURL('/'))) throw new Error('此操作仅允许在扩展设置页执行');
         }
@@ -56,6 +58,7 @@ export default defineBackground(() => {
         if (request.type === 'settings:open') { await browser.runtime.openOptionsPage(); return { ok: true, data: null }; }
         if (request.type === 'settings:save') { await browser.storage.local.set({ settings: request.settings }); return { ok: true, data: null }; }
         if (request.type === 'cache:clear') { await service.clear(); return { ok: true, data: null }; }
+        if (request.type === 'model:control') return { ok: true, data: await localModel.control(request.action, request.enabled) };
         const key = `${owner}:${request.id}`;
         if (request.type === 'cancel') { pending.get(key)?.controller.abort(new Error('请求已取消')); return { ok: true, data: null }; }
         if (pending.has(key)) throw new Error('重复请求');

@@ -53,6 +53,26 @@ def loaded():
     return run("launchctl", "print", target(), check=False).returncode == 0
 
 
+def wait_unloaded(timeout=10):
+    # bootout can return before launchd finishes removing the old job.
+    deadline = time.monotonic() + timeout
+    while loaded():
+        if time.monotonic() >= deadline:
+            raise RuntimeError("旧模型服务尚未退出，请稍后重试")
+        time.sleep(0.05)
+
+
+def bootstrap(home):
+    # launchd can briefly reject re-registration after a successful bootout.
+    for attempt in range(20):
+        result = run("launchctl", "bootstrap", f"gui/{os.getuid()}", str(paths(home)[1]), check=False)
+        if result.returncode == 0:
+            return
+        if result.returncode != 5 or attempt == 19:
+            raise RuntimeError(f"注册模型服务失败：{result.stderr.strip()}（{result.returncode}）")
+        time.sleep(0.25)
+
+
 def port_free():
     try:
         with socket.socket() as probe:
@@ -95,11 +115,22 @@ def start(home):
         raise RuntimeError("尚未安装，请运行 pnpm model:install")
     if not loaded():
         assert_port_free()
+    # CLI start also restores login startup after the browser disabled it.
+    config = plistlib.loads(plist.read_bytes())
+    if not config.get("RunAtLoad") or not config.get("KeepAlive"):
+        config.update(RunAtLoad=True, KeepAlive=True)
+        temporary = plist.with_suffix(".plist.tmp")
+        temporary.write_bytes(plistlib.dumps(config))
+        temporary.chmod(0o600)
+        temporary.replace(plist)
+        if loaded():
+            run("launchctl", "bootout", target())
+            wait_unloaded()
     run("launchctl", "enable", target())
     if loaded():
         run("launchctl", "kickstart", target())
     else:
-        run("launchctl", "bootstrap", f"gui/{os.getuid()}", str(plist))
+        bootstrap(home)
     verify_generation()
 
 

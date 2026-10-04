@@ -5,6 +5,24 @@ import { TranslationService } from '../../src/service';
 import { defaults } from '../../src/schema';
 afterEach(() => vi.unstubAllGlobals());
 describe('跨页面翻译缓存', () => {
+  it('连接检测遇到小模型错误 JSON 时使用网页翻译的回退流程，获得中文后才成功', async () => {
+    const fetcher = vi.fn()
+      .mockResolvedValueOnce(new Response(JSON.stringify({ choices: [{ message: { content: '{"translations":["wrong","length"]}' } }] })))
+      .mockResolvedValueOnce(new Response(JSON.stringify({ choices: [{ message: { content: '今天天气多云，请带把伞。' } }] })));
+    vi.stubGlobal('fetch', fetcher);
+    const service = new TranslationService(new ResultCache(crypto.randomUUID()));
+    expect(await service.test(defaults, new AbortController().signal)).toEqual(['今天天气多云，请带把伞。']);
+    expect(fetcher).toHaveBeenCalledTimes(2);
+  });
+  it('译文完全命中缓存时不唤醒模型，只有首次请求需要等待模型就绪', async () => {
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue(new Response(JSON.stringify({ choices: [{ message: { content: '{"translations":["你好"]}' } }] }))));
+    const ensureModel = vi.fn().mockResolvedValue(undefined);
+    const service = new TranslationService(new ResultCache(crypto.randomUUID()), ensureModel);
+    const signal = new AbortController().signal;
+    await service.translate(defaults, ['Hello'], signal);
+    expect(await service.translate(defaults, ['Hello'], signal)).toEqual(['你好']);
+    expect(ensureModel).toHaveBeenCalledTimes(1);
+  });
   it('同批部分段落命中缓存时先推送缓存译文，不等待未命中段落的模型请求', async () => {
     const service = new TranslationService(new ResultCache(crypto.randomUUID()));
     const fetcher = vi.fn<typeof fetch>().mockResolvedValueOnce(new Response(JSON.stringify({ choices: [{ message: { content: '{"translations":["已缓存"]}' } }] })));

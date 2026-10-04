@@ -1,6 +1,6 @@
 import { test as base, chromium, firefox, type BrowserContext, type Page } from '@playwright/test';
 import { cp, mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
-import { tmpdir } from 'node:os';
+import { homedir, tmpdir } from 'node:os';
 import path from 'node:path';
 import { createRequire } from 'node:module';
 import { pathToFileURL } from 'node:url';
@@ -20,6 +20,13 @@ export const test = base.extend<Fixture>({
     try {
       let options: SettingsDriver;
       if (testInfo.project.name === 'chromium') {
+        if (testInfo.config.metadata.nativeHost) {
+          // Chrome resolves user-level hosts under its custom --user-data-dir.
+          // Register the installed real helper in this isolated test profile.
+          const name = 'com.cloudys_gloss.mlx.json';
+          await mkdir(path.join(profile, 'NativeMessagingHosts'), { recursive: true });
+          await cp(path.join(homedir(), 'Library/Application Support/Google/ChromeForTesting/NativeMessagingHosts', name), path.join(profile, 'NativeMessagingHosts', name));
+        }
         const extensionPath = path.resolve('.output/chrome-mv3');
         context = await chromium.launchPersistentContext(profile, { channel: 'chromium', headless: true, reducedMotion: motion, viewport: { width: 1100, height: 800 }, args: [`--disable-extensions-except=${extensionPath}`, `--load-extension=${extensionPath}`] });
         const worker = context.serviceWorkers()[0] ?? await context.waitForEvent('serviceworker');

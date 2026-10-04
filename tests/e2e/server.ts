@@ -21,6 +21,14 @@ export async function startServer() {
     if (request.url === '/v1/chat/completions') {
       let raw = ''; for await (const chunk of request) raw += chunk;
       const requestBody = JSON.parse(raw);
+      if (requestBody.messages[0].content.includes('as plain text')) {
+        const text = requestBody.messages[1].content as string;
+        calls.push({ texts: [text] });
+        if (delay) await new Promise((resolve) => setTimeout(resolve, delay));
+        response.writeHead(200, { 'Content-Type': 'application/json' });
+        response.end(JSON.stringify({ choices: [{ message: { content: invalid ? '{"broken":true}' : `中文译文：${text}` } }] }));
+        return;
+      }
       const data = JSON.parse(requestBody.messages[1].content) as typeof calls[number]; calls.push(data);
       if (delay) await new Promise((resolve) => setTimeout(resolve, delay));
       const content = invalid ? { broken: true } : data.texts ? { translations: data.texts.map((text) => `中文译文：${text}`) } : {

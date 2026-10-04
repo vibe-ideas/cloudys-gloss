@@ -28,3 +28,16 @@ pnpm smoke:live
 ```
 
 真实测试还会在 2000 段页面记录首段显示时间及首段出现前的最大 rAF 回调间隔（仅为响应性采样，不是完整性能分析），验证滚到页尾继续翻译，再验证中文译文、IPA 按钮、上下文释义与双语例句，并在 `artifacts/live` 保存截图。普通 E2E 截图与 HTML 报告位于 `test-results`、`playwright-report`。
+
+## 本地助手与真实模型启停回归
+
+Apple Silicon Mac 安装模型和助手后运行：
+
+```sh
+pnpm model:bridge
+pnpm test:native
+```
+
+此测试真实控制当前用户的 MLX 服务，会暂时关闭登录自启、停止/启动模型，请避免同时进行其他模型推理。测试在 Chrome 与 Firefox 中操作真实设置按钮，再从停止状态点击网页翻译，断言中文译文出现。结束时恢复原来的登录自启偏好，保留模型运行。截图与启动耗时保存在 `artifacts/native/`。若强制中断测试，可用 `pnpm model:start` 恢复服务和自启。
+
+普通 CI 不运行此硬件测试；Vitest 覆盖消息校验、扩展白名单、停止保留自启、并发启动合并、取消等待与其他模型隔离。

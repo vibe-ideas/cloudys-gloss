@@ -10,6 +10,14 @@ function evaluate(body: string) {
 }
 
 describe('macOS 本地模型服务管理', () => {
+  it('macOS 暂时拒绝重新注册服务时有限重试，成功后立即结束', () => {
+    const result = evaluate(`from types import SimpleNamespace\nwith patch.object(service, 'run', side_effect=[SimpleNamespace(returncode=5, stderr='busy'), SimpleNamespace(returncode=0, stderr='')]) as run, patch.object(service.time, 'sleep') as sleep:\n    service.bootstrap(Path('/tmp'))\n    print(json.dumps({'attempts':run.call_count,'waits':sleep.call_count}))`);
+    expect(result).toEqual({ attempts: 2, waits: 1 });
+  });
+  it('服务注册持续失败时停止重试并报告原因，避免无限等待', () => {
+    const result = evaluate(`from types import SimpleNamespace\nwith patch.object(service, 'run', return_value=SimpleNamespace(returncode=5, stderr='denied')) as run, patch.object(service.time, 'sleep'):\n    try: service.bootstrap(Path('/tmp'))\n    except RuntimeError as error: print(json.dumps({'attempts':run.call_count,'error':str(error)}))`);
+    expect(result.attempts).toBe(20); expect(result.error).toContain('denied');
+  });
   it('用户目录含空格时，自启直接运行独立环境并且只监听本机', () => {
     const config = evaluate(`import plistlib\np = service.build_plist(Path('/Users/Reader With Spaces'))\nprint(json.dumps(plistlib.loads(plistlib.dumps(p))))`);
     const args: string[] = config.ProgramArguments;

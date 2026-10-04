@@ -15,6 +15,7 @@ export function firefoxBridge(url: string, token: string) {
       try {
         if (operation === 'ready') value = !!document.querySelector('button[type="submit"]') && !document.querySelector('button[type="submit"]').disabled;
         else if (operation === 'status') value = document.querySelector('[role="status"]').textContent;
+        else if (operation === 'model-status') value = document.querySelector('[data-testid="model-status"]').textContent;
         else if (operation === 'fill') {
           const input = document.querySelector('[name="' + args[0] + '"]');
           input.value = args[1]; input.dispatchEvent(new Event('input', {bubbles:true}));

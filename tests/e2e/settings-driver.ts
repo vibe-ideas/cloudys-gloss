@@ -11,6 +11,7 @@ export class SettingsDriver {
     else await this.control!('click', [name]);
   }
   async status(): Promise<string> { return this.page ? (await this.page.getByRole('status').textContent()) ?? '' : this.control!('status'); }
+  async modelStatus(): Promise<string> { return this.page ? (await this.page.getByTestId('model-status').textContent()) ?? '' : this.control!('model-status'); }
   async ready(): Promise<boolean> { return this.page ? await this.page.getByRole('button', { name: '保存设置', exact: true }).isEnabled() : this.control!('ready'); }
   async screenshot(path: string) { if (this.page) await this.page.screenshot({ path, fullPage: true }); }
   async toggle(url: string) {

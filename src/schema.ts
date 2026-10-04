@@ -11,6 +11,7 @@ export const SettingsSchema = z.object({
   timeout: z.number().int().min(1000).max(300000).default(60000),
   concurrency: z.number().int().min(1).max(8).default(2),
   theme: z.enum(['system', 'light', 'dark']).default('system'),
+  autoStartLocalModel: z.boolean().default(true),
 });
 export type Settings = z.infer<typeof SettingsSchema>;
 export const defaults: Settings = SettingsSchema.parse({
@@ -42,6 +43,7 @@ export const RequestSchema = z.discriminatedUnion('type', [
   z.object({ type: z.literal('settings:save'), settings: SettingsSchema }),
   z.object({ type: z.literal('connection:test'), id: requestId, settings: SettingsSchema }),
   z.object({ type: z.literal('cache:clear') }),
+  z.object({ type: z.literal('model:control'), action: z.enum(['status', 'start', 'stop', 'restart', 'autostart']), enabled: z.boolean().optional() }),
 ]);
 export type Request = z.infer<typeof RequestSchema>;
 export type Response<T> = { ok: true; data: T } | { ok: false; error: string };

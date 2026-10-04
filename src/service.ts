@@ -6,7 +6,7 @@ import { WordCardSchema, type Settings } from './schema';
 
 export class TranslationService {
   private queue = new ConcurrencyQueue();
-  constructor(private cache = new ResultCache()) {}
+  constructor(private cache = new ResultCache(), private ensureModel: (settings: Settings, signal: AbortSignal) => Promise<void> = async () => {}) {}
   private key(settings: Settings, kind: string, value: unknown) {
     return cacheKey([settings.baseUrl, settings.model, settings.temperature, settings.apiKey, 'zh-CN', kind, value]);
   }
@@ -26,8 +26,11 @@ export class TranslationService {
       if (cached.success) { results.set(text, cached.data); emit(text, cached.data, true); } else missing.push(text);
     });
     if (missing.length) {
-      const translations = await this.queue.run(() => new OpenAICompatibleProvider(settings).translate(missing, signal,
-        onItem ? (index, text) => emit(missing[index]!, text, false) : undefined), signal);
+      const translations = await this.queue.run(async () => {
+        await this.ensureModel(settings, signal);
+        return new OpenAICompatibleProvider(settings).translate(missing, signal,
+          onItem ? (index, text) => emit(missing[index]!, text, false) : undefined);
+      }, signal);
       signal.throwIfAborted();
       await Promise.all(missing.map(async (text, i) => {
         results.set(text, translations[i]!);
@@ -44,14 +47,23 @@ export class TranslationService {
     const cached = WordCardSchema.safeParse(await this.cache.get(key));
     signal.throwIfAborted();
     if (cached.success) return cached.data;
-    const card = await this.queue.run(() => new OpenAICompatibleProvider(settings).lookup(word, context, signal), signal, true);
+    const card = await this.queue.run(async () => {
+      await this.ensureModel(settings, signal);
+      return new OpenAICompatibleProvider(settings).lookup(word, context, signal);
+    }, signal, true);
     signal.throwIfAborted();
     await this.cache.set(key, card);
     return card;
   }
   test(settings: Settings, signal: AbortSignal) {
     this.queue.setLimit(settings.concurrency);
-    return this.queue.run(() => new OpenAICompatibleProvider(settings).translate(['Hello'], signal), signal, true);
+    return this.queue.run(async () => {
+      await this.ensureModel(settings, signal);
+      // Exercise the same streaming + validated plain-text fallback as page
+      // translation, with enough source words to require Chinese output.
+      return new OpenAICompatibleProvider(settings).translate(
+        ['The weather is cloudy today, so please bring an umbrella.'], signal, () => {});
+    }, signal, true);
   }
   clear() { return this.cache.clear(); }
 }
