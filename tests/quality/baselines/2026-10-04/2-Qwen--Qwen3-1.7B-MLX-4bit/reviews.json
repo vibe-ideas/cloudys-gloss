@@ -1,0 +1,172 @@
+{
+  "corpusHash": "66299cbae34ac48e49061dc0edea8ef7e94d1ab07a23c09aa0bfb8de7e309794",
+  "providerHash": "5c093530ce2cea1ea96b8f17dced7f1da894ce4bfe6d00a3b104e1a65b7f1b59",
+  "model": "Qwen/Qwen3-1.7B-MLX-4bit",
+  "reviewer": "Codex",
+  "method": "逐例对照原文、参考译文与固定评分尺度；已知模型标签，非独立人工盲评；未调用外部 judge。两轮相同输出复用审阅。",
+  "reviews": [
+    {
+      "id": "T01",
+      "outputHash": "d62c41f456440a81f08e7eedc7bb311d7820fabfd7cc7e44fbfcca35fbe149e4",
+      "adequacy": 4,
+      "completeness": 4,
+      "fluency": 3,
+      "critical": false,
+      "notes": "原文情绪、动作和借阅规定保留；“做一杯咖啡”不如“泡咖啡”自然。"
+    },
+    {
+      "id": "T02",
+      "outputHash": "fee9cce73432330a9e26e9b48e91a9091e6ee4e74964e9cf7b0ca97678ebfd7a",
+      "adequacy": 3,
+      "completeness": 4,
+      "fluency": 3,
+      "critical": false,
+      "notes": "读者、后台、取消和缓存均正确；首段“段落可用时”对译文完成的指代略模糊，但整体含义可恢复。"
+    },
+    {
+      "id": "T03",
+      "outputHash": "1fae35d0c92ef7ff5818e19cff2ebed49fbdf6fd1371885ace5ae8c58beca038",
+      "adequacy": 4,
+      "completeness": 4,
+      "fluency": 3,
+      "critical": false,
+      "notes": "两段信息点和五年研究含义保留；“水源可达性”略学术化，不影响理解。"
+    },
+    {
+      "id": "T04",
+      "outputHash": "f06da8b10b85b2c80452ccd6dfa14b40912d69eccb34c0d2b52f9e6799e3c4bd",
+      "adequacy": 3,
+      "completeness": 4,
+      "fluency": 3,
+      "critical": false,
+      "notes": "两段完整；mature trees 译为“树木茂盛”侧重繁茂而非成熟，属于局部偏差；其余研究限定保留。"
+    },
+    {
+      "id": "T05",
+      "outputHash": "94dd43e6b3c05d1e9da62cad301fe047f23101a56045257decfa6d9f36e37d74",
+      "adequacy": 4,
+      "completeness": 4,
+      "fluency": 3,
+      "critical": false,
+      "notes": "价格、币种、用户数和完整截止日期时间准确；“可为3名用户使用”不够自然。"
+    },
+    {
+      "id": "T06",
+      "outputHash": "3fdaebb2f6cddc877f47590db8f2a66518e28f69d2bae2d533c2b0562f454bc9",
+      "adequacy": 4,
+      "completeness": 4,
+      "fluency": 4,
+      "critical": false,
+      "notes": "否定条件和“不一定意味着”的限定准确自然。"
+    },
+    {
+      "id": "T07",
+      "outputHash": "e5f59e2a3a0cf3be82a2ae20ccd89ba231c8e1d3ce08e4f7413bd7f8455fb5ec",
+      "adequacy": 4,
+      "completeness": 4,
+      "fluency": 4,
+      "critical": false,
+      "notes": "数值、增幅方向与百分点概念准确。"
+    },
+    {
+      "id": "T08",
+      "outputHash": "52f076267dd20b5674ac1068309839cc265d2a171f5d32437c895d3ee44463f3",
+      "adequacy": 4,
+      "completeness": 4,
+      "fluency": 4,
+      "critical": false,
+      "notes": "负号、小数、单位和操作时序全部保留。"
+    },
+    {
+      "id": "T09",
+      "outputHash": "6ef8ed34733c4720f76481e28e112d87e4436a91b104e6b953cc221c7ab4bf86",
+      "adequacy": 4,
+      "completeness": 4,
+      "fluency": 3,
+      "critical": false,
+      "notes": "河岸含义正确；“河边的岸边”稍显重复。"
+    },
+    {
+      "id": "T10",
+      "outputHash": "044d1e317e1fc6894ccc089ca19982c81223c5659b3097a6fe514d208a27b95d",
+      "adequacy": 4,
+      "completeness": 4,
+      "fluency": 4,
+      "critical": false,
+      "notes": "已批准贷款、尚未签协议的对照明确。"
+    },
+    {
+      "id": "T11",
+      "outputHash": "baeec25afce9c7bcab3960b3e47b8f217effec692a92d14fc36e72914cdcdc04",
+      "adequacy": 3,
+      "completeness": 4,
+      "fluency": 3,
+      "critical": false,
+      "notes": "“意外地很轻”保留惊讶，物品完整；“还装着”对 even with 的让步表达较弱。"
+    },
+    {
+      "id": "T12",
+      "outputHash": "d7ec6eed4a837884651d8af316d2000384ae21dc261bc66f6152ee9246e45fb1",
+      "adequacy": 4,
+      "completeness": 4,
+      "fluency": 4,
+      "critical": false,
+      "notes": "在会议和笑话语境下“破冰”是成立的社交习语，人物与时间保留。"
+    },
+    {
+      "id": "T13",
+      "outputHash": "b180336023997fb0af61797ab7f2be5aefa86ef44d8e3dba63047862bbae7f50",
+      "adequacy": 4,
+      "completeness": 4,
+      "fluency": 3,
+      "critical": false,
+      "notes": "借还方向、人物和次日早晨准确；“忘记带了”可由前文补足相机。"
+    },
+    {
+      "id": "T14",
+      "outputHash": "2ec27095361fb9dda81bdc063f48951d74e174c6ac5fe9999a8fc79bd5df66f1",
+      "adequacy": 4,
+      "completeness": 4,
+      "fluency": 4,
+      "critical": false,
+      "notes": "API、路径、先取消后删除和缓存不是备份均准确。"
+    },
+    {
+      "id": "T15",
+      "outputHash": "6450a7e12b4fe0087cb547dad044d23b8103edfc475bca6380448da57b330d12",
+      "adequacy": 4,
+      "completeness": 4,
+      "fluency": 4,
+      "critical": false,
+      "notes": "引用边界和编辑说明完整，没有执行指令。"
+    },
+    {
+      "id": "T16",
+      "outputHash": "74aa0d456067414b38e147e0f84b096a0a43ccbc692b188dc378d54a2cfa2dd8",
+      "adequacy": 3,
+      "completeness": 4,
+      "fluency": 3,
+      "critical": false,
+      "notes": "“开始教程”比原文 Getting started 多了教程限定，仍是合理入门标题；其余按钮与顺序正确。"
+    },
+    {
+      "id": "T17",
+      "outputHash": "0175e05775d5617267b39b808bf2db79f3f1bcdd68504457f098af99e080709b",
+      "adequacy": 4,
+      "completeness": 4,
+      "fluency": 4,
+      "critical": false,
+      "notes": "所有疗效与安全性限定正确保留。"
+    },
+    {
+      "id": "T18",
+      "outputHash": "2ca27584cb453d8f23ad6d54e2c9bfc74b185a2d00ffe9583b437e6f7384cc4c",
+      "adequacy": 2,
+      "completeness": 3,
+      "fluency": 2,
+      "critical": false,
+      "notes": "两小时保留，但 connection 直译“连接”缺少转乘含义；“好的”“所期盼的”使反讽语气弱化，中文需要改写。"
+    }
+  ],
+  "rubricVersion": "1.0"
+}

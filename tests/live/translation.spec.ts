@@ -1,4 +1,4 @@
-import { test, expect } from '../tests/e2e/fixtures';
+import { test, expect } from '../e2e/fixtures';
 test('真实 MLX / 网关：2000 段页面首段流式出现，滚到页尾继续翻译，记录首段与主线程响应间隔', async ({ extension }, testInfo) => {
   const { options, page, server } = extension;
   await options.fill('baseUrl', process.env.MODEL_BASE_URL!); await options.fill('model', process.env.MODEL_NAME!);

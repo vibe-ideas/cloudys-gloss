@@ -3,8 +3,8 @@ import { mkdirSync, openSync, closeSync, readFileSync, writeFileSync, appendFile
 import path from 'node:path';
 import { cpus, totalmem } from 'node:os';
 import { setTimeout as delay } from 'node:timers/promises';
-import { OpenAICompatibleProvider } from '../src/provider';
-import { SettingsSchema } from '../src/schema';
+import { OpenAICompatibleProvider } from '../../src/provider';
+import { SettingsSchema } from '../../src/schema';
 
 // Dedicated localhost server; never stops or changes the user's normal MLX service.
 const python = process.env.MLX_PYTHON;
@@ -16,7 +16,7 @@ const models = (process.env.BENCH_MODELS ?? 'mlx-community/Qwen2.5-3B-Instruct-4
 const port = Number(process.env.BENCH_PORT ?? 18081);
 const baseUrl = `http://127.0.0.1:${port}/v1`;
 type Scenario = { id: string; texts: string[] } | { id: string; word: string; context: string };
-const scenarios: Scenario[] = JSON.parse(readFileSync('docs/performance/data/scenarios.json', 'utf8'));
+const scenarios: Scenario[] = JSON.parse(readFileSync('tests/performance/scenarios.json', 'utf8'));
 const article = scenarios.find((scenario) => scenario.id === 'article');
 if (!article || !('texts' in article)) throw new Error('Missing article input');
 const longText = article.texts.join('\n\n');

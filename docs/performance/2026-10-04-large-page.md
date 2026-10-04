@@ -18,7 +18,7 @@ pnpm model:mlx
 pnpm smoke:mlx
 ```
 
-脚本位于 [scripts/live.spec.ts](../../scripts/live.spec.ts)，输入夹具位于 [tests/e2e/server.ts](../../tests/e2e/server.ts)。测试命令会构建双浏览器扩展并保存本机截图到 `artifacts/live/`。离线可重复的流式时序断言见 [tests/e2e/large-page.spec.ts](../../tests/e2e/large-page.spec.ts)，通过 `pnpm test:e2e` 运行。
+脚本位于 [tests/live/translation.spec.ts](../../tests/live/translation.spec.ts)，输入夹具位于 [tests/e2e/server.ts](../../tests/e2e/server.ts)。测试命令会构建双浏览器扩展并保存本机截图到 `artifacts/live/`。离线可重复的流式时序断言见 [tests/e2e/large-page.spec.ts](../../tests/e2e/large-page.spec.ts)，通过 `pnpm test:e2e` 运行。
 
 ## 限制
 

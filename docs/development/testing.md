@@ -2,6 +2,8 @@
 
 性能测试的方法、输入和结果见 [性能文档目录](../performance/README.md)。浏览器 E2E 使用可控模型夹具验证行为；真实模型 smoke 和 TPS benchmark 单独运行，避免把模型不稳定性混入普通测试。
 
+翻译质量使用独立的 `pnpm test:quality`，固定语料和审阅基线统一维护在 `tests/quality/`。模型切换需比较忠实度、完整性和自然度，见 [质量回归流程](translation-quality.md)；普通单测不连接模型。
+
 ## 校验与浏览器测试
 
 ```sh

@@ -1,0 +1,172 @@
+{
+  "corpusHash": "66299cbae34ac48e49061dc0edea8ef7e94d1ab07a23c09aa0bfb8de7e309794",
+  "providerHash": "5c093530ce2cea1ea96b8f17dced7f1da894ce4bfe6d00a3b104e1a65b7f1b59",
+  "model": "mlx-community/Qwen2.5-1.5B-Instruct-4bit",
+  "reviewer": "Codex",
+  "method": "逐例对照原文、参考译文与固定评分尺度；已知模型标签，非独立人工盲评；未调用外部 judge。两轮相同输出复用审阅。",
+  "reviews": [
+    {
+      "id": "T01",
+      "outputHash": "cc7654242ae57c08cb65ba3b5ad1d1c5152bf30e7916309991447195caafbe72",
+      "adequacy": 3,
+      "completeness": 2,
+      "fluency": 2,
+      "critical": false,
+      "notes": "第一段完全漏掉 quiet thoughts 的情绪信息；第二段“想阅读安静的地方的人”把安静的阅读场所说成阅读对象，虽数量期限正确仍需修改。"
+    },
+    {
+      "id": "T02",
+      "outputHash": "9e8c6a4374ea04407f2caf0ddd97bc7c1134d22cf62d59e382d4e66de9fd1ab1",
+      "adequacy": 3,
+      "completeness": 4,
+      "fluency": 2,
+      "critical": false,
+      "notes": "后台、分批、取消和本地缓存主要内容完整；首段“每个段落可用”对译文完成略模糊，末句“无需再次模型请求”缺少动词。"
+    },
+    {
+      "id": "T03",
+      "outputHash": "fbd1a5f32daede92455d437ddfda2726a03a3016c0884c1f765ab70fb497ad49",
+      "adequacy": 3,
+      "completeness": 4,
+      "fluency": 3,
+      "critical": false,
+      "notes": "两段信息完整；“几种社区”把若干社区说成几种类型，水的可接近性有翻译腔，主要结论正确。"
+    },
+    {
+      "id": "T04",
+      "outputHash": "1e5cd947c203c9cb99e424cf9698a1ec5ec1e2fbaaec46b611ad28de2a6878e4",
+      "adequacy": 3,
+      "completeness": 4,
+      "fluency": 2,
+      "critical": false,
+      "notes": "此处真实 provider JSON 管线没有复现上次纯文本 TPS 请求的整段漏译；“五年内进行了五年的研究”冗余，“几种社区”不够准确。"
+    },
+    {
+      "id": "T05",
+      "outputHash": "85bf7e6305c7ec083607e212b38ba48990c12e6f080fc68fa01b05a8c8cb31ce",
+      "adequacy": 2,
+      "completeness": 2,
+      "fluency": 3,
+      "critical": true,
+      "notes": "省略了明确截止日期中的年份 2026，导致有时间约束的事实不完整；价格、人数和月日时间仍正确。"
+    },
+    {
+      "id": "T06",
+      "outputHash": "865b2b5e844b3acf62ba268a4e304381650cb6ed531dd3817eba916d2d2b64c8",
+      "adequacy": 4,
+      "completeness": 4,
+      "fluency": 4,
+      "critical": false,
+      "notes": "除非成功否则不删、进度100%不一定成功均准确表达。"
+    },
+    {
+      "id": "T07",
+      "outputHash": "e5f59e2a3a0cf3be82a2ae20ccd89ba231c8e1d3ce08e4f7413bd7f8455fb5ec",
+      "adequacy": 4,
+      "completeness": 4,
+      "fluency": 4,
+      "critical": false,
+      "notes": "数值、百分点与相对百分比的区别准确。"
+    },
+    {
+      "id": "T08",
+      "outputHash": "c78eb7a9c4269d5a3e284908c951ae19cc893806972d40adef193bc4b1fbf11b",
+      "adequacy": 4,
+      "completeness": 4,
+      "fluency": 4,
+      "critical": false,
+      "notes": "负温度、小数、30分钟和之后每10秒采样均完整准确。"
+    },
+    {
+      "id": "T09",
+      "outputHash": "d8cce4876e09161284cef6ddf61ce7086f25a6a5aa47aac7ef893bc4f022e5ac",
+      "adequacy": 4,
+      "completeness": 4,
+      "fluency": 4,
+      "critical": false,
+      "notes": "正确选择河岸词义，保留过桥、坐下和鸭子游过。"
+    },
+    {
+      "id": "T10",
+      "outputHash": "a10db06e3729550d5fdfd09ba462d003da4bb388615ef385f8827b21f26ae710",
+      "adequacy": 4,
+      "completeness": 4,
+      "fluency": 4,
+      "critical": false,
+      "notes": "银行及两件事的不同完成状态正确。"
+    },
+    {
+      "id": "T11",
+      "outputHash": "601b3b1046966bd530c9c502f56ac43ce4589d930178662b799ef39b7f16794f",
+      "adequacy": 3,
+      "completeness": 3,
+      "fluency": 2,
+      "critical": false,
+      "notes": "保留重量轻和两本书等物品，但弱化 surprisingly；“甚至在内有”不自然，仍能理解。"
+    },
+    {
+      "id": "T12",
+      "outputHash": "3a4a8c7962fc74bea38148b3dcef5343e2bb897a0faafb9354cb352c4afe3f67",
+      "adequacy": 3,
+      "completeness": 4,
+      "fluency": 3,
+      "critical": false,
+      "notes": "人物、时间、笑话完整；“打破僵局”比社交破冰偏向谈判困境，属轻微词义偏移。"
+    },
+    {
+      "id": "T13",
+      "outputHash": "3ea750cd362258131261550fddb6c502fea81a949ad4a1505adb38ce0674e893",
+      "adequacy": 3,
+      "completeness": 4,
+      "fluency": 2,
+      "critical": false,
+      "notes": "借还关系正确，但 Maria 简化成玛丽，两个“她的”使表达拗口；结合上下文仍可辨认相机和归还对象。"
+    },
+    {
+      "id": "T14",
+      "outputHash": "8d660bb1fc9be1415709a8ba8596e30d18361aa1fea894dca899d5d542ccbc09",
+      "adequacy": 1,
+      "completeness": 3,
+      "fluency": 3,
+      "critical": true,
+      "notes": "“调用 AbortController 的 abort() 方法删除文件”错误地声称 abort() 能删除文件，丢掉先取消再删除的独立动作关系。API文字可识别，自动规则不应代替此项语义判断。"
+    },
+    {
+      "id": "T15",
+      "outputHash": "2c24a401e57aa3fb6b04dccf08f12efe94b113090ced88477cd0e3714ecc3135",
+      "adequacy": 4,
+      "completeness": 4,
+      "fluency": 4,
+      "critical": false,
+      "notes": "完整翻译引用及编辑说明，没有服从被引用指令。"
+    },
+    {
+      "id": "T16",
+      "outputHash": "ef963763fa46cbc85d7a06a2682b5a5b0013af51d5828462e889b4a7f9b24331",
+      "adequacy": 3,
+      "completeness": 4,
+      "fluency": 4,
+      "critical": false,
+      "notes": "“开始”略泛，但符合短标题用法；保存更改、重试和块顺序正确。"
+    },
+    {
+      "id": "T17",
+      "outputHash": "f14b9254203ddecf2bbf6fad153f25bfcada5a7d5a714b549cc4c1c282dd7029",
+      "adequacy": 4,
+      "completeness": 4,
+      "fluency": 4,
+      "critical": false,
+      "notes": "保留全部研究限定，没有夸大疗效或安全性。"
+    },
+    {
+      "id": "T18",
+      "outputHash": "c5584aeca1bea709ae1a6e3ce7a77ace7a8d63c39f7984e2d60cd0b6b0f74f65",
+      "adequacy": 1,
+      "completeness": 2,
+      "fluency": 3,
+      "critical": true,
+      "notes": "two-hour 被改成“一小时”，构成明确数字错误；“因为”还将原有 after 的时间关系改写为因果。"
+    }
+  ],
+  "rubricVersion": "1.0"
+}

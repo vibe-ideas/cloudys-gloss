@@ -1,0 +1,20 @@
+[
+  {
+    "model": "mlx-community/Qwen2.5-3B-Instruct-4bit",
+    "revision": "4f83f8f146fdf28b512a06562b671d7af4fab457",
+    "directory": "0-mlx-community--Qwen2.5-3B-Instruct-4bit",
+    "exitCode": 0
+  },
+  {
+    "model": "mlx-community/Qwen2.5-1.5B-Instruct-4bit",
+    "revision": "8b403126fc14f14cfc99bb4cfa72ecbc129ea677",
+    "directory": "1-mlx-community--Qwen2.5-1.5B-Instruct-4bit",
+    "exitCode": 1
+  },
+  {
+    "model": "Qwen/Qwen3-1.7B-MLX-4bit",
+    "revision": "21457c6f51ed54a7c16e988c0844db973815c137",
+    "directory": "2-Qwen--Qwen3-1.7B-MLX-4bit",
+    "exitCode": 0
+  }
+]

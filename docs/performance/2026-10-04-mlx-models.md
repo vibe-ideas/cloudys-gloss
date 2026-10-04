@@ -1,5 +1,7 @@
 # M4 Pro：MLX 模型 TPS 与内存对比
 
+后续补充：[固定 18 类用例的翻译质量评测与全部译文对照](2026-10-04-translation-quality.md)。本文保留当时纯文本测速与小规模 provider 结果，不把 TPS 视为质量评分。
+
 日期：2026-10-04。当前默认 Qwen2.5 3B 4-bit 的 HTTP 流生成速度约 **102 tokens/s**。Qwen3 1.7B 4-bit 关闭思考后约 **175 tokens/s**，快约 73%，进程 footprint 约 **1.4 GiB**。它值得作为全文翻译候选，但当前词卡兼容性测试失败，尚不能替换默认模型承担全部功能。
 
 ## 设备与测试条件
@@ -72,12 +74,12 @@ uv run --python 3.12 --with mlx-lm==0.32.0 mlx_lm.server \
 ```sh
 MLX_PYTHON=/path/to/mlx-env/bin/python \
 BENCH_OUTPUT=artifacts/benchmark/my-mlx-run \
-pnpm dlx tsx@4.23.15 scripts/benchmark-mlx-models.ts
+pnpm dlx tsx@4.23.15 tests/performance/benchmark-mlx-models.ts
 
-python3 scripts/summarize-mlx-benchmark.py artifacts/benchmark/my-mlx-run
+python3 tests/performance/summarize-mlx-benchmark.py artifacts/benchmark/my-mlx-run
 ```
 
-脚本支持 `BENCH_MODELS`（逗号分隔）和 `BENCH_PORT`；自动清理自己启动的服务，不停止用户的 8080 服务。输入文件为 [scenarios.json](data/scenarios.json)。
+脚本支持 `BENCH_MODELS`（逗号分隔）和 `BENCH_PORT`；自动清理自己启动的服务，不停止用户的 8080 服务。输入文件为 [scenarios.json](../../tests/performance/scenarios.json)。
 
 ## 归档数据
 

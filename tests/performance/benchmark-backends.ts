@@ -1,32 +1,16 @@
 import { spawn, execFileSync, type ChildProcess } from 'node:child_process';
-import { mkdirSync, openSync, closeSync, writeFileSync, appendFileSync, existsSync } from 'node:fs';
+import { mkdirSync, openSync, closeSync, writeFileSync, appendFileSync, existsSync, readFileSync } from 'node:fs';
 import { homedir, cpus, totalmem, release } from 'node:os';
 import path from 'node:path';
 import { setTimeout as delay } from 'node:timers/promises';
-import { OpenAICompatibleProvider } from '../src/provider';
-import { SettingsSchema } from '../src/schema';
+import { OpenAICompatibleProvider } from '../../src/provider';
+import { SettingsSchema } from '../../src/schema';
 
 // Benchmarks the actual provider, including streamed paragraphs, validation and retries.
 // No extension result cache. Only one backend runs at a time. See report for quantization caveats.
 type Engine = 'mlx' | 'llama';
 type Scenario = { id: string; texts: string[] } | { id: string; word: string; context: string };
-const scenarios: Scenario[] = [
-  { id: 'reading', texts: [
-    'A cloudy morning brings quiet thoughts. She opened the window and listened to the rain while making a cup of coffee.',
-    'The small library at the end of the street welcomes anyone who wants a quiet place to read. Visitors may borrow three books for two weeks.',
-  ] },
-  { id: 'technical', texts: [
-    'The browser extension sends translation requests to a background process. It groups nearby paragraphs into small batches and displays each translated paragraph as soon as it becomes available.',
-    'An AbortController cancels requests when the reader moves to another section. Cached translations are stored locally, so returning to a previously translated page does not require another model request.',
-  ] },
-  { id: 'article', texts: [
-    'Urban trees provide shade during hot summers and help reduce the temperature of nearby buildings. However, planting more trees is only part of the solution. Cities also need to maintain healthy soil, protect existing roots, and choose species that can survive local weather conditions. A successful planting program considers both the needs of residents and the long-term health of the urban ecosystem.',
-    'Researchers compared several neighborhoods over five years. Areas with mature trees experienced lower afternoon temperatures, but the benefits varied with street width, building height, and access to water. The report recommends collecting local measurements before making large investments, rather than assuming that the same approach will work equally well in every district.',
-  ] },
-  { id: 'cloudy', word: 'cloudy', context: 'A cloudy morning brings quiet thoughts. She opened the window and listened to the rain.' },
-  { id: 'bank', word: 'bank', context: 'After crossing the bridge, we sat on the bank of the river and watched the ducks swim past.' },
-  { id: 'light', word: 'light', context: 'This backpack is surprisingly light, even with a laptop and two books inside.' },
-];
+const scenarios: Scenario[] = JSON.parse(readFileSync("tests/performance/scenarios.json", "utf8"));
 const out = path.resolve(process.env.BENCH_OUTPUT ?? `artifacts/benchmark/${new Date().toISOString().replace(/[:.]/g, '-')}`);
 mkdirSync(out, { recursive: true });
 const python = process.env.MLX_PYTHON;

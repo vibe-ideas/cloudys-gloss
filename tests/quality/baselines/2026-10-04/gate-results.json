@@ -1,0 +1,24 @@
+[
+  {
+    "name": "qwen3-no-regression",
+    "exitCode": 0,
+    "acceptedCases": 17,
+    "regressions": []
+  },
+  {
+    "name": "qwen3-all-cases",
+    "exitCode": 1,
+    "acceptedCases": 17,
+    "regressions": []
+  },
+  {
+    "name": "qwen15-no-regression",
+    "exitCode": 1,
+    "acceptedCases": 14,
+    "regressions": [
+      "mlx-community/Qwen2.5-1.5B-Instruct-4bit: T01",
+      "mlx-community/Qwen2.5-1.5B-Instruct-4bit: T05",
+      "mlx-community/Qwen2.5-1.5B-Instruct-4bit: T14"
+    ]
+  }
+]

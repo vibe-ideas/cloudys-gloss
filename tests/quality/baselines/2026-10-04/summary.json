@@ -1,0 +1,107 @@
+[
+  {
+    "model": "mlx-community/Qwen2.5-3B-Instruct-4bit",
+    "samples": 36,
+    "automaticPassed": 36,
+    "reviewed": 36,
+    "acceptedCases": 14,
+    "cases": 18,
+    "byCase": {
+      "T01": true,
+      "T02": false,
+      "T03": true,
+      "T04": true,
+      "T05": true,
+      "T06": false,
+      "T07": true,
+      "T08": true,
+      "T09": true,
+      "T10": true,
+      "T11": false,
+      "T12": true,
+      "T13": true,
+      "T14": true,
+      "T15": true,
+      "T16": true,
+      "T17": true,
+      "T18": false
+    },
+    "criticalCases": 1,
+    "medianMs": 496.6718335000005,
+    "meanReview": {
+      "adequacy": 3.2222222222222223,
+      "completeness": 3.8333333333333335,
+      "fluency": 2.7222222222222223
+    }
+  },
+  {
+    "model": "mlx-community/Qwen2.5-1.5B-Instruct-4bit",
+    "samples": 36,
+    "automaticPassed": 32,
+    "reviewed": 36,
+    "acceptedCases": 14,
+    "cases": 18,
+    "byCase": {
+      "T01": false,
+      "T02": true,
+      "T03": true,
+      "T04": true,
+      "T05": false,
+      "T06": true,
+      "T07": true,
+      "T08": true,
+      "T09": true,
+      "T10": true,
+      "T11": true,
+      "T12": true,
+      "T13": true,
+      "T14": false,
+      "T15": true,
+      "T16": true,
+      "T17": true,
+      "T18": false
+    },
+    "criticalCases": 3,
+    "medianMs": 282.7462294999996,
+    "meanReview": {
+      "adequacy": 3.111111111111111,
+      "completeness": 3.5555555555555554,
+      "fluency": 3.1666666666666665
+    }
+  },
+  {
+    "model": "Qwen/Qwen3-1.7B-MLX-4bit",
+    "samples": 36,
+    "automaticPassed": 36,
+    "reviewed": 36,
+    "acceptedCases": 17,
+    "cases": 18,
+    "byCase": {
+      "T01": true,
+      "T02": true,
+      "T03": true,
+      "T04": true,
+      "T05": true,
+      "T06": true,
+      "T07": true,
+      "T08": true,
+      "T09": true,
+      "T10": true,
+      "T11": true,
+      "T12": true,
+      "T13": true,
+      "T14": true,
+      "T15": true,
+      "T16": true,
+      "T17": true,
+      "T18": false
+    },
+    "criticalCases": 0,
+    "medianMs": 553.9558334999992,
+    "meanReview": {
+      "adequacy": 3.6666666666666665,
+      "completeness": 3.9444444444444446,
+      "fluency": 3.388888888888889
+    }
+  }
+]
