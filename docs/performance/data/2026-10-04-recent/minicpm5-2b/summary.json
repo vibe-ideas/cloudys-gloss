@@ -1,0 +1,85 @@
+[
+  {
+    "model": "openbmb/MiniCPM5-2B-MLX",
+    "samples": 6,
+    "decodeTpsMedian": 126.9644103367059,
+    "decodeTpsRange": [
+      125.24777741713135,
+      130.60127552802317
+    ],
+    "ttftMsMedian": 194.90097900000046,
+    "totalMsMedian": 1140.446541499999,
+    "endToEndTpsMedian": 106.11139006144649,
+    "completionTokens": [
+      121
+    ],
+    "scenarios": [
+      {
+        "id": "reading",
+        "n": 2,
+        "success": 2,
+        "medianMs": 606.643,
+        "firstMs": 351.63997900000095,
+        "requests": [
+          1,
+          1
+        ]
+      },
+      {
+        "id": "technical",
+        "n": 2,
+        "success": 2,
+        "medianMs": 715.7528539999998,
+        "firstMs": 454.9426454999989,
+        "requests": [
+          1,
+          1
+        ]
+      },
+      {
+        "id": "article",
+        "n": 2,
+        "success": 2,
+        "medianMs": 2471.0703329999997,
+        "firstMs": 743.3749580000003,
+        "requests": [
+          3,
+          3
+        ]
+      },
+      {
+        "id": "cloudy",
+        "n": 2,
+        "success": 0,
+        "medianMs": 1214.8336039999986,
+        "firstMs": null,
+        "requests": [
+          2,
+          2
+        ]
+      },
+      {
+        "id": "bank",
+        "n": 2,
+        "success": 0,
+        "medianMs": 8642.309042,
+        "firstMs": null,
+        "requests": [
+          1,
+          1
+        ]
+      },
+      {
+        "id": "light",
+        "n": 2,
+        "success": 0,
+        "medianMs": 1197.6844164999984,
+        "firstMs": null,
+        "requests": [
+          2,
+          2
+        ]
+      }
+    ]
+  }
+]

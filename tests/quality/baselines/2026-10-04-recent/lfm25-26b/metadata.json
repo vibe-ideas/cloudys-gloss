@@ -1,0 +1,18 @@
+{
+  "date": "2026-10-04T10:09:16.023Z",
+  "model": "LiquidAI/LFM2.5-2.6B-MLX-4bit",
+  "modelRevision": "04efa23776ce61ec34ec95ec34c859854c89542b",
+  "corpusVersion": "1.0.1",
+  "corpusHash": "66299cbae34ac48e49061dc0edea8ef7e94d1ab07a23c09aa0bfb8de7e309794",
+  "providerHash": "5c093530ce2cea1ea96b8f17dced7f1da894ce4bfe6d00a3b104e1a65b7f1b59",
+  "repetitions": 2,
+  "temperature": 0,
+  "concurrency": 1,
+  "chip": "Apple M4 Pro",
+  "route": "OpenAICompatibleProvider.translate with streaming callback, validation and fallback",
+  "runtime": "mlx 0.32.3 mlx-lm 0.32.0",
+  "promptCache": "disabled",
+  "enableThinking": "enabled",
+  "cache": "no extension result cache",
+  "reviewPolicy": "Automatic guards are not a semantic quality score; reviews.json records the current review status"
+}

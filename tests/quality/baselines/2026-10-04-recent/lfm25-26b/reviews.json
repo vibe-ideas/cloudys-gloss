@@ -1,0 +1,171 @@
+{
+  "corpusHash": "66299cbae34ac48e49061dc0edea8ef7e94d1ab07a23c09aa0bfb8de7e309794",
+  "providerHash": "5c093530ce2cea1ea96b8f17dced7f1da894ce4bfe6d00a3b104e1a65b7f1b59",
+  "model": "LiquidAI/LFM2.5-2.6B-MLX-4bit",
+  "reviewer": "Codex",
+  "method": "逐例对照原文、参考译文和语义要求的署名审阅；已知模型、非独立盲评，相同输出复用评分。沿用既有尺度；明确区分模型调用失败与错译，未调用外部judge。",
+  "reviews": [
+    {
+      "id": "T01",
+      "outputHash": "14de59fa59dd2659e576a8373332cac38a2b45fb6dfd9d47de40476128db019c",
+      "adequacy": 3,
+      "completeness": 4,
+      "fluency": 2,
+      "critical": false,
+      "notes": "情绪、动作、三本书和两周期限保留；访客译为游客缩窄对象，“想要安静阅读的地方的人”较生硬。"
+    },
+    {
+      "id": "T02",
+      "outputHash": "c09a7cf054e9ac4a581f5e2569e85da8e16d11810138f3d42f60fa293247d4d5",
+      "adequacy": 4,
+      "completeness": 4,
+      "fluency": 3,
+      "critical": false,
+      "notes": "后台、逐段显示、读者移动后取消、本地缓存与避免再次请求均保留；分组成等表达略直译。"
+    },
+    {
+      "id": "T03",
+      "outputHash": "9d78555a9097a3554b6f5a3532d9dd03f5717eb68b9b611be2296c233d362e09",
+      "adequacy": 4,
+      "completeness": 4,
+      "fluency": 3,
+      "critical": false,
+      "notes": "两段主要信息完整，五年研究期限、成熟树木和三项环境变量保留；水源可及性略学术化。"
+    },
+    {
+      "id": "T04",
+      "outputHash": "b4903e056a0d9017b76a9cba50c6d88fced0600c7fd048fb18b0f0c8a1d7d4ca",
+      "adequacy": 0,
+      "completeness": 0,
+      "fluency": 0,
+      "critical": true,
+      "notes": "两轮均达到输出长度上限，provider 拒绝截断结果，没有有效译文；当前预算下整块不可用。"
+    },
+    {
+      "id": "T05",
+      "outputHash": "e35b17367ff3a66fa8bfcc0962fd75973f06606ffa6ebceea5f2a5399a09798a",
+      "adequacy": 4,
+      "completeness": 4,
+      "fluency": 4,
+      "critical": false,
+      "notes": "币种、每月49.90美元、三名用户、2026年10月12日18:30及取消目的准确。"
+    },
+    {
+      "id": "T06",
+      "outputHash": "e2a5842ab8aa26ae16fbd9c9ffb2e9dc552a7f9b7e65142600126efd89bd9c69",
+      "adequacy": 4,
+      "completeness": 4,
+      "fluency": 4,
+      "critical": false,
+      "notes": "成功上传才允许删除备份，100%进度不保证成功，两层限制均保留。"
+    },
+    {
+      "id": "T07",
+      "outputHash": "8582ead179cf7a8cc7c95b2af205eac837cabc06d6144773490aedb8ed6025ec",
+      "adequacy": 4,
+      "completeness": 4,
+      "fluency": 3,
+      "critical": false,
+      "notes": "3%到5%增加两百分点而非2%的区别准确；句末英文句点不影响含义。"
+    },
+    {
+      "id": "T08",
+      "outputHash": "496144971b80d7c3886c9f86696a720245f79541983f5a4570e7ab3009374c55",
+      "adequacy": 4,
+      "completeness": 4,
+      "fluency": 4,
+      "critical": false,
+      "notes": "负五度、12.5度、三十分钟升温和十秒读数间隔准确。"
+    },
+    {
+      "id": "T09",
+      "outputHash": "5b19737013bdee957dd6c40ce3ab39ff18c05baaddac97f85a8eef9d7fe44259",
+      "adequacy": 4,
+      "completeness": 4,
+      "fluency": 4,
+      "critical": false,
+      "notes": "bank 译为河岸，过桥、坐下和看鸭子动作完整。"
+    },
+    {
+      "id": "T10",
+      "outputHash": "a7b94d00c8ac49a6b634133a9634dbda5e76d8f0bbd4e2dbb9bb0a4b5dab6118",
+      "adequacy": 4,
+      "completeness": 4,
+      "fluency": 4,
+      "critical": false,
+      "notes": "银行已批准贷款与尚未签署协议的时间关系正确。"
+    },
+    {
+      "id": "T11",
+      "outputHash": "d95a3149c7a7341a06aba01acb10eaaae17bf198350a6744fb7bda36832ab1a7",
+      "adequacy": 4,
+      "completeness": 4,
+      "fluency": 3,
+      "critical": false,
+      "notes": "出奇地轻准确表达惊讶和重量轻；电脑与两本书保留，后半句重复很轻略显冗余。"
+    },
+    {
+      "id": "T12",
+      "outputHash": "633f8dd1e8403f70223622c2321725cecd2fad59cb9f6692e39cd73bc6579375",
+      "adequacy": 4,
+      "completeness": 4,
+      "fluency": 4,
+      "critical": false,
+      "notes": "打破僵局的习语、玛雅、会前和简短笑话的目的准确。"
+    },
+    {
+      "id": "T13",
+      "outputHash": "1edf3a0d2c0fff23a65c0956a6c9d5a228e9a33f75e319005e401fee5c010d42",
+      "adequacy": 2,
+      "completeness": 4,
+      "fluency": 3,
+      "critical": true,
+      "notes": "借出和归还双方正确，但 the next morning 译为“明天早上”，把叙事中的第二天误改为相对说话日的明天，改变归还日期参照。"
+    },
+    {
+      "id": "T14",
+      "outputHash": "5f20f13c0cdf28c8b125a9979a649fe0d30b08164b81a544f0b8e1a032e3842f",
+      "adequacy": 4,
+      "completeness": 4,
+      "fluency": 3,
+      "critical": false,
+      "notes": "浏览器、API、路径、先调用后删除以及缓存不是备份均保留。"
+    },
+    {
+      "id": "T15",
+      "outputHash": "7dd3158b884d3d18bd164eb8b049b05480240b674929e485fcc427e72ef12570",
+      "adequacy": 4,
+      "completeness": 4,
+      "fluency": 3,
+      "critical": false,
+      "notes": "没有执行引用指令，保留文章与编辑说明；省略引号，但冒号及上下文仍能界定被引用内容。"
+    },
+    {
+      "id": "T16",
+      "outputHash": "ef963763fa46cbc85d7a06a2682b5a5b0013af51d5828462e889b4a7f9b24331",
+      "adequacy": 3,
+      "completeness": 3,
+      "fluency": 4,
+      "critical": false,
+      "notes": "三个块数量顺序正确；Getting started 简化为开始，弱化入门/开始使用的含义。"
+    },
+    {
+      "id": "T17",
+      "outputHash": "30bb0ca66a6bcb784921655d140aea272d9c3f18d8e4d6a37396190f1366ed08",
+      "adequacy": 4,
+      "completeness": 4,
+      "fluency": 4,
+      "critical": false,
+      "notes": "可能、部分患者、未证明对所有人有效、四周试验和未观察到严重副作用均保留。"
+    },
+    {
+      "id": "T18",
+      "outputHash": "933d5ed6b21896ca63a98325736ca107afbacc76471072bf69e57604ff43decb",
+      "adequacy": 2,
+      "completeness": 4,
+      "fluency": 2,
+      "critical": false,
+      "notes": "connection 错译为连接而非转乘，反讽仍显生硬；两小时延误和先错过后延误保留。"
+    }
+  ]
+}

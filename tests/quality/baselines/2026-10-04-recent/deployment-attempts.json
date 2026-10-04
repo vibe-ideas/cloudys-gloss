@@ -1,0 +1,12 @@
+[
+  {
+    "model": "mlx-community/LFM2.5-2.6B-4bit",
+    "revision": "72a08228cf703cd7dc0187abf4edbbd8e935f864",
+    "runtime": "mlx 0.32.3 mlx-lm 0.32.0",
+    "stage": "model load, before quality tests",
+    "success": false,
+    "error": "Received 600 parameters not in model: language_model.model.*",
+    "explanation": "Downloaded tensors carry a language_model. prefix that this runtime LFM2 loader does not sanitize. Warmup returned HTTP 404 after the generation thread died. No quality or TPS score can be inferred.",
+    "nextAttempt": "LiquidAI/LFM2.5-2.6B-MLX-4bit"
+  }
+]

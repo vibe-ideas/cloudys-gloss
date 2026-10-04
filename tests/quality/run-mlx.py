@@ -13,6 +13,9 @@ def main():
     python = os.environ.get("MLX_PYTHON")
     if not python:
         raise SystemExit("Set MLX_PYTHON to the Python executable containing mlx-lm")
+    thinking = os.environ.get("QUALITY_THINKING", "disabled")
+    if thinking not in ("enabled", "disabled"):
+        raise SystemExit("QUALITY_THINKING must be enabled or disabled")
     models = os.environ.get("QUALITY_MODELS", "mlx-community/Qwen2.5-3B-Instruct-4bit,mlx-community/Qwen2.5-1.5B-Instruct-4bit,Qwen/Qwen3-1.7B-MLX-4bit").split(",")
     output = Path(os.environ.get("QUALITY_OUTPUT", f"artifacts/quality/{datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%SZ')}"))
     output.mkdir(parents=True, exist_ok=False)
@@ -29,7 +32,7 @@ def main():
         model_output.mkdir()
         command = [python, "-m", "mlx_lm.server", "--model", model_path, "--host", "127.0.0.1", "--port", str(port),
                    "--max-tokens", "4096", "--decode-concurrency", "1", "--prompt-concurrency", "1", "--prompt-cache-size", "0",
-                   "--chat-template-args", '{"enable_thinking":false}']
+                   "--chat-template-args", json.dumps({"enable_thinking": thinking == "enabled"})]
         with (model_output / "server.log").open("w") as log:
             server = subprocess.Popen(command, stdout=log, stderr=log)
             try:
@@ -52,7 +55,7 @@ def main():
                     response.read()
                 env = {**os.environ, "MODEL_BASE_URL": base, "MODEL_NAME": model_path, "MODEL_LABEL": model,
                        "MODEL_API_KEY": "", "MODEL_REVISION": revision, "QUALITY_OUTPUT": str(model_output),
-                       "QUALITY_RUNTIME": versions, "QUALITY_PROMPT_CACHE": "disabled", "QUALITY_THINKING": "disabled"}
+                       "QUALITY_RUNTIME": versions, "QUALITY_PROMPT_CACHE": "disabled", "QUALITY_THINKING": thinking}
                 print(f"Evaluating {model} @ {revision}", flush=True)
                 result = subprocess.run(["pnpm", "test:quality"], env=env, check=False)
                 manifest.append({"model": model, "revision": revision, "directory": model_output.name, "exitCode": result.returncode})

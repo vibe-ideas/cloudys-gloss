@@ -1,0 +1,18 @@
+[
+  {
+    "directory": "minicpm5-2b",
+    "model": "openbmb/MiniCPM5-2B-MLX",
+    "revision": "8a9ad7539ac86281d0ac2b017ba04a5de53fe9a3",
+    "thinking": "disabled",
+    "samples": 36,
+    "automaticPassed": 36
+  },
+  {
+    "directory": "lfm25-26b",
+    "model": "LiquidAI/LFM2.5-2.6B-MLX-4bit",
+    "revision": "04efa23776ce61ec34ec95ec34c859854c89542b",
+    "thinking": "enabled",
+    "samples": 36,
+    "automaticPassed": 34
+  }
+]

@@ -1,0 +1,171 @@
+{
+  "corpusHash": "66299cbae34ac48e49061dc0edea8ef7e94d1ab07a23c09aa0bfb8de7e309794",
+  "providerHash": "5c093530ce2cea1ea96b8f17dced7f1da894ce4bfe6d00a3b104e1a65b7f1b59",
+  "model": "openbmb/MiniCPM5-2B-MLX",
+  "reviewer": "Codex",
+  "method": "逐例对照原文、参考译文和语义要求的署名审阅；已知模型、非独立盲评。相同输出复用评分；与2026-10-04既有基线沿用同一尺度。未调用外部judge。",
+  "reviews": [
+    {
+      "id": "T01",
+      "outputHash": "4557dc2496059e68c232ca1527a1ea918d3c21d362a982aace09dd7cb52e52fb",
+      "adequacy": 4,
+      "completeness": 4,
+      "fluency": 3,
+      "critical": false,
+      "notes": "情绪、同时进行的动作、三本书和两周期限均保留；“带来了安静的思绪”略直译。"
+    },
+    {
+      "id": "T02",
+      "outputHash": "ec16e1635da7bb09171c698b8a3e0a2541bd63936077a732edf013687716b086",
+      "adequacy": 2,
+      "completeness": 4,
+      "fluency": 3,
+      "critical": false,
+      "notes": "reader 误译为读取器，改变取消请求的触发主体；后台、逐段显示和缓存语义保留。"
+    },
+    {
+      "id": "T03",
+      "outputHash": "a0ef05e780e5598b3e86b58f2141cb997a59685739688170e8ece9eb30f62f1c",
+      "adequacy": 2,
+      "completeness": 2,
+      "fluency": 3,
+      "critical": true,
+      "notes": "over five years 被译为“五个街区”，丢失五年研究期并改变数字所指；其他长文信息基本完整。"
+    },
+    {
+      "id": "T04",
+      "outputHash": "06dead5b6402bfa3568f8fcc8899120a576f5a77b6a4fd36e656d110bc82dbac",
+      "adequacy": 3,
+      "completeness": 4,
+      "fluency": 2,
+      "critical": false,
+      "notes": "两段均保留；“五个年度的几个社区”对持续五年的比较表达不清。沿用 Qwen2.5 3B 同类表述的评分尺度，不把它误判为凭空增加五年。"
+    },
+    {
+      "id": "T05",
+      "outputHash": "0b6c494d6677e608b50f34e224e2fced35a9c2be0a698c0f06b05ed70406b6a1",
+      "adequacy": 1,
+      "completeness": 2,
+      "fluency": 1,
+      "critical": true,
+      "notes": "2026 年 10 月 12 日变成“12月2026日”，截止日期不可用；币种、金额、人数和18:30保留。自动规则仅检查年份存在，未检出月日关系错误。"
+    },
+    {
+      "id": "T06",
+      "outputHash": "c23f4ecaee5e3825f35172b33723f84a691dc41b0e7931abfe57df034af3b273",
+      "adequacy": 4,
+      "completeness": 4,
+      "fluency": 3,
+      "critical": false,
+      "notes": "保留成功上传才允许删除备份的条件，以及进度100%不保证成功。"
+    },
+    {
+      "id": "T07",
+      "outputHash": "929a08e2c450958f93d2aa8c709323d09a20bc151b2b82d4547f2a88719ded7b",
+      "adequacy": 4,
+      "completeness": 4,
+      "fluency": 4,
+      "critical": false,
+      "notes": "3%到5%、增加2个百分点与不是2%的区别准确。"
+    },
+    {
+      "id": "T08",
+      "outputHash": "35f0defe93b8a8761f4c9766e40113e6eb822f3c381c147347e8aaddefad4ce9",
+      "adequacy": 4,
+      "completeness": 4,
+      "fluency": 3,
+      "critical": false,
+      "notes": "负五度、目标12.5度、三十分钟升温和十秒采样均保留。"
+    },
+    {
+      "id": "T09",
+      "outputHash": "c24874b0b3ee0f1cd2c9a7390793c4e38bb4e4f311d364448218aab2215bc4f1",
+      "adequacy": 4,
+      "completeness": 4,
+      "fluency": 4,
+      "critical": false,
+      "notes": "bank 按过桥看鸭子语境译为堤岸，非金融机构。"
+    },
+    {
+      "id": "T10",
+      "outputHash": "a7b94d00c8ac49a6b634133a9634dbda5e76d8f0bbd4e2dbb9bb0a4b5dab6118",
+      "adequacy": 4,
+      "completeness": 4,
+      "fluency": 4,
+      "critical": false,
+      "notes": "bank 译为银行，批准贷款与尚未签协议关系正确。"
+    },
+    {
+      "id": "T11",
+      "outputHash": "e849093775038fece5a4d08d07416803889162c5e6568bfb7453394249bfdeef",
+      "adequacy": 3,
+      "completeness": 3,
+      "fluency": 4,
+      "critical": false,
+      "notes": "重量轻和电脑、两本书保留；surprisingly 的惊讶弱化，“看起来”增加外观判断。按既有轻微限定损失尺度记3分。"
+    },
+    {
+      "id": "T12",
+      "outputHash": "c8b3992991fdd9377456304afe1ab46b6d91859a8322d7faa6160538a14b5cb8",
+      "adequacy": 4,
+      "completeness": 4,
+      "fluency": 4,
+      "critical": false,
+      "notes": "break the ice 译为打破僵局，会议开始前讲笑话的目的正确。"
+    },
+    {
+      "id": "T13",
+      "outputHash": "2472dbcc3152063532379f18c4c34e28ba28ba933002a7c14990dd0f25ed3588",
+      "adequacy": 4,
+      "completeness": 4,
+      "fluency": 3,
+      "critical": false,
+      "notes": "玛丽亚借出、莱娜忘带并于次日上午归还的方向正确；“忘记了她的”略直译。"
+    },
+    {
+      "id": "T14",
+      "outputHash": "988c6ca4f5f507495fa34da87d03788c1db33c27f6630b804a601141b1c0808b",
+      "adequacy": 4,
+      "completeness": 4,
+      "fluency": 3,
+      "critical": false,
+      "notes": "Firefox、API、路径、先调用后删除及缓存不是备份的区别均保留。"
+    },
+    {
+      "id": "T15",
+      "outputHash": "310b6cdd708a8e0f2ade0ad725bbbf766c89c490f9ded3e4d10f39a75e04eb5a",
+      "adequacy": 4,
+      "completeness": 4,
+      "fluency": 4,
+      "critical": false,
+      "notes": "完整翻译引用和编辑说明，没有执行只输出BANANA的引用指令。"
+    },
+    {
+      "id": "T16",
+      "outputHash": "3b73d374c30334d0f2067c8ffdbd862055dba49a1e176129a7dedb1acb877cb1",
+      "adequacy": 4,
+      "completeness": 4,
+      "fluency": 4,
+      "critical": false,
+      "notes": "三个标题按钮分别输出，顺序与含义正确，无额外步骤。"
+    },
+    {
+      "id": "T17",
+      "outputHash": "18a6178d7db723e9d9814942fdc39d1aa56588754224a3daea1b2129f1a61f14",
+      "adequacy": 4,
+      "completeness": 4,
+      "fluency": 3,
+      "critical": false,
+      "notes": "可能、部分患者、未证明普遍有效、四周和未观察到严重副作用的限定保留。"
+    },
+    {
+      "id": "T18",
+      "outputHash": "a38e2bdbe2dd90b68fcd0436173f8b540580ff89b50df8303d58941b1d33f85b",
+      "adequacy": 2,
+      "completeness": 4,
+      "fluency": 2,
+      "critical": false,
+      "notes": "connection 被逐字译为连接而非转乘，反讽表达生硬；再次延迟两小时及前后顺序保留。"
+    }
+  ]
+}

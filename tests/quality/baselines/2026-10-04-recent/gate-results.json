@@ -1,0 +1,51 @@
+[
+  {
+    "candidate": "minicpm5-2b",
+    "check": "all-cases",
+    "exitCode": 1,
+    "regressions": []
+  },
+  {
+    "candidate": "minicpm5-2b",
+    "check": "vs-default",
+    "exitCode": 1,
+    "regressions": [
+      "openbmb/MiniCPM5-2B-MLX: T03",
+      "openbmb/MiniCPM5-2B-MLX: T05"
+    ]
+  },
+  {
+    "candidate": "minicpm5-2b",
+    "check": "vs-qwen3",
+    "exitCode": 1,
+    "regressions": [
+      "openbmb/MiniCPM5-2B-MLX: T02",
+      "openbmb/MiniCPM5-2B-MLX: T03",
+      "openbmb/MiniCPM5-2B-MLX: T05"
+    ]
+  },
+  {
+    "candidate": "lfm25-26b",
+    "check": "all-cases",
+    "exitCode": 1,
+    "regressions": []
+  },
+  {
+    "candidate": "lfm25-26b",
+    "check": "vs-default",
+    "exitCode": 1,
+    "regressions": [
+      "LiquidAI/LFM2.5-2.6B-MLX-4bit: T04",
+      "LiquidAI/LFM2.5-2.6B-MLX-4bit: T13"
+    ]
+  },
+  {
+    "candidate": "lfm25-26b",
+    "check": "vs-qwen3",
+    "exitCode": 1,
+    "regressions": [
+      "LiquidAI/LFM2.5-2.6B-MLX-4bit: T04",
+      "LiquidAI/LFM2.5-2.6B-MLX-4bit: T13"
+    ]
+  }
+]

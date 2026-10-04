@@ -1,0 +1,22 @@
+[
+  {
+    "file": "0-openbmb--MiniCPM5-2B-MLX-memory.txt",
+    "summary": [
+      "Physical footprint:         1.6G",
+      "Physical footprint (peak):  2.0G",
+      "mapped file                      121.7M    1344K       0K       0K       0K       0K       0K        7 ",
+      "TOTAL                            389.2G     2.1G     1.6G       0K       0K     1.4G       0K     3972 ",
+      "TOTAL                             203.9M     152.6M      84.6M         0K     399825      63.6M      21.0M     25%      56"
+    ]
+  },
+  {
+    "file": "1-openbmb--MiniCPM5-2B-MLX-memory.txt",
+    "summary": [
+      "Physical footprint:         1.6G",
+      "Physical footprint (peak):  1.9G",
+      "mapped file                      121.7M    1344K       0K       0K       0K       0K       0K        7 ",
+      "TOTAL                            389.2G     2.1G     1.6G       0K       0K     1.4G       0K     3966 ",
+      "TOTAL                             191.9M     148.1M      82.3M         0K     400013      63.6M      18.7M     23%      53"
+    ]
+  }
+]

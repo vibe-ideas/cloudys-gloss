@@ -1,0 +1,15 @@
+{
+  "model": "openbmb/MiniCPM5-2B-MLX",
+  "revision": "8a9ad7539ac86281d0ac2b017ba04a5de53fe9a3",
+  "releaseDate": "2026-09-07",
+  "releaseSource": "https://github.com/OpenBMB/MiniCPM/blob/main/README-cn.md",
+  "weightsSource": "https://huggingface.co/openbmb/MiniCPM5-2B-MLX",
+  "weightBytes": 1416035216,
+  "quantization": {
+    "group_size": 64,
+    "bits": 4,
+    "mode": "affine"
+  },
+  "templateSha256": "cc945752db555d60949b16989df4ccfeb52a313d6b4b5c5229dd786e2e9fcf1c",
+  "thinkingValidation": "Template uses enable_thinking=false to append an empty closed <think> block."
+}

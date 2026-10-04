@@ -73,6 +73,8 @@ pnpm test:quality:mlx
 
 只停止测试自身启动的服务，不修改插件默认配置和 8080 服务。普通后台应用可能影响耗时，因此质量比较中的时延只是辅助指标；TPS 方法见 [性能测试](../performance/2026-10-04-mlx-models.md)。
 
+始终思考的模型可显式设置 `QUALITY_THINKING=enabled`，运行器将传入 `enable_thinking=true` 并记录配置。默认仍为 `disabled`。该参数是否受支持必须核对模型模板，不能仅凭传参就声称实际关闭了思考；例如 LFM2.5-2.6B 的模板始终开启思考，应使用 `enabled`，单独标注延迟比较的差异。
+
 ## 审阅与比较
 
 把每个运行目录的 `review-template.json` 复制为 `reviews.json`，填写 reviewer、method、三维评分、critical、notes。每条 notes 必须解释具体优点/问题；同一用例的完全相同输出可复用一条评分，不同输出必须分别审阅。

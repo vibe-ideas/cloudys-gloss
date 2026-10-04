@@ -1,0 +1,11 @@
+{
+  "model": "LiquidAI/LFM2.5-2.6B-MLX-4bit",
+  "revision": "04efa23776ce61ec34ec95ec34c859854c89542b",
+  "source": "https://huggingface.co/LiquidAI/LFM2.5-2.6B-MLX-4bit",
+  "releaseSource": "https://www.liquid.ai/blog/lfm2-5-2-6b",
+  "releaseDate": "2026-08-04",
+  "weightBytes": 1583152892,
+  "quantization": "affine 4-bit group 64, embedding 6-bit",
+  "thinking": "enabled; native template always opens <think>",
+  "memoryMethod": "one vmmap sample during quality run; not end-of-run or continuous peak; sampling can perturb desktop timing"
+}
