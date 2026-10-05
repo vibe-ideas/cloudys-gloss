@@ -149,6 +149,9 @@ test.describe('系统开启减少动态效果', () => {
     server.holdStreams();
     await host.getByRole('button', { name: '翻译当前网页', exact: true }).click();
     await expect(page.locator('[data-state="partial"]').first()).toContainText('中文译文');
+    await expect(host.locator('.busy-ring')).toBeVisible();
+    expect(await host.locator('.busy-ring').evaluate(element => getComputedStyle(element).animationName)).toBe('none');
+    expect(await host.locator('.cloud-line').first().evaluate(element => getComputedStyle(element).animationName)).toBe('none');
     const dot = page.locator('[data-state="translating"] [data-gloss-part="loader"] i').first();
     await expect(dot).toBeVisible();
     expect(await dot.evaluate((element) => getComputedStyle(element).animationName)).toBe('none');
@@ -172,4 +175,35 @@ test('网页拦截鼠标事件时，拖选单词仍展示词卡，点击卡外�
   await expect(page.getByRole('button', { name: '美式发音' })).toContainText('/ˈkɫaʊdi/');
   await page.locator('h1').click();
   await expect(page.getByRole('dialog')).toHaveCount(0);
+});
+
+
+test('云朵悬浮球只在翻译期间显示进度动效，完成后静止，展开和忙碌状态不改变页面宽度', async ({ extension }, testInfo) => {
+  const { page, server } = extension;
+  const host = page.locator('[data-cloudys-gloss="floating-control"]');
+  await expect(host).toHaveCount(1);
+  await host.locator('.dock').hover();
+  const width = await page.evaluate(() => document.documentElement.clientWidth);
+  await expect.poll(async () => (await host.locator('.capsule').boundingBox())!.x + 70).toBe(width - 10);
+  const box = (await host.locator('.capsule').boundingBox())!;
+  const moving = () => host.locator('.capsule').evaluate(node => node.getAnimations({ subtree: true }).some(animation => animation.playState === 'running'));
+  await expect.poll(moving).toBe(false);
+  await host.locator('.capsule').screenshot({ path: testInfo.outputPath('cloud-orb-idle.png') });
+  server.holdStreams();
+  await host.getByRole('button', { name: '翻译当前网页', exact: true }).click();
+  await expect(host.locator('.orb')).toHaveAttribute('aria-busy', 'true');
+  await expect(host.locator('.busy-ring')).toBeVisible();
+  await expect.poll(moving).toBe(true);
+  expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBe(width);
+  expect((await host.locator('.capsule').boundingBox())!).toEqual(box);
+  await host.locator('.capsule').screenshot({ path: testInfo.outputPath('cloud-orb-busy.png'), animations: 'disabled' });
+  server.releaseStreams();
+  await expect(host.locator('.orb')).toHaveAttribute('aria-busy', 'false');
+  await expect(host.locator('.busy-ring')).toHaveCount(0);
+  await expect(host.locator('.indicator')).toBeVisible();
+  await expect.poll(moving).toBe(false);
+  await host.getByRole('button', { name: '翻译快捷菜单' }).click();
+  await host.locator('.menu').screenshot({ path: testInfo.outputPath('cloud-menu-light.png'), animations: 'disabled' });
+  await page.emulateMedia({ colorScheme: 'dark' });
+  await host.locator('.menu').screenshot({ path: testInfo.outputPath('cloud-menu-dark.png'), animations: 'disabled' });
 });

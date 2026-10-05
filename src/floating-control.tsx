@@ -5,20 +5,75 @@ import type { TranslationStatus } from './translator';
 
 const css = `
 :host{all:initial!important;position:fixed!important;inset:0!important;pointer-events:none!important;z-index:2147483646!important;color-scheme:light dark!important;overflow:clip!important}
-*{box-sizing:border-box}button{font:inherit;color:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent}button:focus-visible{outline:2px solid var(--accent);outline-offset:3px}svg{display:block;width:20px;height:20px;flex-shrink:0}
-.dock{--bg:#fff;--fg:#243a37;--muted:#62726c;--line:#e7eeeb;--accent:#1f806f;--tint:#edf7f2;--hover:#f4f7f5;--error:#b9634c;--shadow:0 8px 28px #193c3212,0 2px 6px #193c320a;position:fixed;width:35px;height:46px;pointer-events:auto;font:13px/1.5 -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;color:var(--fg);isolation:isolate}
-.dock.dark{--bg:#1e2726;--fg:#e3eeea;--muted:#99aba5;--line:#374540;--accent:#88d6bc;--tint:#293f36;--hover:#2a3530;--error:#edac93;--shadow:0 8px 28px #0003,0 2px 6px #0002}@media(prefers-color-scheme:dark){.dock.system{--bg:#1e2726;--fg:#e3eeea;--muted:#99aba5;--line:#374540;--accent:#88d6bc;--tint:#293f36;--hover:#2a3530;--error:#edac93;--shadow:0 8px 28px #0003,0 2px 6px #0002}}
-.capsule{position:absolute;top:0;display:flex;align-items:center;width:70px;height:46px;padding:3px;border:1px solid var(--line);border-radius:17px;background:var(--bg);box-shadow:var(--shadow);transition:transform .24s cubic-bezier(.2,.8,.2,1),opacity .2s;opacity:.72}
-.dock.right .capsule{right:0;transform:translateX(50%)}.dock.left .capsule{left:0;flex-direction:row-reverse;transform:translateX(-50%)}
+*{box-sizing:border-box}
+button{font:inherit;color:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent}
+button:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+svg{display:block;width:20px;height:20px;flex-shrink:0}
+.dock{--bg:#fff;--fg:#302b40;--muted:#7b748b;--line:#ece8f3;--accent:#7257d6;--orb:#7257d6;--orb-active:#6045c3;--tint:#f2eefc;--hover:#f7f4fd;--error:#be644d;--shadow:0 5px 20px #3a23691a,0 1px 4px #3a23690d;position:fixed;width:35px;height:46px;pointer-events:auto;font:13px/1.5 -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;color:var(--fg);isolation:isolate}
+.dock.dark{--bg:#26222f;--fg:#f1edf9;--muted:#aea4bf;--line:#42394f;--accent:#b59af5;--orb:#9274df;--orb-active:#8263d0;--tint:#383046;--hover:#332c40;--error:#efa88e;--shadow:0 5px 20px #0004,0 1px 4px #0003}
+@media(prefers-color-scheme:dark){.dock.system{--bg:#26222f;--fg:#f1edf9;--muted:#aea4bf;--line:#42394f;--accent:#b59af5;--orb:#9274df;--orb-active:#8263d0;--tint:#383046;--hover:#332c40;--error:#efa88e;--shadow:0 5px 20px #0004,0 1px 4px #0003}}
+.capsule{position:absolute;top:0;display:flex;align-items:center;width:70px;height:46px;padding:3px;border:1px solid var(--line);border-radius:25px;background:var(--bg);box-shadow:var(--shadow);transition:transform .32s cubic-bezier(.22,1,.36,1)}
+.dock.right .capsule{right:0;transform:translateX(50%)}
+.dock.left .capsule{left:0;flex-direction:row-reverse;transform:translateX(-50%)}
 .dock.left .more{margin-left:0;margin-right:2px}
-.dock:is(:hover,:has(:focus-visible),.expanded) .capsule{opacity:1}
 .dock.right:is(:hover,:has(:focus-visible),.expanded) .capsule{transform:translateX(-10px)}
 .dock.left:is(:hover,:has(:focus-visible),.expanded) .capsule{transform:translateX(10px)}
 .dock.dragging .capsule{transition:none}
-@media(hover:none){.dock .capsule{opacity:1}.dock.right .capsule{transform:translateX(-10px)}.dock.left .capsule{transform:translateX(10px)}}
-.orb{position:relative;display:grid;place-items:center;width:38px;height:38px;border:0;border-radius:12px;background:transparent;touch-action:none;user-select:none;transition:background .16s,color .16s}.orb>svg{width:23px;height:23px}.orb:hover,.more:hover{background:var(--hover);color:var(--accent)}.orb.active{background:var(--tint);color:var(--accent)}.orb.active:hover{filter:brightness(.97)}.indicator{position:absolute;right:3px;bottom:3px;width:8px;height:8px;border:2px solid var(--bg);border-radius:50%;background:var(--accent)}.indicator.busy{width:10px;height:10px;right:2px;bottom:2px;border:2px solid var(--line);border-top-color:var(--accent);background:var(--bg);animation:spin .9s linear infinite}.indicator.error{background:var(--error)}.more{display:grid;place-items:center;align-self:stretch;width:22px;margin-left:2px;padding:0;border:0;border-radius:10px;background:transparent;color:var(--muted)}.more svg{width:13px;height:13px;transition:transform .16s}.more[aria-expanded=true]{background:var(--hover);color:var(--accent)}.more[aria-expanded=true] svg{transform:rotate(180deg)}
-.menu{position:fixed;overflow:auto;overscroll-behavior:contain;width:276px;max-width:calc(100vw - 24px);padding:16px;border:1px solid var(--line);border-radius:20px;background:var(--bg);box-shadow:0 18px 60px #193c321c,0 3px 10px #193c3210;animation:appear .15s ease-out}.header{display:flex;align-items:center;gap:10px}.brand{display:grid;place-items:center;width:32px;height:32px;border-radius:10px;background:var(--tint);color:var(--accent)}.brand svg{width:19px;height:19px}.title{font-size:13px;font-weight:650;letter-spacing:-.2px}.subtitle{font-size:10px;color:var(--muted);letter-spacing:1.1px;line-height:1.8}.state{display:flex;gap:7px;align-items:center;margin:19px 0 5px;font-size:12px;font-weight:550}.state-dot{width:6px;height:6px;flex-shrink:0;border-radius:50%;background:var(--muted)}.state-dot.active{background:var(--accent)}.state-dot.error{background:var(--error)}.status{font-size:12px;line-height:1.65;color:var(--muted);margin:0 0 15px;overflow-wrap:anywhere}.status.error{color:var(--error)}.primary{display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;padding:11px 12px;border:1px solid transparent;border-radius:11px;background:var(--accent);color:#fff;font-size:12px;font-weight:550}.dark .primary{color:#16392d}@media(prefers-color-scheme:dark){.system .primary{color:#16392d}}.primary:hover{filter:brightness(.95)}.primary svg{width:17px;height:17px}.primary-label{display:flex;align-items:center;gap:8px}.toggle-track{width:25px;height:14px;border-radius:8px;background:#ffffff35;padding:3px;flex-shrink:0}.toggle-track span{display:block;width:8px;height:8px;border-radius:50%;background:currentColor;transition:transform .15s}.toggle-track.on span{transform:translateX(11px)}.rows{margin-top:11px;padding-top:7px;border-top:1px solid var(--line)}.row{display:flex;align-items:center;gap:9px;width:100%;padding:9px 8px;border:0;border-radius:9px;background:transparent;text-align:left;font-size:12px}.row:hover{background:var(--hover)}.row>svg{width:16px;height:16px;color:var(--muted)}.row .end{margin-left:auto;width:13px;height:13px;color:var(--muted)}.retry{color:var(--error)}.hint{display:flex;align-items:center;justify-content:center;gap:5px;font-size:10px;color:var(--muted);margin-top:13px}.hint svg{width:12px;height:12px}@keyframes spin{to{transform:rotate(360deg)}}@keyframes appear{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+@media(hover:none){.dock.right .capsule{transform:translateX(-10px)}.dock.left .capsule{transform:translateX(10px)}}
+.orb{--mark-cutout:var(--orb);position:relative;display:grid;place-items:center;width:38px;height:38px;padding:0;flex-shrink:0;border:0;border-radius:50%;background:var(--orb);color:#fff;touch-action:none;user-select:none;transition:background .18s,transform .18s cubic-bezier(.2,.8,.2,1)}
+.orb>.cloud-mark{width:26px;height:26px;transition:transform .22s cubic-bezier(.2,.8,.2,1)}
+.orb:hover>.cloud-mark{transform:translateY(-1px)}
+.orb:active{transform:scale(.94)}
+.dock.dragging .orb{transform:none;cursor:grabbing}
+.orb.active{--mark-cutout:var(--orb-active);background:var(--orb-active)}
+.orb.active>.cloud-mark{animation:cloud-awake .38s ease-out}
+.busy-ring{position:absolute;inset:-3px;border:2px solid transparent;border-top-color:var(--accent);border-right-color:var(--accent);border-radius:50%;pointer-events:none;animation:orbit 1.2s linear infinite}
+.orb.busy .cloud-line{animation:reading-ink 1.5s ease-in-out infinite}
+.orb.busy .cloud-line:last-child{animation-delay:.2s}
+.indicator{position:absolute;right:-1px;bottom:0;display:grid;place-items:center;width:13px;height:13px;border:2px solid var(--bg);border-radius:50%;background:var(--orb-active);color:#fff}
+.indicator svg{width:8px;height:8px}
+.indicator.error{background:var(--error)}
+.more{display:grid;place-items:center;align-self:stretch;width:22px;margin-left:2px;padding:0;border:0;border-radius:14px;background:transparent;color:var(--muted);transition:background .18s,color .18s}
+.more:hover,.more[aria-expanded=true]{background:var(--tint);color:var(--accent)}
+.more svg{width:13px;height:13px;transition:transform .22s cubic-bezier(.2,.8,.2,1)}
+.more[aria-expanded=true] svg{transform:rotate(180deg)}
+.menu{position:fixed;overflow:auto;overscroll-behavior:contain;width:276px;max-width:calc(100vw - 24px);padding:18px;border:1px solid var(--line);border-radius:22px;background:var(--bg);box-shadow:0 16px 48px #30204720,0 2px 8px #3020470a;transform-origin:var(--menu-origin);animation:menu-arrive .2s cubic-bezier(.2,.8,.2,1)}
+.header{display:flex;align-items:center;gap:11px}
+.brand{--mark-cutout:var(--orb);display:grid;place-items:center;width:36px;height:36px;flex-shrink:0;border-radius:12px;background:var(--orb);color:white}
+.brand svg{width:26px;height:26px}
+.title{font-size:14px;font-weight:650;letter-spacing:-.3px}
+.subtitle{font-size:11px;color:var(--muted);line-height:1.8}
+.state{display:flex;gap:7px;align-items:center;margin:21px 0 6px;font-size:12px;font-weight:550}
+.state-dot{width:6px;height:6px;flex-shrink:0;border-radius:50%;background:var(--muted)}
+.state-dot.active{background:var(--accent)}.state-dot.error{background:var(--error)}
+.status{font-size:12px;line-height:1.7;color:var(--muted);margin:0 0 17px;overflow-wrap:anywhere}
+.status.error{color:var(--error)}
+.primary{display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;padding:11px 12px;border:1px solid transparent;border-radius:13px;background:#7257d6;color:#fff;font-size:12px;font-weight:550;transition:background .18s,transform .15s}
+.primary:hover{background:#6045c3}.primary:active{transform:scale(.98)}
+.primary svg{width:17px;height:17px}.primary-label{display:flex;align-items:center;gap:8px}
+.toggle-track{width:25px;height:14px;border-radius:8px;background:#ffffff35;padding:3px;flex-shrink:0}
+.toggle-track span{display:block;width:8px;height:8px;border-radius:50%;background:currentColor;transition:transform .2s}
+.toggle-track.on span{transform:translateX(11px)}
+.rows{margin-top:13px;padding-top:7px;border-top:1px solid var(--line)}
+.row{display:flex;align-items:center;gap:9px;width:100%;padding:10px 8px;border:0;border-radius:10px;background:transparent;text-align:left;font-size:12px;transition:background .16s}
+.row:hover{background:var(--hover)}.row>svg{width:16px;height:16px;color:var(--muted)}.row .end{margin-left:auto;width:13px;height:13px}.retry{color:var(--error)}
+.hint{display:flex;align-items:center;justify-content:center;gap:5px;font-size:10px;color:var(--muted);margin-top:12px}.hint svg{width:12px;height:12px}
+@keyframes orbit{to{transform:rotate(360deg)}}
+@keyframes reading-ink{0%,100%{opacity:1}50%{opacity:.45}}
+@keyframes cloud-awake{0%{transform:scale(.88)}60%{transform:scale(1.05)}100%{transform:scale(1)}}
+@keyframes menu-arrive{from{opacity:0;transform:translateY(var(--menu-shift)) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}
+.dock.motion-paused *{animation-play-state:paused!important}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}.orb:hover>.cloud-mark,.orb:active,.primary:active{transform:none}}
 `;
+
+/** Pixel-independent version of the cloud + two reading lines brand mark. */
+function CloudMark() {
+  return <svg class="cloud-mark" viewBox="0 0 32 32" aria-hidden="true">
+    <path fill="currentColor" d="M9 25C4.6 25 2 22.2 2 18.7c0-3.3 2.5-6.1 5.9-6.5C8.8 7.7 12 5 16 5s7.2 2.7 8.1 7.2c3.4.4 5.9 3.2 5.9 6.5 0 3.5-2.6 6.3-7 6.3h-3c-1.7 0-2.9.7-4 2-1.1-1.3-2.3-2-4-2Z" />
+    <g fill="var(--mark-cutout)"><rect class="cloud-line" x="9.5" y="15" width="13" height="2.5" rx="1.25" /><rect class="cloud-line" x="9.5" y="19.5" width="9" height="2.5" rx="1.25" /></g>
+  </svg>;
+}
+
 
 type IconName = 'translate' | 'chevron' | 'settings' | 'hide' | 'retry' | 'original' | 'drag';
 function Icon({ name, className }: { name: IconName; className?: string }) {
@@ -54,6 +109,7 @@ export class FloatingControl {
     const shadow = this.host.attachShadow({ mode: 'open' });
     const style = document.createElement('style'); style.textContent = css;
     shadow.append(style, this.mount); document.documentElement.append(this.host);
+    document.addEventListener('visibilitychange', () => this.draw(), { signal: this.controller.signal });
     window.addEventListener('resize', () => this.draw(), { signal: this.controller.signal });
     document.addEventListener('pointerdown', (event) => {
       if (this.open && !event.composedPath().includes(this.host)) { this.open = false; this.draw(); }
@@ -76,9 +132,9 @@ export class FloatingControl {
     const label = enabled ? '恢复原文' : '翻译当前网页';
     const menuBelow = this.y < window.innerHeight / 2;
     const menuSpace = menuBelow ? window.innerHeight - this.y - 66 : this.y - 22;
-    render(<><div class={`dock ${this.theme} ${this.side} ${this.open || this.drag?.moved ? 'expanded' : ''} ${this.drag?.moved ? 'dragging' : ''}`} style={{ top: `${this.y}px`, [this.side]: '0px' }}>
+    render(<><div class={`dock ${this.theme} ${this.side} ${this.open || this.drag?.moved ? 'expanded' : ''} ${this.drag?.moved ? 'dragging' : ''} ${document.hidden ? 'motion-paused' : ''}`} style={{ top: `${this.y}px`, [this.side]: '0px' }}>
       <div class="capsule">
-      <button class={`orb ${enabled ? 'active' : ''}`} aria-label={label} aria-pressed={enabled} title={`${label} · 拖动调整位置`}
+      <button class={`orb ${enabled ? 'active' : ''} ${pending ? 'busy' : ''}`} aria-busy={pending > 0} aria-label={label} aria-pressed={enabled} title={`${label} · 拖动调整位置`}
         onPointerDown={(event) => {
           if (event.button !== 0) return;
           this.suppressClick = false;
@@ -104,13 +160,14 @@ export class FloatingControl {
           if (this.suppressClick && event.detail !== 0) { this.suppressClick = false; return; }
           this.toggle();
         }}>
-        <Icon name="translate" />
-        {(enabled || error) && <span class={`indicator ${pending ? 'busy' : error ? 'error' : ''}`} />}
+        <CloudMark />
+        {pending > 0 && <span class="busy-ring" aria-hidden="true" />}
+        {!pending && (enabled || error) && <span class={`indicator ${error ? 'error' : ''}`} aria-hidden="true"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">{error ? <path d="M6 2v4m0 3v.1" /> : <path d="m2.5 6 2.2 2.2 4.8-5" />}</svg></span>}
       </button>
       <button class="more" aria-label="翻译快捷菜单" aria-expanded={this.open} title="翻译快捷菜单" onClick={() => { this.open = !this.open; this.draw(); }}><Icon name="chevron" /></button>
       </div>
-      {this.open && <div class="menu" role="region" aria-label="翻译快捷操作" style={{ [this.side]: '12px', ...(menuBelow ? { top: `${this.y + 54}px` } : { bottom: `${window.innerHeight - this.y + 10}px` }), maxHeight: `${Math.max(80, menuSpace)}px` }}>
-        <div class="header"><span class="brand"><Icon name="translate" /></span><div><div class="title">Cloudy’s Gloss</div><div class="subtitle">让阅读，自然发生</div></div></div>
+      {this.open && <div class="menu" role="region" aria-label="翻译快捷操作" style={{ '--menu-origin': `${this.side} ${menuBelow ? 'top' : 'bottom'}`, '--menu-shift': menuBelow ? '-5px' : '5px', [this.side]: '12px', ...(menuBelow ? { top: `${this.y + 54}px` } : { bottom: `${window.innerHeight - this.y + 10}px` }), maxHeight: `${Math.max(80, menuSpace)}px` }}>
+        <div class="header"><span class="brand"><CloudMark /></span><div><div class="title">Cloudy’s Gloss</div><div class="subtitle">让阅读，自然发生</div></div></div>
         <div class="state"><span class={`state-dot ${error ? 'error' : enabled ? 'active' : ''}`} />{error ? '翻译遇到了一点问题' : pending ? '正在为你翻译' : enabled ? '双语阅读已开启' : '专注阅读，随时翻译'}</div>
         <div class={`status ${error ? 'error' : ''}`} role="status">{error || (pending ? `已完成 ${translated} 段，译文即将呈现` : enabled ? `已翻译 ${translated} 段 · 滚动时继续翻译` : '保留原文，让中文译文伴你阅读。')}</div>
         <button class="primary" aria-label={label} onClick={() => this.toggle()}><span class="primary-label"><Icon name={enabled ? 'original' : 'translate'} />{label}</span><span class={`toggle-track ${enabled ? 'on' : ''}`} aria-hidden="true"><span /></span></button>
