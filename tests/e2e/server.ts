@@ -10,7 +10,8 @@ import { pdfLayoutFixture, pdfLayoutTranslations } from './pdf-layout-fixture';
 import { componentFixture, componentTranslations } from './component-fixture';
 export async function startServer() {
   const calls: { texts?: string[]; word?: string; context?: string; example?: string }[] = [];
-  let delay = 0; let invalid = false;
+  let delay = 0; let invalid = false; let translationFailure = 0;
+  const translationOverrides = new Map<string, string>();
   let streamGate: Promise<void> | undefined; let releaseStream: (() => void) | undefined;
   let finishedStreams = 0; let abortedStreams = 0;
   const token = crypto.randomUUID();
@@ -49,14 +50,16 @@ export async function startServer() {
       if (requestBody.messages[0].content.includes('as plain text')) {
         const text = requestBody.messages[1].content as string;
         calls.push({ texts: [text] });
+        if (translationFailure) { response.writeHead(translationFailure); response.end('test failure'); return; }
         if (delay) await new Promise((resolve) => setTimeout(resolve, delay));
         response.writeHead(200, { 'Content-Type': 'application/json' });
         response.end(JSON.stringify({ choices: [{ message: { content: invalid ? '{"broken":true}' : `中文译文：${text}` } }] }));
         return;
       }
       const data = JSON.parse(requestBody.messages[1].content) as typeof calls[number]; calls.push(data);
+      if (data.texts && translationFailure) { response.writeHead(translationFailure); response.end('test failure'); return; }
       if (delay) await new Promise((resolve) => setTimeout(resolve, delay));
-      const content = invalid ? { broken: true } : data.texts ? { translations: data.texts.map((text) => pdfLayoutTranslations[text] ?? componentTranslations[text] ?? diverseTranslations[text] ?? layoutTranslations[text] ?? readingTranslations[text] ?? `中文译文：${text}`) } : {
+      const content = invalid ? { broken: true } : data.texts ? { translations: data.texts.map((text) => translationOverrides.get(text) ?? pdfLayoutTranslations[text] ?? componentTranslations[text] ?? diverseTranslations[text] ?? layoutTranslations[text] ?? readingTranslations[text] ?? `中文译文：${text}`) } : {
         word: data.word, ipa: { us: '/ˈklaʊdi/', uk: '/ˈklaʊdi/' },
         senses: [{ partOfSpeech: 'adjective', meaning: '多云的；不清晰的' }], contextMeaning: '在当前句子中表示多云的天气',
         examples: data.example ? [{ zh: '多云的早晨让人思绪宁静。' }]
@@ -101,5 +104,7 @@ export async function startServer() {
   return { url, calls, token, control, get finishedStreams() { return finishedStreams; }, get abortedStreams() { return abortedStreams; },
     holdStreams: () => { streamGate = new Promise<void>((resolve) => { releaseStream = resolve; }); },
     releaseStreams: () => { releaseStream?.(); streamGate = undefined; },
+    setTranslationFailure: (status: number) => { translationFailure = status; },
+    setTranslation: (source: string, text: string) => { translationOverrides.set(source, text); },
     setDelay: (value: number) => { delay = value; }, setInvalid: (value: boolean) => { invalid = value; }, close: () => new Promise<void>((resolve, reject) => { releaseStream?.(); for (const job of pending.values()) { clearTimeout(job.timer); job.reject(new Error('Test server closed')); } pending.clear(); server.closeAllConnections(); server.close((error) => error ? reject(error) : resolve()); }) };
 }

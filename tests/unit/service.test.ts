@@ -5,6 +5,31 @@ import { TranslationService } from '../../src/service';
 import { defaults } from '../../src/schema';
 afterEach(() => vi.unstubAllGlobals());
 describe('跨页面翻译缓存', () => {
+  it('单段重新翻译绕过旧缓存，更新该段结果且其他段落仍命中缓存', async () => {
+    const fetcher = vi.fn()
+      .mockResolvedValueOnce(new Response(JSON.stringify({ choices: [{ message: { content: '{"translations":["旧译文","保留译文"]}' } }] })))
+      .mockResolvedValueOnce(new Response(JSON.stringify({ choices: [{ message: { content: '{"translations":["新译文"]}' } }] })));
+    vi.stubGlobal('fetch', fetcher);
+    const service = new TranslationService(new ResultCache(crypto.randomUUID()));
+    const signal = new AbortController().signal;
+    await service.translate(defaults, ['Hello', 'World'], signal);
+    expect(await service.translate(defaults, ['Hello'], signal, undefined, true)).toEqual(['新译文']);
+    expect(JSON.parse(JSON.parse(fetcher.mock.calls[1]![1].body).messages[1].content).texts).toEqual(['Hello']);
+    expect(await service.translate(defaults, ['Hello', 'World'], signal)).toEqual(['新译文', '保留译文']);
+    expect(fetcher).toHaveBeenCalledTimes(2);
+  });
+  it('单段重新翻译遇到服务错误时保留已有缓存供后续阅读', async () => {
+    const fetcher = vi.fn()
+      .mockResolvedValueOnce(new Response(JSON.stringify({ choices: [{ message: { content: '{"translations":["已有译文"]}' } }] })))
+      .mockResolvedValueOnce(new Response('Unavailable', { status: 503 }));
+    vi.stubGlobal('fetch', fetcher);
+    const service = new TranslationService(new ResultCache(crypto.randomUUID()));
+    const signal = new AbortController().signal;
+    await service.translate(defaults, ['Hello'], signal);
+    await expect(service.translate(defaults, ['Hello'], signal, undefined, true)).rejects.toThrow('HTTP 503');
+    expect(await service.translate(defaults, ['Hello'], signal)).toEqual(['已有译文']);
+    expect(fetcher).toHaveBeenCalledTimes(2);
+  });
   it('已缓存词卡的词典恢复后补齐音标，不重新请求或唤醒模型', async () => {
     const card = { word: 'light', ipa: { us: '', uk: '' }, senses: [{ partOfSpeech: 'adjective', meaning: '轻的' }], contextMeaning: '轻的', examples: [{ en: 'A light bag.', zh: '一个轻包。' }] };
     const fetcher = vi.fn().mockImplementation(async () => new Response(JSON.stringify({ choices: [{ message: { content: JSON.stringify(card) } }] })));

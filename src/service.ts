@@ -10,11 +10,11 @@ export class TranslationService {
   private key(settings: Settings, kind: string, value: unknown) {
     return cacheKey([settings.baseUrl, settings.model, settings.temperature, settings.apiKey, 'zh-CN', kind, value]);
   }
-  async translate(settings: Settings, texts: string[], signal: AbortSignal, onItem?: (index: number, text: string, confirmed: boolean) => void) {
+  async translate(settings: Settings, texts: string[], signal: AbortSignal, onItem?: (index: number, text: string, confirmed: boolean) => void, bypassCache = false) {
     this.queue.setLimit(settings.concurrency);
     const unique = [...new Set(texts)];
     const keys = await Promise.all(unique.map((text) => this.key(settings, 'translation-v4', text)));
-    const values = await Promise.all(keys.map((key) => this.cache.get(key)));
+    const values = bypassCache ? [] : await Promise.all(keys.map((key) => this.cache.get(key)));
     const results = new Map<string, string>();
     const emit = (source: string, text: string, confirmed: boolean) => {
       signal.throwIfAborted();

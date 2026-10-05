@@ -1,7 +1,7 @@
 import { browser } from 'wxt/browser';
 import type { Request, Response } from './schema';
 const streams = new Map<string, () => void>();
-export function translateStream(id: string, texts: string[], onItem: (index: number, text: string, confirmed: boolean) => void): Promise<string[]> {
+export function translateStream(id: string, texts: string[], onItem: (index: number, text: string, confirmed: boolean) => void, options: { bypassCache?: boolean } = {}): Promise<string[]> {
   return new Promise((resolve, reject) => {
     const port = browser.runtime.connect({ name: 'translation-stream' });
     let settled = false;
@@ -25,7 +25,7 @@ export function translateStream(id: string, texts: string[], onItem: (index: num
       else if (event.type === 'error' && typeof event.error === 'string') finish(new Error(event.error));
       else finish(new Error('翻译进度消息无效'));
     });
-    port.postMessage({ type: 'translate', id, texts });
+    port.postMessage({ type: 'translate', id, texts, ...options });
   });
 }
 export async function send<T>(request: Request): Promise<T> {

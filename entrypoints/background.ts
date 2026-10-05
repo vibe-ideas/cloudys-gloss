@@ -51,7 +51,7 @@ export default defineBackground(() => {
         try {
           const config = await settings(); controller.signal.throwIfAborted();
           const translations = await service.translate(config, request.texts, controller.signal,
-            (index, text, confirmed) => post({ type: 'item', index, text, confirmed }));
+            (index, text, confirmed) => post({ type: 'item', index, text, confirmed }), request.bypassCache);
           post({ type: 'done', translations });
         } catch (error) { post({ type: 'error', error: error instanceof Error ? error.message : '翻译失败' }); }
         finally { if (key) pending.delete(key); }
@@ -84,7 +84,7 @@ export default defineBackground(() => {
         pending.set(key, { controller, tabId: sender.tab?.id });
         try {
           const config = request.type === 'connection:test' ? request.settings : await settings();
-          const data = request.type === 'translate' ? await service.translate(config, request.texts, controller.signal)
+          const data = request.type === 'translate' ? await service.translate(config, request.texts, controller.signal, undefined, request.bypassCache)
             : request.type === 'dictionary' ? await service.dictionary(config, request.word, request.context, controller.signal)
               : await service.test(config, controller.signal);
           return { ok: true, data };

@@ -99,6 +99,7 @@ async function pdfOperation({ operation, args }: { operation: string; args: stri
         fitted: lines.every(line => { const bounds = line.getBoundingClientRect(); return bounds.bottom <= box.bottom + 1 && bounds.right <= box.right + 1 && line.scrollWidth <= line.clientWidth + 1; }),
         color: getComputedStyle(node).color };
     });
+    const errors = [...document.querySelectorAll('.pdf-failures li p')].map(node => node.textContent ?? '');
     const reading = visible(document.querySelector('.reading-flow'));
     const translations = reading ? [...document.querySelectorAll('.pdf-paragraph .translation.done')].filter(visible).map(node => node.textContent ?? '')
       : overlays.filter(node => node.visible && node.translated).map(node => node.text);
@@ -107,7 +108,7 @@ async function pdfOperation({ operation, args }: { operation: string; args: stri
     const close = dialog?.querySelector('button[aria-label="关闭段落详情"]'); const closeBounds = close?.getBoundingClientRect();
     const closeHit = closeBounds && document.elementFromPoint(closeBounds.x + closeBounds.width / 2, closeBounds.y + closeBounds.height / 2);
     return { status: [...document.querySelectorAll('[role="status"]')].map((node) => node.textContent).join(' '),
-      error: document.querySelector('[role="alert"]')?.textContent ?? '', source, translations,
+      error: document.querySelector('[role="alert"]')?.textContent ?? '', errors, source, translations,
       page: document.querySelector<HTMLInputElement>('#page-number')?.value ?? '',
       canvases: canvases.length, pixels: canvases.reduce((sum, canvas) => sum + canvas.width * canvas.height, 0), canvasVisible: !!canvas?.width && canvasVariation, canvasVariation,
       canvasDetails: canvases.map(node => ({ width: node.width, height: node.height, visible: onScreen(node, reader), box: rect(node) })),
@@ -118,7 +119,7 @@ async function pdfOperation({ operation, args }: { operation: string; args: stri
       reader: { ...rect(reader), scrollTop: reader?.scrollTop ?? 0, scrollLeft: reader?.scrollLeft ?? 0, scrollWidth: reader?.scrollWidth ?? 0, clientWidth: reader?.clientWidth ?? 0,
         scrollHeight: reader?.scrollHeight ?? 0, clientHeight: reader?.clientHeight ?? 0 },
       focusedBlock: document.activeElement instanceof HTMLElement ? document.activeElement.dataset.block ?? '' : '',
-      dialog: { open: !!dialog?.open, box: rect(dialog), source: dialog?.querySelector('.detail-source')?.textContent ?? '', translation: dialog?.querySelector('.detail-translation')?.textContent ?? '',
+      dialog: { open: !!dialog?.open, box: rect(dialog), source: dialog?.querySelector('.detail-source')?.textContent ?? '', translation: dialog?.querySelector('.detail-translation')?.textContent ?? '', error: dialog?.querySelector('.paragraph-error')?.textContent ?? '',
         scrollTop: detailBody?.scrollTop ?? 0, scrollHeight: detailBody?.scrollHeight ?? 0, clientHeight: detailBody?.clientHeight ?? 0,
         closeVisible: !!close && onScreen(close, dialog), closeHit: !!close && (closeHit === close || !!closeHit && close.contains(closeHit)) },
     };
@@ -171,13 +172,13 @@ async function pdfOperation({ operation, args }: { operation: string; args: stri
 type Rectangle = { x: number; y: number; width: number; height: number };
 type PixelSample = { changed: number; outsideOverlays: number; nonWhite: number; backgroundDifference: number; originalHash: number; translatedHash: number };
 export type PdfPixels = PixelSample & { width: number; height: number; probes: (PixelSample & { name: string })[] };
-export type PdfSnapshot = { status: string; error: string; source: string[]; translations: string[]; page: string; canvases: number; pixels: number;
+export type PdfSnapshot = { status: string; error: string; errors: string[]; source: string[]; translations: string[]; page: string; canvases: number; pixels: number;
   canvasVisible: boolean; canvasVariation: boolean; canvasAspect: number; canvasDetails: { width: number; height: number; visible: boolean; box: Rectangle }[];
   overflow: boolean; width: number; height: number; name: string; mode: string; reading: boolean; notice: string; zoom: number;
   overlays: { index: number; text: string; translated: boolean; overflow: boolean; visible: boolean; box: Rectangle; inside: boolean; fitted: boolean; color: string }[];
   reader: Rectangle & { scrollTop: number; scrollLeft: number; scrollWidth: number; clientWidth: number; scrollHeight: number; clientHeight: number };
   focusedBlock: string;
-  dialog: { open: boolean; box: Rectangle; source: string; translation: string; scrollTop: number; scrollHeight: number; clientHeight: number; closeVisible: boolean; closeHit: boolean };
+  dialog: { open: boolean; box: Rectangle; source: string; translation: string; error: string; scrollTop: number; scrollHeight: number; clientHeight: number; closeVisible: boolean; closeHit: boolean };
 };
 class PdfDriver {
   constructor(readonly context: BrowserContext, private page?: Page, private control?: Awaited<ReturnType<typeof startServer>>['control']) {}
