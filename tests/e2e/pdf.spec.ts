@@ -1,19 +1,25 @@
 import { test, expect } from './pdf-browser';
 import { createPdfFixture, pdfFixture } from './pdf-fixture';
 
-test('在线多页 PDF 仅解析当前页，显式开启后流式双语，窄屏与离屏返回时原稿完整', async ({ pdf }, testInfo) => {
+test('在线多页 PDF 只处理当前页，开启后在真实对照页显示译文，窄屏与阅读区滚动后原稿完整', async ({ pdf }, testInfo) => {
   const { driver, server } = pdf;
   await driver.command('fill', ['#pdf-url', `${server.url}/pdf-fixture.pdf`]); await driver.command('click', ['打开']);
   await expect.poll(async () => (await driver.snapshot()).source.length).toBe(3);
   let snapshot = await driver.snapshot();
-  expect(snapshot.name).toContain('20 页'); expect(snapshot.canvases).toBe(1); expect(snapshot.canvasVisible).toBe(true);
+  expect(snapshot.name).toContain('20 页'); expect(snapshot.canvases).toBe(3); expect(snapshot.canvasVisible).toBe(true);
   expect(snapshot.canvasAspect).toBeCloseTo(612 / 792, 2);
-  expect(snapshot.pixels).toBeLessThanOrEqual(3000000); expect(server.calls).toHaveLength(0);
+  expect(snapshot.pixels).toBeLessThanOrEqual(6000000); expect(server.calls).toHaveLength(0);
+  expect(snapshot.mode).toBe('layout'); expect(snapshot.reading).toBe(false);
+  expect(snapshot.reader.scrollWidth).toBeLessThanOrEqual(snapshot.reader.clientWidth + 1);
+  const before = await driver.pixels(); expect(before.nonWhite).toBeGreaterThan(100); expect(before.changed).toBe(0);
   expect(snapshot.source[1]).toContain('A calm layout');
   await driver.command('click', ['开启双语']);
   await expect.poll(async () => (await driver.snapshot()).translations.length).toBe(3);
   expect(server.calls.flatMap((call) => call.texts ?? []).join(' ')).not.toMatch(/page (2|20)\b/);
   expect((await driver.snapshot()).status).toContain('本页翻译完成');
+  snapshot = await driver.snapshot(); expect(snapshot.overlays.filter(block => block.translated && block.visible)).toHaveLength(3);
+  expect(snapshot.overlays.every(block => block.inside && block.fitted)).toBe(true);
+  const after = await driver.pixels(); expect(after.originalHash).toBe(before.originalHash); expect(after.changed).toBeGreaterThan(0); expect(after.outsideOverlays).toBe(0);
   await driver.screenshot(testInfo.outputPath('pdf-desktop.png'));
   await driver.viewport(390, 240); await expect.poll(async () => (await driver.snapshot()).width).toBe(390); await driver.command('scroll', ['0']);
   await driver.command('frame'); await driver.command('scroll', ['500']); await driver.command('frame'); await driver.command('scroll', ['0']); await driver.command('frame');
@@ -21,7 +27,8 @@ test('在线多页 PDF 仅解析当前页，显式开启后流式双语，窄屏
   await expect.poll(async () => (await driver.snapshot()).width).toBe(390);
   await expect.poll(async () => (await driver.snapshot()).canvasVisible).toBe(true);
   await expect.poll(async () => (await driver.snapshot()).canvasAspect).toBeCloseTo(612 / 792, 2);
-  snapshot = await driver.snapshot(); expect(snapshot.overflow).toBe(false); expect(snapshot.canvases).toBe(1);
+  snapshot = await driver.snapshot(); expect(snapshot.overflow).toBe(false); expect(snapshot.canvases).toBe(3);
+  expect(snapshot.pixels).toBeLessThanOrEqual(6000000); expect(snapshot.reader.scrollWidth).toBeLessThanOrEqual(snapshot.reader.clientWidth + 1);
   await driver.screenshot(testInfo.outputPath('pdf-mobile.png'));
 });
 

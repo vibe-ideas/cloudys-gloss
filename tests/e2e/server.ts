@@ -6,6 +6,7 @@ import { diverseFixture, diverseTranslations } from './diverse-layout-fixture';
 import { auxiliaryFixture } from './auxiliary-fixture';
 import { componentPerformanceFixture } from './performance-fixture';
 import { pdfFixture } from './pdf-fixture';
+import { pdfLayoutFixture, pdfLayoutTranslations } from './pdf-layout-fixture';
 import { componentFixture, componentTranslations } from './component-fixture';
 export async function startServer() {
   const calls: { texts?: string[]; word?: string; context?: string; example?: string }[] = [];
@@ -18,6 +19,9 @@ export async function startServer() {
   const server = createServer(async (request, response) => {
     if (request.url === '/pdf-fixture.pdf') {
       response.writeHead(200, { 'Content-Type': 'application/pdf', 'Content-Length': pdfFixture.byteLength }); response.end(pdfFixture); return;
+    }
+    if (request.url === '/pdf-layout-fixture.pdf') {
+      response.writeHead(200, { 'Content-Type': 'application/pdf', 'Content-Length': pdfLayoutFixture.byteLength }); response.end(pdfLayoutFixture); return;
     }
     if (request.url === '/slow-pdf.pdf') {
       response.writeHead(200, { 'Content-Type': 'application/pdf', 'Content-Length': pdfFixture.byteLength }); response.write(pdfFixture.subarray(0, 8));
@@ -52,7 +56,7 @@ export async function startServer() {
       }
       const data = JSON.parse(requestBody.messages[1].content) as typeof calls[number]; calls.push(data);
       if (delay) await new Promise((resolve) => setTimeout(resolve, delay));
-      const content = invalid ? { broken: true } : data.texts ? { translations: data.texts.map((text) => componentTranslations[text] ?? diverseTranslations[text] ?? layoutTranslations[text] ?? readingTranslations[text] ?? `中文译文：${text}`) } : {
+      const content = invalid ? { broken: true } : data.texts ? { translations: data.texts.map((text) => pdfLayoutTranslations[text] ?? componentTranslations[text] ?? diverseTranslations[text] ?? layoutTranslations[text] ?? readingTranslations[text] ?? `中文译文：${text}`) } : {
         word: data.word, ipa: { us: '/ˈklaʊdi/', uk: '/ˈklaʊdi/' },
         senses: [{ partOfSpeech: 'adjective', meaning: '多云的；不清晰的' }], contextMeaning: '在当前句子中表示多云的天气',
         examples: data.example ? [{ zh: '多云的早晨让人思绪宁静。' }]

@@ -17,12 +17,20 @@
 
 ## 体验设计
 
+- [PDF 原版式对照、长译文和视觉验证](design/2026-10-05-pdf-layout.md)
+
 - [页眉、常见组件与 PDF 体验修复](design/2026-10-05-components-pdf.md)
 - [全文双语排版与视觉回归](design/bilingual-reading.md)
 - [多样化网页体验测试与修复](design/2026-10-05-diverse-web-ux.md)
 - [Apple 产品页真实浏览验收与待修问题](design/2026-10-05-apple-product-review.md)
 
+## 技术调研
+
+- [PDF 原版式翻译：竞品、BabelDOC、PDF.js 与实现取舍](research/2026-10-05-pdf-layout.md)
+
 ## 性能
+
+- [PDF 原版式首屏、逐块回填与画布预算](performance/2026-10-05-pdf-layout.md)
 
 - [报告索引、指标口径与模型选择](performance/README.md)
 - [常见组件、大页面调度与 PDF 资源开销](performance/2026-10-05-components-pdf.md)

@@ -1,0 +1,13 @@
+{
+  "browser": "firefox",
+  "document": "compressed.tracemonkey-pldi-09.pdf14 页",
+  "paragraphs": 106,
+  "visibleTranslations": 81,
+  "mode": "read",
+  "requestedBlocks": 81,
+  "canvasPixels": 1289088,
+  "narrowWidth": 390,
+  "overflow": false,
+  "actualPdf": true,
+  "model": "deterministic fixture"
+}

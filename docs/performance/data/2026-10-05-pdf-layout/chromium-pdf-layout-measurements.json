@@ -1,0 +1,78 @@
+{
+  "environment": "local mock model; observed front-end readiness, not model TPS",
+  "firstPaintMs": 155.6957500000001,
+  "firstOverlayMs": 135.189208,
+  "canvasPixels": 1322760,
+  "requestsBeforeZoom": 2,
+  "requestsAfterZoom": 2,
+  "screenshot": "pdf-report-layout.png",
+  "screenshotCaptured": true,
+  "originalHash": 423973561,
+  "translatedPixels": 9717,
+  "outsideOverlayChanges": 0,
+  "probes": [
+    {
+      "name": "colored-header",
+      "changed": 0,
+      "outsideOverlays": 0,
+      "nonWhite": 484,
+      "backgroundDifference": 0,
+      "originalHash": 1341113397,
+      "translatedHash": 1341113397
+    },
+    {
+      "name": "decorative-square",
+      "changed": 0,
+      "outsideOverlays": 0,
+      "nonWhite": 400,
+      "backgroundDifference": 0,
+      "originalHash": 3252197573,
+      "translatedHash": 3252197573
+    },
+    {
+      "name": "numeric-readings",
+      "changed": 0,
+      "outsideOverlays": 0,
+      "nonWhite": 6400,
+      "backgroundDifference": 254,
+      "originalHash": 73173927,
+      "translatedHash": 73173927
+    },
+    {
+      "name": "numeric-quality",
+      "changed": 0,
+      "outsideOverlays": 0,
+      "nonWhite": 8128,
+      "backgroundDifference": 400,
+      "originalHash": 1193879561,
+      "translatedHash": 1193879561
+    },
+    {
+      "name": "email",
+      "changed": 0,
+      "outsideOverlays": 0,
+      "nonWhite": 4750,
+      "backgroundDifference": 700,
+      "originalHash": 3022413638,
+      "translatedHash": 3022413638
+    },
+    {
+      "name": "late-table-grid",
+      "changed": 0,
+      "outsideOverlays": 0,
+      "nonWhite": 388,
+      "backgroundDifference": 0,
+      "originalHash": 496884848,
+      "translatedHash": 496884848
+    },
+    {
+      "name": "body-text",
+      "changed": 3248,
+      "outsideOverlays": 0,
+      "nonWhite": 20008,
+      "backgroundDifference": 0,
+      "originalHash": 1671456888,
+      "translatedHash": 133133573
+    }
+  ]
+}

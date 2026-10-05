@@ -16,7 +16,7 @@ pnpm test:e2e
 
 E2E 使用本地 HTTP 模型夹具和真实扩展后台，不模拟 `runtime.sendMessage`，也不让内容脚本请求模型。页面夹具的 CSP 禁止页面网络请求。验证 2000 段页面在第二段响应被暂停时已经显示第一段、快速跳页尾取消旧流、关闭恢复原文，以及悬浮球切换、拖动不误触、窄屏边界、隐藏与恢复、语义 batching、视口延迟翻译、SPA 增量变化、恢复原文、缓存、词卡结构、CSS 隔离、明暗主题、窄屏位置和设置错误。
 
-Chromium 用 Playwright 持久上下文加载生产构建。Firefox 用 Playwright 的 Firefox BiDi 和 Mozilla `web-ext` RDP 临时安装生产构建；由于 BiDi 不暴露扩展页面的执行上下文，测试副本附加打开设置页与 DOM 操作桥接脚本，操作实际设置页并经真实 runtime messaging 访问 background；发布构建不包含这些脚本。网页交互和断言仍由 Playwright 驱动。Firefox 设置页不生成截图。macOS 优先检测 Firefox Developer Edition，也可指定 `FIREFOX_BINARY`。所有测试均使用独立临时配置，不修改日常浏览器配置。
+Chromium 用 Playwright 持久上下文加载生产构建。Firefox 用 Playwright 的 Firefox BiDi 和 Mozilla `web-ext` RDP 临时安装生产构建；由于 BiDi 不暴露扩展页面的执行上下文，测试副本附加打开设置页与 DOM 操作桥接脚本，操作实际设置页并经真实 runtime messaging 访问 background；发布构建不包含这些脚本。网页交互和断言仍由 Playwright 驱动。Firefox 设置页不生成截图。PDF 阅读器尝试由测试副本调用扩展截图 API；当前本机 Firefox 扩展测试环境未提供该 API，因此明确输出 unavailable 说明，不生成冒充截图的文件。其 DOM、几何和画布像素断言仍完整运行；测试桥不进入发布构建。macOS 优先检测 Firefox Developer Edition，也可指定 `FIREFOX_BINARY`。所有测试均使用独立临时配置，不修改日常浏览器配置。
 
 真实网关测试需要显式配置，可能产生服务用量：
 
@@ -42,7 +42,9 @@ pnpm smoke:live
 - `performance.spec.ts`：24 个导航项与 2000 张正文卡片共存，首屏正文不被组件挤到队尾，只请求访问视口附近的内容，跳到页尾后继续翻译并完整恢复。测量结果作为 `component-performance.json` 附件保存，记录首段显示、跳转起点及全过程帧间隔，浏览器支持时附带 Long Tasks。属于受控前端体验测量，不是模型 TPS；帧间隔不是对某个函数耗时的归因。
 - `pdf.spec.ts`：原创 20 页 PDF，验证网络链接、本地文件、显式开启翻译、切页取消、无文字页提示、窄屏、关闭释放、错误恢复和慢下载取消。PDF.js、worker、provider 和 background 均使用生产实现；Firefox 测试副本的 DOM 操作桥不会进入发布包。
 
-PDF 夹具在 `pdf-fixture.ts` 中生成，不含第三方文档。纯函数测试覆盖提取行段、分批边界、URL 校验、大小限制、无长度响应和取消。浏览器内存只对画布像素和活动页数作明确断言，不将它们冒充进程总内存指标。
+- `pdf-layout.spec.ts`：虚构观测报告的同版式回填，验证彩底、装饰图形、后绘表格线、数字与邮箱区域的像素保留；检查长译文详情、原稿恢复、共享缩放、模式切换、窄屏和不安全页面降级。实际可见覆盖层和画布像素均参与断言，不以隐藏段落列表冒充显示成功。
+
+PDF 夹具在 `pdf-fixture.ts`、`pdf-layout-fixture.ts` 中生成，不含第三方或私人文档。纯函数测试覆盖提取行段、分批边界、URL 校验、大小限制、无长度响应和取消。浏览器内存只对画布像素和活动页数作明确断言，不将它们冒充进程总内存指标。
 
 `pnpm smoke:pdf` 额外读取 Mozilla PDF.js 的公开多栏论文样例，在两种浏览器验证真实 PDF 的字形解析、原稿、逐段回传和 390px 布局；场景维护在 `tests/online/pdf.spec.ts`。模型响应仍是可控夹具，不评价译文准确性。此命令依赖外网，不进入普通 CI；结果位于 `artifacts/public-pdf-review`。
 
