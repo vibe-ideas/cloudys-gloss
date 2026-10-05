@@ -38,6 +38,7 @@ pnpm smoke:live
 ## 组件、HTTP 与 PDF 回归
 
 - `component-design.spec.ts`：页眉导航、面包屑、按钮、标签页、折叠摘要、静态表单标签、表格操作、菜单、固定控件和模态对话框；检查布局边界、原有点击行为、提示层和恢复。
+- `web-retry.spec.ts`：网页逐段错误原因、单段缓存刷新、重试失败保留旧译文、导航和按钮原行为、键盘焦点、窄屏边界、SPA 改文与关闭取消；`translator.test.ts` 另验证长段落分批、并发上限和重试不扫描全文。
 - `http-context.spec.ts`：普通 HTTP 页面缺少 `crypto.randomUUID` 时，全文、组件提示和划词卡仍能使用；内容脚本不得直接请求模型。
 - `performance.spec.ts`：24 个导航项与 2000 张正文卡片共存，首屏正文不被组件挤到队尾，只请求访问视口附近的内容，跳到页尾后继续翻译并完整恢复。测量结果作为 `component-performance.json` 附件保存，记录首段显示、跳转起点及全过程帧间隔，浏览器支持时附带 Long Tasks。属于受控前端体验测量，不是模型 TPS；帧间隔不是对某个函数耗时的归因。
 - `pdf.spec.ts`：原创 20 页 PDF，验证网络链接、本地文件、显式开启翻译、切页取消、无文字页提示、窄屏、关闭释放、错误恢复和慢下载取消。PDF.js、worker、provider 和 background 均使用生产实现；Firefox 测试副本的 DOM 操作桥不会进入发布包。

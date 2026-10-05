@@ -77,7 +77,8 @@ test('折叠、标签面板和菜单只改变显隐属性时，展开后增量�
     const host = (node.getRootNode() as ShadowRoot).host;
     return host.matches(':popover-open') && host.closest('dialog[open]') !== null && rect.width > 0 && rect.height > 0;
   })).toBe(true);
-  await expect(modalHint).toHaveCSS('pointer-events', 'none');
+  await expect(modalHint).toHaveCSS('pointer-events', 'auto');
+  await expect(modalHint.getByRole('button', { name: '重新翻译这一段' })).toBeVisible();
   await expect.poll(() => modalHint.evaluate(node => {
     const tip = node.getBoundingClientRect(); const close = document.querySelector('#close-dialog')!.getBoundingClientRect();
     return tip.right <= close.left || close.right <= tip.left || tip.bottom <= close.top || close.bottom <= tip.top;

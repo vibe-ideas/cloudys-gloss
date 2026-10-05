@@ -1,0 +1,108 @@
+import { test, expect } from './fixtures';
+
+const panelSelector = '[data-cloudys-gloss="component-hint"]';
+
+test('网页失败段落显示各自错误，重试只请求当前段，重新翻译失败保留旧译文', async ({ extension }, testInfo) => {
+  const { page, server, toggle } = extension;
+  const original = await page.locator('main').innerHTML();
+  await expect(page.locator('[data-cloudys-gloss="floating-control"]')).toHaveCount(1);
+  server.setTranslationFailure(503); await toggle();
+  const first = page.locator('#first > [data-cloudys-gloss]');
+  await expect(first).toHaveAttribute('data-state', 'error');
+  await expect(page.locator('#second > [data-cloudys-gloss]')).toHaveAttribute('data-state', 'error');
+  await first.click();
+  const panel = page.locator(panelSelector);
+  await expect(panel.locator('.error')).toContainText('HTTP 503');
+  const before = server.calls.length;
+  server.setTranslationFailure(0);
+  await panel.getByRole('button', { name: '重试这一段', exact: true }).click();
+  await expect(first).toHaveAttribute('data-state', 'done');
+  expect(server.calls.slice(before).map(call => call.texts)).toEqual([['A cloudy morning brings quiet thoughts.']]);
+  const previous = await first.textContent();
+  server.setTranslationFailure(429);
+  await panel.getByRole('button', { name: '重新翻译这一段', exact: true }).click();
+  await expect(panel.locator('.error')).toContainText('HTTP 429');
+  await expect(first).toHaveText(previous!);
+  await page.keyboard.press('Escape');
+  await page.locator('#second > [data-cloudys-gloss]').click();
+  await expect(panel.locator('.error')).toContainText('HTTP 503');
+  await page.keyboard.press('Escape'); await first.click();
+  server.setTranslationFailure(0); server.setTranslation('A cloudy morning brings quiet thoughts.', '阴天的早晨让思绪沉静。'); server.holdStreams();
+  const last = server.calls.length;
+  await panel.getByRole('button', { name: '重试这一段', exact: true }).click();
+  await expect.poll(() => server.calls.length).toBe(last + 1);
+  await expect(panel.getByRole('button', { name: '正在重试…', exact: true })).toBeDisabled();
+  await expect(first).toHaveText(previous!);
+  server.releaseStreams();
+  await expect(first).toHaveText('阴天的早晨让思绪沉静。');
+  await expect(panel.locator('.error')).toBeHidden();
+  expect(server.calls.slice(last).map(call => call.texts)).toEqual([['A cloudy morning brings quiet thoughts.']]);
+  for (const width of [1100, 390]) {
+    await page.setViewportSize({ width, height: 640 }); await first.focus();
+    await page.keyboard.press('Enter');
+    await expect(panel.getByRole('button', { name: '重新翻译这一段', exact: true })).toBeFocused();
+    const box = (await panel.locator('.tip').boundingBox())!;
+    expect(box.x).toBeGreaterThanOrEqual(11); expect(box.x + box.width).toBeLessThanOrEqual(width - 11);
+    expect(box.y).toBeGreaterThanOrEqual(11); expect(box.y + box.height).toBeLessThanOrEqual(629);
+    await page.screenshot({ caret: 'initial', path: testInfo.outputPath(`web-retry-${width}.png`) });
+    await page.keyboard.press('Escape'); await expect(first).toBeFocused();
+  }
+  await toggle(); await expect(panel).toHaveCount(0); expect(await page.locator('main').innerHTML()).toBe(original);
+});
+
+test('固定导航和普通按钮可逐段重试，原有点击与名称不变，操作面板全页只有一个', async ({ extension }) => {
+  const { page, server, toggle } = extension;
+  await page.goto(`${server.url}/component-design`);
+  await expect(page.locator('[data-cloudys-gloss="floating-control"]')).toHaveCount(1);
+  server.setTranslationFailure(503); await toggle();
+  const source = page.locator('#fixed-help');
+  await expect(source.locator('[data-state=error]')).toHaveCount(1);
+  const height = await page.locator('.fixed-tools').evaluate(node => node.getBoundingClientRect().height);
+  await source.focus(); await page.keyboard.press('Alt+Enter');
+  const panel = page.locator(panelSelector);
+  await expect(panel.locator('.error')).toContainText('HTTP 503');
+  await expect(panel.getByRole('button', { name: '重试这一段', exact: true })).toBeFocused();
+  server.setTranslationFailure(0);
+  const before = server.calls.length;
+  await page.keyboard.press('Enter');
+  await expect(source.locator('[data-state=done]')).toHaveText('固定工具栏帮助');
+  expect(server.calls.slice(before).flatMap(call => call.texts ?? [])).toEqual(['Fixed help']);
+  expect(await page.locator('.fixed-tools').evaluate(node => node.getBoundingClientRect().height)).toBe(height);
+  await page.keyboard.press('Escape'); await expect(source).toBeFocused();
+  await page.locator('#save').scrollIntoViewIfNeeded();
+  await expect(page.locator('#save > [data-state]')).not.toHaveAttribute('data-state', 'translating');
+  await page.getByRole('button', { name: 'Save changes', exact: true }).click();
+  await expect(page.locator('#save')).toHaveAttribute('data-clicked', 'true');
+  await page.keyboard.press('Alt+Enter');
+  await expect(panel.getByRole('button')).toBeFocused();
+  await expect(panel).toHaveCount(1);
+  expect(await page.locator('#save').getAttribute('aria-label')).toBeNull();
+  await toggle(); await expect(panel).toHaveCount(0);
+});
+
+test('网页单段重试中发生 SPA 改文或关闭翻译时取消请求，旧结果不会回写页面', async ({ extension }) => {
+  const { page, server, toggle } = extension;
+  await expect(page.locator('[data-cloudys-gloss="floating-control"]')).toHaveCount(1);
+  await toggle();
+  const first = page.locator('#first > [data-cloudys-gloss]');
+  await expect(first).toHaveAttribute('data-state', 'done');
+  await expect(page.locator('#second > [data-cloudys-gloss]')).toHaveAttribute('data-state', 'done');
+  server.holdStreams(); await first.click();
+  await page.locator(panelSelector).getByRole('button', { name: '重新翻译这一段', exact: true }).click();
+  await expect(first).toHaveAttribute('data-state', 'retrying');
+  await page.locator('#first').evaluate(node => { node.firstChild!.textContent = 'Updated '; });
+  await expect.poll(() => server.abortedStreams).toBeGreaterThan(0);
+  server.releaseStreams();
+  await expect(first).toHaveAttribute('data-state', 'done');
+  await expect(first).toContainText('Updated cloudy');
+  await expect(first).not.toContainText('A cloudy');
+  await page.keyboard.press('Escape'); await first.click(); server.holdStreams();
+  const aborted = server.abortedStreams;
+  await page.locator(panelSelector).getByRole('button', { name: '重新翻译这一段', exact: true }).click();
+  await expect(first).toHaveAttribute('data-state', 'retrying');
+  await toggle(); await expect.poll(() => server.abortedStreams).toBeGreaterThan(aborted);
+  server.releaseStreams();
+  await expect(page.locator('main [data-cloudys-gloss]')).toHaveCount(0);
+  await expect(page.locator(panelSelector)).toHaveCount(0);
+  await expect(page.locator('#first')).toHaveText('Updated cloudy morning brings quiet thoughts.');
+});

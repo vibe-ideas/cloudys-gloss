@@ -382,4 +382,72 @@ describe('双语阅读生命周期', () => {
     expect(local.targets.size).toBe(0);
     translator.stop();
   });
+  it('网页各段保留各自错误，单段重试绕过缓存且再次失败保留成功译文，不重新扫描全文', async () => {
+    const translate = vi.fn<import('../../src/translator').TranslationTransport['translate']>()
+      .mockRejectedValueOnce(new Error('HTTP 503 服务不可用'))
+      .mockResolvedValueOnce(['新的第一段译文'])
+      .mockRejectedValueOnce(new Error('HTTP 429 请求过多'));
+    const translator = new PageTranslator({ translate, cancel: vi.fn() });
+    const scan = vi.spyOn(document, 'createTreeWalker'); translator.start(); visible();
+    await vi.waitFor(() => expect(document.querySelectorAll('[data-state="error"]')).toHaveLength(2));
+    const count = scan.mock.calls.filter(([root]) => root === document.body).length;
+    const first = document.querySelector<HTMLElement>('p [data-cloudys-gloss]')!;
+    first.dispatchEvent(new FocusEvent('focusin', { bubbles: true }));
+    const host = document.querySelector('[data-cloudys-gloss="component-hint"]')!;
+    expect(host.shadowRoot!.querySelector('.error')!.textContent).toContain('HTTP 503');
+    host.shadowRoot!.querySelector('button')!.click();
+    await vi.waitFor(() => expect(first.textContent).toBe('新的第一段译文'));
+    expect(translate.mock.calls[1]![1]).toEqual(['Hello world.']);
+    expect(translate.mock.calls[1]![3]).toEqual({ bypassCache: true });
+    host.shadowRoot!.querySelector('button')!.click();
+    await vi.waitFor(() => expect(host.shadowRoot!.querySelector('.error')!.textContent).toContain('HTTP 429'));
+    expect(first.textContent).toBe('新的第一段译文');
+    document.querySelectorAll('p')[1]!.querySelector('[data-cloudys-gloss]')!.dispatchEvent(new FocusEvent('focusin', { bubbles: true }));
+    expect(host.shadowRoot!.querySelector('.error')!.textContent).toContain('HTTP 503');
+    expect(scan.mock.calls.filter(([root]) => root === document.body)).toHaveLength(count);
+    translator.stop(); scan.mockRestore();
+  });
+  it('长段落重新翻译按两块以内分批，全部成功才替换旧译文，不重复请求其他段落', async () => {
+    document.body.innerHTML = `<p>${'A long sentence for careful reading. '.repeat(70)}</p><p>Other paragraph.</p>`;
+    const translate = vi.fn<import('../../src/translator').TranslationTransport['translate']>(async (_id, texts) => texts.map(text => `旧译文：${text}`));
+    const translator = new PageTranslator({ translate, cancel: vi.fn() }); translator.start(); await vi.waitFor(() => expect(observed.size).toBe(2)); visible();
+    await vi.waitFor(() => expect(translator.status.translated).toBe(2));
+    const first = document.querySelector<HTMLElement>('p [data-cloudys-gloss]')!; const previous = first.textContent;
+    const count = translate.mock.calls.length;
+    const finish: (() => void)[] = [];
+    translate.mockImplementation((_id, texts) => new Promise(resolve => finish.push(() => resolve(texts.map(() => '新译文')))));
+    first.dispatchEvent(new FocusEvent('focusin', { bubbles: true }));
+    const button = document.querySelector('[data-cloudys-gloss="component-hint"]')!.shadowRoot!.querySelector('button')!;
+    button.click(); button.click();
+    await vi.waitFor(() => expect(finish).toHaveLength(1));
+    expect(first.textContent).toBe(previous); finish[0]!();
+    await vi.waitFor(() => expect(finish).toHaveLength(2));
+    expect(first.textContent).toBe(previous); finish[1]!();
+    await vi.waitFor(() => expect(first.textContent).not.toBe(previous));
+    const calls = translate.mock.calls.slice(count);
+    expect(calls).toHaveLength(2);
+    expect(calls.every(([, texts, , options]) => texts.length <= 2 && texts.join('').length <= 1800 && options?.bypassCache)).toBe(true);
+    expect(calls.flatMap(([, texts]) => texts)).not.toContain('Other paragraph.');
+    translator.stop();
+  });
+  it('网页同时重试三段仍最多占用两个请求，关闭翻译取消运行请求且迟到结果不恢复译文', async () => {
+    document.body.innerHTML = '<p>First paragraph.</p><p>Second paragraph.</p><p>Third paragraph.</p>';
+    const original = document.body.innerHTML;
+    const translate = vi.fn<import('../../src/translator').TranslationTransport['translate']>(async (_id, texts) => texts.map(text => `译文：${text}`));
+    const cancel = vi.fn(); const translator = new PageTranslator({ translate, cancel }); translator.start(); visible();
+    await vi.waitFor(() => expect(translator.status.translated).toBe(3));
+    const finish: (() => void)[] = [];
+    translate.mockImplementation((_id, texts) => new Promise(resolve => finish.push(() => resolve(texts.map(() => '迟到的译文')))));
+    for (const node of document.querySelectorAll('p [data-cloudys-gloss]')) {
+      node.dispatchEvent(new FocusEvent('focusin', { bubbles: true }));
+      document.querySelector('[data-cloudys-gloss="component-hint"]')!.shadowRoot!.querySelector('button')!.click();
+    }
+    await vi.waitFor(() => expect(finish).toHaveLength(2));
+    expect(translator.status.pending).toBe(3);
+    translator.stop(); expect(cancel).toHaveBeenCalledTimes(2);
+    finish.forEach(resolve => resolve()); await Promise.resolve();
+    expect(document.body.innerHTML).toBe(original);
+    expect(document.querySelector('[data-cloudys-gloss="component-hint"]')).toBeNull();
+  });
+
 });

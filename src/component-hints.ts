@@ -1,15 +1,19 @@
 import { OWN } from './blocks';
 import { createId } from './id';
 
-/** One shared, non-interactive translation surface for labels in rigid overlays.
+type TranslationAction = { error?: string; busy: boolean; label: string; retry: () => void };
+
+/** One shared translation/action surface for paragraphs and rigid components.
  * Normal clicks keep their native action. Touch users can hold a marked label;
  * keyboard users receive the same translation when its existing control focuses.
  */
 export class ComponentHints {
+  private actions = new Map<Element, TranslationAction>();
   private texts = new Map<Element, string>();
   private host?: HTMLElement;
   private panel?: HTMLElement;
   private source?: Element;
+  private interactive = false;
   private dismissed?: Element;
   private description?: string | null;
   private descriptionTarget?: Element;
@@ -20,7 +24,8 @@ export class ComponentHints {
   private held?: { source: Element; until: number };
   private pressed?: { x: number; y: number };
   private listening = false;
-  update(source: Element, text: string) {
+  update(source: Element, text: string, action?: TranslationAction) {
+    if (action) this.actions.set(source, action); else this.actions.delete(source);
     this.texts.set(source, text);
     if (!this.listening) {
       this.listening = true;
@@ -38,10 +43,11 @@ export class ComponentHints {
       window.addEventListener('scroll', this.scroll, true);
       window.addEventListener('resize', this.resize);
     }
-    if (this.dismissed !== source && (this.source === source || this.focused(source) || source.matches(':hover'))) this.show(source);
+    if (this.host === document.activeElement && this.source !== source) return;
+    if (this.dismissed !== source && (this.source === source || this.focused(source) || source.matches(':hover'))) this.show(source, this.source === source ? this.interactive : source.matches(':hover'));
   }
   private focused(source: Element) {
-    return source === document.activeElement || source.contains(document.activeElement) || source instanceof HTMLLabelElement && source.control === document.activeElement;
+    return this.source === source && this.host === document.activeElement || source === document.activeElement || source.contains(document.activeElement) || source instanceof HTMLLabelElement && source.control === document.activeElement;
   }
   private find(target: EventTarget | null) {
     for (let element = target instanceof Element ? target : null; element; element = element.parentElement) if (this.texts.has(element)) return element;
@@ -52,7 +58,8 @@ export class ComponentHints {
     if (!source && (!this.host || !event.composedPath().includes(this.host))) return;
     if (this.leaveTimer) clearTimeout(this.leaveTimer); this.leaveTimer = undefined;
     if (event instanceof PointerEvent && event.pointerType === 'touch') return;
-    if (source) { this.dismissed = undefined; this.show(source); }
+    if (source && source !== this.source && this.host === document.activeElement && event.type === 'pointerover') return;
+    if (source) { this.dismissed = undefined; this.show(source, event.type === 'pointerover' || this.source === source && this.interactive); }
   };
   private leave = (event: Event) => {
     if (!this.source || !(event.target instanceof Node) || !this.source.contains(event.target) && !this.descriptionTarget?.contains(event.target) && !this.host?.contains(event.target)) return;
@@ -69,7 +76,17 @@ export class ComponentHints {
       else this.hide();
     }
   };
-  private key = (event: KeyboardEvent) => { if (event.key === 'Escape') this.hide(); };
+  private key = (event: KeyboardEvent) => {
+    if (event.key === 'Escape') {
+      const source = this.source;
+      if (this.host && event.composedPath().includes(this.host) && source instanceof HTMLElement) source.focus({ preventScroll: true });
+      this.hide(); return;
+    }
+    const source = this.find(event.target);
+    if (source && this.actions.has(source) && (event.altKey && event.key === 'Enter' || source.hasAttribute(OWN) && (event.key === 'Enter' || event.key === ' '))) {
+      event.preventDefault(); event.stopPropagation(); this.show(source, true); this.panel?.querySelector('button')?.focus({ preventScroll: true });
+    }
+  };
   private scroll = (event: Event) => { if (!this.host || !event.composedPath().includes(this.host)) this.hide(); };
   private resize = () => {
     const source = this.source;
@@ -89,7 +106,7 @@ export class ComponentHints {
     if (event.target instanceof Element && event.target.closest('input,textarea,select,[contenteditable]')) return;
     const source = this.find(event.target); if (!source) return;
     this.pressed = { x: event.clientX, y: event.clientY };
-    this.hold = setTimeout(() => { this.held = { source, until: Infinity }; this.show(source); }, 500);
+    this.hold = setTimeout(() => { this.held = { source, until: Infinity }; this.show(source, true); }, 500);
   };
   private move = (event: PointerEvent) => {
     if (this.pressed && Math.hypot(event.clientX - this.pressed.x, event.clientY - this.pressed.y) > 10) this.clearHold();
@@ -98,15 +115,19 @@ export class ComponentHints {
   private up = () => { this.clearHold(); if (this.held) this.held.until = performance.now() + 750; };
   private cancel = () => { this.hide(); this.held = undefined; };
   private click = (event: MouseEvent) => {
+    const source = this.find(event.target);
+    if (source?.hasAttribute(OWN) && this.actions.has(source) && !window.getSelection()?.toString()) {
+      event.preventDefault(); event.stopPropagation(); this.show(source, true); this.panel?.querySelector('button')?.focus({ preventScroll: true }); return;
+    }
     if (this.held && performance.now() < this.held.until && this.held.source === this.find(event.target)) {
       event.preventDefault(); event.stopImmediatePropagation(); this.held = undefined;
     }
   };
   private context = (event: Event) => { if (this.held && performance.now() < this.held.until && this.held.source === this.find(event.target)) event.preventDefault(); };
-  private show(source: Element) {
+  private show(source: Element, interactive = this.interactive) {
     const text = this.texts.get(source); if (!text || !source.isConnected) return;
     if (this.source !== source) this.hide();
-    this.dismissed = undefined;
+    this.dismissed = undefined; this.interactive = interactive;
     if (!this.host) {
       this.host = document.createElement('span'); this.host.setAttribute(OWN, 'component-hint');
       this.host.id = `cloudys-gloss-label-${createId()}`; this.host.setAttribute('role', 'tooltip');
@@ -116,8 +137,10 @@ export class ComponentHints {
       const style = document.createElement('style');
       // A fixed auto-width box can widen after left changes. Intrinsic width
       // keeps the measured width stable while the viewport cap still wraps it.
-      style.textContent = ':host{color-scheme:light dark}:host::backdrop{background:transparent;pointer-events:none}.tip{position:fixed;box-sizing:border-box;width:max-content;max-width:min(320px,calc(100vw - 24px));max-height:calc(100vh - 24px);overflow:auto;overscroll-behavior:contain;padding:9px 12px;border:1px solid light-dark(#d5d9df,#505860);border-radius:9px;background:light-dark(#fff,#20252b);color:light-dark(#202832,#f3f6fa);box-shadow:0 4px 18px #0003;font:13px/1.6 system-ui,sans-serif;overflow-wrap:anywhere;pointer-events:none}.tip small{display:block;font-size:10px;opacity:.72;margin-top:3px}';
-      this.panel = document.createElement('span'); this.panel.className = 'tip';
+      style.textContent = ':host{color-scheme:light dark}:host::backdrop{background:transparent;pointer-events:none}.tip{position:fixed;box-sizing:border-box;width:max-content;max-width:min(320px,calc(100vw - 24px));max-height:calc(100vh - 24px);overflow:auto;overscroll-behavior:contain;padding:9px 12px;border:1px solid light-dark(#d5d9df,#505860);border-radius:9px;background:light-dark(#fff,#20252b);color:light-dark(#202832,#f3f6fa);box-shadow:0 4px 18px #0003;font:13px/1.6 system-ui,sans-serif;overflow-wrap:anywhere;pointer-events:none}.tip small{display:block;font-size:10px;opacity:.72;margin-top:3px}.error{color:light-dark(#a32e3b,#ffb4b9);margin-top:8px;white-space:pre-wrap}.actions{pointer-events:auto;display:flex;align-items:center;gap:12px;border-top:1px solid light-dark(#e4e5ec,#444a56);padding-top:8px;margin-top:10px}.actions[hidden]{display:none}.actions button{font:inherit;font-size:12px;border:1px solid light-dark(#d6d1e9,#655c80);border-radius:6px;padding:5px 9px;background:light-dark(#f6f3ff,#322b43);color:inherit;cursor:pointer}.actions button:disabled{opacity:.6;cursor:wait}.actions button:focus-visible{outline:2px solid #8570ce;outline-offset:2px}';
+      this.panel = document.createElement('span'); this.panel.className = 'tip'; this.panel.tabIndex = -1;
+      this.panel.addEventListener('click', event => event.stopPropagation());
+      this.panel.addEventListener('pointerdown', event => event.stopPropagation());
       shadow.append(style, this.panel); document.documentElement.append(this.host);
     }
     // A modal makes everything outside its DOM subtree inert, including a
@@ -133,11 +156,36 @@ export class ComponentHints {
     if (typeof this.host.showPopover === 'function') {
       if (!this.host.matches(':popover-open')) this.host.showPopover();
     }
-    this.panel!.replaceChildren(document.createTextNode(text));
-    const note = document.createElement('small'); note.textContent = '译文 · Esc 关闭'; this.panel!.append(note);
+    const action = this.actions.get(source);
+    this.host.setAttribute('role', action && this.interactive ? 'dialog' : 'tooltip');
+    this.host.setAttribute('aria-label', '段落翻译操作');
+    // Update in place so streaming/retry status never removes keyboard focus.
+    if (!this.panel!.firstChild) {
+      const copy = document.createElement('div'); copy.className = 'copy';
+      const error = document.createElement('div'); error.className = 'error'; error.setAttribute('role', 'status');
+      const actions = document.createElement('div'); actions.className = 'actions';
+      const retry = document.createElement('button'); retry.type = 'button';
+      retry.onclick = () => { const value = this.source && this.actions.get(this.source); if (value && !value.busy) value.retry(); };
+      actions.append(retry);
+      const note = document.createElement('small'); note.className = 'note';
+      this.panel!.append(copy, error, actions, note);
+    }
+    this.panel!.querySelector('.copy')!.textContent = text;
+    const error = this.panel!.querySelector<HTMLElement>('.error')!;
+    error.hidden = !action?.error; error.textContent = action?.error ? `翻译失败原因：${action.error}` : '';
+    this.panel!.querySelector<HTMLElement>('.actions')!.hidden = !action || !this.interactive;
+    const retry = this.panel!.querySelector('button')!;
+    retry.textContent = action?.label ?? '重新翻译这一段';
+    if (action?.busy && this.host.shadowRoot?.activeElement === retry) this.panel!.focus({ preventScroll: true });
+    retry.disabled = !!action?.busy;
+    this.panel!.querySelector('.note')!.textContent = action ? '仅请求这一段 · Alt+Enter 进入操作 · Esc 关闭' : '译文 · Esc 关闭';
     this.position(source);
     if (this.source !== source) {
-      this.source = source; this.descriptionTarget = source instanceof HTMLLabelElement ? source.control ?? source : source;
+      this.source = source;
+    }
+    if (action) this.clearDescription();
+    else if (!this.descriptionTarget) {
+      this.descriptionTarget = source instanceof HTMLLabelElement ? source.control ?? source : source;
       this.description = this.descriptionTarget.getAttribute('aria-describedby');
       this.applied = [this.description, this.host.id].filter(Boolean).join(' ');
       this.descriptionTarget.setAttribute('aria-describedby', this.applied);
@@ -152,9 +200,10 @@ export class ComponentHints {
     const full = available < 64;
     this.panel!.style.maxHeight = `${Math.max(24, full ? innerHeight - 24 : before ? above : below)}px`;
     const panel = this.panel!.getBoundingClientRect();
-    // Short hints never intercept the original control or adjacent buttons.
-    // Only overflowing long help needs a pointer surface for native scrolling.
-    this.panel!.style.pointerEvents = this.panel!.scrollHeight > this.panel!.clientHeight + 2 ? 'auto' : 'none';
+    // Interactive panels must catch their whole surface: otherwise hovering
+    // through transparent copy can switch to a different underlying paragraph.
+    // Passive, short hints still let original controls receive pointer events.
+    this.panel!.style.pointerEvents = this.interactive && this.actions.has(source) || this.panel!.scrollHeight > this.panel!.clientHeight + 2 ? 'auto' : 'none';
     this.panel!.style.left = `${Math.min(Math.max(12, bounds.left), Math.max(12, innerWidth - panel.width - 12))}px`;
     this.panel!.style.top = `${full ? 12 : before ? Math.max(12, bounds.top - panel.height - 6) : bounds.bottom + 6}px`;
   }
@@ -163,6 +212,11 @@ export class ComponentHints {
     if (this.resizeFrame !== undefined) cancelAnimationFrame(this.resizeFrame); this.resizeFrame = undefined;
     if (this.leaveTimer) clearTimeout(this.leaveTimer); this.leaveTimer = undefined;
     if (this.host) { if (typeof this.host.hidePopover === 'function' && this.host.matches(':popover-open')) this.host.hidePopover(); this.host.style.setProperty('display', 'none', 'important'); }
+    this.clearDescription();
+    if (this.source) this.dismissed = this.source;
+    this.source = undefined; this.descriptionTarget = undefined; this.description = undefined; this.applied = undefined;
+  };
+  private clearDescription() {
     if (this.descriptionTarget && this.descriptionTarget.getAttribute('aria-describedby') === this.applied) {
       if (this.description === null) this.descriptionTarget.removeAttribute('aria-describedby');
       else if (this.description !== undefined) this.descriptionTarget.setAttribute('aria-describedby', this.description);
@@ -173,12 +227,11 @@ export class ComponentHints {
         if (remaining) this.descriptionTarget.setAttribute('aria-describedby', remaining); else this.descriptionTarget.removeAttribute('aria-describedby');
       }
     }
-    if (this.source) this.dismissed = this.source;
-    this.source = undefined; this.descriptionTarget = undefined; this.description = undefined; this.applied = undefined;
-  };
-  release(source: Element) { this.texts.delete(source); if (this.source === source) this.hide(); }
+    this.descriptionTarget = undefined; this.description = undefined; this.applied = undefined;
+  }
+  release(source: Element) { this.texts.delete(source); this.actions.delete(source); if (this.source === source) this.hide(); }
   stop() {
-    this.hide(); this.held = undefined; this.dismissed = undefined; this.host?.remove(); this.host = undefined; this.panel = undefined; this.texts.clear();
+    this.hide(); this.held = undefined; this.dismissed = undefined; this.host?.remove(); this.host = undefined; this.panel = undefined; this.texts.clear(); this.actions.clear();
     document.removeEventListener('pointerover', this.enter); document.removeEventListener('pointerout', this.leave);
     document.removeEventListener('focusin', this.enter); document.removeEventListener('focusout', this.leave);
     document.removeEventListener('keydown', this.key, true); document.removeEventListener('pointerdown', this.down, true);

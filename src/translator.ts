@@ -4,20 +4,21 @@ import { translationStyle } from './translation-style';
 import { TranslationLayout } from './translation-layout';
 import { ComponentHints } from './component-hints';
 import { createId } from './id';
-type Block = { element: Element; text: string; sourceText: string; chunks: string[]; translated: string[]; confirmed: boolean[]; next: number; near: boolean; visible: boolean; visibilityAt?: number; compact: boolean; node?: HTMLElement; rendered?: string; failed: boolean; active: number; layout?: string | false; description?: { target: Element; original: string | null; applied: string }; scroll?: ScrollRegion; scrollChecked?: boolean; localNear?: boolean };
+type Block = { element: Element; text: string; sourceText: string; chunks: string[]; translated: string[]; confirmed: boolean[]; next: number; near: boolean; visible: boolean; visibilityAt?: number; compact: boolean; node?: HTMLElement; rendered?: string; failed: boolean; error?: string; retry?: { id?: string }; active: number; layout?: string | false; description?: { target: Element; original: string | null; applied: string }; scroll?: ScrollRegion; scrollChecked?: boolean; localNear?: boolean };
 type ScrollRegion = { element: Element; observer: IntersectionObserver; near: boolean; blocks: Set<Block> };
 export type TranslationStatus = { enabled: boolean; translated: number; pending: number; error: string };
 type Work = { block: Block; index: number; text: string };
 type Reading = { element: Element; iterator: Generator<void, string>; context: SemanticContext; revision: number };
 const inlineHiding = /(?:^|;)\s*(?:display\s*:\s*none|visibility\s*:\s*(?:hidden|collapse)|opacity\s*:\s*0(?:[;\s!]|$)|content-visibility\s*:\s*hidden)/i;
 const semanticClasses = /(?:^|\s)(?:badge|chip|button|btn|cta)(?:\s|$)/;
-export interface TranslationTransport { translate(id: string, texts: string[], onItem: (index: number, text: string, confirmed: boolean) => void): Promise<string[]>; cancel(id: string): void }
+export interface TranslationTransport { translate(id: string, texts: string[], onItem: (index: number, text: string, confirmed: boolean) => void, options?: { bypassCache?: boolean }): Promise<string[]>; cancel(id: string): void }
 export class PageTranslator {
   private blocks = new Map<Element, Block>();
   private nearby = new Set<Block>();
   private complete = new Set<Block>();
   private dirty = new Set<Block>();
   private visibilityDirty = new Set<Block>();
+  private retries = new Set<Block>();
   private requests = new Map<string, Work[]>();
   private roots = new Set<Element>();
   private scans: { iterator: Generator<Element>; context: SemanticContext }[] = [];
@@ -39,7 +40,7 @@ export class PageTranslator {
   private preferComponents = false;
   private extraction = semanticContext();
   constructor(private transport: TranslationTransport, private changed: () => void = () => {}) {}
-  get status() { return { enabled: this.running, translated: this.complete.size, pending: this.requests.size, error: this.lastError }; }
+  get status() { return { enabled: this.running, translated: this.complete.size, pending: this.requests.size + this.retries.size, error: this.lastError }; }
   start() {
     if (this.running) return;
     this.running = true; this.generation++; this.lastError = '';
@@ -189,7 +190,7 @@ export class PageTranslator {
   }
   private invalidate(element: Element) {
     const block = this.blocks.get(element);
-    if (block) { this.clearDescription(block); block.node?.remove(); this.layout.release(element, block.node); this.hints.release(element); this.detachScrollRegion(block); this.nearby.delete(block); this.dirty.delete(block); this.visibilityDirty.delete(block); this.complete.delete(block); }
+    if (block) { this.cancelRetry(block); if (block.node) this.hints.release(block.node); this.clearDescription(block); block.node?.remove(); this.layout.release(element, block.node); this.hints.release(element); this.detachScrollRegion(block); this.nearby.delete(block); this.dirty.delete(block); this.visibilityDirty.delete(block); this.complete.delete(block); }
     this.intersections?.unobserve(element); this.viewport?.unobserve(element); this.blocks.delete(element);
   }
   private scan(root: Element) { this.scans.push({ iterator: semanticCandidates(root), context: semanticContext() }); this.scanSlice(); }
@@ -285,35 +286,43 @@ export class PageTranslator {
     const unchanged = done && text.normalize('NFKC').replace(/\s+/gu, ' ').trim() === block.text.normalize('NFKC').replace(/\s+/gu, ' ').trim();
     const hint = this.layout.isHint(block.element);
     block.node.style.setProperty('display', unchanged || hint ? 'none' : 'block', 'important');
-    const stateName = done ? 'done' : block.failed ? 'error' : text ? 'partial' : block.active ? 'translating' : 'queued';
-    const rendered = JSON.stringify([stateName, text, block.failed && block.active > 0]);
+    const stateName = block.retry ? 'retrying' : block.failed ? 'error' : done ? 'done' : text ? 'partial' : block.active ? 'translating' : 'queued';
+    const rendered = JSON.stringify([stateName, text, block.error, block.active > 0]);
     if (block.rendered === rendered) return;
     block.rendered = rendered;
     block.node.setAttribute(OWN, text ? 'translation' : 'pending');
     block.node.dataset.state = stateName;
-    block.node.setAttribute('aria-busy', String(!done && !block.failed));
+    block.node.setAttribute('aria-busy', String(!!block.retry || !done && !block.failed));
     const content = block.node.firstElementChild as HTMLElement;
-    content.textContent = text;
+    content.textContent = text || (block.compact && block.failed ? '翻译失败' : '');
     if (text) content.dataset.glossReveal = 'true';
     // Keep the text element mounted: streamed chunks must not restart its fade-in.
     while (content.nextSibling) content.nextSibling.remove();
-    if (!done) {
-      if (!block.failed) block.node.append(translationLoader(Boolean(text), Boolean(block.active)));
-      if (block.failed) {
-        block.node.append(document.createTextNode(' 翻译失败 · '));
-        if (!block.compact) {
-        const retry = document.createElement('button'); retry.type = 'button'; retry.textContent = '重试'; retry.title = this.lastError;
-        retry.style.cssText = 'font:inherit!important;font-size:0.8em!important;color:inherit!important;border:0!important;background:transparent!important;text-decoration:underline!important;cursor:pointer!important;padding:0!important;';
-        retry.disabled = block.active > 0;
-        retry.onclick = () => { this.lastError = ''; block.failed = false; block.next = 0; this.dirty.add(block); this.schedule(); };
-        block.node.append(retry);
-        }
-      }
+    if (!done && !block.retry && !block.failed) block.node.append(translationLoader(Boolean(text), Boolean(block.active)));
+    if (block.failed && !text && !block.compact) {
+      const failure = document.createElement('span'); failure.dataset.glossPart = 'failure'; failure.textContent = '翻译失败 · 查看原因与重试'; block.node.append(failure);
     }
+    // One shared Shadow DOM panel: no per-paragraph toolbar or nested buttons
+    // inside native links, labels, or buttons.
+    const action = {
+      error: block.error, busy: !!block.retry || block.active > 0,
+      label: block.retry ? '正在重试…' : block.failed ? '重试这一段' : '重新翻译这一段',
+      retry: () => this.retryBlock(block),
+    };
+    const actionable = done && !unchanged || block.failed || !!block.retry;
+    const source = hint || block.compact || unchanged ? block.element : block.node;
+    const other = source === block.element ? block.node : block.element;
+    this.hints.release(other);
+    if (!block.compact && !unchanged) {
+      block.node.tabIndex = 0; block.node.setAttribute('role', 'button');
+      block.node.setAttribute('aria-label', block.failed ? '翻译失败：查看原因与重试' : '译文操作：重新翻译这一段');
+      block.node.title = '点击或聚焦译文查看操作';
+    }
+    if (actionable || hint && text && !unchanged) this.hints.update(source, text || '本段尚未完成翻译', actionable ? action : undefined);
+    else this.hints.release(source);
     if (done) this.complete.add(block); else this.complete.delete(block);
     if (hint) {
-      const ready = !!text && !unchanged && !block.failed;
-      if (ready) this.hints.update(block.element, text); else this.hints.release(block.element);
+      const ready = actionable || !!text && !unchanged;
       this.layout.hintReady(block.element, ready);
     } else if (block.compact && done && !unchanged) {
       const target = block.element instanceof HTMLLabelElement ? block.element.control ?? block.element : block.element;
@@ -324,6 +333,44 @@ export class PageTranslator {
       block.description = { target, original, applied }; target.setAttribute('aria-describedby', applied);
     } else if (unchanged || block.failed) this.clearDescription(block);
     this.layout.update(block.element);
+  }
+  private retryBlock(block: Block) {
+    if (!this.running || block.retry || block.active || this.blocks.get(block.element) !== block || !block.element.isConnected) return;
+    block.retry = {}; this.retries.add(block); this.dirty.add(block); this.schedule();
+  }
+  private cancelRetry(block: Block) {
+    const id = block.retry?.id;
+    block.retry = undefined; this.retries.delete(block);
+    if (id) this.transport.cancel(id);
+  }
+  private async runRetry(block: Block) {
+    const attempt = block.retry!;
+    const current = () => this.running && block.retry === attempt && this.blocks.get(block.element) === block && block.element.isConnected;
+    const translations: string[] = [];
+    try {
+      // Reserve one page queue slot for this paragraph, keeping request limits
+      // even for long paragraphs. Preserve its last result until all chunks pass.
+      for (let index = 0; index < block.chunks.length; index += 2) {
+        attempt.id = createId();
+        const result = await this.transport.translate(attempt.id, block.chunks.slice(index, index + 2), () => {}, { bypassCache: true });
+        if (!current()) return;
+        translations.push(...result);
+      }
+      if (blockText(block.element, false, undefined, this.extraction) !== block.sourceText) return;
+      block.translated = translations; block.confirmed = translations.map(() => true); block.next = block.chunks.length;
+      block.failed = false; block.error = undefined;
+    } catch (error) {
+      if (current()) { block.failed = true; block.error = this.errorMessage(error); }
+    } finally {
+      if (current()) {
+        block.retry = undefined; this.retries.delete(block);
+        this.lastError = [...this.blocks.values()].find(value => value.error)?.error ?? '';
+        this.dirty.add(block); this.schedule();
+      }
+    }
+  }
+  private errorMessage(error: unknown) {
+    return error instanceof Error && error.message.trim() ? error.message.slice(0, 500) : '翻译失败，服务未返回可用的错误信息，请重试。';
   }
   private clearDescription(block: Block) {
     const target = block.description?.target;
@@ -346,12 +393,20 @@ export class PageTranslator {
       this.requests.delete(id); this.transport.cancel(id);
       for (const { block, index } of work) { block.active--; if (!block.confirmed[index]) { block.next = Math.min(block.next, index); block.translated[index] = ''; } this.dirty.add(block); }
     }
-    while (this.requests.size < 2) {
+    for (const block of this.retries) if (!block.near || !block.element.isConnected || this.blocks.get(block.element) !== block) {
+      this.cancelRetry(block); this.dirty.add(block);
+    }
+    const slots = () => this.requests.size + [...this.retries].filter(block => block.retry?.id).length;
+    for (const block of this.retries) {
+      if (slots() >= 2) break;
+      if (!block.retry?.id) void this.runRetry(block);
+    }
+    while (slots() < 2) {
       const work: Work[] = []; let chars = 0;
       const candidates = [...this.nearby].sort((a, b) => Number(b.visible) - Number(a.visible) || (this.preferComponents ? Number(b.compact) - Number(a.compact) : Number(a.compact) - Number(b.compact)));
       let compactBatch: boolean | undefined;
       for (const block of candidates) {
-        if (block.failed || block.layout === false || !block.element.isConnected) continue;
+        if (block.retry || block.failed || block.layout === false || !block.element.isConnected) continue;
         if (block.next >= block.chunks.length) continue;
         compactBatch ??= block.compact;
         if (block.compact !== compactBatch) continue;
@@ -381,8 +436,8 @@ export class PageTranslator {
         translations.forEach((text, index) => receive(index, text, true));
       }).catch((error: unknown) => {
         if (generation !== this.generation || !this.requests.has(id)) return;
-        this.lastError = error instanceof Error ? error.message : '翻译失败';
-        for (const { block, index } of work) if (!block.confirmed[index]) { block.failed = true; block.translated[index] = ''; this.dirty.add(block); }
+        this.lastError = this.errorMessage(error);
+        for (const { block, index } of work) if (!block.confirmed[index]) { block.failed = true; block.error = this.lastError; block.translated[index] = ''; this.dirty.add(block); }
       }).finally(() => {
         if (this.requests.delete(id)) for (const { block } of work) { block.active--; this.dirty.add(block); }
         this.schedule();
@@ -396,6 +451,7 @@ export class PageTranslator {
     this.mutations?.disconnect(); this.intersections?.disconnect(); this.viewport?.disconnect(); this.scrollVisibility?.disconnect();
     for (const region of this.scrollRegions.values()) region.observer.disconnect();
     this.scrollRegions.clear(); this.scrollVisibility = undefined;
+    for (const block of this.retries) this.cancelRetry(block);
     for (const id of this.requests.keys()) this.transport.cancel(id);
     this.requests.clear(); this.roots.clear(); this.nearby.clear(); this.dirty.clear(); this.visibilityDirty.clear(); this.complete.clear();
     for (const block of this.blocks.values()) { this.clearDescription(block); block.node?.remove(); }

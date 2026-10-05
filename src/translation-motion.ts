@@ -8,6 +8,7 @@ export function mountTranslationMotion() {
 @keyframes cloudys-breathe{0%,100%{opacity:.25}50%{opacity:.8}}
 @keyframes cloudys-reveal{from{opacity:.25}to{opacity:1}}
 [${OWN}] [data-gloss-part="text"]{all:unset!important;color:inherit!important;font:inherit!important;letter-spacing:inherit!important;line-height:inherit!important;text-transform:none!important}
+[${OWN}] [data-gloss-part="failure"]{all:initial!important;display:block!important;font:12px/1.5 system-ui,sans-serif!important;color:inherit!important;opacity:.75!important;cursor:pointer!important}
 [${OWN}] [data-gloss-reveal="true"]{animation:cloudys-reveal .22s ease-out!important}
 [${OWN}] [data-gloss-part="loader"]{all:initial!important;display:inline-flex!important;align-items:center!important;gap:4px!important;height:1em!important;margin:0!important;vertical-align:middle!important;color:inherit!important}
 [${OWN}] [data-gloss-part="loader"] i{all:initial!important;display:block!important;width:4px!important;height:4px!important;border-radius:50%!important;background:currentColor!important;color:inherit!important;opacity:.25!important}
