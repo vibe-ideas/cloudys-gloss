@@ -41,7 +41,7 @@ jobs:
       - name: Install test browsers
         run: pnpm exec playwright install --with-deps chromium firefox
       - name: Test Chrome and Firefox extensions
-        run: pnpm test:e2e
+        run: xvfb-run -a pnpm test:e2e
       - name: Build release packages
         run: |
           pnpm zip

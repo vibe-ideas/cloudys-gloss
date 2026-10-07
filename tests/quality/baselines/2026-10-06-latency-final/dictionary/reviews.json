@@ -1,0 +1,367 @@
+{
+  "kind": "dictionary",
+  "corpusHash": "dbef3d029f4c2a230b22a6fa2ddc0c00cf4da4458559a65c0bdfc0af7063d818",
+  "providerHash": "20517adbe38ffbe92b85c2d0112c40f11bd1872fa98b97b42a88b4f14c1f5f41",
+  "model": "Qwen/Qwen3-1.7B-MLX-4bit",
+  "reviewer": "dictionary_expert — independent AI-assisted bilingual final-run review",
+  "method": "Read all 24 newly recorded delivered cards and their source contexts. Compare with the accepted 2026-10-05 final-dictionary baseline; do not reuse the rejected latency-optimization candidate outputs or scores. Retain the same rubric, semantic acceptance criteria, missing-IPA policy and known minor-error treatment.",
+  "rubric": {
+    "adequacy": "0–4: contextual sense and part of speech",
+    "completeness": "0–4: required card content including pronunciation",
+    "fluency": "0–4: natural Chinese and bilingual example",
+    "ipa": "correct / incorrect / missing / uncertain; expert review, never inferred from Zod"
+  },
+  "reviews": [
+    {
+      "id": "D01",
+      "outputHash": "da1bdd6d82a496979a443d8d3ec24e294ba4698033b309abed8fd4e89d878478",
+      "adequacy": 3,
+      "completeness": 3,
+      "fluency": 3,
+      "critical": false,
+      "ipaUs": "correct",
+      "ipaUk": "correct",
+      "notes": "本次有界回退得到轻重义项与正确形容词。中译仍把 surprisingly/even 的意外与让步语气弱化为“非常轻”，与旧版同级；补充“一台”不改变含义。沿原标准可接受但不是完全保留语气的译文。",
+      "aspects": {
+        "meaning": true,
+        "partOfSpeech": true,
+        "contextMeaning": true,
+        "examples": true
+      },
+      "semanticAcceptable": true,
+      "ipaComplete": true,
+      "wholeCardAcceptable": true
+    },
+    {
+      "id": "D02",
+      "outputHash": "ac2f3675f11262b8dbe03c574df185c2d0657d7a4af1861d8a0ff8499f90d5d2",
+      "adequacy": 4,
+      "completeness": 4,
+      "fluency": 4,
+      "critical": false,
+      "ipaUs": "correct",
+      "ipaUk": "correct",
+      "notes": "点燃动词义项、语境及原句中译正确，与旧版最终输出逐字相同。",
+      "aspects": {
+        "meaning": true,
+        "partOfSpeech": true,
+        "contextMeaning": true,
+        "examples": true
+      },
+      "semanticAcceptable": true,
+      "ipaComplete": true,
+      "wholeCardAcceptable": true
+    },
+    {
+      "id": "D03",
+      "outputHash": "1e2e5b1dbfc8aa543aab34c04068e496c4bc7a021b0c09cf6e6900250978fe41",
+      "adequacy": 4,
+      "completeness": 4,
+      "fluency": 4,
+      "critical": false,
+      "ipaUs": "correct",
+      "ipaUk": "correct",
+      "notes": "河岸名词义项、语境及例句中译正确，与旧版逐字相同。",
+      "aspects": {
+        "meaning": true,
+        "partOfSpeech": true,
+        "contextMeaning": true,
+        "examples": true
+      },
+      "semanticAcceptable": true,
+      "ipaComplete": true,
+      "wholeCardAcceptable": true
+    },
+    {
+      "id": "D04",
+      "outputHash": "586aa234d8cbdea330f3423cbcede9818b0834bffca92b0cb15e5f4337f45a6b",
+      "adequacy": 3,
+      "completeness": 3,
+      "fluency": 4,
+      "critical": false,
+      "ipaUs": "correct",
+      "ipaUk": "correct",
+      "notes": "银行义项及存款例句主要含义正确，但中文仍漏 yesterday。与旧版逐字相同，沿原标准记轻微完整性问题，不扩大为新失败。",
+      "aspects": {
+        "meaning": true,
+        "partOfSpeech": true,
+        "contextMeaning": true,
+        "examples": true
+      },
+      "semanticAcceptable": true,
+      "ipaComplete": true,
+      "wholeCardAcceptable": true
+    },
+    {
+      "id": "D05",
+      "outputHash": "a6c3b2a46f319b243194125e5b5ba6883d5424f5565a9652517fd464d91f6eb3",
+      "adequacy": 4,
+      "completeness": 4,
+      "fluency": 2,
+      "critical": false,
+      "ipaUs": "correct",
+      "ipaUk": "correct",
+      "notes": "多云义项及语境正确，与旧版逐字相同；“它是…没有雨预期”仍生硬，主要含义可理解。",
+      "aspects": {
+        "meaning": true,
+        "partOfSpeech": true,
+        "contextMeaning": true,
+        "examples": true
+      },
+      "semanticAcceptable": true,
+      "ipaComplete": true,
+      "wholeCardAcceptable": true
+    },
+    {
+      "id": "D06",
+      "outputHash": "10b7302ac05383a40ddf78fb0d5843537ca63dd9d999b09d64c19d953b3cfeee",
+      "adequacy": 4,
+      "completeness": 4,
+      "fluency": 4,
+      "critical": false,
+      "ipaUs": "correct",
+      "ipaUk": "correct",
+      "notes": "运行程序的动词义项、语境与完整例句中译正确，与旧版逐字相同。音标按来源的 US/UK 转写约定审核。",
+      "aspects": {
+        "meaning": true,
+        "partOfSpeech": true,
+        "contextMeaning": true,
+        "examples": true
+      },
+      "semanticAcceptable": true,
+      "ipaComplete": true,
+      "wholeCardAcceptable": true
+    },
+    {
+      "id": "D07",
+      "outputHash": "198d2a0d8297a9f0e31e8d0e4378e2807be957cb58522b9b3f78e4fc2a68106f",
+      "adequacy": 4,
+      "completeness": 4,
+      "fluency": 3,
+      "critical": false,
+      "ipaUs": "correct",
+      "ipaUk": "correct",
+      "notes": "收费的及物动词义项正确，生成的英文例句和中文翻译成对，保留20美元停车费。“对停车费收取20美元”略重复，较旧版措辞生硬但不是实质语义回退。",
+      "aspects": {
+        "meaning": true,
+        "partOfSpeech": true,
+        "contextMeaning": true,
+        "examples": true
+      },
+      "semanticAcceptable": true,
+      "ipaComplete": true,
+      "wholeCardAcceptable": true
+    },
+    {
+      "id": "D08",
+      "outputHash": "fbbd307c974dab1a63adf293c2e29527eb88e04412f92d9477a00a9389a421e5",
+      "adequacy": 4,
+      "completeness": 4,
+      "fluency": 2,
+      "critical": false,
+      "ipaUs": "correct",
+      "ipaUk": "correct",
+      "notes": "本次两轮均为正确的“指控”，没有旧版的“处罚”或已拒绝候选的“使承担法律责任/追究刑事责任”。生成例句 Charge him with theft. 虽缩短为祈使句，仍使用同一动词义项，中文对应；“对他指控盗窃”语序生硬但可理解。根据原标准本次通过，不推断该历史难例已永久修复。",
+      "aspects": {
+        "meaning": true,
+        "partOfSpeech": true,
+        "contextMeaning": true,
+        "examples": true
+      },
+      "semanticAcceptable": true,
+      "ipaComplete": true,
+      "wholeCardAcceptable": true
+    },
+    {
+      "id": "D09",
+      "outputHash": "589b3e825515470bbb407c2cb02e959ed99cc11699642003a621d787526d96de",
+      "adequacy": 4,
+      "completeness": 4,
+      "fluency": 2,
+      "critical": false,
+      "ipaUs": "correct",
+      "ipaUk": "correct",
+      "notes": "身体状态良好的形容词义项与例句含义正确。措辞略变，“经过一个好睡眠的夜晚”仍生硬，按旧版同级处理。",
+      "aspects": {
+        "meaning": true,
+        "partOfSpeech": true,
+        "contextMeaning": true,
+        "examples": true
+      },
+      "semanticAcceptable": true,
+      "ipaComplete": true,
+      "wholeCardAcceptable": true
+    },
+    {
+      "id": "D10",
+      "outputHash": "aae6c2756cb59e5ffda785c1c20f3dc3aadcdc8e026edc1bbd990a6a9b5f6e86",
+      "adequacy": 4,
+      "completeness": 4,
+      "fluency": 3,
+      "critical": false,
+      "ipaUs": "correct",
+      "ipaUk": "correct",
+      "notes": "罚款名词和 paid a fine 例句一致，中译语序略生硬但含义正确，与旧版逐字相同。",
+      "aspects": {
+        "meaning": true,
+        "partOfSpeech": true,
+        "contextMeaning": true,
+        "examples": true
+      },
+      "semanticAcceptable": true,
+      "ipaComplete": true,
+      "wholeCardAcceptable": true
+    },
+    {
+      "id": "D11",
+      "outputHash": "e76061abac73354b9ffeb24eb7525899f8cf2e2baf54ceaa15323e8e64da031d",
+      "adequacy": 4,
+      "completeness": 2,
+      "fluency": 3,
+      "critical": false,
+      "ipaUs": "missing",
+      "ipaUk": "missing",
+      "notes": "放弃的短语动词与例句翻译可接受，与旧版逐字相同。US/UK 整短语 IPA 均缺失，不能记correct，整卡完整性不通过。",
+      "aspects": {
+        "meaning": true,
+        "partOfSpeech": true,
+        "contextMeaning": true,
+        "examples": true
+      },
+      "semanticAcceptable": true,
+      "ipaComplete": false,
+      "wholeCardAcceptable": false
+    },
+    {
+      "id": "D12",
+      "outputHash": "bbcc03618b6aa54b1b5fcfa27ddb2a492547b725d675c7f72ac04893fe66cda7",
+      "adequacy": 4,
+      "completeness": 2,
+      "fluency": 4,
+      "critical": false,
+      "ipaUs": "missing",
+      "ipaUk": "missing",
+      "notes": "飞机起飞义项与“十分钟后起飞”例句翻译正确，本次没有旧版“十分钟内”的精确性问题。整短语 US/UK IPA 仍缺失，整卡完整性不通过。",
+      "aspects": {
+        "meaning": true,
+        "partOfSpeech": true,
+        "contextMeaning": true,
+        "examples": true
+      },
+      "semanticAcceptable": true,
+      "ipaComplete": false,
+      "wholeCardAcceptable": false
+    }
+  ],
+  "acceptancePolicy": {
+    "semantic": "meaning, partOfSpeech, contextMeaning and bilingual examples all acceptable; minor stylistic awkwardness or nonessential omission may pass, but wrong target sense, omitted selected word, wrong example grammar and untranslated examples fail",
+    "ipaComplete": "both US and UK nonempty and individually reviewed correct under the source conventions",
+    "wholeCard": "semantic acceptable AND IPA complete AND adequacy >= 3 AND completeness >= 3 AND fluency >= 2 AND no critical error"
+  },
+  "baseline": "tests/quality/baselines/2026-10-05-tuning/final-dictionary",
+  "summary": {
+    "corpusHash": "dbef3d029f4c2a230b22a6fa2ddc0c00cf4da4458559a65c0bdfc0af7063d818",
+    "providerHash": "20517adbe38ffbe92b85c2d0112c40f11bd1872fa98b97b42a88b4f14c1f5f41",
+    "baseline": "tests/quality/baselines/2026-10-05-tuning/final-dictionary",
+    "rows": 24,
+    "uniqueOutputs": 12,
+    "repetitions": 2,
+    "counts": {
+      "meaning": {
+        "passed": 24,
+        "total": 24,
+        "rate": 1.0
+      },
+      "partOfSpeech": {
+        "passed": 24,
+        "total": 24,
+        "rate": 1.0
+      },
+      "contextMeaning": {
+        "passed": 24,
+        "total": 24,
+        "rate": 1.0
+      },
+      "examples": {
+        "passed": 24,
+        "total": 24,
+        "rate": 1.0
+      },
+      "semanticAcceptable": {
+        "passed": 24,
+        "total": 24,
+        "rate": 1.0
+      },
+      "ipaComplete": {
+        "passed": 20,
+        "total": 24,
+        "rate": 0.8333333333333334
+      },
+      "wholeCardAcceptable": {
+        "passed": 20,
+        "total": 24,
+        "rate": 0.8333333333333334
+      }
+    },
+    "decision": {
+      "verdict": "accept_final_rollback_quality_check",
+      "reason": "No new material semantic failures in this fresh run. D08 correctly conveys accusation in both rounds, so the field-level regression in the rejected local-example-repair candidate is absent. Missing phrase IPA and existing minor omissions/awkwardness remain disclosed.",
+      "scope": "Acceptance concerns observed semantic compatibility of the final pipeline on this fixed corpus, not a claim of universally perfect translation or attribution of quality gains to diagnostics/performance changes."
+    },
+    "comparison": {
+      "semanticPassed": {
+        "before": 22,
+        "after": 24
+      },
+      "contextMeaningPassed": {
+        "before": 24,
+        "after": 24
+      },
+      "wholeCardPassed": {
+        "before": 18,
+        "after": 20
+      },
+      "ipaComplete": {
+        "before": 20,
+        "after": 20
+      },
+      "exactlyMatchingOutputRows": 14,
+      "changedCases": [
+        "D01",
+        "D07",
+        "D08",
+        "D09",
+        "D12"
+      ],
+      "newMaterialFailures": [],
+      "d08": "Both fresh outputs correctly say accusation; historical failure should remain a regression case because identical settings do not guarantee identical future model output."
+    },
+    "requests": {
+      "total": 36,
+      "rowsByRequestCount": {
+        "3": 6,
+        "1": 18
+      },
+      "groundedInitial": 24,
+      "groundedRepair": 6,
+      "generatedFallbackInitial": 6,
+      "generatedFallbackRepair": 0,
+      "fallbackCases": [
+        "D01",
+        "D07",
+        "D08"
+      ],
+      "perLookupBound": 4,
+      "exampleOnlyRepair": 0
+    },
+    "missingIpa": [
+      "D11 give up and D12 take off, both repetitions; no attested whole-phrase entries in either dialect"
+    ],
+    "knownMinorIssues": [
+      "D01: surprise/concession nuance weakened",
+      "D04: yesterday omitted",
+      "D05/D07/D08/D09/D10/D11: awkward or repetitive Chinese"
+    ],
+    "limits": "24/24 acceptable core semantics applies only to these 12 fixed cases repeated twice under the existing rubric. It allows minor non-core omissions and awkwardness and is not a perfect-translation score. Complete cards remain 20/24 because IPA is missing for two phrases. Keep earlier failed D08 outputs as stability evidence."
+  }
+}

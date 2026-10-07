@@ -2,6 +2,7 @@
 
 ## 使用指南
 
+- [导入、管理与使用离线 StarDict 词库](guides/dictionary-import.md)
 - [安装、开发启动与网页操作](guides/getting-started.md)
 - [MLX、Ollama 与兼容 API 配置](guides/models.md)
 - [模型启动、macOS 登录自启与停止卸载](guides/model-service.md)
@@ -26,6 +27,8 @@
 
 ## 技术调研
 
+- [GoldenDict 词库生态、科技义项与双浏览器读取实测](research/2026-10-07-goldendict.md)
+- [轻量离线词典覆盖与存储对比](research/2026-10-07-lightweight-dictionaries.md)
 - [PDF 原版式翻译：竞品、BabelDOC、PDF.js 与实现取舍](research/2026-10-05-pdf-layout.md)
 
 ## 性能

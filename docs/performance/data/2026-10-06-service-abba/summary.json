@@ -1,0 +1,40 @@
+{
+  "before": {
+    "duplicate-pages": {
+      "samples": 2,
+      "medianMs": 2591.087167,
+      "requests": [
+        2,
+        2
+      ]
+    },
+    "interactive-after-prefetch": {
+      "samples": 2,
+      "medianMs": 2610.7327920000007,
+      "requests": [
+        5,
+        5
+      ],
+      "interactiveMedianMs": 2565.8862085
+    }
+  },
+  "after": {
+    "duplicate-pages": {
+      "samples": 2,
+      "medianMs": 1293.1717920000006,
+      "requests": [
+        1,
+        1
+      ]
+    },
+    "interactive-after-prefetch": {
+      "samples": 2,
+      "medianMs": 2624.0739165,
+      "requests": [
+        5,
+        5
+      ],
+      "interactiveMedianMs": 1512.5702500000002
+    }
+  }
+}

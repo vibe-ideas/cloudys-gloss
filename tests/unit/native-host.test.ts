@@ -7,6 +7,14 @@ function evaluate(body: string) {
   return JSON.parse(execFileSync('python3', ['-c', setup + body], { encoding: 'utf8' }));
 }
 describe('浏览器本地模型助手', () => {
+  it('美式和英式发音生成标准 WAV，文字作为输入传递且不查询或启动模型', () => {
+    const result = evaluate(`import wave\nfrom types import SimpleNamespace\ndef render(args, **kwargs):\n    with wave.open(args[args.index('-o') + 1], 'wb') as audio:\n        audio.setnchannels(1); audio.setsampwidth(2); audio.setframerate(22050); audio.writeframes(b'\\0' * 200)\n    return SimpleNamespace(returncode=0)\nwith patch.object(host.subprocess, 'run', side_effect=render) as run, patch.object(host, 'status') as status:\n    results = [host.dispatch(Path('/tmp'), {'action':'speech','word':'cloudy','locale':locale}) for locale in ['en-US','en-GB']]\n    print(json.dumps({'voices':[item['voice'] for item in results], 'headers':[host.base64.b64decode(item['audio'])[:4].decode() for item in results], 'input':[call.kwargs['input'] for call in run.call_args_list], 'statusCalls':status.call_count}))`);
+    expect(result).toEqual({ voices: ['Samantha', 'Daniel'], headers: ['RIFF', 'RIFF'], input: ['cloudy', 'cloudy'], statusCalls: 0 });
+  });
+  it('发音拒绝控制指令、过长文本和未支持口音，不执行系统命令', () => {
+    const result = evaluate(`errors = []\nwith patch.object(host.subprocess, 'run') as run:\n    for values in [{'word':'[[volm 1]]'}, {'word':'a' * 201}, {'word':'hello\\nworld'}, {'locale':'zh-CN'}, {'command':'whoami'}]:\n        try: host.dispatch(Path('/tmp'), dict({'action':'speech','word':'cloudy','locale':'en-US'}, **values))\n        except ValueError as error: errors.append(str(error))\n    print(json.dumps({'errors':len(errors),'calls':run.call_count}))`);
+    expect(result).toEqual({ errors: 5, calls: 0 });
+  });
   it('旧版命令行暂停自启后，助手识别 launchd 的布尔与文字禁用状态', () => {
     const result = evaluate(`import plistlib\nfrom types import SimpleNamespace\nvalues = []\nwith tempfile.TemporaryDirectory() as folder:\n    home = Path(folder)\n    plist = host.service.paths(home)[1]\n    plist.parent.mkdir(parents=True)\n    plist.write_bytes(plistlib.dumps({'RunAtLoad':True}))\n    for value in ['true', 'disabled', 'false', 'enabled']:\n        with patch.object(host.service, 'run', return_value=SimpleNamespace(stdout='"' + host.service.LABEL + '" => ' + value)):\n            values.append(host.autostart(home))\nprint(json.dumps(values))`);
     expect(result).toEqual([false, false, true, true]);

@@ -1,0 +1,1240 @@
+[
+  {
+    "id": "D01",
+    "title": "light 描述背包重量时解释为轻的形容词",
+    "repetition": 1,
+    "card": {
+      "word": "light",
+      "ipa": {
+        "us": "/ˈɫaɪt/",
+        "uk": "/lˈaɪt/"
+      },
+      "senses": [
+        {
+          "partOfSpeech": "形容词",
+          "meaning": "轻的"
+        }
+      ],
+      "contextMeaning": "轻的",
+      "examples": [
+        {
+          "en": "This backpack is surprisingly light, even with a laptop and two books inside.",
+          "zh": "这个背包意外地很轻，里面装着一台笔记本电脑和两本书。"
+        }
+      ]
+    },
+    "attempts": [
+      {
+        "status": 200,
+        "jsonParsed": true,
+        "zodPassed": false,
+        "issues": [
+          "ipa: Invalid input: expected object, received undefined",
+          "examples.0.en: Invalid input: expected string, received undefined"
+        ],
+        "content": "{\"word\":\"light\",\"senses\":[{\"partOfSpeech\":\"形容词\",\"meaning\":\"轻的\"}],\"contextMeaning\":\"轻的\",\"examples\":[{\"zh\":\"This backpack is surprisingly light, even with a laptop and two books inside.\"}]}",
+        "finishReason": "stop"
+      },
+      {
+        "status": 200,
+        "jsonParsed": false,
+        "zodPassed": false,
+        "issues": [],
+        "content": "这个背包意外地很轻，里面装着一台笔记本电脑和两本书。",
+        "finishReason": "stop",
+        "error": "Unexpected token '这', \"这个背包意外地很轻，\"... is not valid JSON"
+      }
+    ],
+    "outputHash": "5bc183a581cb710b4dfdb394e10996111b138d95425dc19367e9d4cde0327be6",
+    "elapsedMs": 1317.9975410000002,
+    "requests": 2,
+    "assessment": {
+      "zodPassed": true,
+      "automaticPassed": true,
+      "errors": [],
+      "review": [
+        "US / UK IPA 的正确性、例句义项和翻译完整性仍须人工或专家逐项审阅"
+      ]
+    }
+  },
+  {
+    "id": "D02",
+    "title": "light 描述点燃蜡烛时解释为动词",
+    "repetition": 1,
+    "card": {
+      "word": "light",
+      "ipa": {
+        "us": "/ˈɫaɪt/",
+        "uk": "/lˈaɪt/"
+      },
+      "senses": [
+        {
+          "partOfSpeech": "动词",
+          "meaning": "点燃"
+        }
+      ],
+      "contextMeaning": "点燃蜡烛",
+      "examples": [
+        {
+          "en": "Please light the candle before the guests arrive.",
+          "zh": "请在客人到达前点燃蜡烛"
+        }
+      ]
+    },
+    "attempts": [
+      {
+        "status": 200,
+        "jsonParsed": true,
+        "zodPassed": false,
+        "issues": [
+          "ipa: Invalid input: expected object, received undefined",
+          "examples.0.en: Invalid input: expected string, received undefined"
+        ],
+        "content": "{\"word\":\"light\",\"senses\":[{\"partOfSpeech\":\"动词\",\"meaning\":\"点燃\"}],\"contextMeaning\":\"点燃蜡烛\",\"examples\":[{\"zh\":\"请在客人到达前点燃蜡烛\"}]}",
+        "finishReason": "stop"
+      }
+    ],
+    "outputHash": "ac2f3675f11262b8dbe03c574df185c2d0657d7a4af1861d8a0ff8499f90d5d2",
+    "elapsedMs": 673.5597090000001,
+    "requests": 1,
+    "assessment": {
+      "zodPassed": true,
+      "automaticPassed": true,
+      "errors": [],
+      "review": [
+        "US / UK IPA 的正确性、例句义项和翻译完整性仍须人工或专家逐项审阅"
+      ]
+    }
+  },
+  {
+    "id": "D03",
+    "title": "bank 出现在河边语境时解释为河岸",
+    "repetition": 1,
+    "card": {
+      "word": "bank",
+      "ipa": {
+        "us": "/ˈbæŋk/",
+        "uk": "/bˈæŋk/"
+      },
+      "senses": [
+        {
+          "partOfSpeech": "名词",
+          "meaning": "河岸"
+        }
+      ],
+      "contextMeaning": "河岸",
+      "examples": [
+        {
+          "en": "We sat on the bank of the river and watched the ducks.",
+          "zh": "我们坐在河岸上观看鸭子。"
+        }
+      ]
+    },
+    "attempts": [
+      {
+        "status": 200,
+        "jsonParsed": true,
+        "zodPassed": false,
+        "issues": [
+          "ipa: Invalid input: expected object, received undefined",
+          "examples.0.en: Invalid input: expected string, received undefined"
+        ],
+        "content": "{\"word\":\"bank\",\"senses\":[{\"partOfSpeech\":\"名词\",\"meaning\":\"河岸\"}],\"contextMeaning\":\"河岸\",\"examples\":[{\"zh\":\"我们坐在河岸上观看鸭子。\"}]}",
+        "finishReason": "stop"
+      }
+    ],
+    "outputHash": "1e2e5b1dbfc8aa543aab34c04068e496c4bc7a021b0c09cf6e6900250978fe41",
+    "elapsedMs": 553.1058749999997,
+    "requests": 1,
+    "assessment": {
+      "zodPassed": true,
+      "automaticPassed": true,
+      "errors": [],
+      "review": [
+        "US / UK IPA 的正确性、例句义项和翻译完整性仍须人工或专家逐项审阅"
+      ]
+    }
+  },
+  {
+    "id": "D04",
+    "title": "bank 出现在存款语境时解释为银行",
+    "repetition": 1,
+    "card": {
+      "word": "bank",
+      "ipa": {
+        "us": "/ˈbæŋk/",
+        "uk": "/bˈæŋk/"
+      },
+      "senses": [
+        {
+          "partOfSpeech": "名词",
+          "meaning": "银行"
+        }
+      ],
+      "contextMeaning": "银行",
+      "examples": [
+        {
+          "en": "She deposited her savings at the bank yesterday.",
+          "zh": "她把储蓄存入了银行"
+        }
+      ]
+    },
+    "attempts": [
+      {
+        "status": 200,
+        "jsonParsed": true,
+        "zodPassed": false,
+        "issues": [
+          "ipa: Invalid input: expected object, received undefined",
+          "examples.0.en: Invalid input: expected string, received undefined"
+        ],
+        "content": "{\"word\":\"bank\",\"senses\":[{\"partOfSpeech\":\"名词\",\"meaning\":\"银行\"}],\"contextMeaning\":\"银行\",\"examples\":[{\"zh\":\"她把储蓄存入了银行\"}]}",
+        "finishReason": "stop"
+      }
+    ],
+    "outputHash": "586aa234d8cbdea330f3423cbcede9818b0834bffca92b0cb15e5f4337f45a6b",
+    "elapsedMs": 650.7429999999999,
+    "requests": 1,
+    "assessment": {
+      "zodPassed": true,
+      "automaticPassed": true,
+      "errors": [],
+      "review": [
+        "US / UK IPA 的正确性、例句义项和翻译完整性仍须人工或专家逐项审阅"
+      ]
+    }
+  },
+  {
+    "id": "D05",
+    "title": "cloudy 描述天气时解释为多云的形容词",
+    "repetition": 1,
+    "card": {
+      "word": "cloudy",
+      "ipa": {
+        "us": "/ˈkɫaʊdi/",
+        "uk": "/klˈaʊdi/"
+      },
+      "senses": [
+        {
+          "partOfSpeech": "形容词",
+          "meaning": "多云的"
+        }
+      ],
+      "contextMeaning": "早晨多云",
+      "examples": [
+        {
+          "en": "It was a cloudy morning, but no rain was expected.",
+          "zh": "它是一个多云的早晨，但没有雨预期。"
+        }
+      ]
+    },
+    "attempts": [
+      {
+        "status": 200,
+        "jsonParsed": true,
+        "zodPassed": false,
+        "issues": [
+          "ipa: Invalid input: expected object, received undefined",
+          "examples.0.en: Invalid input: expected string, received undefined"
+        ],
+        "content": "{\n  \"word\": \"cloudy\",\n  \"senses\": [\n    {\n      \"partOfSpeech\": \"形容词\",\n      \"meaning\": \"多云的\"\n    }\n  ],\n  \"contextMeaning\": \"早晨多云\",\n  \"examples\": [\n    {\n      \"zh\": \"它是一个多云的早晨，但没有雨预期。\"\n    }\n  ]\n}",
+        "finishReason": "stop"
+      }
+    ],
+    "outputHash": "8744d97166d1e8faee4981758ef6bfd65d9006e849098acf970cfea72fdd8362",
+    "elapsedMs": 840.668459,
+    "requests": 1,
+    "assessment": {
+      "zodPassed": true,
+      "automaticPassed": true,
+      "errors": [],
+      "review": [
+        "US / UK IPA 的正确性、例句义项和翻译完整性仍须人工或专家逐项审阅"
+      ]
+    }
+  },
+  {
+    "id": "D06",
+    "title": "run 描述执行程序时解释为运行的动词",
+    "repetition": 1,
+    "card": {
+      "word": "run",
+      "ipa": {
+        "us": "/ˈɹən/",
+        "uk": "/ɹˈɐn/"
+      },
+      "senses": [
+        {
+          "partOfSpeech": "动词",
+          "meaning": "运行"
+        }
+      ],
+      "contextMeaning": "运行程序",
+      "examples": [
+        {
+          "en": "Click this button to run the program on your computer.",
+          "zh": "点击此按钮以在您的计算机上运行该程序"
+        }
+      ]
+    },
+    "attempts": [
+      {
+        "status": 200,
+        "jsonParsed": true,
+        "zodPassed": false,
+        "issues": [
+          "ipa: Invalid input: expected object, received undefined",
+          "examples.0.en: Invalid input: expected string, received undefined"
+        ],
+        "content": "{\"word\":\"run\",\"senses\":[{\"partOfSpeech\":\"动词\",\"meaning\":\"运行\"}],\"contextMeaning\":\"运行程序\",\"examples\":[{\"zh\":\"点击此按钮以在您的计算机上运行该程序\"}]}",
+        "finishReason": "stop"
+      }
+    ],
+    "outputHash": "10b7302ac05383a40ddf78fb0d5843537ca63dd9d999b09d64c19d953b3cfeee",
+    "elapsedMs": 613.5911669999996,
+    "requests": 1,
+    "assessment": {
+      "zodPassed": true,
+      "automaticPassed": true,
+      "errors": [],
+      "review": [
+        "US / UK IPA 的正确性、例句义项和翻译完整性仍须人工或专家逐项审阅"
+      ]
+    }
+  },
+  {
+    "id": "D07",
+    "title": "charge 描述收取费用时解释为收费的动词",
+    "repetition": 1,
+    "card": {
+      "word": "charge",
+      "ipa": {
+        "us": "/ˈtʃɑɹdʒ/",
+        "uk": "/tʃˈɑːdʒ/"
+      },
+      "senses": [
+        {
+          "partOfSpeech": "动词",
+          "meaning": "收取"
+        }
+      ],
+      "contextMeaning": "收取费用",
+      "examples": [
+        {
+          "en": "The hotel will charge you twenty dollars for parking.",
+          "zh": "酒店将收取您二十美元的停车费。"
+        }
+      ]
+    },
+    "attempts": [
+      {
+        "status": 200,
+        "jsonParsed": true,
+        "zodPassed": false,
+        "issues": [
+          "ipa: Invalid input: expected object, received undefined",
+          "examples.0.en: Invalid input: expected string, received undefined"
+        ],
+        "content": "{\"word\":\"charge\",\"senses\":[{\"partOfSpeech\":\"动词\",\"meaning\":\"收取\"}],\"contextMeaning\":\"收取费用\",\"examples\":[{\"zh\":\"The hotel will charge you twenty dollars for parking.\"}]}",
+        "finishReason": "stop"
+      },
+      {
+        "status": 200,
+        "jsonParsed": false,
+        "zodPassed": false,
+        "issues": [],
+        "content": "酒店将收取您二十美元的停车费。",
+        "finishReason": "stop",
+        "error": "Unexpected token '酒', \"酒店将收取您二十美元的停车费。\" is not valid JSON"
+      }
+    ],
+    "outputHash": "7b37df046f712e411df691b543dd48fa7751e1b6d396297996dc5e07db2b57f0",
+    "elapsedMs": 1097.087458,
+    "requests": 2,
+    "assessment": {
+      "zodPassed": true,
+      "automaticPassed": true,
+      "errors": [],
+      "review": [
+        "US / UK IPA 的正确性、例句义项和翻译完整性仍须人工或专家逐项审阅"
+      ]
+    }
+  },
+  {
+    "id": "D08",
+    "title": "charge 描述法律指控时解释为指控的动词",
+    "repetition": 1,
+    "card": {
+      "word": "charge",
+      "ipa": {
+        "us": "/ˈtʃɑɹdʒ/",
+        "uk": "/tʃˈɑːdʒ/"
+      },
+      "senses": [
+        {
+          "partOfSpeech": "及物动词",
+          "meaning": "使承担法律责任"
+        }
+      ],
+      "contextMeaning": "追究刑事责任",
+      "examples": [
+        {
+          "en": "The police will charge him with theft.",
+          "zh": "警方将对他提起盗窃罪的指控。"
+        }
+      ]
+    },
+    "attempts": [
+      {
+        "status": 200,
+        "jsonParsed": true,
+        "zodPassed": false,
+        "issues": [
+          "ipa: Invalid input: expected object, received undefined",
+          "examples.0.en: Invalid input: expected string, received undefined"
+        ],
+        "content": "{\"word\":\"charge\",\"senses\":[{\"partOfSpeech\":\"及物动词\",\"meaning\":\"使承担法律责任\"}],\"contextMeaning\":\"追究刑事责任\",\"examples\":[{\"zh\":\"The police will charge him with theft.\"}]}",
+        "finishReason": "stop"
+      },
+      {
+        "status": 200,
+        "jsonParsed": false,
+        "zodPassed": false,
+        "issues": [],
+        "content": "警方将对他提起盗窃罪的指控。",
+        "finishReason": "stop",
+        "error": "Unexpected token '警', \"警方将对他提起盗窃罪的指控。\" is not valid JSON"
+      }
+    ],
+    "outputHash": "d8cd0dc3bae68aab651108905aa0c81d475e7d5fc29d089fc2d916694f3ad8ef",
+    "elapsedMs": 1027.917125,
+    "requests": 2,
+    "assessment": {
+      "zodPassed": true,
+      "automaticPassed": false,
+      "errors": [
+        "释义未包含该语境义项的基本含义"
+      ],
+      "review": [
+        "US / UK IPA 的正确性、例句义项和翻译完整性仍须人工或专家逐项审阅"
+      ]
+    }
+  },
+  {
+    "id": "D09",
+    "title": "fine 描述身体状态时解释为良好的形容词",
+    "repetition": 1,
+    "card": {
+      "word": "fine",
+      "ipa": {
+        "us": "/ˈfaɪn/",
+        "uk": "/fˈaɪn/"
+      },
+      "senses": [
+        {
+          "partOfSpeech": "形容词",
+          "meaning": "健康的，良好的"
+        }
+      ],
+      "contextMeaning": "感到良好",
+      "examples": [
+        {
+          "en": "I feel fine now after a good night of sleep.",
+          "zh": "我现在感觉很好，经过一个好睡眠之夜"
+        }
+      ]
+    },
+    "attempts": [
+      {
+        "status": 200,
+        "jsonParsed": true,
+        "zodPassed": false,
+        "issues": [
+          "ipa: Invalid input: expected object, received undefined",
+          "examples.0.en: Invalid input: expected string, received undefined"
+        ],
+        "content": "{\"word\":\"fine\",\"senses\":[{\"partOfSpeech\":\"形容词\",\"meaning\":\"健康的，良好的\"}],\"contextMeaning\":\"感到良好\",\"examples\":[{\"zh\":\"我现在感觉很好，经过一个好睡眠之夜\"}]}",
+        "finishReason": "stop"
+      }
+    ],
+    "outputHash": "7091af3df6f3d7feadbeeb7bec25cabbed7fb8cb8810a97575ac731ce696a9c6",
+    "elapsedMs": 737.6451659999993,
+    "requests": 1,
+    "assessment": {
+      "zodPassed": true,
+      "automaticPassed": true,
+      "errors": [],
+      "review": [
+        "US / UK IPA 的正确性、例句义项和翻译完整性仍须人工或专家逐项审阅"
+      ]
+    }
+  },
+  {
+    "id": "D10",
+    "title": "fine 描述停车处罚时解释为罚款的名词",
+    "repetition": 1,
+    "card": {
+      "word": "fine",
+      "ipa": {
+        "us": "/ˈfaɪn/",
+        "uk": "/fˈaɪn/"
+      },
+      "senses": [
+        {
+          "partOfSpeech": "名词",
+          "meaning": "罚款"
+        }
+      ],
+      "contextMeaning": "罚款",
+      "examples": [
+        {
+          "en": "He paid a fine for parking in front of the fire exit.",
+          "zh": "他因停车在消防出口前而支付了罚款"
+        }
+      ]
+    },
+    "attempts": [
+      {
+        "status": 200,
+        "jsonParsed": true,
+        "zodPassed": false,
+        "issues": [
+          "ipa: Invalid input: expected object, received undefined",
+          "examples.0.en: Invalid input: expected string, received undefined"
+        ],
+        "content": "{\"word\":\"fine\",\"senses\":[{\"partOfSpeech\":\"名词\",\"meaning\":\"罚款\"}],\"contextMeaning\":\"罚款\",\"examples\":[{\"zh\":\"他因停车在消防出口前而支付了罚款\"}]}",
+        "finishReason": "stop"
+      }
+    ],
+    "outputHash": "aae6c2756cb59e5ffda785c1c20f3dc3aadcdc8e026edc1bbd990a6a9b5f6e86",
+    "elapsedMs": 568.8002500000002,
+    "requests": 1,
+    "assessment": {
+      "zodPassed": true,
+      "automaticPassed": true,
+      "errors": [],
+      "review": [
+        "US / UK IPA 的正确性、例句义项和翻译完整性仍须人工或专家逐项审阅"
+      ]
+    }
+  },
+  {
+    "id": "D11",
+    "title": "give up 描述停止尝试时解释为放弃的短语动词",
+    "repetition": 1,
+    "card": {
+      "word": "give up",
+      "ipa": {
+        "us": "",
+        "uk": ""
+      },
+      "senses": [
+        {
+          "partOfSpeech": "动词",
+          "meaning": "放弃"
+        }
+      ],
+      "contextMeaning": "放弃",
+      "examples": [
+        {
+          "en": "The puzzle is difficult, but please do not give up.",
+          "zh": "难题虽然困难，请不要放弃。"
+        }
+      ]
+    },
+    "attempts": [
+      {
+        "status": 200,
+        "jsonParsed": true,
+        "zodPassed": false,
+        "issues": [
+          "ipa: Invalid input: expected object, received undefined",
+          "examples.0.en: Invalid input: expected string, received undefined"
+        ],
+        "content": "{\"word\":\"give up\",\"senses\":[{\"partOfSpeech\":\"动词\",\"meaning\":\"放弃\"}],\"contextMeaning\":\"放弃\",\"examples\":[{\"zh\":\"难题虽然困难，请不要放弃。\"}]}",
+        "finishReason": "stop"
+      }
+    ],
+    "outputHash": "e76061abac73354b9ffeb24eb7525899f8cf2e2baf54ceaa15323e8e64da031d",
+    "elapsedMs": 558.3640829999986,
+    "requests": 1,
+    "assessment": {
+      "zodPassed": true,
+      "automaticPassed": true,
+      "errors": [],
+      "review": [
+        "US / UK IPA 的正确性、例句义项和翻译完整性仍须人工或专家逐项审阅",
+        "存在空音标：结构合法但发音内容不完整"
+      ]
+    }
+  },
+  {
+    "id": "D12",
+    "title": "take off 描述飞机离地时解释为起飞的短语动词",
+    "repetition": 1,
+    "card": {
+      "word": "take off",
+      "ipa": {
+        "us": "",
+        "uk": ""
+      },
+      "senses": [
+        {
+          "partOfSpeech": "动词",
+          "meaning": "起飞"
+        }
+      ],
+      "contextMeaning": "飞机起飞",
+      "examples": [
+        {
+          "en": "The plane will take off in ten minutes.",
+          "zh": "飞机将在十分钟后起飞"
+        }
+      ]
+    },
+    "attempts": [
+      {
+        "status": 200,
+        "jsonParsed": true,
+        "zodPassed": false,
+        "issues": [
+          "ipa: Invalid input: expected object, received undefined",
+          "examples.0.en: Invalid input: expected string, received undefined"
+        ],
+        "content": "{\"word\":\"take off\",\"senses\":[{\"partOfSpeech\":\"动词\",\"meaning\":\"起飞\"}],\"contextMeaning\":\"飞机起飞\",\"examples\":[{\"zh\":\"飞机将在十分钟后起飞\"}]}",
+        "finishReason": "stop"
+      }
+    ],
+    "outputHash": "bbcc03618b6aa54b1b5fcfa27ddb2a492547b725d675c7f72ac04893fe66cda7",
+    "elapsedMs": 620.1464169999999,
+    "requests": 1,
+    "assessment": {
+      "zodPassed": true,
+      "automaticPassed": true,
+      "errors": [],
+      "review": [
+        "US / UK IPA 的正确性、例句义项和翻译完整性仍须人工或专家逐项审阅",
+        "存在空音标：结构合法但发音内容不完整"
+      ]
+    }
+  },
+  {
+    "id": "D01",
+    "title": "light 描述背包重量时解释为轻的形容词",
+    "repetition": 2,
+    "card": {
+      "word": "light",
+      "ipa": {
+        "us": "/ˈɫaɪt/",
+        "uk": "/lˈaɪt/"
+      },
+      "senses": [
+        {
+          "partOfSpeech": "形容词",
+          "meaning": "轻的"
+        }
+      ],
+      "contextMeaning": "轻的",
+      "examples": [
+        {
+          "en": "This backpack is surprisingly light, even with a laptop and two books inside.",
+          "zh": "这个背包意外地很轻，里面装着一台笔记本电脑和两本书。"
+        }
+      ]
+    },
+    "attempts": [
+      {
+        "status": 200,
+        "jsonParsed": true,
+        "zodPassed": false,
+        "issues": [
+          "ipa: Invalid input: expected object, received undefined",
+          "examples.0.en: Invalid input: expected string, received undefined"
+        ],
+        "content": "{\"word\":\"light\",\"senses\":[{\"partOfSpeech\":\"形容词\",\"meaning\":\"轻的\"}],\"contextMeaning\":\"轻的\",\"examples\":[{\"zh\":\"This backpack is surprisingly light, even with a laptop and two books inside.\"}]}",
+        "finishReason": "stop"
+      },
+      {
+        "status": 200,
+        "jsonParsed": false,
+        "zodPassed": false,
+        "issues": [],
+        "content": "这个背包意外地很轻，里面装着一台笔记本电脑和两本书。",
+        "finishReason": "stop",
+        "error": "Unexpected token '这', \"这个背包意外地很轻，\"... is not valid JSON"
+      }
+    ],
+    "outputHash": "5bc183a581cb710b4dfdb394e10996111b138d95425dc19367e9d4cde0327be6",
+    "elapsedMs": 1074.4667919999993,
+    "requests": 2,
+    "assessment": {
+      "zodPassed": true,
+      "automaticPassed": true,
+      "errors": [],
+      "review": [
+        "US / UK IPA 的正确性、例句义项和翻译完整性仍须人工或专家逐项审阅"
+      ]
+    }
+  },
+  {
+    "id": "D02",
+    "title": "light 描述点燃蜡烛时解释为动词",
+    "repetition": 2,
+    "card": {
+      "word": "light",
+      "ipa": {
+        "us": "/ˈɫaɪt/",
+        "uk": "/lˈaɪt/"
+      },
+      "senses": [
+        {
+          "partOfSpeech": "动词",
+          "meaning": "点燃"
+        }
+      ],
+      "contextMeaning": "点燃蜡烛",
+      "examples": [
+        {
+          "en": "Please light the candle before the guests arrive.",
+          "zh": "请在客人到达前点燃蜡烛"
+        }
+      ]
+    },
+    "attempts": [
+      {
+        "status": 200,
+        "jsonParsed": true,
+        "zodPassed": false,
+        "issues": [
+          "ipa: Invalid input: expected object, received undefined",
+          "examples.0.en: Invalid input: expected string, received undefined"
+        ],
+        "content": "{\"word\":\"light\",\"senses\":[{\"partOfSpeech\":\"动词\",\"meaning\":\"点燃\"}],\"contextMeaning\":\"点燃蜡烛\",\"examples\":[{\"zh\":\"请在客人到达前点燃蜡烛\"}]}",
+        "finishReason": "stop"
+      }
+    ],
+    "outputHash": "ac2f3675f11262b8dbe03c574df185c2d0657d7a4af1861d8a0ff8499f90d5d2",
+    "elapsedMs": 666.0258329999997,
+    "requests": 1,
+    "assessment": {
+      "zodPassed": true,
+      "automaticPassed": true,
+      "errors": [],
+      "review": [
+        "US / UK IPA 的正确性、例句义项和翻译完整性仍须人工或专家逐项审阅"
+      ]
+    }
+  },
+  {
+    "id": "D03",
+    "title": "bank 出现在河边语境时解释为河岸",
+    "repetition": 2,
+    "card": {
+      "word": "bank",
+      "ipa": {
+        "us": "/ˈbæŋk/",
+        "uk": "/bˈæŋk/"
+      },
+      "senses": [
+        {
+          "partOfSpeech": "名词",
+          "meaning": "河岸"
+        }
+      ],
+      "contextMeaning": "河岸",
+      "examples": [
+        {
+          "en": "We sat on the bank of the river and watched the ducks.",
+          "zh": "我们坐在河岸上观看鸭子。"
+        }
+      ]
+    },
+    "attempts": [
+      {
+        "status": 200,
+        "jsonParsed": true,
+        "zodPassed": false,
+        "issues": [
+          "ipa: Invalid input: expected object, received undefined",
+          "examples.0.en: Invalid input: expected string, received undefined"
+        ],
+        "content": "{\"word\":\"bank\",\"senses\":[{\"partOfSpeech\":\"名词\",\"meaning\":\"河岸\"}],\"contextMeaning\":\"河岸\",\"examples\":[{\"zh\":\"我们坐在河岸上观看鸭子。\"}]}",
+        "finishReason": "stop"
+      }
+    ],
+    "outputHash": "1e2e5b1dbfc8aa543aab34c04068e496c4bc7a021b0c09cf6e6900250978fe41",
+    "elapsedMs": 577.3389580000003,
+    "requests": 1,
+    "assessment": {
+      "zodPassed": true,
+      "automaticPassed": true,
+      "errors": [],
+      "review": [
+        "US / UK IPA 的正确性、例句义项和翻译完整性仍须人工或专家逐项审阅"
+      ]
+    }
+  },
+  {
+    "id": "D04",
+    "title": "bank 出现在存款语境时解释为银行",
+    "repetition": 2,
+    "card": {
+      "word": "bank",
+      "ipa": {
+        "us": "/ˈbæŋk/",
+        "uk": "/bˈæŋk/"
+      },
+      "senses": [
+        {
+          "partOfSpeech": "名词",
+          "meaning": "银行"
+        }
+      ],
+      "contextMeaning": "银行",
+      "examples": [
+        {
+          "en": "She deposited her savings at the bank yesterday.",
+          "zh": "她把储蓄存入了银行"
+        }
+      ]
+    },
+    "attempts": [
+      {
+        "status": 200,
+        "jsonParsed": true,
+        "zodPassed": false,
+        "issues": [
+          "ipa: Invalid input: expected object, received undefined",
+          "examples.0.en: Invalid input: expected string, received undefined"
+        ],
+        "content": "{\"word\":\"bank\",\"senses\":[{\"partOfSpeech\":\"名词\",\"meaning\":\"银行\"}],\"contextMeaning\":\"银行\",\"examples\":[{\"zh\":\"她把储蓄存入了银行\"}]}",
+        "finishReason": "stop"
+      }
+    ],
+    "outputHash": "586aa234d8cbdea330f3423cbcede9818b0834bffca92b0cb15e5f4337f45a6b",
+    "elapsedMs": 643.3642909999999,
+    "requests": 1,
+    "assessment": {
+      "zodPassed": true,
+      "automaticPassed": true,
+      "errors": [],
+      "review": [
+        "US / UK IPA 的正确性、例句义项和翻译完整性仍须人工或专家逐项审阅"
+      ]
+    }
+  },
+  {
+    "id": "D05",
+    "title": "cloudy 描述天气时解释为多云的形容词",
+    "repetition": 2,
+    "card": {
+      "word": "cloudy",
+      "ipa": {
+        "us": "/ˈkɫaʊdi/",
+        "uk": "/klˈaʊdi/"
+      },
+      "senses": [
+        {
+          "partOfSpeech": "形容词",
+          "meaning": "多云的"
+        }
+      ],
+      "contextMeaning": "早晨多云",
+      "examples": [
+        {
+          "en": "It was a cloudy morning, but no rain was expected.",
+          "zh": "它是一个多云的早晨，但没有雨预期。"
+        }
+      ]
+    },
+    "attempts": [
+      {
+        "status": 200,
+        "jsonParsed": true,
+        "zodPassed": false,
+        "issues": [
+          "ipa: Invalid input: expected object, received undefined",
+          "examples.0.en: Invalid input: expected string, received undefined"
+        ],
+        "content": "{\n  \"word\": \"cloudy\",\n  \"senses\": [\n    {\n      \"partOfSpeech\": \"形容词\",\n      \"meaning\": \"多云的\"\n    }\n  ],\n  \"contextMeaning\": \"早晨多云\",\n  \"examples\": [\n    {\n      \"zh\": \"它是一个多云的早晨，但没有雨预期。\"\n    }\n  ]\n}",
+        "finishReason": "stop"
+      }
+    ],
+    "outputHash": "8744d97166d1e8faee4981758ef6bfd65d9006e849098acf970cfea72fdd8362",
+    "elapsedMs": 836.6729579999992,
+    "requests": 1,
+    "assessment": {
+      "zodPassed": true,
+      "automaticPassed": true,
+      "errors": [],
+      "review": [
+        "US / UK IPA 的正确性、例句义项和翻译完整性仍须人工或专家逐项审阅"
+      ]
+    }
+  },
+  {
+    "id": "D06",
+    "title": "run 描述执行程序时解释为运行的动词",
+    "repetition": 2,
+    "card": {
+      "word": "run",
+      "ipa": {
+        "us": "/ˈɹən/",
+        "uk": "/ɹˈɐn/"
+      },
+      "senses": [
+        {
+          "partOfSpeech": "动词",
+          "meaning": "运行"
+        }
+      ],
+      "contextMeaning": "运行程序",
+      "examples": [
+        {
+          "en": "Click this button to run the program on your computer.",
+          "zh": "点击此按钮以在您的计算机上运行该程序"
+        }
+      ]
+    },
+    "attempts": [
+      {
+        "status": 200,
+        "jsonParsed": true,
+        "zodPassed": false,
+        "issues": [
+          "ipa: Invalid input: expected object, received undefined",
+          "examples.0.en: Invalid input: expected string, received undefined"
+        ],
+        "content": "{\"word\":\"run\",\"senses\":[{\"partOfSpeech\":\"动词\",\"meaning\":\"运行\"}],\"contextMeaning\":\"运行程序\",\"examples\":[{\"zh\":\"点击此按钮以在您的计算机上运行该程序\"}]}",
+        "finishReason": "stop"
+      }
+    ],
+    "outputHash": "10b7302ac05383a40ddf78fb0d5843537ca63dd9d999b09d64c19d953b3cfeee",
+    "elapsedMs": 577.6876250000005,
+    "requests": 1,
+    "assessment": {
+      "zodPassed": true,
+      "automaticPassed": true,
+      "errors": [],
+      "review": [
+        "US / UK IPA 的正确性、例句义项和翻译完整性仍须人工或专家逐项审阅"
+      ]
+    }
+  },
+  {
+    "id": "D07",
+    "title": "charge 描述收取费用时解释为收费的动词",
+    "repetition": 2,
+    "card": {
+      "word": "charge",
+      "ipa": {
+        "us": "/ˈtʃɑɹdʒ/",
+        "uk": "/tʃˈɑːdʒ/"
+      },
+      "senses": [
+        {
+          "partOfSpeech": "动词",
+          "meaning": "收取"
+        }
+      ],
+      "contextMeaning": "收取费用",
+      "examples": [
+        {
+          "en": "The hotel will charge you twenty dollars for parking.",
+          "zh": "酒店将收取您二十美元的停车费。"
+        }
+      ]
+    },
+    "attempts": [
+      {
+        "status": 200,
+        "jsonParsed": true,
+        "zodPassed": false,
+        "issues": [
+          "ipa: Invalid input: expected object, received undefined",
+          "examples.0.en: Invalid input: expected string, received undefined"
+        ],
+        "content": "{\"word\":\"charge\",\"senses\":[{\"partOfSpeech\":\"动词\",\"meaning\":\"收取\"}],\"contextMeaning\":\"收取费用\",\"examples\":[{\"zh\":\"The hotel will charge you twenty dollars for parking.\"}]}",
+        "finishReason": "stop"
+      },
+      {
+        "status": 200,
+        "jsonParsed": false,
+        "zodPassed": false,
+        "issues": [],
+        "content": "酒店将收取您二十美元的停车费。",
+        "finishReason": "stop",
+        "error": "Unexpected token '酒', \"酒店将收取您二十美元的停车费。\" is not valid JSON"
+      }
+    ],
+    "outputHash": "7b37df046f712e411df691b543dd48fa7751e1b6d396297996dc5e07db2b57f0",
+    "elapsedMs": 980.5460000000003,
+    "requests": 2,
+    "assessment": {
+      "zodPassed": true,
+      "automaticPassed": true,
+      "errors": [],
+      "review": [
+        "US / UK IPA 的正确性、例句义项和翻译完整性仍须人工或专家逐项审阅"
+      ]
+    }
+  },
+  {
+    "id": "D08",
+    "title": "charge 描述法律指控时解释为指控的动词",
+    "repetition": 2,
+    "card": {
+      "word": "charge",
+      "ipa": {
+        "us": "/ˈtʃɑɹdʒ/",
+        "uk": "/tʃˈɑːdʒ/"
+      },
+      "senses": [
+        {
+          "partOfSpeech": "及物动词",
+          "meaning": "使承担法律责任"
+        }
+      ],
+      "contextMeaning": "追究刑事责任",
+      "examples": [
+        {
+          "en": "The police will charge him with theft.",
+          "zh": "警方将对他提起盗窃罪的指控。"
+        }
+      ]
+    },
+    "attempts": [
+      {
+        "status": 200,
+        "jsonParsed": true,
+        "zodPassed": false,
+        "issues": [
+          "ipa: Invalid input: expected object, received undefined",
+          "examples.0.en: Invalid input: expected string, received undefined"
+        ],
+        "content": "{\"word\":\"charge\",\"senses\":[{\"partOfSpeech\":\"及物动词\",\"meaning\":\"使承担法律责任\"}],\"contextMeaning\":\"追究刑事责任\",\"examples\":[{\"zh\":\"The police will charge him with theft.\"}]}",
+        "finishReason": "stop"
+      },
+      {
+        "status": 200,
+        "jsonParsed": false,
+        "zodPassed": false,
+        "issues": [],
+        "content": "警方将对他提起盗窃罪的指控。",
+        "finishReason": "stop",
+        "error": "Unexpected token '警', \"警方将对他提起盗窃罪的指控。\" is not valid JSON"
+      }
+    ],
+    "outputHash": "d8cd0dc3bae68aab651108905aa0c81d475e7d5fc29d089fc2d916694f3ad8ef",
+    "elapsedMs": 972.734790999999,
+    "requests": 2,
+    "assessment": {
+      "zodPassed": true,
+      "automaticPassed": false,
+      "errors": [
+        "释义未包含该语境义项的基本含义"
+      ],
+      "review": [
+        "US / UK IPA 的正确性、例句义项和翻译完整性仍须人工或专家逐项审阅"
+      ]
+    }
+  },
+  {
+    "id": "D09",
+    "title": "fine 描述身体状态时解释为良好的形容词",
+    "repetition": 2,
+    "card": {
+      "word": "fine",
+      "ipa": {
+        "us": "/ˈfaɪn/",
+        "uk": "/fˈaɪn/"
+      },
+      "senses": [
+        {
+          "partOfSpeech": "形容词",
+          "meaning": "健康的，良好的"
+        }
+      ],
+      "contextMeaning": "感到良好",
+      "examples": [
+        {
+          "en": "I feel fine now after a good night of sleep.",
+          "zh": "我现在感觉很好，经过一个好睡眠之夜"
+        }
+      ]
+    },
+    "attempts": [
+      {
+        "status": 200,
+        "jsonParsed": true,
+        "zodPassed": false,
+        "issues": [
+          "ipa: Invalid input: expected object, received undefined",
+          "examples.0.en: Invalid input: expected string, received undefined"
+        ],
+        "content": "{\"word\":\"fine\",\"senses\":[{\"partOfSpeech\":\"形容词\",\"meaning\":\"健康的，良好的\"}],\"contextMeaning\":\"感到良好\",\"examples\":[{\"zh\":\"我现在感觉很好，经过一个好睡眠之夜\"}]}",
+        "finishReason": "stop"
+      }
+    ],
+    "outputHash": "7091af3df6f3d7feadbeeb7bec25cabbed7fb8cb8810a97575ac731ce696a9c6",
+    "elapsedMs": 667.1774580000001,
+    "requests": 1,
+    "assessment": {
+      "zodPassed": true,
+      "automaticPassed": true,
+      "errors": [],
+      "review": [
+        "US / UK IPA 的正确性、例句义项和翻译完整性仍须人工或专家逐项审阅"
+      ]
+    }
+  },
+  {
+    "id": "D10",
+    "title": "fine 描述停车处罚时解释为罚款的名词",
+    "repetition": 2,
+    "card": {
+      "word": "fine",
+      "ipa": {
+        "us": "/ˈfaɪn/",
+        "uk": "/fˈaɪn/"
+      },
+      "senses": [
+        {
+          "partOfSpeech": "名词",
+          "meaning": "罚款"
+        }
+      ],
+      "contextMeaning": "罚款",
+      "examples": [
+        {
+          "en": "He paid a fine for parking in front of the fire exit.",
+          "zh": "他因停车在消防出口前而支付了罚款"
+        }
+      ]
+    },
+    "attempts": [
+      {
+        "status": 200,
+        "jsonParsed": true,
+        "zodPassed": false,
+        "issues": [
+          "ipa: Invalid input: expected object, received undefined",
+          "examples.0.en: Invalid input: expected string, received undefined"
+        ],
+        "content": "{\"word\":\"fine\",\"senses\":[{\"partOfSpeech\":\"名词\",\"meaning\":\"罚款\"}],\"contextMeaning\":\"罚款\",\"examples\":[{\"zh\":\"他因停车在消防出口前而支付了罚款\"}]}",
+        "finishReason": "stop"
+      }
+    ],
+    "outputHash": "aae6c2756cb59e5ffda785c1c20f3dc3aadcdc8e026edc1bbd990a6a9b5f6e86",
+    "elapsedMs": 511.64424999999756,
+    "requests": 1,
+    "assessment": {
+      "zodPassed": true,
+      "automaticPassed": true,
+      "errors": [],
+      "review": [
+        "US / UK IPA 的正确性、例句义项和翻译完整性仍须人工或专家逐项审阅"
+      ]
+    }
+  },
+  {
+    "id": "D11",
+    "title": "give up 描述停止尝试时解释为放弃的短语动词",
+    "repetition": 2,
+    "card": {
+      "word": "give up",
+      "ipa": {
+        "us": "",
+        "uk": ""
+      },
+      "senses": [
+        {
+          "partOfSpeech": "动词",
+          "meaning": "放弃"
+        }
+      ],
+      "contextMeaning": "放弃",
+      "examples": [
+        {
+          "en": "The puzzle is difficult, but please do not give up.",
+          "zh": "难题虽然困难，请不要放弃。"
+        }
+      ]
+    },
+    "attempts": [
+      {
+        "status": 200,
+        "jsonParsed": true,
+        "zodPassed": false,
+        "issues": [
+          "ipa: Invalid input: expected object, received undefined",
+          "examples.0.en: Invalid input: expected string, received undefined"
+        ],
+        "content": "{\"word\":\"give up\",\"senses\":[{\"partOfSpeech\":\"动词\",\"meaning\":\"放弃\"}],\"contextMeaning\":\"放弃\",\"examples\":[{\"zh\":\"难题虽然困难，请不要放弃。\"}]}",
+        "finishReason": "stop"
+      }
+    ],
+    "outputHash": "e76061abac73354b9ffeb24eb7525899f8cf2e2baf54ceaa15323e8e64da031d",
+    "elapsedMs": 485.66970800000126,
+    "requests": 1,
+    "assessment": {
+      "zodPassed": true,
+      "automaticPassed": true,
+      "errors": [],
+      "review": [
+        "US / UK IPA 的正确性、例句义项和翻译完整性仍须人工或专家逐项审阅",
+        "存在空音标：结构合法但发音内容不完整"
+      ]
+    }
+  },
+  {
+    "id": "D12",
+    "title": "take off 描述飞机离地时解释为起飞的短语动词",
+    "repetition": 2,
+    "card": {
+      "word": "take off",
+      "ipa": {
+        "us": "",
+        "uk": ""
+      },
+      "senses": [
+        {
+          "partOfSpeech": "动词",
+          "meaning": "起飞"
+        }
+      ],
+      "contextMeaning": "飞机起飞",
+      "examples": [
+        {
+          "en": "The plane will take off in ten minutes.",
+          "zh": "飞机将在十分钟后起飞"
+        }
+      ]
+    },
+    "attempts": [
+      {
+        "status": 200,
+        "jsonParsed": true,
+        "zodPassed": false,
+        "issues": [
+          "ipa: Invalid input: expected object, received undefined",
+          "examples.0.en: Invalid input: expected string, received undefined"
+        ],
+        "content": "{\"word\":\"take off\",\"senses\":[{\"partOfSpeech\":\"动词\",\"meaning\":\"起飞\"}],\"contextMeaning\":\"飞机起飞\",\"examples\":[{\"zh\":\"飞机将在十分钟后起飞\"}]}",
+        "finishReason": "stop"
+      }
+    ],
+    "outputHash": "bbcc03618b6aa54b1b5fcfa27ddb2a492547b725d675c7f72ac04893fe66cda7",
+    "elapsedMs": 676.3642919999984,
+    "requests": 1,
+    "assessment": {
+      "zodPassed": true,
+      "automaticPassed": true,
+      "errors": [],
+      "review": [
+        "US / UK IPA 的正确性、例句义项和翻译完整性仍须人工或专家逐项审阅",
+        "存在空音标：结构合法但发音内容不完整"
+      ]
+    }
+  }
+]

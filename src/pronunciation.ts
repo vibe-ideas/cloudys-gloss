@@ -2,7 +2,7 @@ export type PronunciationDialect = 'us' | 'uk';
 export type PronunciationLoader = (dialect: PronunciationDialect) => Promise<string>;
 
 /** Binary-search sorted TSV without splitting 140k entries into a second in-memory index. */
-function findPronunciation(text: string, word: string): string {
+export function findPronunciation(text: string, word: string): string {
   let low = 0; let high = text.length;
   while (low < high) {
     const middle = Math.floor((low + high) / 2);
@@ -23,7 +23,7 @@ function findPronunciation(text: string, word: string): string {
 }
 
 /** Cancellation belongs to a caller, not the asset load shared with other lookups. */
-function waitFor<T>(pending: Promise<T>, signal: AbortSignal): Promise<T> {
+export function waitFor<T>(pending: Promise<T>, signal: AbortSignal): Promise<T> {
   signal.throwIfAborted();
   return new Promise<T>((resolve, reject) => {
     const abort = () => { cleanup(); reject(signal.reason); };

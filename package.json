@@ -1,16 +1,18 @@
 {
   "name": "cloudys-gloss",
-  "version": "0.1.0",
+  "version": "0.1.3",
   "private": true,
   "type": "module",
   "packageManager": "pnpm@10.33.0",
   "scripts": {
+    "icons:build": "node scripts/build-icons.mjs",
     "dev": "wxt",
     "dev:firefox": "wxt -b firefox",
     "build": "wxt build",
     "build:firefox": "wxt build -b firefox",
     "zip": "wxt zip",
     "zip:firefox": "wxt zip -b firefox",
+    "update:firefox": "python3 scripts/update-firefox.py",
     "postinstall": "wxt prepare",
     "lint": "eslint .",
     "typecheck": "wxt prepare && tsc --noEmit",
@@ -34,6 +36,7 @@
     "smoke:mlx": "MODEL_BASE_URL=http://127.0.0.1:8080/v1 MODEL_NAME=Qwen/Qwen3-1.7B-MLX-4bit pnpm smoke:live"
   },
   "dependencies": {
+    "entities": "^8.1.0",
     "idb": "^8.0.3",
     "pdfjs-dist": "6.4.299",
     "preact": "^11.0.0",

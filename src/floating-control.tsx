@@ -89,7 +89,9 @@ function Icon({ name, className }: { name: IconName; className?: string }) {
   return <svg class={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">{paths[name]}</svg>;
 }
 
-/** One isolated control per content-script lifetime. Pointer movement never reads layout. */
+const REPLACE_CONTROL = 'cloudys-gloss:replace-control';
+
+/** One control per document, including reinjection after an extension update. */
 export class FloatingControl {
   private host = document.createElement('div');
   private mount = document.createElement('div');
@@ -104,8 +106,17 @@ export class FloatingControl {
   private frame = 0;
   private destroyed = false;
 
-  constructor(private toggle: () => void, private settings: () => void) {
+  constructor(private toggle: () => void, private settings: () => void, onReplaced?: () => void) {
+    // Firefox can discard an old extension realm while leaving its DOM behind.
+    // Live instances dispose their listeners; orphaned hosts are removed too.
+    // Our hosts are direct children: no whole-page scan or ongoing observer.
+    for (const previous of Array.from(document.documentElement.children)) {
+      if (previous.getAttribute(OWN) !== 'floating-control') continue;
+      previous.dispatchEvent(new Event(REPLACE_CONTROL));
+      previous.remove();
+    }
     this.host.setAttribute(OWN, 'floating-control');
+    this.host.addEventListener(REPLACE_CONTROL, () => { this.destroy(); onReplaced?.(); }, { once: true, signal: this.controller.signal });
     const shadow = this.host.attachShadow({ mode: 'open' });
     const style = document.createElement('style'); style.textContent = css;
     shadow.append(style, this.mount); document.documentElement.append(this.host);
@@ -180,5 +191,8 @@ export class FloatingControl {
       </div>}
     </div></>, this.mount);
   };
-  destroy() { this.destroyed = true; this.controller.abort(); cancelAnimationFrame(this.frame); render(null, this.mount); this.host.remove(); }
+  destroy() {
+    if (this.destroyed) return;
+    this.destroyed = true; this.controller.abort(); cancelAnimationFrame(this.frame); render(null, this.mount); this.host.remove();
+  }
 }

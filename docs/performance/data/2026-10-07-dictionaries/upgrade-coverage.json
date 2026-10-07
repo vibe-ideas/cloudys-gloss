@@ -1,0 +1,45 @@
+{
+  "scope": "Development-set exact-headword coverage, not independently held-out IPA accuracy. Unlabelled IPA is counted only under general/any, never US or UK.",
+  "groups": {
+    "基础技术词": {
+      "total": 39,
+      "beforeUs": 35,
+      "beforeUk": 28,
+      "afterUs": 35,
+      "afterUk": 34,
+      "beforeAny": 35,
+      "afterAny": 36,
+      "general": 2
+    },
+    "新技术词与产品名": {
+      "total": 33,
+      "beforeUs": 9,
+      "beforeUk": 2,
+      "afterUs": 11,
+      "afterUk": 4,
+      "beforeAny": 9,
+      "afterAny": 13,
+      "general": 3
+    },
+    "技术缩写": {
+      "total": 19,
+      "beforeUs": 7,
+      "beforeUk": 2,
+      "afterUs": 8,
+      "afterUk": 4,
+      "beforeAny": 8,
+      "afterAny": 10,
+      "general": 3
+    },
+    "技术短语": {
+      "total": 10,
+      "beforeUs": 0,
+      "beforeUk": 0,
+      "afterUs": 1,
+      "afterUk": 0,
+      "beforeAny": 0,
+      "afterAny": 1,
+      "general": 0
+    }
+  }
+}

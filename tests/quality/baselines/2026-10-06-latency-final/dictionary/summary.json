@@ -1,0 +1,105 @@
+{
+  "corpusHash": "dbef3d029f4c2a230b22a6fa2ddc0c00cf4da4458559a65c0bdfc0af7063d818",
+  "providerHash": "20517adbe38ffbe92b85c2d0112c40f11bd1872fa98b97b42a88b4f14c1f5f41",
+  "baseline": "tests/quality/baselines/2026-10-05-tuning/final-dictionary",
+  "rows": 24,
+  "uniqueOutputs": 12,
+  "repetitions": 2,
+  "counts": {
+    "meaning": {
+      "passed": 24,
+      "total": 24,
+      "rate": 1.0
+    },
+    "partOfSpeech": {
+      "passed": 24,
+      "total": 24,
+      "rate": 1.0
+    },
+    "contextMeaning": {
+      "passed": 24,
+      "total": 24,
+      "rate": 1.0
+    },
+    "examples": {
+      "passed": 24,
+      "total": 24,
+      "rate": 1.0
+    },
+    "semanticAcceptable": {
+      "passed": 24,
+      "total": 24,
+      "rate": 1.0
+    },
+    "ipaComplete": {
+      "passed": 20,
+      "total": 24,
+      "rate": 0.8333333333333334
+    },
+    "wholeCardAcceptable": {
+      "passed": 20,
+      "total": 24,
+      "rate": 0.8333333333333334
+    }
+  },
+  "decision": {
+    "verdict": "accept_final_rollback_quality_check",
+    "reason": "No new material semantic failures in this fresh run. D08 correctly conveys accusation in both rounds, so the field-level regression in the rejected local-example-repair candidate is absent. Missing phrase IPA and existing minor omissions/awkwardness remain disclosed.",
+    "scope": "Acceptance concerns observed semantic compatibility of the final pipeline on this fixed corpus, not a claim of universally perfect translation or attribution of quality gains to diagnostics/performance changes."
+  },
+  "comparison": {
+    "semanticPassed": {
+      "before": 22,
+      "after": 24
+    },
+    "contextMeaningPassed": {
+      "before": 24,
+      "after": 24
+    },
+    "wholeCardPassed": {
+      "before": 18,
+      "after": 20
+    },
+    "ipaComplete": {
+      "before": 20,
+      "after": 20
+    },
+    "exactlyMatchingOutputRows": 14,
+    "changedCases": [
+      "D01",
+      "D07",
+      "D08",
+      "D09",
+      "D12"
+    ],
+    "newMaterialFailures": [],
+    "d08": "Both fresh outputs correctly say accusation; historical failure should remain a regression case because identical settings do not guarantee identical future model output."
+  },
+  "requests": {
+    "total": 36,
+    "rowsByRequestCount": {
+      "3": 6,
+      "1": 18
+    },
+    "groundedInitial": 24,
+    "groundedRepair": 6,
+    "generatedFallbackInitial": 6,
+    "generatedFallbackRepair": 0,
+    "fallbackCases": [
+      "D01",
+      "D07",
+      "D08"
+    ],
+    "perLookupBound": 4,
+    "exampleOnlyRepair": 0
+  },
+  "missingIpa": [
+    "D11 give up and D12 take off, both repetitions; no attested whole-phrase entries in either dialect"
+  ],
+  "knownMinorIssues": [
+    "D01: surprise/concession nuance weakened",
+    "D04: yesterday omitted",
+    "D05/D07/D08/D09/D10/D11: awkward or repetitive Chinese"
+  ],
+  "limits": "24/24 acceptable core semantics applies only to these 12 fixed cases repeated twice under the existing rubric. It allows minor non-core omissions and awkwardness and is not a perfect-translation score. Complete cards remain 20/24 because IPA is missing for two phrases. Keep earlier failed D08 outputs as stability evidence."
+}

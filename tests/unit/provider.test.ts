@@ -1,9 +1,77 @@
 import { describe, expect, it, vi } from 'vitest';
-import { OpenAICompatibleProvider, completionUrl } from '../../src/provider';
+import { OpenAICompatibleProvider, completionUrl, type ProviderDiagnostic } from '../../src/provider';
 import { defaults } from '../../src/schema';
 const signal = () => new AbortController().signal;
 const reply = (value: unknown) => new Response(JSON.stringify({ choices: [{ message: { content: JSON.stringify(value) } }] }));
 describe('OpenAI-compatible 模型请求', () => {
+  it('批量翻译只有一段照抄原文时保留成功译文，只重新请求失败的段落', async () => {
+    const sources = ['The library is open now.', 'The service is ready now.'];
+    const payload = JSON.stringify({ translations: ['图书馆现在开放了。', sources[1]] });
+    const fetcher = vi.fn<typeof fetch>()
+      .mockResolvedValueOnce(new Response(`data: ${JSON.stringify({ choices: [{ delta: { content: payload }, finish_reason: 'stop' }] })}\n\ndata: [DONE]\n\n`, { headers: { 'Content-Type': 'text/event-stream' } }))
+      .mockResolvedValueOnce(new Response(JSON.stringify({ choices: [{ message: { content: '服务现在已就绪。' } }] })));
+    const item = vi.fn();
+    expect(await new OpenAICompatibleProvider(defaults, fetcher).translate(sources, signal(), item)).toEqual(['图书馆现在开放了。', '服务现在已就绪。']);
+    expect(fetcher).toHaveBeenCalledTimes(2);
+    expect(JSON.parse(fetcher.mock.calls[1]![1]!.body as string).messages[1].content).toBe(sources[1]);
+    expect(item).not.toHaveBeenCalledWith(0, '');
+    expect(item).toHaveBeenCalledWith(1, '');
+    expect(item).not.toHaveBeenCalledWith(1, sources[1]);
+  });
+  it.each([
+    ['JSON 未闭合', '{"translations":["错误位置的译文"'],
+    ['段落数量不足', '{"translations":["错误位置的译文"]}'],
+    ['段落数量超出', '{"translations":["错误位置的译文","错误位置的译文","额外内容"]}'],
+  ])('流式批量输出%s时撤回临时译文，并逐段重新请求以防原文错配', async (_case, payload) => {
+    const fetcher = vi.fn<typeof fetch>()
+      .mockResolvedValueOnce(new Response(`data: ${JSON.stringify({ choices: [{ delta: { content: payload }, finish_reason: 'stop' }] })}\n\ndata: [DONE]\n\n`, { headers: { 'Content-Type': 'text/event-stream' } }))
+      .mockResolvedValueOnce(new Response(JSON.stringify({ choices: [{ message: { content: '你好' } }] })))
+      .mockResolvedValueOnce(new Response(JSON.stringify({ choices: [{ message: { content: '世界' } }] })));
+    const item = vi.fn();
+    expect(await new OpenAICompatibleProvider(defaults, fetcher).translate(['Hello', 'World'], signal(), item)).toEqual(['你好', '世界']);
+    expect(fetcher).toHaveBeenCalledTimes(3);
+    expect(item).toHaveBeenCalledWith(0, ''); expect(item).toHaveBeenCalledWith(1, '');
+    expect(item.mock.calls.findIndex(([index, text]) => index === 0 && text === '')).toBeGreaterThan(item.mock.calls.findIndex(([index, text]) => index === 0 && text === '错误位置的译文'));
+  });
+  it('完整批量 JSON 中一段为空或类型错误时只修复该段，其余段落仍可使用', async () => {
+    for (const invalid of ['', 42, { text: '你好' }]) {
+      const fetcher = vi.fn<typeof fetch>().mockResolvedValueOnce(reply({ translations: ['你好', invalid] }))
+        .mockResolvedValueOnce(new Response(JSON.stringify({ choices: [{ message: { content: '世界' } }] })));
+      const item = vi.fn();
+      expect(await new OpenAICompatibleProvider(defaults, fetcher).translate(['Hello', 'World'], signal(), item)).toEqual(['你好', '世界']);
+      expect(fetcher).toHaveBeenCalledTimes(2); expect(item).not.toHaveBeenCalledWith(0, '');
+    }
+  });
+  it('用户在失败段落修复期间取消时不返回整批成功，也不再请求后续失败段落', async () => {
+    const controller = new AbortController();
+    const fetcher = vi.fn<typeof fetch>().mockResolvedValueOnce(reply({ translations: ['你好', '', ''] }))
+      .mockImplementationOnce(async () => {
+        controller.abort(new Error('用户已关闭翻译'));
+        return new Response(JSON.stringify({ choices: [{ message: { content: '世界' } }] }));
+      });
+    const item = vi.fn();
+    await expect(new OpenAICompatibleProvider(defaults, fetcher).translate(['Hello', 'World', 'Again'], controller.signal, item)).rejects.toThrow('用户已关闭翻译');
+    expect(fetcher).toHaveBeenCalledTimes(2); expect(item).not.toHaveBeenCalledWith(1, '世界');
+  });
+  it('诊断记录区分词卡校验修复与 token 用量，且不包含输入文本或密钥', async () => {
+    const events: ProviderDiagnostic[] = [];
+    const card = { word: 'cloudy', ipa: { us: '', uk: '' }, senses: [{ partOfSpeech: 'adjective', meaning: '多云的' }], contextMeaning: '多云的', examples: [{ en: 'A cloudy sky.', zh: '多云的天空。' }] };
+    const fetcher = vi.fn<typeof fetch>().mockResolvedValueOnce(reply({ ...card, ipa: '' }))
+      .mockResolvedValueOnce(new Response(JSON.stringify({ choices: [{ message: { content: JSON.stringify(card) } }], usage: { prompt_tokens: 100, completion_tokens: 50, total_tokens: 150 } })));
+    expect(await new OpenAICompatibleProvider({ ...defaults, apiKey: 'private-key' }, fetcher, undefined, (event) => events.push(event)).lookup('cloudy', '', signal())).toEqual(card);
+    expect(events.filter((event) => event.event === 'start').map(({ operation, attempt, requestId }) => ({ operation, attempt, requestId }))).toEqual([
+      { operation: 'dictionary-generated', attempt: 1, requestId: 1 }, { operation: 'dictionary-generated', attempt: 2, requestId: 2 },
+    ]);
+    expect(events.find((event) => event.event === 'validation-error')?.invalidFields).toEqual(['ipa']);
+    expect(events.at(-1)?.usage).toEqual({ prompt_tokens: 100, completion_tokens: 50, total_tokens: 150 });
+    expect(JSON.stringify(events)).not.toContain('cloudy'); expect(JSON.stringify(events)).not.toContain('private-key');
+    expect(events.every((event) => event.elapsedMs >= 0)).toBe(true);
+  });
+  it('诊断监听器自身出错时翻译仍正常完成，不增加模型请求', async () => {
+    const fetcher = vi.fn<typeof fetch>().mockResolvedValue(reply({ translations: ['你好'] }));
+    expect(await new OpenAICompatibleProvider(defaults, fetcher, undefined, () => { throw new Error('诊断不可用'); }).translate(['Hello'], signal())).toEqual(['你好']);
+    expect(fetcher).toHaveBeenCalledTimes(1);
+  });
   it('模型流式照抄不足八词的英文短句时不推送原文，并以纯文本重试返回中文', async () => {
     const source = 'The service is ready now.';
     const body = `data: ${JSON.stringify({ choices: [{ delta: { content: JSON.stringify({ translations: [source] }) }, finish_reason: 'stop' }] })}\n\ndata: [DONE]\n\n`;

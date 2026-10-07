@@ -1,0 +1,14 @@
+{
+  "version": "0.1.2",
+  "artifact": "cloudys-gloss-0.1.2-firefox-unsigned.xpi",
+  "bytes": 3414831,
+  "sha256": "b4bd2050337459c78da99715f379acc9369f9df21cdb3da3e4dbb28d79af877c",
+  "checks": {
+    "lint": "passed",
+    "typecheck": "passed",
+    "unitTests": 356,
+    "regressionE2E": 26,
+    "realDictionaryBrowserCases": 2
+  },
+  "installation": "Requested via pnpm update:firefox; user-profile activation not verified."
+}

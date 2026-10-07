@@ -29,6 +29,10 @@
 
 ## 回归
 
+扩展更新可能让旧内容脚本退出、但保留其 Shadow DOM。新悬浮球挂载前会检查 `documentElement` 的直接子节点，通知仍存活的旧实例清理整个内容脚本会话，并移除失效实例遗留的悬浮球。清理函数可重复调用，迟到状态回调不会重新绘制已销毁实例；不添加轮询或全页 MutationObserver。
+
+`tests/unit/floating-control.test.ts` 覆盖失效节点清理、活实例交接与迟到回调。`tests/e2e/floating-lifecycle.spec.ts` 在两个浏览器中复现残留 Shadow DOM 后重新注入，验证只展开一个悬浮球、每段只请求一次、恢复原文和隐藏后不复活。重新注入能力只加入测试副本，生产扩展权限不变。
+
 `tests/e2e/extension.spec.ts` 中新增「云朵悬浮球只在翻译期间显示进度动效，完成后静止，展开和忙碌状态不改变页面宽度」，同时扩展减少动态效果场景，验证静态进度提示。
 
 与 `interaction-design.spec.ts` 一起在 Chromium 和 Firefox 验证 24 个场景，包括贴边与展开、左右拖动不误触、窄屏、浅色/深色、设置入口、恢复原文、点击外部关闭、Esc 焦点恢复和词卡交互。

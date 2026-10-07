@@ -32,6 +32,7 @@ test('普通 HTTP 网页没有 randomUUID 时，双语正文、页眉译文与�
   await page.mouse.move(word.x, word.y + word.height / 2); await page.mouse.down();
   await page.mouse.move(word.x + word.width, word.y + word.height / 2, { steps: 8 }); await page.mouse.up();
   await expect.poll(() => page.evaluate(() => getSelection()?.toString())).toBe('cloudy');
+  await page.getByRole('button', { name: '翻译所选内容', exact: true }).click();
   await expect(page.getByRole('dialog', { name: 'AI 单词卡' })).toBeVisible();
   await expect(page.getByText('多云的；不清晰的', { exact: true })).toBeVisible();
   await page.keyboard.press('Escape'); await expect(page.getByRole('dialog')).toHaveCount(0);

@@ -1,0 +1,21 @@
+{
+  "checkedDate": "2026-10-07",
+  "release": "v26.8.0",
+  "releaseUrl": "https://github.com/xiaoyifang/goldendict-ng/releases/tag/v26.8.0",
+  "commit": "c84e0113b84fc9ee6d5cfef8de646b0eb95d7707",
+  "macArmAssets": [
+    {
+      "name": "GoldenDict-ng-26.8.0-Qt6.10.3-macOS-arm64.dmg",
+      "bytes": 229078132,
+      "url": "https://github.com/xiaoyifang/goldendict-ng/releases/download/v26.8.0/GoldenDict-ng-26.8.0-Qt6.10.3-macOS-arm64.dmg",
+      "digest": "sha256:2369c5bba5c68cd42061be8482813199c3fbe04e895616b62c4c3d5e7e233757"
+    },
+    {
+      "name": "GoldenDict-ng-26.8.0-Qt6.8.3-macOS-arm64.dmg",
+      "bytes": 217307353,
+      "url": "https://github.com/xiaoyifang/goldendict-ng/releases/download/v26.8.0/GoldenDict-ng-26.8.0-Qt6.8.3-macOS-arm64.dmg",
+      "digest": "sha256:d1b15eedfc499f1e7e0e632bdf66d536bc49894639b0a80df5018e1913e7f103"
+    }
+  ],
+  "note": "Release metadata only. Desktop app was not installed or benchmarked; package bytes are not RSS."
+}

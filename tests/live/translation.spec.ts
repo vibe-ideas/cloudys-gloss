@@ -55,11 +55,16 @@ test('真实兼容网关：后台返回中文双语译文与通过 Zod 校验的
   await page.mouse.move(bounds.x, bounds.y + bounds.height / 2); await page.mouse.down();
   await page.mouse.move(bounds.x + bounds.width, bounds.y + bounds.height / 2, { steps: 8 }); await page.mouse.up();
   await expect.poll(() => page.evaluate(() => getSelection()?.toString())).toBe('cloudy');
-  await expect(page.getByRole('button', { name: '美式发音' })).toBeVisible();
+  const clickedAt = Date.now();
+  await page.getByRole('button', { name: '翻译所选内容', exact: true }).click();
+  await expect(page.getByRole('button', { name: '美式发音' })).toContainText('/ˈkɫaʊdi/');
+  const ipaMs = Date.now() - clickedAt;
   await expect(page.locator('[data-cloudys-gloss="popover"] .context')).toContainText(/[\u4e00-\u9fff]/);
   await expect(page.locator('[data-cloudys-gloss="popover"] .examples .zh').first()).toContainText(/[\u4e00-\u9fff]/);
   const cardMs = Date.now() - cardStart;
+  const clickedToCardMs = Date.now() - clickedAt;
   await page.screenshot({ path: testInfo.outputPath('real-word-card.png') });
   console.log(`${testInfo.project.name}: ${process.env.MODEL_NAME} first translation=${translationMs}ms, word card=${cardMs}ms`);
-  await testInfo.attach('latency', { body: JSON.stringify({ model: process.env.MODEL_NAME, translationMs, cardMs }), contentType: 'application/json' });
+  console.log(`${testInfo.project.name}: click to offline IPA=${ipaMs}ms, complete card=${clickedToCardMs}ms`);
+  await testInfo.attach('latency', { body: JSON.stringify({ model: process.env.MODEL_NAME, translationMs, cardMs, ipaMs, clickedToCardMs }), contentType: 'application/json' });
 });

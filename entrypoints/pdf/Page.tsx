@@ -198,7 +198,7 @@ export function PdfPage({ document: pdf, number, enabled, view, onView }: Props)
     setRows(previous => { const next = [...previous]; next[index] = { ...next[index], text: next[index]?.text ?? '', done: next[index]?.done ?? false, error: undefined, retrying: true }; return next; });
     try {
       // Keep the last good translation until the replacement is validated.
-      const [text] = await translateStream(id, [block.text], () => {}, { bypassCache: true });
+      const [text] = await translateStream(id, [block.text], () => {}, { bypassCache: true, priority: 'interactive' });
       if (!current()) return;
       if (!retainsPdfNumbers(block.text, text!)) throw new Error(NUMBER_ERROR);
       setRows(previous => { const next = [...previous]; next[index] = { text: text!, done: true }; return next; });

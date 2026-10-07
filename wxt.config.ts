@@ -4,12 +4,17 @@ import { existsSync } from 'node:fs';
 import { readdir } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import nativeKey from './scripts/native-key.json';
+import { generateDictionaryAssets } from './scripts/dictionary-assets';
 
 const firefoxBinary = process.env.FIREFOX_BINARY ?? (existsSync('/Applications/Firefox Developer Edition.app/Contents/MacOS/firefox') ? '/Applications/Firefox Developer Edition.app/Contents/MacOS/firefox' : undefined);
 
 export default defineConfig({
   hooks: {
     'build:publicAssets': async (wxt, files) => {
+      for (let i = files.length - 1; i >= 0; i--) {
+        if (/^dictionaries\/(us|uk)\.tsv$/.test(files[i]!.relativeDest)) files.splice(i, 1);
+      }
+      files.push(...await generateDictionaryAssets(wxt.config.root, resolve(wxt.config.root, 'artifacts/dictionary-build')));
       // PDF fonts and character maps are local assets, loaded only by the PDF
       // reader. They must not be bundled into every website's content script.
       const library = resolve(wxt.config.root, 'node_modules/pdfjs-dist');
@@ -28,10 +33,11 @@ export default defineConfig({
     },
     'prepare:publicPaths': (_wxt, paths) => {
       paths.push({ type: 'templateLiteral', path: '/pdf-resources/${string}' });
+      paths.push({ type: 'templateLiteral', path: '/dictionaries/${string}' });
     },
   },
   zip: {
-    includeSources: ['entrypoints/**', 'src/**', 'public/**', 'scripts/native-key.json', 'wxt.config.ts', 'tsconfig.json', 'package.json', 'pnpm-lock.yaml', 'README.md'],
+    includeSources: ['entrypoints/**', 'src/**', 'public/**', 'scripts/native-key.json', 'scripts/dictionary-assets.ts', 'scripts/build-tech-pronunciation.py', 'scripts/build-icons.mjs', 'data/pronunciation/**', 'wxt.config.ts', 'tsconfig.json', 'package.json', 'pnpm-lock.yaml', 'README.md'],
   },
   vite: () => ({ plugins: [preact()] }),
   webExt: {

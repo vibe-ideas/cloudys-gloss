@@ -1,4 +1,4 @@
-"""One-shot Native Messaging bridge for the user's managed MLX service."""
+"""One-shot Native Messaging bridge for managed MLX and local speech rendering."""
 import base64
 import contextlib
 import fcntl
@@ -12,6 +12,9 @@ import re
 import shlex
 import shutil
 import struct
+import subprocess
+import tempfile
+import wave
 import sys
 from pathlib import Path
 
@@ -45,7 +48,8 @@ def install(home):
     data, plist, _ = service.paths(home)
     python = data / "bridge-venv/bin/python"
     if not python.exists():
-        raise RuntimeError("请先运行 pnpm model:install 安装 MLX 环境和模型")
+        # Speech only needs the standard library; no model download is required.
+        python = Path(sys.executable).resolve()
     # Provision the executable launch configuration during explicit installation.
     # Browser-spawned hosts must update this existing file, not create a new one.
     if plist.exists():
@@ -65,7 +69,7 @@ def install(home):
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_text(json.dumps(manifest, indent=2) + "\n")
         path.chmod(0o600)
-    print(f"本地助手已安装。Firefox / Chrome / Chromium 扩展可管理 MLX。Chrome ID: {chrome_id()}")
+    print(f"本地助手已安装，支持系统发音与 MLX 管理。Chrome ID: {chrome_id()}")
 
 
 def autostart(home):
@@ -103,7 +107,36 @@ def status(home):
             "model": service.MODEL, "baseUrl": f"http://127.0.0.1:{service.PORT}/v1"}
 
 
+def speech(message):
+    if set(message) != {"action", "word", "locale"}:
+        raise ValueError("无效的发音请求")
+    word = message.get("word")
+    voices = {"en-US": "Samantha", "en-GB": "Daniel"}
+    if not isinstance(word, str) or not 0 < len(word.strip()) <= 200 or any(ord(c) < 32 for c in word) or "[[" in word:
+        raise ValueError("发音文字无效")
+    if message.get("locale") not in voices:
+        raise ValueError("不支持的发音口音")
+    # Render only: Firefox plays the resulting PCM via its normal media path.
+    # Text goes through stdin, never through a shell or command-line options.
+    with tempfile.TemporaryDirectory(prefix="cloudys-gloss-speech-") as folder:
+        path = Path(folder) / "word.wav"
+        result = subprocess.run([
+            "/usr/bin/say", "-v", voices[message["locale"]], "-r", "175",
+            "-o", str(path), "--file-format=WAVE", "--data-format=LEI16@22050",
+        ], input=word, text=True, capture_output=True, timeout=15)
+        if result.returncode or not path.exists():
+            raise RuntimeError("系统语音生成失败，请安装 Samantha（美式）或 Daniel（英式）语音")
+        if path.stat().st_size > 600000:
+            raise ValueError("发音过长，请选择较短的词组")
+        with wave.open(str(path)) as audio:
+            if audio.getnchannels() != 1 or audio.getsampwidth() != 2 or audio.getframerate() != 22050:
+                raise ValueError("系统语音格式无效")
+        return {"audio": base64.b64encode(path.read_bytes()).decode(), "voice": voices[message["locale"]]}
+
+
 def dispatch(home, message):
+    if isinstance(message, dict) and message.get("action") == "speech":
+        return speech(message)
     if not isinstance(message, dict) or set(message) - {"action", "enabled"}:
         raise ValueError("无效的服务管理请求")
     action = message.get("action")
@@ -167,8 +200,8 @@ def serve(home, source, output):
 
 
 def main():
-    if platform.system() != "Darwin" or platform.machine() != "arm64":
-        raise RuntimeError("本地 MLX 助手仅支持 Apple Silicon macOS")
+    if platform.system() != "Darwin":
+        raise RuntimeError("本地助手仅支持 macOS；MLX 模型另外需要 Apple Silicon")
     if "--install" in sys.argv[1:]:
         install(Path.home())
     elif "--uninstall" in sys.argv[1:]:

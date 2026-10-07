@@ -1,0 +1,992 @@
+{
+  "source": "Wiktionary contributors via Kaikki raw per-headword JSONL",
+  "license": "CC-BY-SA-4.0",
+  "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+  "retrieved": "2026-10-07",
+  "review": {
+    "method": "Source-label and transcription review; preserve base pronunciations; reject incomplete, humorous, regional-only and narrow transcriptions; no inferred accents or generated IPA. Not a pronunciation accuracy guarantee.",
+    "excludedWords": {
+      "parsing": "Upstream UK /ˈpɑː.zɪŋ/ has a suspect voiced consonant; defer rather than silently repair.",
+      "recursion": "Upstream /ɹɪˈkɜː(ɹ)ʒən/ has a suspect voiced fricative; defer pending verification."
+    }
+  },
+  "sourceManifestSha256": "1acdfa088b9ce9e8237c1909ac4ae9dae9f339b7b2747bbf31161c29591ba8c7",
+  "assetSha256": "40c0b28a218837caefa668d97af090adb4f06a4d1c64176dc6ae4c247ee2b144",
+  "entries": [
+    {
+      "word": "latency",
+      "url": "https://kaikki.org/dictionary/English/meaning/l/la/latency.jsonl",
+      "sha256": "45eff910e9455378a9a2792af5512e16e2d089688d40d3a9f9e19ab5488ec600",
+      "sounds": [
+        {
+          "tags": [
+            "UK",
+            "US"
+          ],
+          "ipa": "/ˈleɪ.tən.si/"
+        }
+      ]
+    },
+    {
+      "word": "throughput",
+      "url": "https://kaikki.org/dictionary/English/meaning/t/th/throughput.jsonl",
+      "sha256": "142da33ce355300babb41ec695c5e8bee534488da2c484e83017a0ed5b3ec253",
+      "sounds": [
+        {
+          "tags": [
+            "Received-Pronunciation"
+          ],
+          "ipa": "/ˈθɹuː.pʊt/"
+        },
+        {
+          "tags": [
+            "Canada",
+            "General-American"
+          ],
+          "ipa": "/ˈθɹu.pʊt/"
+        }
+      ]
+    },
+    {
+      "word": "concurrency",
+      "url": "https://kaikki.org/dictionary/English/meaning/c/co/concurrency.jsonl",
+      "sha256": "65506afe8838a48479a33a626f41ecfdd117282fda5678fcc9fc17388e69054c",
+      "sounds": [
+        {
+          "ipa": "/kəŋˈkʌɹənsi/"
+        }
+      ]
+    },
+    {
+      "word": "transformer",
+      "url": "https://kaikki.org/dictionary/English/meaning/t/tr/transformer.jsonl",
+      "sha256": "2b2495b87564ce33555331f6ff0fea06e0a8e4ce2569a8637c44482a812328cf",
+      "sounds": [
+        {
+          "tags": [
+            "Received-Pronunciation"
+          ],
+          "ipa": "/tɹænsˈfɔːmə/"
+        },
+        {
+          "tags": [
+            "General-American"
+          ],
+          "ipa": "/tɹænsˈfoɹməɹ/"
+        }
+      ]
+    },
+    {
+      "word": "embedding",
+      "url": "https://kaikki.org/dictionary/English/meaning/e/em/embedding.jsonl",
+      "sha256": "2a060e87c8efba80cbaf9a261c163bf96e1bf9b5042fa2dc232af7fe3a45d35b",
+      "sounds": [
+        {
+          "ipa": "/ɪmˈbɛdɪŋ/"
+        },
+        {
+          "ipa": "/ɛmˈbɛdɪŋ/"
+        },
+        {
+          "ipa": "/ɪmˈbɛdɪŋ/"
+        },
+        {
+          "ipa": "/ɛmˈbɛdɪŋ/"
+        }
+      ]
+    },
+    {
+      "word": "tensor",
+      "url": "https://kaikki.org/dictionary/English/meaning/t/te/tensor.jsonl",
+      "sha256": "fa8474b7fb6d14f294d543525b176e65c1668154bd052aa74d28cbabaf3a7a13",
+      "sounds": [
+        {
+          "tags": [
+            "Received-Pronunciation"
+          ],
+          "ipa": "/ˈtɛn.sə/"
+        },
+        {
+          "tags": [
+            "Received-Pronunciation"
+          ],
+          "ipa": "/ˈtɛn.sɔː/"
+        },
+        {
+          "tags": [
+            "General-American"
+          ],
+          "ipa": "/ˈtɛn.sɚ/"
+        },
+        {
+          "tags": [
+            "General-American"
+          ],
+          "ipa": "/ˈtɛn.sɔɹ/"
+        },
+        {
+          "tags": [
+            "Received-Pronunciation"
+          ],
+          "ipa": "/ˈtɛn.sə/"
+        },
+        {
+          "tags": [
+            "Received-Pronunciation"
+          ],
+          "ipa": "/ˈtɛn.sɔː/"
+        },
+        {
+          "tags": [
+            "General-American"
+          ],
+          "ipa": "/ˈtɛn.sɚ/"
+        },
+        {
+          "tags": [
+            "General-American"
+          ],
+          "ipa": "/ˈtɛn.sɔɹ/"
+        }
+      ]
+    },
+    {
+      "word": "scalability",
+      "url": "https://kaikki.org/dictionary/English/meaning/s/sc/scalability.jsonl",
+      "sha256": "022a60352a20f0a1b0e908b9cfad2c14636cfe7ce7b11a787631b2c1820ffc7f",
+      "sounds": [
+        {
+          "tags": [
+            "Received-Pronunciation"
+          ],
+          "ipa": "/ˌskeɪ.ləˈbɪl.ɪ.ti/"
+        },
+        {
+          "tags": [
+            "Canada",
+            "General-American",
+            "Received-Pronunciation"
+          ],
+          "ipa": "/ˌskeɪ.ləˈbɪl.ə.ti/"
+        }
+      ]
+    },
+    {
+      "word": "asynchronous",
+      "url": "https://kaikki.org/dictionary/English/meaning/a/as/asynchronous.jsonl",
+      "sha256": "4a3b7eba32e0b32bf7ff3450d0fe6a103e99a8fb69b92a6ab15fc06fbba6d4a6",
+      "sounds": [
+        {
+          "tags": [
+            "General-American",
+            "Received-Pronunciation"
+          ],
+          "ipa": "/eɪˈsɪŋ.kɹə.nəs/"
+        }
+      ]
+    },
+    {
+      "word": "Kubernetes",
+      "url": "https://kaikki.org/dictionary/English/meaning/K/Ku/Kubernetes.jsonl",
+      "sha256": "b1b3c8dc288826c991fa051df7cb4632dc43eb491af5a180f52773454e6293e6",
+      "sounds": [
+        {
+          "ipa": "/k(j)uːbəˈnɛtɪs/"
+        },
+        {
+          "ipa": "/k(j)uːbəˈneɪtɪs/"
+        },
+        {
+          "ipa": "/k(j)uːbəˈneɪtiːz/"
+        }
+      ]
+    },
+    {
+      "word": "TypeScript",
+      "url": "https://kaikki.org/dictionary/English/meaning/T/Ty/TypeScript.jsonl",
+      "sha256": "4d8d5f06bf56d96a9b52c34c74a969675f0ae61b1bdd82de9f71646e908e047d",
+      "sounds": [
+        {
+          "ipa": "/ˈtʌɪpskɹɪpt/"
+        }
+      ]
+    },
+    {
+      "word": "wasm",
+      "url": "https://kaikki.org/dictionary/English/meaning/w/wa/wasm.jsonl",
+      "sha256": "1e3ce24ca14e5b68daf6d819a8c62a58d5b2bfc56cfe4ce9a14060af7414a710",
+      "sounds": [
+        {
+          "tags": [
+            "Received-Pronunciation"
+          ],
+          "ipa": "/ˈwɒz(ə)m/"
+        },
+        {
+          "tags": [
+            "Received-Pronunciation"
+          ],
+          "ipa": "/ˈwʌz(ə)m/"
+        },
+        {
+          "ipa": "/ˈwʌz(ə)m/",
+          "tags": [
+            "General-American"
+          ]
+        },
+        {
+          "ipa": "/ˈwɑz(ə)m/",
+          "tags": [
+            "General-American"
+          ]
+        }
+      ]
+    },
+    {
+      "word": "cryptocurrency",
+      "url": "https://kaikki.org/dictionary/English/meaning/c/cr/cryptocurrency.jsonl",
+      "sha256": "ce25ff2c189a67c0def5552d500b0da63255b80bb98b0d13616514a9710a8433",
+      "sounds": [
+        {
+          "tags": [
+            "US"
+          ],
+          "ipa": "/ˈkɹɪp.toʊˌkɝ.ən.si/"
+        }
+      ]
+    },
+    {
+      "word": "Claude",
+      "url": "https://kaikki.org/dictionary/English/meaning/C/Cl/Claude.jsonl",
+      "sha256": "b20e043baa2094c0902fefaa3c98d389bb84ea4c6b15958b54cb202543368b26",
+      "sounds": [
+        {
+          "tags": [
+            "Received-Pronunciation"
+          ],
+          "ipa": "/ˈklɔːd/"
+        },
+        {
+          "tags": [
+            "Atlantic-Canada",
+            "General-American",
+            "cot-caught-merger"
+          ],
+          "ipa": "/ˈklɑd/"
+        }
+      ]
+    },
+    {
+      "word": "Gemini",
+      "url": "https://kaikki.org/dictionary/English/meaning/G/Ge/Gemini.jsonl",
+      "sha256": "2fbf014304f3ab4e740e2317c79326e6df3963b381f5b8cf397c6c28e77eb154",
+      "sounds": [
+        {
+          "ipa": "/ˈd͡ʒɛmɪnaɪ/"
+        },
+        {
+          "ipa": "/ˈd͡ʒɛmɪniː/"
+        },
+        {
+          "ipa": "/ˈd͡ʒɛmɪnaɪ/"
+        },
+        {
+          "ipa": "/ˈd͡ʒɛmɪniː/"
+        }
+      ]
+    },
+    {
+      "word": "CPU",
+      "url": "https://kaikki.org/dictionary/English/meaning/C/CP/CPU.jsonl",
+      "sha256": "4585915845492a9469395e457f7eba77a2f569f8e0a1b00fa5671be0e9f577d9",
+      "sounds": [
+        {
+          "tags": [
+            "Received-Pronunciation"
+          ],
+          "ipa": "/(ˌ)siː(ˌ)piːˈjuː/"
+        },
+        {
+          "ipa": "/ˌsi(ˌ)piˈju/",
+          "tags": [
+            "General-American"
+          ]
+        }
+      ]
+    },
+    {
+      "word": "SQL",
+      "url": "https://kaikki.org/dictionary/English/meaning/S/SQ/SQL.jsonl",
+      "sha256": "f499c785813e70d7974e78f421e1f5725012fc1c51c0d8dc88f238d08d581b56",
+      "sounds": [
+        {
+          "ipa": "/ɛs kjuː ɛl/"
+        },
+        {
+          "ipa": "/ˈsiːkwəl/"
+        },
+        {
+          "ipa": "/ɛs kjuː ɛl/"
+        }
+      ]
+    },
+    {
+      "word": "JSON",
+      "url": "https://kaikki.org/dictionary/English/meaning/J/JS/JSON.jsonl",
+      "sha256": "72786238ad5b501cfdf2e2d5803c3a182bbe26ae28f0596f8137359a6df09658",
+      "sounds": [
+        {
+          "tags": [
+            "General-American"
+          ],
+          "ipa": "/ˈd͡ʒeɪsən/"
+        },
+        {
+          "tags": [
+            "General-American"
+          ],
+          "ipa": "/ˈd͡ʒeɪsɑn/"
+        },
+        {
+          "tags": [
+            "UK"
+          ],
+          "ipa": "/ˈd͡ʒeɪsən/"
+        },
+        {
+          "tags": [
+            "General-American"
+          ],
+          "ipa": "/ˈd͡ʒeɪsən/"
+        },
+        {
+          "tags": [
+            "General-American"
+          ],
+          "ipa": "/ˈd͡ʒeɪsɑn/"
+        },
+        {
+          "tags": [
+            "UK"
+          ],
+          "ipa": "/ˈd͡ʒeɪsən/"
+        }
+      ]
+    },
+    {
+      "word": "YAML",
+      "url": "https://kaikki.org/dictionary/English/meaning/Y/YA/YAML.jsonl",
+      "sha256": "b3f5701e13f5ec5f1353bdbf10a089dbdb43c1879589c9660927cb5c7b928c6d",
+      "sounds": [
+        {
+          "ipa": "/ˈjæməl/"
+        }
+      ]
+    },
+    {
+      "word": "GUI",
+      "url": "https://kaikki.org/dictionary/English/meaning/G/GU/GUI.jsonl",
+      "sha256": "b909ff812674c11d551dcf857ce9fba46cc195a79bc9ac51c1265e46eb05ee93",
+      "sounds": [
+        {
+          "ipa": "/ˈdʒiːjuːaɪ/"
+        },
+        {
+          "ipa": "/ˈɡuː.i/"
+        }
+      ]
+    },
+    {
+      "word": "open source",
+      "url": "https://kaikki.org/dictionary/English/meaning/o/op/open%20source.jsonl",
+      "sha256": "f56cfeb5affa9b3351f5d3f811090818e3b87b09b4ad69a43bf5f6412b375ccd",
+      "sounds": [
+        {
+          "tags": [
+            "US"
+          ],
+          "ipa": "/ˈoʊpən ˌsɔɹs/"
+        },
+        {
+          "tags": [
+            "US"
+          ],
+          "ipa": "/ˈoʊpən ˌsɔɹs/"
+        }
+      ]
+    },
+    {
+      "word": "cryptography",
+      "url": "https://kaikki.org/dictionary/English/meaning/c/cr/cryptography.jsonl",
+      "sha256": "e1a098e73ae3ae423efcfdb4ce463d6bf4c25d823b2db4a13ac7f6353619822e",
+      "sounds": [
+        {
+          "ipa": "/kɹɪpˈtɒɡ.ɹə.fi/"
+        }
+      ]
+    },
+    {
+      "word": "debugging",
+      "url": "https://kaikki.org/dictionary/English/meaning/d/de/debugging.jsonl",
+      "sha256": "3d7881cdc89cff3310b728eb69e75d655ebbac90c048d4d13d2ac9403479a10c",
+      "sounds": [
+        {
+          "ipa": "/diːˈbʌɡɪŋ/"
+        },
+        {
+          "ipa": "/diːˈbʌɡɪŋ/"
+        }
+      ]
+    },
+    {
+      "word": "decryption",
+      "url": "https://kaikki.org/dictionary/English/meaning/d/de/decryption.jsonl",
+      "sha256": "7b7799e408e2dd23f643edf73d9599c24bdcc0e7acfa203d5d732a4b292c372d",
+      "sounds": [
+        {
+          "tags": [
+            "UK"
+          ],
+          "ipa": "/dɪˈkɹɪpʃən/"
+        }
+      ]
+    },
+    {
+      "word": "dereference",
+      "url": "https://kaikki.org/dictionary/English/meaning/d/de/dereference.jsonl",
+      "sha256": "0f0f67e6fa236ffd34876a7b67dda1a32bfb4fdcc43e90850f7a788b7c4590f8",
+      "sounds": [
+        {
+          "tags": [
+            "UK"
+          ],
+          "ipa": "/dɪˈɹɛfɹəns/"
+        },
+        {
+          "tags": [
+            "UK"
+          ],
+          "ipa": "/dɪˈɹɛfɹəns/"
+        }
+      ]
+    },
+    {
+      "word": "enumeration",
+      "url": "https://kaikki.org/dictionary/English/meaning/e/en/enumeration.jsonl",
+      "sha256": "05525e8b7ebf6a879e11ccc76b256b102ec484081ab217e142fab21d52a405ad",
+      "sounds": [
+        {
+          "ipa": "/ɪˌnjuːməˈɹeɪʃən/"
+        },
+        {
+          "ipa": "/ɪˌnuːməˈɹeɪʃən/"
+        }
+      ]
+    },
+    {
+      "word": "executable",
+      "url": "https://kaikki.org/dictionary/English/meaning/e/ex/executable.jsonl",
+      "sha256": "e84728b615783b0615e21864990f633c19905b356d9c9853b846292c94f0dbc9",
+      "sounds": [
+        {
+          "ipa": "/ˈɛksəkjutəbl/"
+        },
+        {
+          "ipa": "/ˌɛksɪˈkjuːtəbl/"
+        },
+        {
+          "ipa": "/ˈɛksəkjutəbl/"
+        },
+        {
+          "ipa": "/ˌɛksɪˈkjuːtəbl/"
+        }
+      ]
+    },
+    {
+      "word": "generative",
+      "url": "https://kaikki.org/dictionary/English/meaning/g/ge/generative.jsonl",
+      "sha256": "56280637049000a1e4af7363431fea251e0d7426b6e7a624e78a7c7c66eed4e0",
+      "sounds": [
+        {
+          "tags": [
+            "UK"
+          ],
+          "ipa": "/ˈd͡ʒɛnəɹətɪv/"
+        },
+        {
+          "tags": [
+            "UK"
+          ],
+          "ipa": "/ˈd͡ʒɛnɹətɪv/"
+        },
+        {
+          "tags": [
+            "UK"
+          ],
+          "ipa": "/d͡ʒəˈnɛɹətɪv/"
+        },
+        {
+          "tags": [
+            "Canada",
+            "US"
+          ],
+          "ipa": "/ˈd͡ʒɛnəɹətɪv/"
+        },
+        {
+          "tags": [
+            "Canada",
+            "US"
+          ],
+          "ipa": "/ˈd͡ʒɛnɹətɪv/"
+        },
+        {
+          "tags": [
+            "Canada",
+            "US"
+          ],
+          "ipa": "/d͡ʒəˈnɛɹətɪv/"
+        }
+      ]
+    },
+    {
+      "word": "idempotent",
+      "url": "https://kaikki.org/dictionary/English/meaning/i/id/idempotent.jsonl",
+      "sha256": "dea068e39c6df38e677b774854d839a064853a97df5c9f5a289b7db1724b7b09",
+      "sounds": [
+        {
+          "tags": [
+            "US"
+          ],
+          "ipa": "/ˌaɪ.dəmˈpoʊ.tənt/"
+        },
+        {
+          "tags": [
+            "US"
+          ],
+          "ipa": "/ˌɪ.dəmˈpoʊ.tənt/"
+        },
+        {
+          "tags": [
+            "US"
+          ],
+          "ipa": "/aɪˈdɛm.pə.tənt/"
+        },
+        {
+          "tags": [
+            "US"
+          ],
+          "ipa": "/ˌaɪ.dəmˈpoʊ.tənt/"
+        },
+        {
+          "tags": [
+            "US"
+          ],
+          "ipa": "/ˌɪ.dəmˈpoʊ.tənt/"
+        },
+        {
+          "tags": [
+            "US"
+          ],
+          "ipa": "/aɪˈdɛm.pə.tənt/"
+        }
+      ]
+    },
+    {
+      "word": "indentation",
+      "url": "https://kaikki.org/dictionary/English/meaning/i/in/indentation.jsonl",
+      "sha256": "ce01a9b4595b09db94378d20cde746f7d4117e120bb843aff453f78c34d98829",
+      "sounds": [
+        {
+          "ipa": "/ˌɪndɛnˈteɪʃən/"
+        }
+      ]
+    },
+    {
+      "word": "instantiation",
+      "url": "https://kaikki.org/dictionary/English/meaning/i/in/instantiation.jsonl",
+      "sha256": "6333adf6fa0da0eb5e6f52b8380386199a0f5b10c08b2dc623bb79ab8847479a",
+      "sounds": [
+        {
+          "ipa": "/ɪnˌstænʃiˈeɪʃən/"
+        }
+      ]
+    },
+    {
+      "word": "interoperability",
+      "url": "https://kaikki.org/dictionary/English/meaning/i/in/interoperability.jsonl",
+      "sha256": "b3f80f5651513e4267d2973b80b369567239f2ab47f873ec49dce35eb0a144fd",
+      "sounds": [
+        {
+          "tags": [
+            "UK"
+          ],
+          "ipa": "/ˌɪntəɹɒpəɹəˈbɪləti/"
+        }
+      ]
+    },
+    {
+      "word": "interpreter",
+      "url": "https://kaikki.org/dictionary/English/meaning/i/in/interpreter.jsonl",
+      "sha256": "d55efaa89cdb9b34f6f3450f0e116fee0370f31a3467e3769a99f50a4dbbede0",
+      "sounds": [
+        {
+          "tags": [
+            "Received-Pronunciation"
+          ],
+          "ipa": "/ɪnˈtɜː.pɹɪ.tə/"
+        },
+        {
+          "tags": [
+            "General-American"
+          ],
+          "ipa": "/ɪnˈtɝ.pɹɪ.tɚ/"
+        }
+      ]
+    },
+    {
+      "word": "iteration",
+      "url": "https://kaikki.org/dictionary/English/meaning/i/it/iteration.jsonl",
+      "sha256": "cde4b871e2a19eb8038502ee9b2a6b02850a9d5d670457d8674a5d91840f827b",
+      "sounds": [
+        {
+          "tags": [
+            "Received-Pronunciation"
+          ],
+          "ipa": "/ˌɪt.əˈɹeɪ.ʃən/"
+        },
+        {
+          "tags": [
+            "Canada",
+            "General-American"
+          ],
+          "ipa": "/ˌɪt.əˈɹeɪ.ʃən/"
+        }
+      ]
+    },
+    {
+      "word": "memoization",
+      "url": "https://kaikki.org/dictionary/English/meaning/m/me/memoization.jsonl",
+      "sha256": "3e64b9a7b87d18bd480ed084f25abaf84de07b0ccc308ee60a00761666e01b3f",
+      "sounds": [
+        {
+          "tags": [
+            "Canada",
+            "General-American"
+          ],
+          "ipa": "/ˌmɛmoʊaɪˈzeɪʃən/"
+        }
+      ]
+    },
+    {
+      "word": "metadata",
+      "url": "https://kaikki.org/dictionary/English/meaning/m/me/metadata.jsonl",
+      "sha256": "0a04f69f462ffc2fa8f1bc34d281286a6d910b4bcf83a29e44fa8b2a1c8f0091",
+      "sounds": [
+        {
+          "tags": [
+            "Received-Pronunciation"
+          ],
+          "ipa": "/ˈmɛt.əˌdeɪ.tə/"
+        },
+        {
+          "tags": [
+            "Canada",
+            "General-American"
+          ],
+          "ipa": "/ˈmɛt.əˌdeɪ.tə/"
+        }
+      ]
+    },
+    {
+      "word": "mutable",
+      "url": "https://kaikki.org/dictionary/English/meaning/m/mu/mutable.jsonl",
+      "sha256": "36547fa0ec045884046fb43ac395c7bf2374523a8715681c29ef06709e7dbfd8",
+      "sounds": [
+        {
+          "ipa": "/ˈmjuːtəbəl/"
+        },
+        {
+          "ipa": "/ˈmjuːtəbəl/"
+        }
+      ]
+    },
+    {
+      "word": "namespace",
+      "url": "https://kaikki.org/dictionary/English/meaning/n/na/namespace.jsonl",
+      "sha256": "629eb978c58acea1276cf7af26788f0f6cd68bc314bb34b556c220b85af9e3ca",
+      "sounds": [
+        {
+          "ipa": "/ˈneɪmspeɪs/"
+        },
+        {
+          "ipa": "/ˈneɪmspeɪs/"
+        }
+      ]
+    },
+    {
+      "word": "operand",
+      "url": "https://kaikki.org/dictionary/English/meaning/o/op/operand.jsonl",
+      "sha256": "b69a4fce857fceb4f05f5e33921ca677143a87a87506bd96a5dfbf0c6a28ea06",
+      "sounds": [
+        {
+          "tags": [
+            "UK"
+          ],
+          "ipa": "/ˈɒpəɹænd/"
+        },
+        {
+          "tags": [
+            "US"
+          ],
+          "ipa": "/ˈɑpəˌɹænd/"
+        },
+        {
+          "tags": [
+            "US"
+          ],
+          "ipa": "/ˌɑpəˈɹænd/"
+        }
+      ]
+    },
+    {
+      "word": "overload",
+      "url": "https://kaikki.org/dictionary/English/meaning/o/ov/overload.jsonl",
+      "sha256": "611c54c7c4bdaac9ed29d736d5ca200f6f67b1d1a97a71299aeda53a31d3ae79",
+      "sounds": [
+        {
+          "tags": [
+            "Received-Pronunciation"
+          ],
+          "ipa": "/ˌəʊvəˈləʊd/"
+        },
+        {
+          "tags": [
+            "Canada",
+            "General-American"
+          ],
+          "ipa": "/ˌoʊvɚˈloʊd/"
+        },
+        {
+          "tags": [
+            "Received-Pronunciation"
+          ],
+          "ipa": "/ˈəʊvəˌləʊd/"
+        },
+        {
+          "tags": [
+            "Canada",
+            "General-American"
+          ],
+          "ipa": "/ˈoʊvɚˌloʊd/"
+        }
+      ]
+    },
+    {
+      "word": "polymorphism",
+      "url": "https://kaikki.org/dictionary/English/meaning/p/po/polymorphism.jsonl",
+      "sha256": "f36af43ea25c5c6571250eec4cc0b5fc04fbe81eb48882bac8f371cd7c4896a0",
+      "sounds": [
+        {
+          "tags": [
+            "UK"
+          ],
+          "ipa": "/pɒlɪˈmɔːfɪz(ə)m/"
+        },
+        {
+          "ipa": "/pɑliˈmɔɹfɪz(ə)m/",
+          "tags": [
+            "US"
+          ]
+        }
+      ]
+    },
+    {
+      "word": "sandbox",
+      "url": "https://kaikki.org/dictionary/English/meaning/s/sa/sandbox.jsonl",
+      "sha256": "1e377bb7bf966a4f336c9d87736d4292753a19a5e3ab454df4ca14446953dd97",
+      "sounds": [
+        {
+          "tags": [
+            "Received-Pronunciation"
+          ],
+          "ipa": "/ˈsænd.bɒks/"
+        },
+        {
+          "tags": [
+            "General-American"
+          ],
+          "ipa": "/ˈsæn(d).bɑks/"
+        },
+        {
+          "tags": [
+            "Received-Pronunciation"
+          ],
+          "ipa": "/ˈsænd.bɒks/"
+        },
+        {
+          "tags": [
+            "General-American"
+          ],
+          "ipa": "/ˈsæn(d).bɑks/"
+        }
+      ]
+    },
+    {
+      "word": "scheduler",
+      "url": "https://kaikki.org/dictionary/English/meaning/s/sc/scheduler.jsonl",
+      "sha256": "443d4de5bdedb712773bc0953074d1db059075235debe41b7f918338a9010cd9",
+      "sounds": [
+        {
+          "tags": [
+            "UK"
+          ],
+          "ipa": "/ˈʃɛdjələ/"
+        },
+        {
+          "tags": [
+            "UK"
+          ],
+          "ipa": "/ˈskɛdjələ/"
+        }
+      ]
+    },
+    {
+      "word": "semaphore",
+      "url": "https://kaikki.org/dictionary/English/meaning/s/se/semaphore.jsonl",
+      "sha256": "6873c4a0a8503d3c314f44edb7f0f0e35581da0d3ae86fc142ffce46559447aa",
+      "sounds": [
+        {
+          "tags": [
+            "Received-Pronunciation"
+          ],
+          "ipa": "/ˈsɛm.əˌfɔː/"
+        },
+        {
+          "tags": [
+            "General-American"
+          ],
+          "ipa": "/ˈsɛm.əˌfoɹ/"
+        },
+        {
+          "tags": [
+            "Received-Pronunciation"
+          ],
+          "ipa": "/ˈsɛm.əˌfɔː/"
+        },
+        {
+          "tags": [
+            "General-American"
+          ],
+          "ipa": "/ˈsɛm.əˌfoɹ/"
+        }
+      ]
+    },
+    {
+      "word": "telemetry",
+      "url": "https://kaikki.org/dictionary/English/meaning/t/te/telemetry.jsonl",
+      "sha256": "673b30b870f25504655fcdb58c8b47328c4bac0abf7a5695bf2384763ee4ac01",
+      "sounds": [
+        {
+          "tags": [
+            "Received-Pronunciation"
+          ],
+          "ipa": "/tɪˈlɛm.ɪ.tɹi/"
+        },
+        {
+          "tags": [
+            "Canada",
+            "General-American"
+          ],
+          "ipa": "/təˈlɛm.əˌtɹi/"
+        }
+      ]
+    },
+    {
+      "word": "timestamp",
+      "url": "https://kaikki.org/dictionary/English/meaning/t/ti/timestamp.jsonl",
+      "sha256": "c7685618a808e4d2e75ba8f1a60585e7dcf916a98fcd3a3a1e6d0f2c6c72f3c3",
+      "sounds": [
+        {
+          "ipa": "/ˈtaɪmˌstæmp/"
+        },
+        {
+          "ipa": "/ˈtaɪmˌstæmp/"
+        }
+      ]
+    },
+    {
+      "word": "tuple",
+      "url": "https://kaikki.org/dictionary/English/meaning/t/tu/tuple.jsonl",
+      "sha256": "654d754e26b2bf8db9198ed26412b0eab02e29dfe42780983455a7d4a03c0718",
+      "sounds": [
+        {
+          "tags": [
+            "UK"
+          ],
+          "ipa": "/ˈtʊpəl/"
+        },
+        {
+          "tags": [
+            "UK"
+          ],
+          "ipa": "/ˈt͡ʃuːpəl/"
+        },
+        {
+          "tags": [
+            "UK"
+          ],
+          "ipa": "/ˈtjuːpəl/"
+        },
+        {
+          "tags": [
+            "UK"
+          ],
+          "ipa": "/ˈtʌpəl/"
+        },
+        {
+          "tags": [
+            "US"
+          ],
+          "ipa": "/ˈtuːpəl/"
+        },
+        {
+          "tags": [
+            "US"
+          ],
+          "ipa": "/ˈtʌpəl/"
+        }
+      ]
+    },
+    {
+      "word": "Unicode",
+      "url": "https://kaikki.org/dictionary/English/meaning/U/Un/Unicode.jsonl",
+      "sha256": "ed248ca94fee69464c87cd5ed9fb7c4b7a4222fce0f5973b9b8dc0f455e4272a",
+      "sounds": [
+        {
+          "tags": [
+            "US"
+          ],
+          "ipa": "/ˈjunɪˌkoʊd/"
+        },
+        {
+          "tags": [
+            "UK"
+          ],
+          "ipa": "/ˈjuːnɪˌkəʊd/"
+        },
+        {
+          "tags": [
+            "US"
+          ],
+          "ipa": "/ˈjunɪˌkoʊd/"
+        },
+        {
+          "tags": [
+            "UK"
+          ],
+          "ipa": "/ˈjuːnɪˌkəʊd/"
+        }
+      ]
+    }
+  ]
+}

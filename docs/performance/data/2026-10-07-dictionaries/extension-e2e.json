@@ -1,0 +1,934 @@
+{
+  "config": {
+    "argv": [
+      "/Users/yeshan333/.local/share/mise/installs/node/24.14.0/bin/node",
+      "/Users/yeshan333/github/cloudys-gloss/node_modules/.pnpm/@playwright+test@1.63.0/node_modules/@playwright/test/cli.js",
+      "test",
+      "tests/e2e/dictionary-preview.spec.ts",
+      "tests/e2e/extension.spec.ts",
+      "--reporter=list,json"
+    ],
+    "configFile": "/Users/yeshan333/github/cloudys-gloss/playwright.config.ts",
+    "rootDir": "/Users/yeshan333/github/cloudys-gloss/tests/e2e",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "/Users/yeshan333/github/cloudys-gloss/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "chromium",
+        "name": "chromium",
+        "testDir": "/Users/yeshan333/github/cloudys-gloss/tests/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 45000
+      },
+      {
+        "outputDir": "/Users/yeshan333/github/cloudys-gloss/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "firefox",
+        "name": "firefox",
+        "testDir": "/Users/yeshan333/github/cloudys-gloss/tests/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 45000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list"
+      ],
+      [
+        "json"
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.63.0",
+    "workers": 1,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "dictionary-preview.spec.ts",
+      "file": "dictionary-preview.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "模型忙碌时划选 latency，新版离线词库先显示真实音标及口音标注",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2144,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-06T19:39:28.478Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "offline-ipa-latency.json",
+                      "contentType": "application/json",
+                      "body": "eyJ3b3JkIjoibGF0ZW5jeSIsImNsaWNrVG9PYnNlcnZlZElwYU1zIjozMjJ9"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "28122c8d5c4b0a09a222-b5769af91df3f3935d09",
+          "file": "dictionary-preview.spec.ts",
+          "line": 4,
+          "column": 3
+        },
+        {
+          "title": "模型忙碌时划选 Kubernetes，新版离线词库先显示真实音标及口音标注",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1518,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-06T19:39:30.634Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "offline-ipa-latency.json",
+                      "contentType": "application/json",
+                      "body": "eyJ3b3JkIjoiS3ViZXJuZXRlcyIsImNsaWNrVG9PYnNlcnZlZElwYU1zIjozMTl9"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "28122c8d5c4b0a09a222-f976f3b90427058b90d2",
+          "file": "dictionary-preview.spec.ts",
+          "line": 4,
+          "column": 3
+        },
+        {
+          "title": "网页翻译占用模型时，点击划词按钮先出现离线音标，模型空闲后原位置补齐释义",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1570,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-06T19:39:32.156Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "28122c8d5c4b0a09a222-d765ac821196bbf210f6",
+          "file": "dictionary-preview.spec.ts",
+          "line": 34,
+          "column": 1
+        },
+        {
+          "title": "模型忙碌时划选 latency，新版离线词库先显示真实音标及口音标注",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "firefox",
+              "projectName": "firefox",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2702,
+                  "errors": [],
+                  "stdout": [
+                    {
+                      "text": "Installed /var/folders/4p/qqlv9c_n58563nxpy85bn2lc0000gn/T/cloudys-gloss-e2e-rBdF3A/test-addon as a temporary add-on\n"
+                    }
+                  ],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-06T19:39:50.517Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "offline-ipa-latency.json",
+                      "contentType": "application/json",
+                      "body": "eyJ3b3JkIjoibGF0ZW5jeSIsImNsaWNrVG9PYnNlcnZlZElwYU1zIjoyNjh9"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "28122c8d5c4b0a09a222-993b94ab0eac427c49e7",
+          "file": "dictionary-preview.spec.ts",
+          "line": 4,
+          "column": 3
+        },
+        {
+          "title": "模型忙碌时划选 Kubernetes，新版离线词库先显示真实音标及口音标注",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "firefox",
+              "projectName": "firefox",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2713,
+                  "errors": [],
+                  "stdout": [
+                    {
+                      "text": "Installed /var/folders/4p/qqlv9c_n58563nxpy85bn2lc0000gn/T/cloudys-gloss-e2e-ln0BR4/test-addon as a temporary add-on\n"
+                    }
+                  ],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-06T19:39:53.231Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "offline-ipa-latency.json",
+                      "contentType": "application/json",
+                      "body": "eyJ3b3JkIjoiS3ViZXJuZXRlcyIsImNsaWNrVG9PYnNlcnZlZElwYU1zIjoyNjZ9"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "28122c8d5c4b0a09a222-837900f9af6f4dc15de4",
+          "file": "dictionary-preview.spec.ts",
+          "line": 4,
+          "column": 3
+        },
+        {
+          "title": "网页翻译占用模型时，点击划词按钮先出现离线音标，模型空闲后原位置补齐释义",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "firefox",
+              "projectName": "firefox",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2764,
+                  "errors": [],
+                  "stdout": [
+                    {
+                      "text": "Installed /var/folders/4p/qqlv9c_n58563nxpy85bn2lc0000gn/T/cloudys-gloss-e2e-vlSeiY/test-addon as a temporary add-on\n"
+                    }
+                  ],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-06T19:39:55.948Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "28122c8d5c4b0a09a222-99bceb12cf6b5c327de9",
+          "file": "dictionary-preview.spec.ts",
+          "line": 34,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "extension.spec.ts",
+      "file": "extension.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "悬浮球：一键双语与恢复、拖动不误触、窄屏贴边、快捷菜单打开设置并支持本页隐藏",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 4400,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-06T19:39:33.734Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "da119938d3268322a91b-640bb7e8b24a0e5d59ea",
+          "file": "extension.spec.ts",
+          "line": 3,
+          "column": 1
+        },
+        {
+          "title": "双语阅读：只请求视口附近语义块，SPA 增量翻译，关闭恢复原文，再开启命中缓存",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1291,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-06T19:39:38.139Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "da119938d3268322a91b-724578e5be2ec56d4a5b",
+          "file": "extension.spec.ts",
+          "line": 49,
+          "column": 1
+        },
+        {
+          "title": "划词仅显示小按钮，点击后才请求词卡并展示音标释义例句，全页只有一个浮层",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2682,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-06T19:39:39.433Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "da119938d3268322a91b-188beaded6d06bc10cd6",
+          "file": "extension.spec.ts",
+          "line": 70,
+          "column": 1
+        },
+        {
+          "title": "设置页通过后台连接模型，结构错误可见且清空缓存后能够重新请求",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1256,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-06T19:39:42.119Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "da119938d3268322a91b-87cbcceb61f321a2385b",
+          "file": "extension.spec.ts",
+          "line": 102,
+          "column": 1
+        },
+        {
+          "title": "悬浮球默认只露一半，移入展开、移出收起，键盘聚焦和菜单打开时保持展开",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2534,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-06T19:39:43.379Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "da119938d3268322a91b-4fb6e26fd3e9f392c168",
+          "file": "extension.spec.ts",
+          "line": 114,
+          "column": 1
+        },
+        {
+          "title": "网页拦截鼠标事件时，拖选单词后仍可点击小按钮打开词卡，点击卡外关闭",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1491,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-06T19:39:47.004Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "da119938d3268322a91b-0cea642f1410bb177852",
+          "file": "extension.spec.ts",
+          "line": 171,
+          "column": 1
+        },
+        {
+          "title": "云朵悬浮球只在翻译期间显示进度动效，完成后静止，展开和忙碌状态不改变页面宽度",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1811,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-06T19:39:48.498Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "da119938d3268322a91b-5dd37ed8ae60242743f1",
+          "file": "extension.spec.ts",
+          "line": 189,
+          "column": 1
+        },
+        {
+          "title": "悬浮球：一键双语与恢复、拖动不误触、窄屏贴边、快捷菜单打开设置并支持本页隐藏",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "firefox",
+              "projectName": "firefox",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 5383,
+                  "errors": [],
+                  "stdout": [
+                    {
+                      "text": "Installed /var/folders/4p/qqlv9c_n58563nxpy85bn2lc0000gn/T/cloudys-gloss-e2e-ytqqLE/test-addon as a temporary add-on\n"
+                    }
+                  ],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-06T19:39:58.723Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "da119938d3268322a91b-ad8ff9e9194e08fdb6e6",
+          "file": "extension.spec.ts",
+          "line": 3,
+          "column": 1
+        },
+        {
+          "title": "双语阅读：只请求视口附近语义块，SPA 增量翻译，关闭恢复原文，再开启命中缓存",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "firefox",
+              "projectName": "firefox",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2857,
+                  "errors": [],
+                  "stdout": [
+                    {
+                      "text": "Installed /var/folders/4p/qqlv9c_n58563nxpy85bn2lc0000gn/T/cloudys-gloss-e2e-c3KZE0/test-addon as a temporary add-on\n"
+                    }
+                  ],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-06T19:40:04.110Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "da119938d3268322a91b-05ce878958e872accb0f",
+          "file": "extension.spec.ts",
+          "line": 49,
+          "column": 1
+        },
+        {
+          "title": "划词仅显示小按钮，点击后才请求词卡并展示音标释义例句，全页只有一个浮层",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "firefox",
+              "projectName": "firefox",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3577,
+                  "errors": [],
+                  "stdout": [
+                    {
+                      "text": "Installed /var/folders/4p/qqlv9c_n58563nxpy85bn2lc0000gn/T/cloudys-gloss-e2e-dG1ZNb/test-addon as a temporary add-on\n"
+                    }
+                  ],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-06T19:40:06.972Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "da119938d3268322a91b-5b531a770dbeacdd9bca",
+          "file": "extension.spec.ts",
+          "line": 70,
+          "column": 1
+        },
+        {
+          "title": "设置页通过后台连接模型，结构错误可见且清空缓存后能够重新请求",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "firefox",
+              "projectName": "firefox",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2434,
+                  "errors": [],
+                  "stdout": [
+                    {
+                      "text": "Installed /var/folders/4p/qqlv9c_n58563nxpy85bn2lc0000gn/T/cloudys-gloss-e2e-Zh2wJk/test-addon as a temporary add-on\n"
+                    }
+                  ],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-06T19:40:10.552Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "da119938d3268322a91b-8a4fb030784794c8f3e4",
+          "file": "extension.spec.ts",
+          "line": 102,
+          "column": 1
+        },
+        {
+          "title": "悬浮球默认只露一半，移入展开、移出收起，键盘聚焦和菜单打开时保持展开",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "firefox",
+              "projectName": "firefox",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3879,
+                  "errors": [],
+                  "stdout": [
+                    {
+                      "text": "Installed /var/folders/4p/qqlv9c_n58563nxpy85bn2lc0000gn/T/cloudys-gloss-e2e-8L7TTY/test-addon as a temporary add-on\n"
+                    }
+                  ],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-06T19:40:12.989Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "da119938d3268322a91b-ab85db41471d8641cd54",
+          "file": "extension.spec.ts",
+          "line": 114,
+          "column": 1
+        },
+        {
+          "title": "网页拦截鼠标事件时，拖选单词后仍可点击小按钮打开词卡，点击卡外关闭",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "firefox",
+              "projectName": "firefox",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2527,
+                  "errors": [],
+                  "stdout": [
+                    {
+                      "text": "Installed /var/folders/4p/qqlv9c_n58563nxpy85bn2lc0000gn/T/cloudys-gloss-e2e-ULVN3K/test-addon as a temporary add-on\n"
+                    }
+                  ],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-06T19:40:19.377Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "da119938d3268322a91b-0ce7796d6e460e83cfe6",
+          "file": "extension.spec.ts",
+          "line": 171,
+          "column": 1
+        },
+        {
+          "title": "云朵悬浮球只在翻译期间显示进度动效，完成后静止，展开和忙碌状态不改变页面宽度",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 45000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "firefox",
+              "projectName": "firefox",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2983,
+                  "errors": [],
+                  "stdout": [
+                    {
+                      "text": "Installed /var/folders/4p/qqlv9c_n58563nxpy85bn2lc0000gn/T/cloudys-gloss-e2e-P2cf6A/test-addon as a temporary add-on\n"
+                    }
+                  ],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-06T19:40:21.908Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "da119938d3268322a91b-d838be61571e58247ece",
+          "file": "extension.spec.ts",
+          "line": 189,
+          "column": 1
+        }
+      ],
+      "suites": [
+        {
+          "title": "系统开启减少动态效果",
+          "file": "extension.spec.ts",
+          "line": 145,
+          "column": 6,
+          "specs": [
+            {
+              "title": "悬浮球直接展开，段落加载提示静止，首段译文仍及时显示",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 45000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1084,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-06T19:39:45.916Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "da119938d3268322a91b-1585436a873d26652a22",
+              "file": "extension.spec.ts",
+              "line": 147,
+              "column": 3
+            },
+            {
+              "title": "悬浮球直接展开，段落加载提示静止，首段译文仍及时显示",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 45000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 2502,
+                      "errors": [],
+                      "stdout": [
+                        {
+                          "text": "Installed /var/folders/4p/qqlv9c_n58563nxpy85bn2lc0000gn/T/cloudys-gloss-e2e-5NbF10/test-addon as a temporary add-on\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-06T19:40:16.872Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "da119938d3268322a91b-0a80e34971f5769e3631",
+              "file": "extension.spec.ts",
+              "line": 147,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-10-06T19:39:27.951Z",
+    "duration": 56950.315,
+    "expected": 22,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}

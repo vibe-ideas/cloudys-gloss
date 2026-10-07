@@ -5,7 +5,7 @@ type TranslationAction = { error?: string; busy: boolean; label: string; retry: 
 
 /** One shared translation/action surface for paragraphs and rigid components.
  * Normal clicks keep their native action. Touch users can hold a marked label;
- * keyboard users receive the same translation when its existing control focuses.
+ * hover/focus exposes a compact action; explicit activation opens paragraph tools.
  */
 export class ComponentHints {
   private actions = new Map<Element, TranslationAction>();
@@ -44,7 +44,7 @@ export class ComponentHints {
       window.addEventListener('resize', this.resize);
     }
     if (this.host === document.activeElement && this.source !== source) return;
-    if (this.dismissed !== source && (this.source === source || this.focused(source) || source.matches(':hover'))) this.show(source, this.source === source ? this.interactive : source.matches(':hover'));
+    if (this.dismissed !== source && (this.source === source || this.focused(source) || source.matches(':hover'))) this.show(source, this.source === source ? this.interactive : false);
   }
   private focused(source: Element) {
     return this.source === source && this.host === document.activeElement || source === document.activeElement || source.contains(document.activeElement) || source instanceof HTMLLabelElement && source.control === document.activeElement;
@@ -59,7 +59,7 @@ export class ComponentHints {
     if (this.leaveTimer) clearTimeout(this.leaveTimer); this.leaveTimer = undefined;
     if (event instanceof PointerEvent && event.pointerType === 'touch') return;
     if (source && source !== this.source && this.host === document.activeElement && event.type === 'pointerover') return;
-    if (source) { this.dismissed = undefined; this.show(source, event.type === 'pointerover' || this.source === source && this.interactive); }
+    if (source) { this.dismissed = undefined; this.show(source, this.source === source && this.interactive); }
   };
   private leave = (event: Event) => {
     if (!this.source || !(event.target instanceof Node) || !this.source.contains(event.target) && !this.descriptionTarget?.contains(event.target) && !this.host?.contains(event.target)) return;
@@ -84,7 +84,7 @@ export class ComponentHints {
     }
     const source = this.find(event.target);
     if (source && this.actions.has(source) && (event.altKey && event.key === 'Enter' || source.hasAttribute(OWN) && (event.key === 'Enter' || event.key === ' '))) {
-      event.preventDefault(); event.stopPropagation(); this.show(source, true); this.panel?.querySelector('button')?.focus({ preventScroll: true });
+      event.preventDefault(); event.stopPropagation(); this.show(source, true); this.panel?.querySelector<HTMLButtonElement>('.actions button')?.focus({ preventScroll: true });
     }
   };
   private scroll = (event: Event) => { if (!this.host || !event.composedPath().includes(this.host)) this.hide(); };
@@ -117,7 +117,7 @@ export class ComponentHints {
   private click = (event: MouseEvent) => {
     const source = this.find(event.target);
     if (source?.hasAttribute(OWN) && this.actions.has(source) && !window.getSelection()?.toString()) {
-      event.preventDefault(); event.stopPropagation(); this.show(source, true); this.panel?.querySelector('button')?.focus({ preventScroll: true }); return;
+      event.preventDefault(); event.stopPropagation(); this.show(source, true); this.panel?.querySelector<HTMLButtonElement>('.actions button')?.focus({ preventScroll: true }); return;
     }
     if (this.held && performance.now() < this.held.until && this.held.source === this.find(event.target)) {
       event.preventDefault(); event.stopImmediatePropagation(); this.held = undefined;
@@ -137,7 +137,7 @@ export class ComponentHints {
       const style = document.createElement('style');
       // A fixed auto-width box can widen after left changes. Intrinsic width
       // keeps the measured width stable while the viewport cap still wraps it.
-      style.textContent = ':host{color-scheme:light dark}:host::backdrop{background:transparent;pointer-events:none}.tip{position:fixed;box-sizing:border-box;width:max-content;max-width:min(320px,calc(100vw - 24px));max-height:calc(100vh - 24px);overflow:auto;overscroll-behavior:contain;padding:9px 12px;border:1px solid light-dark(#d5d9df,#505860);border-radius:9px;background:light-dark(#fff,#20252b);color:light-dark(#202832,#f3f6fa);box-shadow:0 4px 18px #0003;font:13px/1.6 system-ui,sans-serif;overflow-wrap:anywhere;pointer-events:none}.tip small{display:block;font-size:10px;opacity:.72;margin-top:3px}.error{color:light-dark(#a32e3b,#ffb4b9);margin-top:8px;white-space:pre-wrap}.actions{pointer-events:auto;display:flex;align-items:center;gap:12px;border-top:1px solid light-dark(#e4e5ec,#444a56);padding-top:8px;margin-top:10px}.actions[hidden]{display:none}.actions button{font:inherit;font-size:12px;border:1px solid light-dark(#d6d1e9,#655c80);border-radius:6px;padding:5px 9px;background:light-dark(#f6f3ff,#322b43);color:inherit;cursor:pointer}.actions button:disabled{opacity:.6;cursor:wait}.actions button:focus-visible{outline:2px solid #8570ce;outline-offset:2px}';
+      style.textContent = ':host{color-scheme:light dark}:host::backdrop{background:transparent;pointer-events:none}.tip{position:fixed;box-sizing:border-box;width:max-content;max-width:min(320px,calc(100vw - 24px));max-height:calc(100vh - 24px);overflow:auto;overscroll-behavior:contain;padding:9px 12px;border:1px solid light-dark(#d5d9df,#505860);border-radius:9px;background:light-dark(#fff,#20252b);color:light-dark(#202832,#f3f6fa);box-shadow:0 4px 18px #0003;font:13px/1.6 system-ui,sans-serif;overflow-wrap:anywhere;pointer-events:none}.tip small{display:block;font-size:10px;opacity:.72;margin-top:3px}.error{color:light-dark(#a32e3b,#ffb4b9);margin-top:8px;white-space:pre-wrap}.actions{pointer-events:auto;display:flex;align-items:center;gap:12px;border-top:1px solid light-dark(#e4e5ec,#444a56);padding-top:8px;margin-top:10px}.actions[hidden]{display:none}.actions button{font:inherit;font-size:12px;border:1px solid light-dark(#d6d1e9,#655c80);border-radius:6px;padding:5px 9px;background:light-dark(#f6f3ff,#322b43);color:inherit;cursor:pointer}.actions button:disabled{opacity:.6;cursor:wait}.actions button:focus-visible{outline:2px solid #8570ce;outline-offset:2px}.tip.compact{width:30px;height:30px;min-height:30px;padding:0;border:0;overflow:visible;border-radius:9px}.launch{pointer-events:auto;display:grid;place-items:center;width:30px;height:30px;padding:0;border:1px solid light-dark(#e0daef,#595065);border-radius:9px;background:light-dark(#fff,#292533);color:light-dark(#7257d6,#c0acff);font:22px/1 system-ui;cursor:pointer}.launch:hover{background:light-dark(#f2edff,#3c3251)}.launch:focus-visible{outline:2px solid #8570ce;outline-offset:2px}[hidden]{display:none!important}';
       this.panel = document.createElement('span'); this.panel.className = 'tip'; this.panel.tabIndex = -1;
       this.panel.addEventListener('click', event => event.stopPropagation());
       this.panel.addEventListener('pointerdown', event => event.stopPropagation());
@@ -161,6 +161,10 @@ export class ComponentHints {
     this.host.setAttribute('aria-label', '段落翻译操作');
     // Update in place so streaming/retry status never removes keyboard focus.
     if (!this.panel!.firstChild) {
+      const launch = document.createElement('button'); launch.className = 'launch'; launch.type = 'button';
+      launch.setAttribute('aria-label', '打开段落翻译操作'); launch.title = '重翻 / 查看错误';
+      launch.textContent = '↻';
+      launch.onclick = () => { if (this.source) { this.panel?.focus({ preventScroll: true }); this.show(this.source, true); this.panel?.querySelector<HTMLButtonElement>('.actions button')?.focus({ preventScroll: true }); } };
       const copy = document.createElement('div'); copy.className = 'copy';
       const error = document.createElement('div'); error.className = 'error'; error.setAttribute('role', 'status');
       const actions = document.createElement('div'); actions.className = 'actions';
@@ -168,17 +172,23 @@ export class ComponentHints {
       retry.onclick = () => { const value = this.source && this.actions.get(this.source); if (value && !value.busy) value.retry(); };
       actions.append(retry);
       const note = document.createElement('small'); note.className = 'note';
-      this.panel!.append(copy, error, actions, note);
+      this.panel!.append(launch, copy, error, actions, note);
     }
-    this.panel!.querySelector('.copy')!.textContent = text;
+    const compact = !!action && source.hasAttribute(OWN) && !this.interactive;
+    this.panel!.classList.toggle('compact', compact);
+    this.panel!.querySelector<HTMLElement>('.launch')!.hidden = !action || this.interactive;
+    const copy = this.panel!.querySelector<HTMLElement>('.copy')!;
+    copy.textContent = source.hasAttribute(OWN) && action ? '段落翻译' : text;
+    copy.hidden = compact;
     const error = this.panel!.querySelector<HTMLElement>('.error')!;
-    error.hidden = !action?.error; error.textContent = action?.error ? `翻译失败原因：${action.error}` : '';
+    error.hidden = compact || !action?.error; error.textContent = action?.error ? `翻译失败原因：${action.error}` : '';
     this.panel!.querySelector<HTMLElement>('.actions')!.hidden = !action || !this.interactive;
-    const retry = this.panel!.querySelector('button')!;
+    const retry = this.panel!.querySelector<HTMLButtonElement>('.actions button')!;
     retry.textContent = action?.label ?? '重新翻译这一段';
     if (action?.busy && this.host.shadowRoot?.activeElement === retry) this.panel!.focus({ preventScroll: true });
     retry.disabled = !!action?.busy;
-    this.panel!.querySelector('.note')!.textContent = action ? '仅请求这一段 · Alt+Enter 进入操作 · Esc 关闭' : '译文 · Esc 关闭';
+    this.panel!.querySelector<HTMLElement>('.note')!.hidden = compact;
+    this.panel!.querySelector('.note')!.textContent = action ? '仅重新请求本段 · Esc 关闭' : '译文 · Esc 关闭';
     this.position(source);
     if (this.source !== source) {
       this.source = source;
@@ -193,6 +203,15 @@ export class ComponentHints {
   }
   private position(source: Element) {
     const bounds = source.getBoundingClientRect();
+    if (this.panel!.classList.contains('compact')) {
+      // Prefer the paragraph gutter so the entry never sits on the next line.
+      const beside = bounds.left >= 48 || bounds.right + 48 <= innerWidth;
+      const left = bounds.left >= 48 ? bounds.left - 36 : bounds.right + 48 <= innerWidth ? bounds.right + 6 : bounds.right - 30;
+      this.panel!.style.maxHeight = '30px'; this.panel!.style.pointerEvents = 'auto';
+      this.panel!.style.left = `${Math.max(12, Math.min(left, innerWidth - 42))}px`;
+      this.panel!.style.top = `${Math.max(12, Math.min(beside ? bounds.top : bounds.bottom + 6, innerHeight - 42))}px`;
+      return;
+    }
     const above = Math.max(0, bounds.top - 18); const below = Math.max(0, innerHeight - bounds.bottom - 18);
     const natural = this.panel!.scrollHeight + 2;
     const before = source.closest('dialog[open]') && above >= natural || below < natural && above > below;
@@ -203,7 +222,7 @@ export class ComponentHints {
     // Interactive panels must catch their whole surface: otherwise hovering
     // through transparent copy can switch to a different underlying paragraph.
     // Passive, short hints still let original controls receive pointer events.
-    this.panel!.style.pointerEvents = this.interactive && this.actions.has(source) || this.panel!.scrollHeight > this.panel!.clientHeight + 2 ? 'auto' : 'none';
+    this.panel!.style.pointerEvents = this.panel!.classList.contains('compact') || this.interactive && this.actions.has(source) || this.panel!.scrollHeight > this.panel!.clientHeight + 2 ? 'auto' : 'none';
     this.panel!.style.left = `${Math.min(Math.max(12, bounds.left), Math.max(12, innerWidth - panel.width - 12))}px`;
     this.panel!.style.top = `${full ? 12 : before ? Math.max(12, bounds.top - panel.height - 6) : bounds.bottom + 6}px`;
   }

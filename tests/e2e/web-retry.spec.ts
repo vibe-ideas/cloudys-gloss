@@ -106,3 +106,33 @@ test('网页单段重试中发生 SPA 改文或关闭翻译时取消请求，旧
   await expect(page.locator(panelSelector)).toHaveCount(0);
   await expect(page.locator('#first')).toHaveText('Updated cloudy morning brings quiet thoughts.');
 });
+
+
+test('阅读译文时悬停或聚焦仅显示小入口，点击后展开重翻操作且不重复展示整段译文', async ({ extension }, testInfo) => {
+  const { page, server, toggle } = extension;
+  await expect(page.locator('[data-cloudys-gloss="floating-control"]')).toHaveCount(1);
+  await toggle();
+  const first = page.locator('#first > [data-cloudys-gloss]');
+  await expect(first).toHaveAttribute('data-state', 'done');
+  await expect(page.locator('#second > [data-cloudys-gloss]')).toHaveAttribute('data-state', 'done');
+  const before = server.calls.length;
+  const panel = page.locator(panelSelector);
+  await first.hover();
+  const launch = panel.getByRole('button', { name: '打开段落翻译操作', exact: true });
+  await expect(launch).toBeVisible();
+  await expect(panel.locator('.copy')).toBeHidden();
+  await expect(panel.locator('.actions')).toBeHidden();
+  const small = (await launch.boundingBox())!;
+  expect(small.width).toBeLessThanOrEqual(34); expect(small.height).toBeLessThanOrEqual(34);
+  await first.focus();
+  await expect(launch).toBeVisible(); await expect(panel.locator('.actions')).toBeHidden();
+  expect(server.calls).toHaveLength(before);
+  await page.screenshot({ path: testInfo.outputPath('paragraph-launcher.png') });
+  await launch.click();
+  await expect(panel.getByRole('button', { name: '重新翻译这一段', exact: true })).toBeFocused();
+  await expect(panel.locator('.copy')).toHaveText('段落翻译');
+  expect(server.calls).toHaveLength(before);
+  await page.screenshot({ path: testInfo.outputPath('paragraph-actions.png') });
+  await page.keyboard.press('Escape'); await expect(panel).toBeHidden();
+  await expect(first).toBeFocused();
+});

@@ -1,0 +1,524 @@
+{
+  "snapshotDate": "2026-10-07",
+  "sources": {
+    "freedict-eng-zho.stardict.tar.xz": {
+      "url": "https://download.freedict.org/dictionaries/eng-zho/2025.11.23/freedict-eng-zho-2025.11.23.stardict.tar.xz",
+      "sha512": "059f9aca26fdc3a5a2c0c0e8fc92e111a34bf8fd438f70d267cccf35f5e47a2d45c46650999a1b3a48c3bffc3e16e0db897232128fe822d1bc59cf34f40b395c",
+      "bytes": 1672048,
+      "sha256": "9dbae6bb5558906cc05f1e573bee2deab8b6e09adfb16fc496288926882435af"
+    },
+    "foldoc.txt": {
+      "url": "https://foldoc.org/Dictionary",
+      "sha256": "4e3f05d40ba976d804a69e8513a1e7b446500dded181662881bb0a152dac32b7",
+      "bytes": 5451795
+    }
+  },
+  "starDict": {
+    "rawEntries": 26660,
+    "indexBytes": 464739,
+    "articleBytes": 8124281,
+    "info": {
+      "version": "3.0.0",
+      "bookname": "English-中文 (Zhōngwén) FreeDict+WikDict dictionary",
+      "wordcount": "26660",
+      "idxfilesize": "464739",
+      "sametypesequence": "h",
+      "date": "2025-11-23",
+      "description": "Publisher: Karl Bartel<br>Licensed under the <a href=\"https://creativecommons.org/licenses/by-sa/3.0/legalcode\">Creative Commons Attribution-ShareAlike 3.0 Unported</a> license<br>Automatic creation of this bilingual dictionary by <a href=\"http://www.wikdict.com/\">WikDict</a>.<br>Base data from <a href=\"https://www.wiktionary.org/\">Wiktionary.org</a> via <a href=\"http://kaiko.getalp.org/about-dbnary/\">DBnary</a>.<br>This dictionary comes to you through nice people<br>making it available for free and for good. It is part of<br>the FreeDict project, http://www.freedict.org/. This<br>project aims to make available many translating<br>dictionaries for free. Your contributions are welcome!"
+    }
+  },
+  "inputsSha256": {
+    "tests/performance/dictionary-tech-corpus.json": "b7a4f3972f3e5138f6818ab21bc47ba1326925e7853170eb1202363859b3c1b4",
+    "tests/quality/offline-dictionary-cases.json": "4c3680ffd2a6f65987a70b0d8b4a2dac61fdee2caf03caca9d88f9f919734730",
+    "tests/performance/prepare-goldendict-research.py": "570c3c5eb76576ba3141a22a0a5dca0246cda597ae358372e54cb856b39c2449"
+  },
+  "method": "Exact lowercase headword lookup; FOLDOC pure cross-reference aliases resolved, target headwords preserved; unresolved reference alone fails sense check. Counts are not accuracy. HTML reduced to text for research only; no assets shipped.",
+  "datasets": {
+    "freedict": {
+      "uniqueHeadwords": 24786,
+      "normalizedBytes": 4907769,
+      "normalizedGzipBytes": 1907849,
+      "rangeGzipBytes": 1986845,
+      "maxShardUtf16Bytes": 169324,
+      "indexBytes": 2477,
+      "normalizedSha256": "40b7f8e402eb9ba90f7c1dd67a2464f2752aa0cd82de2efce67948bc8e7bedf6",
+      "coverage": {
+        "基础技术词": {
+          "hits": 26,
+          "total": 39,
+          "found": [
+            "software",
+            "hardware",
+            "algorithm",
+            "database",
+            "network",
+            "server",
+            "client",
+            "compiler",
+            "processor",
+            "memory",
+            "cache",
+            "kernel",
+            "protocol",
+            "architecture",
+            "interface",
+            "encryption",
+            "authentication",
+            "vulnerability",
+            "repository",
+            "dependency",
+            "inference",
+            "transformer",
+            "token",
+            "tensor",
+            "vector",
+            "benchmark"
+          ]
+        },
+        "新技术词与产品名": {
+          "hits": 6,
+          "total": 33,
+          "found": [
+            "javascript",
+            "blockchain",
+            "cryptocurrency",
+            "anthropic",
+            "llama",
+            "gemini"
+          ]
+        },
+        "技术缩写": {
+          "hits": 1,
+          "total": 19,
+          "found": [
+            "RAG"
+          ]
+        },
+        "技术短语": {
+          "hits": 1,
+          "total": 10,
+          "found": [
+            "machine learning"
+          ]
+        }
+      },
+      "senseChecks": [
+        {
+          "word": "software",
+          "headwordFound": true,
+          "unresolvedReferenceOnly": false,
+          "conceptsPresent": true
+        },
+        {
+          "word": "algorithm",
+          "headwordFound": true,
+          "unresolvedReferenceOnly": false,
+          "conceptsPresent": true
+        },
+        {
+          "word": "database",
+          "headwordFound": true,
+          "unresolvedReferenceOnly": false,
+          "conceptsPresent": true
+        },
+        {
+          "word": "network",
+          "headwordFound": true,
+          "unresolvedReferenceOnly": false,
+          "conceptsPresent": true
+        },
+        {
+          "word": "CPU",
+          "headwordFound": false,
+          "unresolvedReferenceOnly": false,
+          "conceptsPresent": false
+        },
+        {
+          "word": "GPU",
+          "headwordFound": false,
+          "unresolvedReferenceOnly": false,
+          "conceptsPresent": false
+        },
+        {
+          "word": "API",
+          "headwordFound": false,
+          "unresolvedReferenceOnly": false,
+          "conceptsPresent": false
+        },
+        {
+          "word": "JSON",
+          "headwordFound": false,
+          "unresolvedReferenceOnly": false,
+          "conceptsPresent": false
+        },
+        {
+          "word": "SQL",
+          "headwordFound": false,
+          "unresolvedReferenceOnly": false,
+          "conceptsPresent": false
+        },
+        {
+          "word": "latency",
+          "headwordFound": false,
+          "unresolvedReferenceOnly": false,
+          "conceptsPresent": false
+        },
+        {
+          "word": "concurrency",
+          "headwordFound": false,
+          "unresolvedReferenceOnly": false,
+          "conceptsPresent": false
+        },
+        {
+          "word": "garbage collection",
+          "headwordFound": false,
+          "unresolvedReferenceOnly": false,
+          "conceptsPresent": false
+        },
+        {
+          "word": "race condition",
+          "headwordFound": false,
+          "unresolvedReferenceOnly": false,
+          "conceptsPresent": false
+        },
+        {
+          "word": "transformer",
+          "headwordFound": true,
+          "unresolvedReferenceOnly": false,
+          "conceptsPresent": false
+        },
+        {
+          "word": "embedding",
+          "headwordFound": false,
+          "unresolvedReferenceOnly": false,
+          "conceptsPresent": false
+        },
+        {
+          "word": "LLM",
+          "headwordFound": false,
+          "unresolvedReferenceOnly": false,
+          "conceptsPresent": false
+        },
+        {
+          "word": "RAG",
+          "headwordFound": true,
+          "unresolvedReferenceOnly": false,
+          "conceptsPresent": false
+        },
+        {
+          "word": "Kubernetes",
+          "headwordFound": false,
+          "unresolvedReferenceOnly": false,
+          "conceptsPresent": false
+        },
+        {
+          "word": "TypeScript",
+          "headwordFound": false,
+          "unresolvedReferenceOnly": false,
+          "conceptsPresent": false
+        },
+        {
+          "word": "Docker",
+          "headwordFound": false,
+          "unresolvedReferenceOnly": false,
+          "conceptsPresent": false
+        }
+      ]
+    },
+    "foldoc": {
+      "uniqueHeadwords": 15034,
+      "normalizedBytes": 7708438,
+      "normalizedGzipBytes": 2675315,
+      "rangeGzipBytes": 2768844,
+      "maxShardUtf16Bytes": 293124,
+      "indexBytes": 2799,
+      "normalizedSha256": "111dbe07fd414f11f3737a1fe778e6e10ac2d8d6ed400d6a2ae47951392c8bc6",
+      "coverage": {
+        "基础技术词": {
+          "hits": 31,
+          "total": 39,
+          "found": [
+            "software",
+            "hardware",
+            "algorithm",
+            "database",
+            "network",
+            "browser",
+            "server",
+            "client",
+            "compiler",
+            "processor",
+            "memory",
+            "latency",
+            "throughput",
+            "concurrency",
+            "cache",
+            "kernel",
+            "protocol",
+            "architecture",
+            "interface",
+            "encryption",
+            "authentication",
+            "vulnerability",
+            "repository",
+            "inference",
+            "embedding",
+            "token",
+            "vector",
+            "benchmark",
+            "scalability",
+            "asynchronous",
+            "middleware"
+          ]
+        },
+        "新技术词与产品名": {
+          "hits": 3,
+          "total": 33,
+          "found": [
+            "postgresql",
+            "javascript",
+            "chatbot"
+          ]
+        },
+        "技术缩写": {
+          "hits": 15,
+          "total": 19,
+          "found": [
+            "API",
+            "CPU",
+            "GPU",
+            "SQL",
+            "HTTP",
+            "JSON",
+            "YAML",
+            "SDK",
+            "CLI",
+            "IDE",
+            "GUI",
+            "TCP",
+            "DNS",
+            "TLS",
+            "SIMD"
+          ]
+        },
+        "技术短语": {
+          "hits": 4,
+          "total": 10,
+          "found": [
+            "machine learning",
+            "garbage collection",
+            "race condition",
+            "open source"
+          ]
+        }
+      },
+      "senseChecks": [
+        {
+          "word": "software",
+          "headwordFound": true,
+          "unresolvedReferenceOnly": false,
+          "conceptsPresent": true
+        },
+        {
+          "word": "algorithm",
+          "headwordFound": true,
+          "unresolvedReferenceOnly": false,
+          "conceptsPresent": true
+        },
+        {
+          "word": "database",
+          "headwordFound": true,
+          "unresolvedReferenceOnly": false,
+          "conceptsPresent": true
+        },
+        {
+          "word": "network",
+          "headwordFound": true,
+          "unresolvedReferenceOnly": false,
+          "conceptsPresent": true
+        },
+        {
+          "word": "CPU",
+          "headwordFound": true,
+          "unresolvedReferenceOnly": false,
+          "conceptsPresent": true
+        },
+        {
+          "word": "GPU",
+          "headwordFound": true,
+          "unresolvedReferenceOnly": true,
+          "conceptsPresent": false
+        },
+        {
+          "word": "API",
+          "headwordFound": true,
+          "unresolvedReferenceOnly": false,
+          "conceptsPresent": true
+        },
+        {
+          "word": "JSON",
+          "headwordFound": true,
+          "unresolvedReferenceOnly": false,
+          "conceptsPresent": true
+        },
+        {
+          "word": "SQL",
+          "headwordFound": true,
+          "unresolvedReferenceOnly": false,
+          "conceptsPresent": true
+        },
+        {
+          "word": "latency",
+          "headwordFound": true,
+          "unresolvedReferenceOnly": false,
+          "conceptsPresent": true
+        },
+        {
+          "word": "concurrency",
+          "headwordFound": true,
+          "unresolvedReferenceOnly": false,
+          "conceptsPresent": true
+        },
+        {
+          "word": "garbage collection",
+          "headwordFound": true,
+          "unresolvedReferenceOnly": false,
+          "conceptsPresent": true
+        },
+        {
+          "word": "race condition",
+          "headwordFound": true,
+          "unresolvedReferenceOnly": false,
+          "conceptsPresent": true
+        },
+        {
+          "word": "transformer",
+          "headwordFound": false,
+          "unresolvedReferenceOnly": false,
+          "conceptsPresent": false
+        },
+        {
+          "word": "embedding",
+          "headwordFound": true,
+          "unresolvedReferenceOnly": false,
+          "conceptsPresent": false
+        },
+        {
+          "word": "LLM",
+          "headwordFound": false,
+          "unresolvedReferenceOnly": false,
+          "conceptsPresent": false
+        },
+        {
+          "word": "RAG",
+          "headwordFound": false,
+          "unresolvedReferenceOnly": false,
+          "conceptsPresent": false
+        },
+        {
+          "word": "Kubernetes",
+          "headwordFound": false,
+          "unresolvedReferenceOnly": false,
+          "conceptsPresent": false
+        },
+        {
+          "word": "TypeScript",
+          "headwordFound": false,
+          "unresolvedReferenceOnly": false,
+          "conceptsPresent": false
+        },
+        {
+          "word": "Docker",
+          "headwordFound": false,
+          "unresolvedReferenceOnly": false,
+          "conceptsPresent": false
+        }
+      ]
+    },
+    "current-us": {
+      "uniqueHeadwords": 125927,
+      "normalizedBytes": 3935829,
+      "normalizedGzipBytes": 894201,
+      "rangeGzipBytes": 906092,
+      "maxShardUtf16Bytes": 124080,
+      "indexBytes": 2445,
+      "normalizedSha256": "383785fc50f726511ffd411272d20f796e683f9e3621b753ee649d9aa894d9b4",
+      "coverage": {
+        "基础技术词": {
+          "hits": 35,
+          "total": 39,
+          "found": [
+            "software",
+            "hardware",
+            "algorithm",
+            "database",
+            "network",
+            "browser",
+            "server",
+            "client",
+            "compiler",
+            "processor",
+            "memory",
+            "latency",
+            "throughput",
+            "cache",
+            "kernel",
+            "protocol",
+            "architecture",
+            "interface",
+            "deployment",
+            "encryption",
+            "authentication",
+            "vulnerability",
+            "repository",
+            "dependency",
+            "inference",
+            "transformer",
+            "embedding",
+            "token",
+            "tensor",
+            "vector",
+            "gradient",
+            "benchmark",
+            "optimization",
+            "scalability",
+            "asynchronous"
+          ]
+        },
+        "新技术词与产品名": {
+          "hits": 9,
+          "total": 33,
+          "found": [
+            "docker",
+            "javascript",
+            "blockchain",
+            "backend",
+            "github",
+            "nvidia",
+            "llama",
+            "claude",
+            "gemini"
+          ]
+        },
+        "技术缩写": {
+          "hits": 7,
+          "total": 19,
+          "found": [
+            "API",
+            "CPU",
+            "RAG",
+            "SQL",
+            "HTTP",
+            "IDE",
+            "DNS"
+          ]
+        },
+        "技术短语": {
+          "hits": 0,
+          "total": 10,
+          "found": []
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "基础技术词": ["software", "hardware", "algorithm", "database", "network", "browser", "server", "client", "compiler", "processor", "memory", "latency", "throughput", "concurrency", "cache", "kernel", "protocol", "architecture", "interface", "deployment", "encryption", "authentication", "vulnerability", "repository", "dependency", "inference", "transformer", "embedding", "quantization", "token", "tensor", "vector", "gradient", "benchmark", "optimization", "scalability", "asynchronous", "serialization", "middleware"],
+  "新技术词与产品名": ["kubernetes", "docker", "nginx", "postgresql", "redis", "sqlite", "pytorch", "tensorflow", "typescript", "javascript", "wasm", "webassembly", "serverless", "microservices", "blockchain", "cryptocurrency", "chatbot", "multimodal", "tokenizer", "embeddings", "fine-tuning", "frontend", "backend", "devops", "github", "openai", "anthropic", "nvidia", "ollama", "llama", "claude", "gemini", "qwen"],
+  "技术缩写": ["API", "CPU", "GPU", "LLM", "RAG", "SQL", "HTTP", "JSON", "YAML", "SDK", "CLI", "IDE", "GUI", "TCP", "DNS", "TLS", "OAuth", "CUDA", "SIMD"],
+  "技术短语": ["machine learning", "large language model", "retrieval augmented generation", "context window", "prompt injection", "garbage collection", "race condition", "fine tuning", "open source", "pull request"]
+}

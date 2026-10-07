@@ -1,4 +1,18 @@
-# Cloudy’s Gloss 标识 · v1
+# Cloudy’s Gloss 标识
+
+## 浏览器图标 · 2026-10-07
+
+0.1.3 补齐浏览器扩展图标。原安装包没有 `icons` 和工具栏 `default_icon`，浏览器因此回退到默认拼图。沿用云朵与双语阅读线，使用纯色矢量母版，并加粗阅读线以适配小尺寸。
+
+- 母版：[public/icon/source.svg](../../../public/icon/source.svg)。
+- PNG：16 / 19 / 24 / 32 / 38 / 48 / 64 / 96 / 128 px，覆盖工具栏、Retina 和扩展管理页。
+- 重建：`pnpm icons:build`，使用已安装的 Playwright Chromium；必要时先运行 `pnpm exec playwright install chromium`。PNG 已随源码提交，正常构建不需要重新导出。
+- WXT 自动从 `public/icon/数字.png` 生成 `icons`；popup 的 `manifest.default_icon` 元数据由 WXT 转换成 Chrome `action` / Firefox `browser_action`，共用同一份业务配置。
+- [浅色、深色及原尺寸预览](toolbar-icons.png)。图标为静态本地资源，无网络请求或运行时动画。
+
+Firefox 自带的「扩展」菜单按钮仍是拼图，它不是插件图标。打开扩展菜单，找到 Cloudy’s Gloss，在对应菜单中选择固定到工具栏，才能显示独立品牌图标。
+
+## 初版设计稿
 
 2026-10-05，视觉设计方案。
 
@@ -15,7 +29,7 @@
 - [品牌展示稿](cloudys-gloss-board-v1.png)：1536 × 1024，包含字标、浅色与深色背景示例，以及缩小展示。
 - [透明底图标](cloudys-gloss-icon-v1.png)：1254 × 1254，RGBA PNG，圆角方形外部透明。已检查 alpha 通道范围为 0–255。
 
-展示稿中的小图为视觉示意。正式接入浏览器工具栏时，应从统一矢量母版导出 16 / 32 / 48 / 128 px，并分别检查两条阅读线的像素清晰度。
+展示稿中的小图为视觉示意。正式工具栏资产采用上方的矢量母版与 PNG 导出，原始设计稿继续保留。
 
 ## 生成记录
 

@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      entities:
+        specifier: ^8.1.0
+        version: 8.1.0
       idb:
         specifier: ^8.0.3
         version: 8.0.3

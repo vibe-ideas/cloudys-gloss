@@ -1,5 +1,7 @@
 # GitHub CI 与版本发布
 
+只想更新自己日常使用的 Firefox 开发者版：运行 `pnpm update:firefox`，见 [本地永久安装更新](local-firefox-update.md)。
+
 工作流为 [ci-release.yml](../../.github/workflows/ci-release.yml)。发布位置：[GitHub Releases](https://github.com/vibe-ideas/cloudys-gloss/releases)。本流程发布下载包，不提交 Chrome Web Store 或 Mozilla AMO，也不会自动获得 Firefox 签名。
 
 ## 触发方式

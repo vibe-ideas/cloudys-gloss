@@ -1,0 +1,616 @@
+{
+  "scope": "101 hand-picked technology terms; lowercase exact headword matching, NOT pronunciation accuracy or article-weighted coverage",
+  "sources": [
+    {
+      "file": "wikipron-us.tsv",
+      "url": "https://raw.githubusercontent.com/CUNY-CL/wikipron/d282e848a211ea31cfd730f0ced8bc8cdab9e83d/data/scrape/tsv/eng_latn_us_broad.tsv",
+      "sha256": "f304b8f0565466e8abfe4c04a30d99421e1590d2aa17c4a08ebfa5942c587e75",
+      "bytes": 2875614
+    },
+    {
+      "file": "wikipron-uk.tsv",
+      "url": "https://raw.githubusercontent.com/CUNY-CL/wikipron/d282e848a211ea31cfd730f0ced8bc8cdab9e83d/data/scrape/tsv/eng_latn_uk_broad.tsv",
+      "sha256": "f8ca476aa2e96cb22cafbf9099d689b5902a9d321579055081909b2eeafa1b8d",
+      "bytes": 2915740
+    },
+    {
+      "file": "ecdict.csv",
+      "url": "https://raw.githubusercontent.com/skywind3000/ECDICT/bc015ed2e24a7abef49fc6dbbb7fe32c1dadaf8b/ecdict.csv",
+      "sha256": "1a6947e04785db63613a92e14903cdae7954f7e84860b10e68e5c7cbb3f9c3cf",
+      "bytes": 65933428
+    },
+    {
+      "file": "cmudict.dict",
+      "url": "https://raw.githubusercontent.com/cmusphinx/cmudict/74790861f652b15e4ac49015a90074ad62a27690/cmudict.dict",
+      "sha256": "81917843c7f44ce2b094ac63873c2c7a4cf802040792c455ba3ca406891c3d22",
+      "bytes": 3618488
+    },
+    {
+      "file": "public/dictionaries/us.tsv",
+      "sha256": "1a543aaf742b628dd6e59791e3c0d25b94dc208c2f9b0bb9377a4cea53adad55",
+      "bytes": 3180267
+    },
+    {
+      "file": "public/dictionaries/uk.tsv",
+      "sha256": "28d12aaaa350ada8c595c97408e6ef44804aa8a204fc9b448aed0ed261c04cb5",
+      "bytes": 358650
+    }
+  ],
+  "dictionaries": {
+    "current-us": {
+      "entries": 125927,
+      "bytes": 3180267,
+      "gzipBytes": 872402,
+      "shardGzipBytes": 1320867,
+      "rangeGzipBytes": 884331,
+      "maxRangeUtf16Bytes": 100464,
+      "maxShardUtf16Bytes": 84936,
+      "entriesWithStress": 125896,
+      "groups": {
+        "基础技术词": {
+          "total": 39,
+          "matches": {
+            "software": "/ˈsɔfˌwɛɹ/, /ˈsɔftˌwɛɹ/",
+            "hardware": "/ˈhɑɹdˌwɛɹ/",
+            "algorithm": "/ˈæɫɡɝˌɪðəm/",
+            "database": "/ˈdætəˌbeɪs/, /ˈdeɪtəˌbeɪs/",
+            "network": "/ˈnɛtˌwɝk/",
+            "browser": "/ˈbɹaʊzɝ/",
+            "server": "/ˈsɝvɝ/",
+            "client": "/ˈkɫaɪənt/",
+            "compiler": "/kəmˈpaɪɫɝ/",
+            "processor": "/ˈpɹɑˌsɛsɝ/",
+            "memory": "/ˈmɛmɝi/",
+            "latency": "/ˈɫeɪtənsi/",
+            "throughput": "/ˈθɹuˌpʊt/",
+            "cache": "/ˈkæʃ/, /kæˈʃeɪ/",
+            "kernel": "/ˈkɝnəɫ/",
+            "protocol": "/ˈpɹoʊtəˌkɑɫ/, /ˈpɹoʊtəˌkɔɫ/",
+            "architecture": "/ˈɑɹkəˌtɛktʃɝ/",
+            "interface": "/ˈɪnɝˌfeɪs/, /ˈɪntɝˌfeɪs/",
+            "deployment": "/dɪˈpɫɔɪmənt/",
+            "encryption": "/ɛnˈkɹɪpʃən/",
+            "authentication": "/ɔˌθɛntəˈkeɪʃən/",
+            "vulnerability": "/ˌvəɫnɝəˈbɪɫɪti/",
+            "repository": "/ɹiˈpɑzəˌtɔɹi/",
+            "dependency": "/dɪˈpɛndənsi/",
+            "inference": "/ˈɪnfɝəns/",
+            "transformer": "/tɹænsˈfɔɹmɝ/",
+            "embedding": "/ɛmˈbɛdɪŋ/",
+            "token": "/ˈtoʊkən/",
+            "tensor": "/ˈtɛnsɝ/",
+            "vector": "/ˈvɛktɝ/",
+            "gradient": "/ˈɡɹeɪdiənt/",
+            "benchmark": "/ˈbɛntʃˌmɑɹk/",
+            "optimization": "/ɑptəməˈzeɪʃən/",
+            "scalability": "/ˈskeɪɫəˈbɪɫɪti/",
+            "asynchronous": "/ˈeɪˈsɪŋkɹənəs/"
+          }
+        },
+        "新技术词与产品名": {
+          "total": 33,
+          "matches": {
+            "docker": "/ˈdɑkɝ/",
+            "javascript": "/ˈdʒɑvəsˌkɹɪpt/",
+            "blockchain": "/ˈbɫɑkˈtʃeɪn/",
+            "backend": "/ˌbæˈkɛnd/",
+            "github": "/ˈɡɪthəb/",
+            "nvidia": "/ˈɛnˈvɪdiə/",
+            "llama": "/ˈɫɑmə/",
+            "claude": "/ˈkɫɔd/",
+            "gemini": "/ˈdʒɛməˌnaɪ/, /ˈdʒɛməˌni/"
+          }
+        },
+        "技术缩写": {
+          "total": 19,
+          "matches": {
+            "API": "/ˌeɪˌpiˈaɪ/",
+            "CPU": "/ˌsiˌpiˈju/",
+            "RAG": "/ˈɹæɡ/",
+            "SQL": "/ˈsikwʊɫ/, /ˌɛsˌkjuˈɛɫ/",
+            "HTTP": "/ˌeɪtʃˌtiˌtiˈpi/",
+            "IDE": "/ˈaɪd/",
+            "DNS": "/ˌdiˌɛˈnɛs/"
+          }
+        },
+        "技术短语": {
+          "total": 10,
+          "matches": {}
+        }
+      }
+    },
+    "wikipron-us": {
+      "entries": 79307,
+      "bytes": 2204112,
+      "gzipBytes": 704775,
+      "shardGzipBytes": 968392,
+      "rangeGzipBytes": 717638,
+      "maxRangeUtf16Bytes": 68660,
+      "maxShardUtf16Bytes": 61402,
+      "entriesWithStress": 0,
+      "groups": {
+        "基础技术词": {
+          "total": 39,
+          "matches": {
+            "software": "/sɑftwɛɹ/, /sɑfwɛɹ/, /sɔftwɛɹ/, /sɔfwɛɹ/",
+            "hardware": "/hɑɹdwɛɹ/",
+            "algorithm": "/alɡəɹɪðm/, /alɡəɹɪðəm/, /ælɡəɹɪðm̩/",
+            "database": "/deɪtəbeɪs/, /dætəbeɪs/",
+            "network": "/nɛtwɝk/",
+            "browser": "/bɹaʊzɚ/",
+            "server": "/sɝvɚ/",
+            "client": "/klaɪənt/",
+            "compiler": "/kəmpaɪlɚ/",
+            "processor": "/pɹɑsəsɚ/, /pɹɑsɛsɚ/",
+            "memory": "/mɛməɹi/, /mɛmɹi/",
+            "latency": "/leɪtənsi/",
+            "throughput": "/θɹupʊt/",
+            "concurrency": "/kəŋkʌɹənsi/",
+            "cache": "/keɪʃ/, /kæʃ/, /kæʃeɪ/",
+            "kernel": "/kɝnəl/",
+            "protocol": "/pɹoʊtəkoʊl/, /pɹoʊtəkɑl/, /pɹoʊtəkɔl/",
+            "architecture": "/ɑɹkɪtɛkt͡ʃɚ/",
+            "interface": "/ɪntɚfeɪs/, /ɪnɚfeɪs/",
+            "deployment": "/dɪplɔɪmənt/",
+            "encryption": "/ɛnkɹɪpʃən/, /ɪnkɹɪpʃən/",
+            "authentication": "/ɑθɛntɪkeɪʃn̩/, /ɔθɛntɪkeɪʃn̩/",
+            "vulnerability": "/vʌlnəɹəbɪləti/, /vʌlnɹəbɪləti/",
+            "repository": "/ɹɪpɑzɪtɔɹi/",
+            "dependency": "/dəpɛndənsi/, /dɪpɛndənsi/",
+            "inference": "/ɪnfɚəns/, /ɪnfɹəns/",
+            "transformer": "/tɹænsfɔɹmɚ/, /tɹænsfoɹmɚ/",
+            "embedding": "/ɛmbɛdɪŋ/, /ɪmbɛdɪŋ/",
+            "token": "/toʊkən/",
+            "tensor": "/tɛnsɔɹ/, /tɛnsɚ/",
+            "vector": "/vɛktɚ/",
+            "gradient": "/ɡɹeɪdiənt/",
+            "benchmark": "/bɛntʃmɑːk/, /bɛnʃmɑːk/",
+            "optimization": "/ɑptəmaɪzeɪʃən/",
+            "scalability": "/skeɪləbɪləti/",
+            "asynchronous": "/eɪsɪŋkɹənəs/"
+          }
+        },
+        "新技术词与产品名": {
+          "total": 33,
+          "matches": {
+            "kubernetes": "/kjuːbəneɪtiːz/, /kjuːbəneɪtɪs/, /kjuːbənɛtɪs/, /kuːbəneɪtiːz/, /kuːbəneɪtɪs/, /kuːbənɛtɪs/",
+            "docker": "/dɑkɚ/",
+            "typescript": "/tʌɪpskɹɪpt/, /taɪpskɹɪpt/",
+            "javascript": "/dʒɑːvəskɹɪpt/",
+            "wasm": "/wɑzm/, /wɑzəm/, /wʌzm/, /wʌzəm/",
+            "cryptocurrency": "/kɹɪptoʊkɝənsi/",
+            "anthropic": "/ænθɹɑpɪk/",
+            "llama": "/jɑmə/, /lɑmə/",
+            "claude": "/klɑd/, /klɒd/, /klɔd/",
+            "gemini": "/d͡ʒɛmɪnaɪ/, /d͡ʒɛmɪniː/"
+          }
+        },
+        "技术缩写": {
+          "total": 19,
+          "matches": {
+            "API": "/eɪpiaɪ/",
+            "CPU": "/sipiju/",
+            "RAG": "/ɹeɪ̯ɡ/, /ɹæɡ/",
+            "SQL": "/siːkwəl/",
+            "JSON": "/d͡ʒeɪsɑn/, /d͡ʒeɪsən/, /ʒəsɔ̃/",
+            "YAML": "/jæməl/",
+            "IDE": "/aɪd/",
+            "GUI": "/dʒiːjuːaɪ/, /ɡuːi/"
+          }
+        },
+        "技术短语": {
+          "total": 10,
+          "matches": {}
+        }
+      }
+    },
+    "current-uk": {
+      "entries": 15212,
+      "bytes": 358650,
+      "gzipBytes": 105792,
+      "shardGzipBytes": 166392,
+      "rangeGzipBytes": 112699,
+      "maxRangeUtf16Bytes": 12598,
+      "maxShardUtf16Bytes": 10610,
+      "entriesWithStress": 15183,
+      "groups": {
+        "基础技术词": {
+          "total": 39,
+          "matches": {
+            "software": "/sˈɒfwˌɛə/, /sˈɒftwˌɛə/",
+            "hardware": "/hˈɑːdwˌɛə/",
+            "algorithm": "/ˈælgəɹˌɪðəm/",
+            "database": "/dˈeɪtəbˌeɪs/",
+            "network": "/nˈɛtwˌɜːk/",
+            "browser": "/bɹˈaʊzə/",
+            "server": "/sˈɜːvə/",
+            "client": "/klˈaɪənt/",
+            "compiler": "/kəmpˈaɪlə/",
+            "processor": "/pɹˈəʊsˌɛsə/",
+            "memory": "/mˈɛməɹi/",
+            "cache": "/kˈæʃ/",
+            "kernel": "/kˈɜːnəl/",
+            "protocol": "/pɹˈəʊtəkˌɒl/",
+            "architecture": "/ˈɑːkɪtˌɛktʃə/",
+            "interface": "/ˈɪntəfˌeɪs/",
+            "deployment": "/dɪplˈɔɪmənt/",
+            "encryption": "/ɛnkɹˈɪpʃən/",
+            "authentication": "/ɔːθˌɛntɪkˈeɪʃən/",
+            "vulnerability": "/vˌɐlnəɹəbˈɪlɪti/",
+            "repository": "/ɹɪpˈɒzɪtəɹi/",
+            "dependency": "/dɪpˈɛndənsi/",
+            "inference": "/ɪnfɹəns/, /ɪnfəɹəns/",
+            "token": "/tˈəʊkən/",
+            "vector": "/vˈɛktə/",
+            "gradient": "/gɹˈeɪdɪənt/",
+            "benchmark": "/bˈɛntʃmˌɑːk/",
+            "optimization": "/ˌɒptɪmaɪzˈeɪʃən/"
+          }
+        },
+        "新技术词与产品名": {
+          "total": 33,
+          "matches": {
+            "javascript": "/dʒˈɑːvəskɹˌɪpt/",
+            "llama": "/lˈɑːmə/"
+          }
+        },
+        "技术缩写": {
+          "total": 19,
+          "matches": {
+            "RAG": "/ɹˈæg/",
+            "GUI": "/gˈuːi/"
+          }
+        },
+        "技术短语": {
+          "total": 10,
+          "matches": {}
+        }
+      }
+    },
+    "wikipron-uk": {
+      "entries": 79884,
+      "bytes": 2243937,
+      "gzipBytes": 700948,
+      "shardGzipBytes": 969247,
+      "rangeGzipBytes": 713973,
+      "maxRangeUtf16Bytes": 66838,
+      "maxShardUtf16Bytes": 62290,
+      "entriesWithStress": 0,
+      "groups": {
+        "基础技术词": {
+          "total": 39,
+          "matches": {
+            "software": "/sɒftwɛə/, /sɒfwɛə/",
+            "hardware": "/hɑːdwɛə/",
+            "algorithm": "/ælɡəɹɪðm̩/",
+            "database": "/deɪtəbeɪs/, /dɑːtəbeɪs/",
+            "network": "/nɛtwɜːk/",
+            "browser": "/bɹaʊzə/",
+            "server": "/sɜːvə/",
+            "client": "/klaɪənt/",
+            "compiler": "/kəmpaɪlə/",
+            "processor": "/pɹəʊsɛsə/, /pɹəʊsɛsɚ/",
+            "memory": "/mɛməɹi/, /mɛmɹi/",
+            "latency": "/leɪtənsi/",
+            "throughput": "/θɹuːpʊt/",
+            "concurrency": "/kəŋkʌɹənsi/",
+            "cache": "/kæʃ/",
+            "kernel": "/kɜːnəl/",
+            "protocol": "/pɹəʊtəkɒl/",
+            "architecture": "/ɑːkɪtɛkt͡ʃə/",
+            "interface": "/ɪntəfeɪs/",
+            "deployment": "/dɪplɔɪmənt/",
+            "encryption": "/ɪŋkɹɪpʃən/",
+            "authentication": "/ɔːθɛntɪkeɪʃn̩/",
+            "vulnerability": "/vʌlnəɹəbɪlɪti/, /vʌlnɹəbɪlɪti/",
+            "repository": "/ɹɪpɒzɪtəɹɪ/, /ɹɪpɒzɪtɹɪ/",
+            "dependency": "/dəpɛndənsi/, /dɪpɛndənsi/",
+            "inference": "/ɪnfəɹəns/",
+            "transformer": "/tɹænsfɔːmə/, /tɹɑːnsfɔːmə/",
+            "embedding": "/ɛmbɛdɪŋ/, /ɪmbɛdɪŋ/",
+            "token": "/təʊkən/",
+            "tensor": "/tɛnsɔː/, /tɛnsə/",
+            "vector": "/vɛktə/",
+            "gradient": "/ɡɹeɪdiənt/",
+            "benchmark": "/bɛntʃmɑːk/, /bɛnʃmɑːk/",
+            "scalability": "/skeɪləbɪləti/, /skeɪləbɪlɪti/",
+            "asynchronous": "/eɪsɪŋkɹənəs/"
+          }
+        },
+        "新技术词与产品名": {
+          "total": 33,
+          "matches": {
+            "kubernetes": "/kjuːbəneɪtiːz/, /kjuːbəneɪtɪs/, /kjuːbənɛtɪs/, /kuːbəneɪtiːz/, /kuːbəneɪtɪs/, /kuːbənɛtɪs/",
+            "typescript": "/tʌɪpskɹɪpt/, /taɪpskɹɪpt/",
+            "javascript": "/dʒɑːvəskɹɪpt/",
+            "wasm": "/wɒzm/, /wɒzəm/, /wʌzm/, /wʌzəm/",
+            "anthropic": "/ænθɹɒpɪk/",
+            "llama": "/lɑːmə/",
+            "claude": "/klɔːd/",
+            "gemini": "/d͡ʒɛmɪnaɪ/, /d͡ʒɛmɪniː/"
+          }
+        },
+        "技术缩写": {
+          "total": 19,
+          "matches": {
+            "CPU": "/siːpiːjuː/",
+            "RAG": "/ɹæɡ/",
+            "SQL": "/siːkwəl/",
+            "JSON": "/d͡ʒeɪsən/, /ʒəsɔ̃/",
+            "YAML": "/jæməl/",
+            "IDE": "/aɪd/",
+            "GUI": "/dʒiːjuːaɪ/, /ɡuːi/"
+          }
+        },
+        "技术短语": {
+          "total": 10,
+          "matches": {}
+        }
+      }
+    },
+    "ecdict-phonetic": {
+      "entries": 218065,
+      "bytes": 5372211,
+      "gzipBytes": 1909047,
+      "shardGzipBytes": 2630365,
+      "rangeGzipBytes": 1931353,
+      "maxRangeUtf16Bytes": 173932,
+      "maxShardUtf16Bytes": 157912,
+      "entriesWithStress": 28218,
+      "groups": {
+        "基础技术词": {
+          "total": 39,
+          "matches": {
+            "software": "'sɒftwєә",
+            "hardware": "'hɑ:dwєә",
+            "algorithm": "'ælgәriðm",
+            "database": "'deitәbeis",
+            "network": "'netwә:k",
+            "browser": "'brauzә",
+            "server": "'sә:vә",
+            "client": "'klaiәnt",
+            "compiler": "kәm'pailә",
+            "processor": "prә'sesә",
+            "memory": "'memәri",
+            "latency": "'leitnsi",
+            "throughput": "'θru:put",
+            "cache": "kæʃ",
+            "kernel": "'kә:nl",
+            "protocol": "'prәutәkɒl",
+            "architecture": "'ɑ:kitektʃә",
+            "interface": "'intәfeis",
+            "encryption": "-'kripʃən",
+            "authentication": "ɒ:θenti'keiʃәn",
+            "vulnerability": ".vʌlnәrә'biliti",
+            "repository": "ri'pɔzitәri",
+            "dependency": "di'pendәnsi",
+            "inference": "'infәrәns",
+            "transformer": "træns'fɒ:mә",
+            "embedding": "em'bediŋ",
+            "quantization": ",kwɔntai'zeiʃәn",
+            "token": "'tәukәn",
+            "tensor": "'tensә",
+            "vector": "'vektә",
+            "gradient": "'greidiәnt",
+            "optimization": ".ɒptimai'zeiʃәn",
+            "scalability": ",skeilә'biliti",
+            "asynchronous": "ei'siŋkrәnәs",
+            "serialization": ".siәriәlai'zeiʃәn",
+            "middleware": "'midlweә(r)"
+          }
+        },
+        "新技术词与产品名": {
+          "total": 33,
+          "matches": {
+            "docker": "'dɒkә",
+            "typescript": "'taipskript",
+            "backend": "'bækend",
+            "anthropic": "æn'θrɔpik",
+            "llama": "'lɑ:mә",
+            "claude": "klɔ:d",
+            "gemini": "'dʒeminai"
+          }
+        },
+        "技术缩写": {
+          "total": 19,
+          "matches": {
+            "RAG": "ræg",
+            "IDE": "aid"
+          }
+        },
+        "技术短语": {
+          "total": 10,
+          "matches": {}
+        }
+      }
+    },
+    "cmudict-arpabet": {
+      "entries": 126052,
+      "bytes": 3517315,
+      "gzipBytes": 908235,
+      "shardGzipBytes": 1379995,
+      "rangeGzipBytes": 920217,
+      "maxRangeUtf16Bytes": 145318,
+      "maxShardUtf16Bytes": 116256,
+      "entriesWithStress": 0,
+      "groups": {
+        "基础技术词": {
+          "total": 39,
+          "matches": {
+            "software": "S AO1 F T W EH2 R, S AO1 F W EH2 R",
+            "hardware": "HH AA1 R D W EH2 R",
+            "algorithm": "AE1 L G ER0 IH2 DH AH0 M",
+            "database": "D EY1 T AH0 B EY2 S, D AE1 T AH0 B EY2 S",
+            "network": "N EH1 T W ER2 K",
+            "browser": "B R AW1 Z ER0",
+            "server": "S ER1 V ER0",
+            "client": "K L AY1 AH0 N T",
+            "compiler": "K AH0 M P AY1 L ER0",
+            "processor": "P R AA1 S EH2 S ER0",
+            "memory": "M EH1 M ER0 IY0",
+            "latency": "L EY1 T AH0 N S IY0",
+            "throughput": "TH R UW1 P UH2 T",
+            "cache": "K AE1 SH, K AE0 SH EY1",
+            "kernel": "K ER1 N AH0 L",
+            "protocol": "P R OW1 T AH0 K AA2 L, P R OW1 T AH0 K AO2 L",
+            "architecture": "AA1 R K AH0 T EH2 K CH ER0",
+            "interface": "IH1 N T ER0 F EY2 S, IH1 N ER0 F EY2 S",
+            "deployment": "D IH0 P L OY1 M AH0 N T",
+            "encryption": "EH0 N K R IH1 P SH AH0 N",
+            "authentication": "AO0 TH EH2 N T AH0 K EY1 SH AH0 N",
+            "vulnerability": "V AH2 L N ER0 AH0 B IH1 L IH0 T IY0",
+            "repository": "R IY0 P AA1 Z AH0 T AO2 R IY0",
+            "dependency": "D IH0 P EH1 N D AH0 N S IY0",
+            "inference": "IH1 N F ER0 AH0 N S",
+            "transformer": "T R AE0 N S F AO1 R M ER0",
+            "embedding": "EH0 M B EH1 D IH0 NG",
+            "token": "T OW1 K AH0 N",
+            "tensor": "T EH1 N S ER0",
+            "vector": "V EH1 K T ER0",
+            "gradient": "G R EY1 D IY0 AH0 N T",
+            "benchmark": "B EH1 N CH M AA2 R K",
+            "optimization": "AA0 P T AH0 M AH0 Z EY1 SH AH0 N",
+            "scalability": "S K EY1 L AH0 B IH1 L IH0 T IY0",
+            "asynchronous": "EY1 S IH1 NG K R AH0 N AH0 S"
+          }
+        },
+        "新技术词与产品名": {
+          "total": 33,
+          "matches": {
+            "docker": "D AA1 K ER0",
+            "javascript": "JH AA1 V AH0 S K R IH2 P T",
+            "blockchain": "B L AA1 K CH EY1 N",
+            "backend": "B AE2 K EH1 N D",
+            "github": "G IH1 T HH AH0 B",
+            "nvidia": "EH1 N V IH1 D IY0 AH0",
+            "llama": "L AA1 M AH0",
+            "claude": "K L AO1 D",
+            "gemini": "JH EH1 M AH0 N AY2, JH EH1 M AH0 N IY2"
+          }
+        },
+        "技术缩写": {
+          "total": 19,
+          "matches": {
+            "API": "EY2 P IY2 AY1",
+            "CPU": "S IY2 P IY2 Y UW1",
+            "RAG": "R AE1 G",
+            "SQL": "EH2 S K Y UW2 EH1 L, S IY1 K W UH0 L",
+            "HTTP": "EY2 CH T IY2 T IY2 P IY1",
+            "IDE": "AY1 D",
+            "DNS": "D IY2 EH2 N EH1 S"
+          }
+        },
+        "技术短语": {
+          "total": 10,
+          "matches": {}
+        }
+      }
+    }
+  },
+  "ecdictTotalHeadwords": 770611,
+  "ecdictChineseDefinitions": 768739,
+  "ecdictDefinitionAudit": {
+    "docker": "n. 码头工人",
+    "embedding": "[化] 埋置; 包埋; (塑料的)嵌铸\\n[医] 包埋, 植入",
+    "gpu": "abbr. 地面动力装置（ground power unit）",
+    "inference": "n. 推论\\n[法] 推论, 推理, 推断",
+    "llm": "abbr. 法学硕士；法律硕士",
+    "rag": "n. 碎布, 抹布, 碎片, 碎屑, 少量, 破旧衣服\\nvt. 责骂, 揶揄, 戏弄\\nvi. 喧闹",
+    "token": "n. 表征, 记号, 代币\\na. 象征的, 表意的\\n[计] 记号",
+    "transformer": "n. 变压器, 促使变化的人\\n[化] 变压器",
+    "typescript": "n. 用打字机打的文件"
+  },
+  "ecdictCompactSizes": {
+    "all": {
+      "entries": 770611,
+      "bytes": 45148776,
+      "gzipBytes": 15464229
+    },
+    "frequency-or-tagged": {
+      "entries": 59137,
+      "bytes": 4214297,
+      "gzipBytes": 1676713
+    }
+  },
+  "ecdictDefinitionMatches": {
+    "基础技术词": [
+      "software",
+      "hardware",
+      "algorithm",
+      "database",
+      "network",
+      "browser",
+      "server",
+      "client",
+      "compiler",
+      "processor",
+      "memory",
+      "latency",
+      "throughput",
+      "concurrency",
+      "cache",
+      "kernel",
+      "protocol",
+      "architecture",
+      "interface",
+      "deployment",
+      "encryption",
+      "authentication",
+      "vulnerability",
+      "repository",
+      "dependency",
+      "inference",
+      "transformer",
+      "embedding",
+      "quantization",
+      "token",
+      "tensor",
+      "vector",
+      "gradient",
+      "benchmark",
+      "optimization",
+      "scalability",
+      "asynchronous",
+      "serialization",
+      "middleware"
+    ],
+    "新技术词与产品名": [
+      "docker",
+      "typescript",
+      "javascript",
+      "multimodal",
+      "fine-tuning",
+      "frontend",
+      "backend",
+      "anthropic",
+      "nvidia",
+      "llama",
+      "claude",
+      "gemini"
+    ],
+    "技术缩写": [
+      "API",
+      "CPU",
+      "GPU",
+      "LLM",
+      "RAG",
+      "SQL",
+      "HTTP",
+      "JSON",
+      "SDK",
+      "CLI",
+      "IDE",
+      "GUI",
+      "TCP",
+      "DNS",
+      "TLS",
+      "SIMD"
+    ],
+    "技术短语": [
+      "machine learning",
+      "garbage collection",
+      "fine tuning",
+      "open source"
+    ]
+  }
+}

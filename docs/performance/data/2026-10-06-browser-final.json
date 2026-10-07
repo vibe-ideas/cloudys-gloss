@@ -1,0 +1,288 @@
+{
+  "config": {
+    "argv": [
+      "/Users/yeshan333/.local/share/mise/installs/node/24.14.0/bin/node",
+      "/Users/yeshan333/github/cloudys-gloss/node_modules/.pnpm/@playwright+test@1.63.0/node_modules/@playwright/test/cli.js",
+      "test",
+      "-c",
+      "playwright.live.config.ts",
+      "--reporter=list,json"
+    ],
+    "configFile": "/Users/yeshan333/github/cloudys-gloss/playwright.live.config.ts",
+    "rootDir": "/Users/yeshan333/github/cloudys-gloss/tests/live",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "/Users/yeshan333/github/cloudys-gloss/artifacts/live",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "chromium",
+        "name": "chromium",
+        "testDir": "/Users/yeshan333/github/cloudys-gloss/tests/live",
+        "testIgnore": [],
+        "testMatch": [
+          "translation.spec.ts"
+        ],
+        "timeout": 180000
+      },
+      {
+        "outputDir": "/Users/yeshan333/github/cloudys-gloss/artifacts/live",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "firefox",
+        "name": "firefox",
+        "testDir": "/Users/yeshan333/github/cloudys-gloss/tests/live",
+        "testIgnore": [],
+        "testMatch": [
+          "translation.spec.ts"
+        ],
+        "timeout": 180000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list"
+      ],
+      [
+        "json"
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.63.0",
+    "workers": 1,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "translation.spec.ts",
+      "file": "translation.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "真实 MLX / 网关：2000 段页面首段流式出现，滚到页尾继续翻译，记录首段与主线程响应间隔",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 180000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 6107,
+                  "errors": [],
+                  "stdout": [
+                    {
+                      "text": "chromium: 2000 paragraphs {\"firstMs\":685,\"longestFrameMs\":19,\"state\":\"partial\"}, completed at first screen=2\n"
+                    }
+                  ],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-05T17:13:27.269Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "large-page-metrics",
+                      "contentType": "application/json",
+                      "body": "eyJmaXJzdE1zIjo2ODUsImxvbmdlc3RGcmFtZU1zIjoxOSwic3RhdGUiOiJwYXJ0aWFsIiwidHJhbnNsYXRlZEF0VG9wIjoyLCJtb2RlbCI6IlF3ZW4vUXdlbjMtMS43Qi1NTFgtNGJpdCJ9"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "f5668e2f0ecfbb9dee1c-f3c2551273201730f677",
+          "file": "translation.spec.ts",
+          "line": 2,
+          "column": 1
+        },
+        {
+          "title": "真实兼容网关：后台返回中文双语译文与通过 Zod 校验的完整词卡",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 180000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 10392,
+                  "errors": [],
+                  "stdout": [
+                    {
+                      "text": "chromium: Qwen/Qwen3-1.7B-MLX-4bit first translation=834ms, word card=8342ms\n"
+                    },
+                    {
+                      "text": "chromium: click to offline IPA=350ms, complete card=8199ms\n"
+                    }
+                  ],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-05T17:13:33.389Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "latency",
+                      "contentType": "application/json",
+                      "body": "eyJtb2RlbCI6IlF3ZW4vUXdlbjMtMS43Qi1NTFgtNGJpdCIsInRyYW5zbGF0aW9uTXMiOjgzNCwiY2FyZE1zIjo4MzQyLCJpcGFNcyI6MzUwLCJjbGlja2VkVG9DYXJkTXMiOjgxOTl9"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "f5668e2f0ecfbb9dee1c-7b3aa36e180e771aeedc",
+          "file": "translation.spec.ts",
+          "line": 35,
+          "column": 1
+        },
+        {
+          "title": "真实 MLX / 网关：2000 段页面首段流式出现，滚到页尾继续翻译，记录首段与主线程响应间隔",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 180000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "firefox",
+              "projectName": "firefox",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 6988,
+                  "errors": [],
+                  "stdout": [
+                    {
+                      "text": "Installed /var/folders/4p/qqlv9c_n58563nxpy85bn2lc0000gn/T/cloudys-gloss-e2e-qnnWnE/test-addon as a temporary add-on\n"
+                    },
+                    {
+                      "text": "firefox: 2000 paragraphs {\"firstMs\":621,\"longestFrameMs\":19,\"state\":\"partial\"}, completed at first screen=2\n"
+                    }
+                  ],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-05T17:13:43.999Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "large-page-metrics",
+                      "contentType": "application/json",
+                      "body": "eyJmaXJzdE1zIjo2MjEsImxvbmdlc3RGcmFtZU1zIjoxOSwic3RhdGUiOiJwYXJ0aWFsIiwidHJhbnNsYXRlZEF0VG9wIjoyLCJtb2RlbCI6IlF3ZW4vUXdlbjMtMS43Qi1NTFgtNGJpdCJ9"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "f5668e2f0ecfbb9dee1c-d0ab771cc4e3dcc86328",
+          "file": "translation.spec.ts",
+          "line": 2,
+          "column": 1
+        },
+        {
+          "title": "真实兼容网关：后台返回中文双语译文与通过 Zod 校验的完整词卡",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 180000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "firefox",
+              "projectName": "firefox",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 14189,
+                  "errors": [],
+                  "stdout": [
+                    {
+                      "text": "Installed /var/folders/4p/qqlv9c_n58563nxpy85bn2lc0000gn/T/cloudys-gloss-e2e-Wnoa9F/test-addon as a temporary add-on\n"
+                    },
+                    {
+                      "text": "firefox: Qwen/Qwen3-1.7B-MLX-4bit first translation=1728ms, word card=9850ms\n"
+                    },
+                    {
+                      "text": "firefox: click to offline IPA=260ms, complete card=9822ms\n"
+                    }
+                  ],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-05T17:13:51.000Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "latency",
+                      "contentType": "application/json",
+                      "body": "eyJtb2RlbCI6IlF3ZW4vUXdlbjMtMS43Qi1NTFgtNGJpdCIsInRyYW5zbGF0aW9uTXMiOjE3MjgsImNhcmRNcyI6OTg1MCwiaXBhTXMiOjI2MCwiY2xpY2tlZFRvQ2FyZE1zIjo5ODIyfQ=="
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "f5668e2f0ecfbb9dee1c-e04ab06635eaded6f340",
+          "file": "translation.spec.ts",
+          "line": 35,
+          "column": 1
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-10-05T17:13:26.766Z",
+    "duration": 38434.993,
+    "expected": 4,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}

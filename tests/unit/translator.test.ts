@@ -21,6 +21,54 @@ afterEach(() => vi.unstubAllGlobals());
 const visible = () => observers.forEach((enter) => enter([...observed].map((target) => ({ target, isIntersecting: true } as IntersectionObserverEntry)), {} as IntersectionObserver));
 const intersect = (observer: ObserverRecord, elements: Element[], isIntersecting: boolean) => observer.callback(elements.map((target) => ({ target, isIntersecting } as IntersectionObserverEntry)), {} as IntersectionObserver);
 describe('双语阅读生命周期', () => {
+  it('视口内正文发可见优先级，附近预取发低优先级，仍最多同时请求两批', async () => {
+    document.body.innerHTML = '<p>Visible first.</p><p>Visible second.</p><p>Nearby third.</p><p>Nearby fourth.</p>';
+    const translate = vi.fn<import('../../src/translator').TranslationTransport['translate']>(() => new Promise(() => {}));
+    const translator = new PageTranslator({ translate, cancel: vi.fn() }); translator.start();
+    const paragraphs = [...document.querySelectorAll('p')];
+    intersect(observerRecords[0]!, paragraphs, true); intersect(observerRecords[1]!, paragraphs.slice(0, 2), true);
+    await vi.waitFor(() => expect(translate).toHaveBeenCalledTimes(2));
+    expect(translate.mock.calls.map(([, texts, , options]) => ({ texts, priority: options?.priority }))).toEqual([
+      { texts: ['Visible first.', 'Visible second.'], priority: 'visible' },
+      { texts: ['Nearby third.', 'Nearby fourth.'], priority: 'prefetch' },
+    ]);
+    translator.stop();
+  });
+  it('切到隐藏标签页后已有批次完成但不继续请求，切回后续译且不重复翻译成功段落', async () => {
+    document.body.innerHTML = Array.from({ length: 8 }, (_, i) => `<p>Paragraph ${i}.</p>`).join('');
+    const visibility = vi.spyOn(document, 'visibilityState', 'get').mockReturnValue('visible');
+    const finish: (() => void)[] = [];
+    const translate = vi.fn<import('../../src/translator').TranslationTransport['translate']>((_id, texts) => new Promise(resolve => finish.push(() => resolve(texts.map(text => `译文：${text}`)))));
+    const cancel = vi.fn(); const translator = new PageTranslator({ translate, cancel });
+    try {
+      translator.start(); visible(); await vi.waitFor(() => expect(translate).toHaveBeenCalledTimes(2));
+      visibility.mockReturnValue('hidden'); document.dispatchEvent(new Event('visibilitychange'));
+      finish[0]!(); finish[1]!(); await vi.waitFor(() => expect(translator.status.pending).toBe(0));
+      expect(translate).toHaveBeenCalledTimes(2); expect(cancel).not.toHaveBeenCalled();
+      visibility.mockReturnValue('visible'); document.dispatchEvent(new Event('visibilitychange'));
+      await vi.waitFor(() => expect(translate).toHaveBeenCalledTimes(4)); finish[2]!(); finish[3]!();
+      await vi.waitFor(() => expect(translator.status.translated).toBe(8));
+      expect(translate.mock.calls.flatMap(([, texts]) => texts)).toEqual(Array.from({ length: 8 }, (_, i) => `Paragraph ${i}.`));
+    } finally { translator.stop(); visibility.mockRestore(); }
+  });
+  it('页面隐藏时新增段落不扫描也不请求，切回只扫描新增区域并保留原有译文', async () => {
+    const visibility = vi.spyOn(document, 'visibilityState', 'get').mockReturnValue('visible');
+    const translate = vi.fn<import('../../src/translator').TranslationTransport['translate']>(async (_id, texts) => texts.map(text => `译文：${text}`));
+    const translator = new PageTranslator({ translate, cancel: vi.fn() });
+    const scan = vi.spyOn(document, 'createTreeWalker');
+    try {
+      translator.start(); visible(); await vi.waitFor(() => expect(translator.status.translated).toBe(2));
+      const fullScans = scan.mock.calls.filter(([root]) => root === document.body).length;
+      visibility.mockReturnValue('hidden'); document.dispatchEvent(new Event('visibilitychange'));
+      const added = document.createElement('p'); added.textContent = 'New hidden-page paragraph.'; document.body.append(added);
+      await new Promise(resolve => setTimeout(resolve, 80)); expect(observed.has(added)).toBe(false); expect(translate).toHaveBeenCalledOnce();
+      visibility.mockReturnValue('visible'); document.dispatchEvent(new Event('visibilitychange'));
+      await vi.waitFor(() => expect(observed.has(added)).toBe(true)); visible();
+      await vi.waitFor(() => expect(translator.status.translated).toBe(3));
+      expect(translate.mock.calls[1]![1]).toEqual(['New hidden-page paragraph.']);
+      expect(scan.mock.calls.filter(([root]) => root === document.body)).toHaveLength(fullScans);
+    } finally { translator.stop(); visibility.mockRestore(); scan.mockRestore(); }
+  });
   it('首次扫描暂停在即将被删除的正文上时，后续存活段落仍被发现并完成翻译', async () => {
     document.body.innerHTML = '<main><p id="first">Removed paragraph.</p><p id="middle">Middle paragraph.</p><p id="last">Last paragraph.</p></main>';
     const first = document.querySelector('#first')!;
@@ -395,11 +443,11 @@ describe('双语阅读生命周期', () => {
     first.dispatchEvent(new FocusEvent('focusin', { bubbles: true }));
     const host = document.querySelector('[data-cloudys-gloss="component-hint"]')!;
     expect(host.shadowRoot!.querySelector('.error')!.textContent).toContain('HTTP 503');
-    host.shadowRoot!.querySelector('button')!.click();
+    host.shadowRoot!.querySelector<HTMLButtonElement>('.actions button')!.click();
     await vi.waitFor(() => expect(first.textContent).toBe('新的第一段译文'));
     expect(translate.mock.calls[1]![1]).toEqual(['Hello world.']);
-    expect(translate.mock.calls[1]![3]).toEqual({ bypassCache: true });
-    host.shadowRoot!.querySelector('button')!.click();
+    expect(translate.mock.calls[1]![3]).toEqual({ bypassCache: true, priority: 'interactive' });
+    host.shadowRoot!.querySelector<HTMLButtonElement>('.actions button')!.click();
     await vi.waitFor(() => expect(host.shadowRoot!.querySelector('.error')!.textContent).toContain('HTTP 429'));
     expect(first.textContent).toBe('新的第一段译文');
     document.querySelectorAll('p')[1]!.querySelector('[data-cloudys-gloss]')!.dispatchEvent(new FocusEvent('focusin', { bubbles: true }));
@@ -417,7 +465,7 @@ describe('双语阅读生命周期', () => {
     const finish: (() => void)[] = [];
     translate.mockImplementation((_id, texts) => new Promise(resolve => finish.push(() => resolve(texts.map(() => '新译文')))));
     first.dispatchEvent(new FocusEvent('focusin', { bubbles: true }));
-    const button = document.querySelector('[data-cloudys-gloss="component-hint"]')!.shadowRoot!.querySelector('button')!;
+    const button = document.querySelector('[data-cloudys-gloss="component-hint"]')!.shadowRoot!.querySelector<HTMLButtonElement>('.actions button')!;
     button.click(); button.click();
     await vi.waitFor(() => expect(finish).toHaveLength(1));
     expect(first.textContent).toBe(previous); finish[0]!();
@@ -430,6 +478,29 @@ describe('双语阅读生命周期', () => {
     expect(calls.flatMap(([, texts]) => texts)).not.toContain('Other paragraph.');
     translator.stop();
   });
+  it('长段重翻在切出标签页后暂停下一批，切回续接已完成片段并一次替换旧译文', async () => {
+    document.body.innerHTML = `<p>${'A long sentence for careful reading. '.repeat(70)}</p>`;
+    const visibility = vi.spyOn(document, 'visibilityState', 'get').mockReturnValue('visible');
+    const translate = vi.fn<import('../../src/translator').TranslationTransport['translate']>(async (_id, texts) => texts.map(() => '旧译文'));
+    const translator = new PageTranslator({ translate, cancel: vi.fn() });
+    try {
+      translator.start(); await vi.waitFor(() => expect(observed.size).toBe(1)); visible();
+      await vi.waitFor(() => expect(translator.status.translated).toBe(1));
+      const first = document.querySelector<HTMLElement>('p [data-cloudys-gloss]')!; const previous = first.textContent;
+      const finish: (() => void)[] = [];
+      translate.mockImplementation((_id, texts) => new Promise(resolve => finish.push(() => resolve(texts.map(() => '新译文')))));
+      first.dispatchEvent(new FocusEvent('focusin', { bubbles: true }));
+      document.querySelector('[data-cloudys-gloss="component-hint"]')!.shadowRoot!.querySelector<HTMLButtonElement>('.actions button')!.click();
+      await vi.waitFor(() => expect(finish).toHaveLength(1));
+      visibility.mockReturnValue('hidden'); document.dispatchEvent(new Event('visibilitychange')); finish[0]!();
+      await new Promise(resolve => setTimeout(resolve, 80));
+      expect(finish).toHaveLength(1); expect(first.textContent).toBe(previous);
+      visibility.mockReturnValue('visible'); document.dispatchEvent(new Event('visibilitychange'));
+      await vi.waitFor(() => expect(finish).toHaveLength(2)); finish[1]!();
+      await vi.waitFor(() => expect(first.textContent).toBe('新译文 新译文 新译文'));
+      expect(finish).toHaveLength(2);
+    } finally { translator.stop(); visibility.mockRestore(); }
+  });
   it('网页同时重试三段仍最多占用两个请求，关闭翻译取消运行请求且迟到结果不恢复译文', async () => {
     document.body.innerHTML = '<p>First paragraph.</p><p>Second paragraph.</p><p>Third paragraph.</p>';
     const original = document.body.innerHTML;
@@ -440,7 +511,7 @@ describe('双语阅读生命周期', () => {
     translate.mockImplementation((_id, texts) => new Promise(resolve => finish.push(() => resolve(texts.map(() => '迟到的译文')))));
     for (const node of document.querySelectorAll('p [data-cloudys-gloss]')) {
       node.dispatchEvent(new FocusEvent('focusin', { bubbles: true }));
-      document.querySelector('[data-cloudys-gloss="component-hint"]')!.shadowRoot!.querySelector('button')!.click();
+      document.querySelector('[data-cloudys-gloss="component-hint"]')!.shadowRoot!.querySelector<HTMLButtonElement>('.actions button')!.click();
     }
     await vi.waitFor(() => expect(finish).toHaveLength(2));
     expect(translator.status.pending).toBe(3);

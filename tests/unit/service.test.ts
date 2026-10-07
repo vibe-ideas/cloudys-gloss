@@ -5,6 +5,85 @@ import { TranslationService } from '../../src/service';
 import { defaults } from '../../src/schema';
 afterEach(() => vi.unstubAllGlobals());
 describe('跨页面翻译缓存', () => {
+  it.each([1, 2])('并发 %i 时两个页面的重叠段落只推理一次，各自返回原顺序结果', async (concurrency) => {
+    const finishes: (() => void)[] = [];
+    const sent: string[][] = [];
+    vi.stubGlobal('fetch', vi.fn(async (_input, init) => {
+      const { texts } = JSON.parse(JSON.parse(init.body).messages[1].content) as { texts: string[] };
+      sent.push(texts);
+      await new Promise<void>((resolve) => finishes.push(resolve));
+      return new Response(JSON.stringify({ choices: [{ message: { content: JSON.stringify({ translations: texts.map((text) => `中文${text}`) }) } }] }));
+    }));
+    const service = new TranslationService(new ResultCache(crypto.randomUUID()));
+    const settings = { ...defaults, concurrency };
+    const first = service.translate(settings, ['Shared', 'First'], new AbortController().signal);
+    await vi.waitFor(() => expect(sent).toHaveLength(1));
+    const second = service.translate(settings, ['Second', 'Shared'], new AbortController().signal);
+    // Let cache lookup and subscription finish before releasing the first batch.
+    await new Promise((resolve) => setTimeout(resolve, 20));
+    finishes[0]!();
+    await vi.waitFor(() => expect(sent).toHaveLength(2));
+    finishes[1]!();
+    expect(await first).toEqual(['中文Shared', '中文First']);
+    expect(await second).toEqual(['中文Second', '中文Shared']);
+    expect(sent.flat().filter((text) => text === 'Shared')).toHaveLength(1);
+  });
+  it('共享段落时一个页面关闭不会取消另一页，全部关闭才中止模型且再次进入可重新请求', async () => {
+    let upstream!: AbortSignal;
+    const fetcher = vi.fn(async (_input, init) => {
+      upstream = init.signal;
+      return await new Promise<Response>((_resolve, reject) => upstream.addEventListener('abort', () => reject(upstream.reason), { once: true }));
+    });
+    vi.stubGlobal('fetch', fetcher);
+    const service = new TranslationService(new ResultCache(crypto.randomUUID()));
+    const a = new AbortController(); const b = new AbortController();
+    const first = service.translate(defaults, ['Shared'], a.signal).catch((error: unknown) => error);
+    await vi.waitFor(() => expect(fetcher).toHaveBeenCalledTimes(1));
+    const item = vi.fn();
+    const second = service.translate(defaults, ['Shared'], b.signal, item).catch((error: unknown) => error);
+    await new Promise((resolve) => setTimeout(resolve, 20));
+    a.abort(new Error('页面 A 关闭'));
+    expect(await first).toMatchObject({ message: '页面 A 关闭' });
+    expect(upstream.aborted).toBe(false);
+    b.abort(new Error('页面 B 关闭'));
+    expect(await second).toMatchObject({ message: '页面 B 关闭' });
+    expect(upstream.aborted).toBe(true);
+    fetcher.mockImplementationOnce(async () => new Response(JSON.stringify({ choices: [{ message: { content: '{"translations":["重新翻译"]}' } }] })));
+    expect(await service.translate(defaults, ['Shared'], new AbortController().signal)).toEqual(['重新翻译']);
+    expect(fetcher).toHaveBeenCalledTimes(2); expect(item).not.toHaveBeenCalled();
+  });
+  it('显式重翻不共享旧请求，旧请求晚返回也不会覆盖新译文缓存', async () => {
+    const finishes: ((value: Response) => void)[] = [];
+    const fetcher = vi.fn(() => new Promise<Response>((resolve) => finishes.push(resolve)));
+    vi.stubGlobal('fetch', fetcher);
+    const service = new TranslationService(new ResultCache(crypto.randomUUID()));
+    const settings = { ...defaults, concurrency: 2 }; const signal = new AbortController().signal;
+    const old = service.translate(settings, ['Shared'], signal);
+    await vi.waitFor(() => expect(fetcher).toHaveBeenCalledTimes(1));
+    const retry = service.translate(settings, ['Shared'], signal, undefined, true);
+    await vi.waitFor(() => expect(fetcher).toHaveBeenCalledTimes(2));
+    const response = (text: string) => new Response(JSON.stringify({ choices: [{ message: { content: JSON.stringify({ translations: [text] }) } }] }));
+    finishes[1]!(response('新译文')); expect(await retry).toEqual(['新译文']);
+    finishes[0]!(response('旧译文')); expect(await old).toEqual(['旧译文']);
+    expect(await service.translate(settings, ['Shared'], signal)).toEqual(['新译文']);
+    expect(fetcher).toHaveBeenCalledTimes(2);
+  });
+  it('首次重翻尚未完成时另一页面请求相同段落，共享最新重翻并由其结果填充缓存', async () => {
+    let finish!: (value: Response) => void;
+    const fetcher = vi.fn(() => new Promise<Response>(resolve => { finish = resolve; }));
+    vi.stubGlobal('fetch', fetcher);
+    const service = new TranslationService(new ResultCache(crypto.randomUUID()));
+    const settings = { ...defaults, concurrency: 2 }; const signal = new AbortController().signal;
+    const retry = service.translate(settings, ['Shared'], signal, undefined, true);
+    await vi.waitFor(() => expect(fetcher).toHaveBeenCalledOnce());
+    const ordinary = service.translate(settings, ['Shared'], signal);
+    await new Promise(resolve => setTimeout(resolve, 30));
+    expect(fetcher).toHaveBeenCalledOnce();
+    finish(new Response(JSON.stringify({ choices: [{ message: { content: '{"translations":["最新重翻译文"]}' } }] })));
+    expect(await retry).toEqual(['最新重翻译文']); expect(await ordinary).toEqual(['最新重翻译文']);
+    expect(await service.translate(settings, ['Shared'], signal)).toEqual(['最新重翻译文']);
+    expect(fetcher).toHaveBeenCalledOnce();
+  });
   it('单段重新翻译绕过旧缓存，更新该段结果且其他段落仍命中缓存', async () => {
     const fetcher = vi.fn()
       .mockResolvedValueOnce(new Response(JSON.stringify({ choices: [{ message: { content: '{"translations":["旧译文","保留译文"]}' } }] })))
@@ -97,5 +176,45 @@ describe('跨页面翻译缓存', () => {
     expect(await service.translate(defaults, ['Hello', 'Hello'], signal)).toEqual(['中文Hello', '中文Hello']);
     await service.translate(defaults, ['Hello'], signal); expect(fetcher).toHaveBeenCalledTimes(1);
     await service.translate({ ...defaults, model: 'another-model' }, ['Hello'], signal); expect(fetcher).toHaveBeenCalledTimes(2);
+  });
+});
+
+
+describe('翻译进度接收异常后的请求清理', () => {
+  it('同批先注册新段落、后推送缓存译文时接收方抛错，后续翻译仍可正常完成并缓存', async () => {
+    const cache = new ResultCache(crypto.randomUUID());
+    const cachedKey = await cacheKey([defaults.baseUrl, defaults.model, defaults.temperature, defaults.apiKey, 'zh-CN', 'translation-v4', 'Cached']);
+    await cache.set(cachedKey, '已有译文');
+    const fetcher = vi.fn(async () => new Response(JSON.stringify({ choices: [{ message: { content: '{"translations":["新译文"]}' } }] })));
+    vi.stubGlobal('fetch', fetcher);
+    const service = new TranslationService(cache); const signal = new AbortController().signal;
+    await expect(service.translate(defaults, ['Uncached', 'Cached'], signal, (index) => {
+      if (index === 1) throw new Error('接收页面已卸载');
+    })).rejects.toThrow('接收页面已卸载');
+    expect(await service.translate(defaults, ['Uncached'], signal)).toEqual(['新译文']);
+    expect(await service.translate(defaults, ['Uncached', 'Cached'], signal)).toEqual(['新译文', '已有译文']);
+    expect(fetcher).toHaveBeenCalledTimes(1);
+  });
+  it('一个页面接收缓存译文时抛错，只取消该页新增段落，另一页等待的共享翻译继续完成', async () => {
+    const cache = new ResultCache(crypto.randomUUID());
+    const cachedKey = await cacheKey([defaults.baseUrl, defaults.model, defaults.temperature, defaults.apiKey, 'zh-CN', 'translation-v4', 'Cached']);
+    await cache.set(cachedKey, '已有译文');
+    let finish!: (value: Response) => void; let upstream!: AbortSignal;
+    const fetcher = vi.fn((_input, init) => {
+      upstream = init.signal;
+      return new Promise<Response>((resolve) => { finish = resolve; });
+    });
+    vi.stubGlobal('fetch', fetcher);
+    const service = new TranslationService(cache); const signal = new AbortController().signal;
+    const first = service.translate(defaults, ['Shared'], signal);
+    await vi.waitFor(() => expect(fetcher).toHaveBeenCalledTimes(1));
+    await expect(service.translate(defaults, ['Shared', 'Uncached', 'Cached'], signal, (index) => {
+      if (index === 2) throw new Error('第二个页面已卸载');
+    })).rejects.toThrow('第二个页面已卸载');
+    expect(upstream.aborted).toBe(false);
+    finish(new Response(JSON.stringify({ choices: [{ message: { content: '{"translations":["共享译文"]}' } }] })));
+    expect(await first).toEqual(['共享译文']);
+    expect(await service.translate(defaults, ['Shared'], signal)).toEqual(['共享译文']);
+    expect(fetcher).toHaveBeenCalledTimes(1);
   });
 });

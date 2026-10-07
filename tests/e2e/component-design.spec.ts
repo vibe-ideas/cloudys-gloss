@@ -69,6 +69,7 @@ test('折叠、标签面板和菜单只改变显隐属性时，展开后增量�
   await page.getByRole('button', { name: 'Open dialog', exact: true }).click();
   await expect(page.locator('dialog p > [data-state=done]')).toContainText('此对话框');
   await page.locator('dialog p').hover();
+  await page.getByRole('button', { name: '打开段落翻译操作', exact: true }).click();
   const modalHint = page.locator('[data-cloudys-gloss=component-hint] .tip');
   await expect(modalHint).toContainText('此对话框');
   await expect(modalHint).toBeVisible();

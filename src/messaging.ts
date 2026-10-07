@@ -1,7 +1,8 @@
 import { browser } from 'wxt/browser';
+import type { RequestPriority } from './queue';
 import type { Request, Response } from './schema';
 const streams = new Map<string, () => void>();
-export function translateStream(id: string, texts: string[], onItem: (index: number, text: string, confirmed: boolean) => void, options: { bypassCache?: boolean } = {}): Promise<string[]> {
+export function translateStream(id: string, texts: string[], onItem: (index: number, text: string, confirmed: boolean) => void, options: { bypassCache?: boolean; priority?: RequestPriority } = {}): Promise<string[]> {
   return new Promise((resolve, reject) => {
     const port = browser.runtime.connect({ name: 'translation-stream' });
     let settled = false;

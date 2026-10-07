@@ -6,6 +6,7 @@ async function selectWord(page: Page) {
   await page.mouse.move(bounds.x, bounds.y + bounds.height / 2); await page.mouse.down();
   await page.mouse.move(bounds.x + bounds.width, bounds.y + bounds.height / 2, { steps: 8 }); await page.mouse.up();
   await expect.poll(() => page.evaluate(() => getSelection()?.toString())).toBe('cloudy');
+  await page.getByRole('button', { name: '翻译所选内容', exact: true }).click();
 }
 
 test('窄屏文章划词后词卡不遮挡原词，卡内可滚动，文章滚动后关闭词卡', async ({ extension }, testInfo) => {
@@ -62,7 +63,7 @@ test('网页拦截指针事件时菜单仍能点外关闭，键盘关闭菜单�
   await expect(host.locator('.menu')).toHaveCount(0); await expect(more).toBeFocused();
 });
 
-test('键盘选词后可直接进入词卡操作，Esc关闭词卡并恢复原阅读控件焦点', async ({ extension }) => {
+test('键盘选词后确认小按钮才进入词卡操作，Esc关闭词卡并恢复原阅读控件焦点', async ({ extension }) => {
   const { page } = extension;
   await page.locator('#first').evaluate((element) => {
     element.setAttribute('tabindex', '0'); (element as HTMLElement).focus();
@@ -70,9 +71,32 @@ test('键盘选词后可直接进入词卡操作，Esc关闭词卡并恢复原�
     const selection = window.getSelection()!; selection.removeAllRanges(); selection.addRange(range);
   });
   await page.keyboard.press('Shift+ArrowRight');
+  await expect(page.getByRole('button', { name: '翻译所选内容', exact: true })).toBeFocused();
+  await expect(page.getByRole('dialog', { name: 'AI 单词卡' })).toHaveCount(0);
+  await page.keyboard.press('Enter');
   const card = page.getByRole('dialog', { name: 'AI 单词卡' });
   await expect(card).toBeFocused();
   await page.keyboard.press('Tab'); await expect(card.getByRole('button', { name: '关闭词卡' })).toBeFocused();
   await page.keyboard.press('Escape');
   await expect(card).toHaveCount(0); await expect(page.locator('#first')).toBeFocused();
+});
+
+
+test('划词入口在窄屏保持屏幕内，取消选区或点击网页后消失且不请求模型', async ({ extension }) => {
+  const { page, server } = extension;
+  await page.setViewportSize({ width: 390, height: 500 });
+  const select = async () => {
+    const bounds = (await page.locator('#first strong').boundingBox())!;
+    await page.mouse.move(bounds.x, bounds.y + bounds.height / 2); await page.mouse.down();
+    await page.mouse.move(bounds.x + bounds.width, bounds.y + bounds.height / 2, { steps: 8 }); await page.mouse.up();
+  };
+  const launch = page.getByRole('button', { name: '翻译所选内容', exact: true });
+  await select(); await expect(launch).toBeVisible();
+  const box = (await launch.boundingBox())!;
+  expect(box.x).toBeGreaterThanOrEqual(12); expect(box.x + box.width).toBeLessThanOrEqual(378);
+  expect(box.y).toBeGreaterThanOrEqual(12); expect(box.y + box.height).toBeLessThanOrEqual(488);
+  await page.evaluate(() => getSelection()?.removeAllRanges()); await expect(launch).toHaveCount(0);
+  await select(); await expect(launch).toBeVisible();
+  await page.locator('h1').click(); await expect(launch).toHaveCount(0);
+  expect(server.calls).toHaveLength(0);
 });

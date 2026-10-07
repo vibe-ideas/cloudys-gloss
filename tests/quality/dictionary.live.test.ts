@@ -4,7 +4,7 @@ import { createHash } from 'node:crypto';
 import { mkdirSync, readFileSync, writeFileSync, existsSync } from 'node:fs';
 import path from 'node:path';
 import { cpus } from 'node:os';
-import { OfflinePronunciationDictionary } from '../../src/pronunciation';
+import { packagedDictionary } from '../helpers/packaged-dictionary';
 import { OpenAICompatibleProvider } from '../../src/provider';
 import { SettingsSchema, WordCardSchema, type WordCard } from '../../src/schema';
 
@@ -29,9 +29,9 @@ if (existsSync(path.join(output, 'metadata.json'))) throw new Error('词卡输�
 mkdirSync(output, { recursive: true });
 const sha = (value: string) => createHash('sha256').update(value).digest('hex');
 const corpusHash = sha(corpusText);
-const providerHash = sha(['provider', 'schema', 'stream', 'pronunciation', 'dictionary-context'].map((name) => readFileSync(`src/${name}.ts`, 'utf8')).join('\n'));
+const providerHash = sha(['provider', 'schema', 'stream', 'pronunciation', 'packaged-pronunciation', 'dictionary-context'].map((name) => readFileSync(`src/${name}.ts`, 'utf8')).join('\n'));
 writeFileSync(path.join(output, 'pipeline.json'), JSON.stringify({ sources: Object.fromEntries(
-  ['provider', 'schema', 'stream', 'pronunciation', 'dictionary-context'].map((name) => [`src/${name}.ts`, readFileSync(`src/${name}.ts`, 'utf8')])),
+  ['provider', 'schema', 'stream', 'pronunciation', 'packaged-pronunciation', 'dictionary-context'].map((name) => [`src/${name}.ts`, readFileSync(`src/${name}.ts`, 'utf8')])),
 }, null, 2) + '\n');
 const modelLabel = process.env.MODEL_LABEL ?? settings.model;
 writeFileSync(path.join(output, 'cases.json'), corpusText);
@@ -40,6 +40,7 @@ writeFileSync(path.join(output, 'metadata.json'), JSON.stringify({ date: new Dat
   corpusHash, providerHash, repetitions, temperature: 0, concurrency: 1, chip: cpus()[0]?.model,
   route: 'OpenAICompatibleProvider.lookup with original Zod validation, bounded repair and offline US/UK pronunciation',
   pronunciationData: JSON.parse(readFileSync('public/dictionaries/sources.json', 'utf8')),
+  technologyPronunciationData: JSON.parse(readFileSync('public/dictionaries/technology-sources.json', 'utf8')),
   runtime: process.env.QUALITY_RUNTIME ?? 'unrecorded', promptCache: process.env.QUALITY_PROMPT_CACHE ?? 'unrecorded',
   cache: 'no extension result cache',
   reviewPolicy: 'JSON/Zod and coarse lexical guards do not establish semantic or IPA accuracy. Review each unique output; empty IPA is missing pronunciation.',
@@ -50,7 +51,7 @@ type Attempt = { status?: number; content?: string; finishReason?: string | null
 type Result = { id: string; title: string; repetition: number; card?: WordCard; outputHash: string;
   elapsedMs: number; requests: number; attempts: Attempt[]; assessment: { zodPassed: boolean;
     automaticPassed: boolean; errors: string[]; review: string[] }; error?: string };
-const pronunciation = new OfflinePronunciationDictionary(async (dialect) => readFileSync(`public/dictionaries/${dialect}.tsv`, 'utf8'));
+const pronunciation = await packagedDictionary();
 const results: Result[] = [];
 const flush = () => writeFileSync(path.join(output, 'results.json'), JSON.stringify(results, null, 2) + '\n');
 const posPatterns = {

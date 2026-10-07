@@ -1,7 +1,7 @@
 import { mkdirSync, readFileSync, writeFileSync, appendFileSync, existsSync } from 'node:fs';
 import { cpus } from 'node:os';
-import { OfflinePronunciationDictionary } from '../../src/pronunciation';
-import { OpenAICompatibleProvider } from '../../src/provider';
+import { packagedDictionary } from '../helpers/packaged-dictionary';
+import { OpenAICompatibleProvider, type ProviderDiagnostic } from '../../src/provider';
 import { SettingsSchema } from '../../src/schema';
 
 // Compare already-running local services, without starting or stopping any process.
@@ -10,7 +10,7 @@ if (services.length < 1 || services.some((s) => !['127.0.0.1', 'localhost'].incl
 const output = process.env.BENCH_OUTPUT!;
 if (!output || existsSync(output)) throw new Error('Set BENCH_OUTPUT to a fresh directory');
 mkdirSync(output, { recursive: true });
-const pronunciation = new OfflinePronunciationDictionary(async (dialect) => readFileSync(`public/dictionaries/${dialect}.tsv`, 'utf8'));
+const pronunciation = await packagedDictionary();
 const model = process.env.MODEL_NAME ?? 'Qwen/Qwen3-1.7B-MLX-4bit';
 type Scenario = { id: string; texts: string[] } | { id: string; word: string; context: string };
 const scenarios: Scenario[] = JSON.parse(readFileSync('tests/performance/scenarios.json', 'utf8'));
@@ -63,13 +63,29 @@ for (const [block, order] of [services, [...services].reverse()].entries()) for 
     record({ kind: 'tps', service: service.name, block, repetition, ...result });
     console.log(service.name, 'TPS', result.decodeTps.toFixed(1));
   }
-  const provider = new OpenAICompatibleProvider(SettingsSchema.parse({ baseUrl: service.baseUrl, model, temperature: 0, timeout: 120000, concurrency: 1 }), undefined, pronunciation);
   for (const scenario of scenarios) {
     const start = performance.now();
+    const requests: { startedMs: number; headersMs?: number; stream: boolean; status?: number }[] = [];
+    const items: { index: number; elapsedMs: number; reset: boolean }[] = [];
+    const diagnostics: ProviderDiagnostic[] = [];
+    const measuredFetch: typeof fetch = async (input, init) => {
+      const body = JSON.parse(String(init?.body)) as { stream?: boolean };
+      const request = { startedMs: performance.now() - start, stream: body.stream === true } as typeof requests[number];
+      requests.push(request);
+      const response = await fetch(input, init);
+      request.headersMs = performance.now() - start;
+      request.status = response.status;
+      return response;
+    };
+    const provider = new OpenAICompatibleProvider(SettingsSchema.parse({ baseUrl: service.baseUrl, model, temperature: 0, timeout: 120000, concurrency: 1 }), measuredFetch, pronunciation,
+      (event) => diagnostics.push(event));
+    const timing = () => ({ elapsedMs: performance.now() - start, requestCount: requests.length, requests,
+      firstItemMs: items.find((item) => !item.reset)?.elapsedMs, items, diagnostics });
     try {
-      const result = 'texts' in scenario ? await provider.translate(scenario.texts, new AbortController().signal, () => {})
+      const result = 'texts' in scenario ? await provider.translate(scenario.texts, new AbortController().signal,
+        (index, text) => items.push({ index, elapsedMs: performance.now() - start, reset: !text }))
         : await provider.lookup(scenario.word, scenario.context, new AbortController().signal);
-      record({ kind: 'provider', service: service.name, block, scenario: scenario.id, success: true, elapsedMs: performance.now() - start, result });
-    } catch (error) { record({ kind: 'provider', service: service.name, block, scenario: scenario.id, success: false, error: String(error) }); }
+      record({ kind: 'provider', service: service.name, block, scenario: scenario.id, success: true, ...timing(), result });
+    } catch (error) { record({ kind: 'provider', service: service.name, block, scenario: scenario.id, success: false, ...timing(), error: String(error) }); }
   }
 }

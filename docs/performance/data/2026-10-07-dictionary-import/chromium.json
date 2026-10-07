@@ -1,0 +1,1529 @@
+{
+  "browser": "chromium",
+  "records": 26660,
+  "importObservedMs": 3316,
+  "rounds": [
+    [
+      {
+        "word": "software",
+        "ms": 1.3999999985098839,
+        "hits": 1
+      },
+      {
+        "word": "hardware",
+        "ms": 1.1000000014901161,
+        "hits": 1
+      },
+      {
+        "word": "algorithm",
+        "ms": 0.8999999985098839,
+        "hits": 1
+      },
+      {
+        "word": "database",
+        "ms": 1.1000000014901161,
+        "hits": 1
+      },
+      {
+        "word": "network",
+        "ms": 1.8999999985098839,
+        "hits": 1
+      },
+      {
+        "word": "browser",
+        "ms": 1,
+        "hits": 0
+      },
+      {
+        "word": "server",
+        "ms": 1,
+        "hits": 1
+      },
+      {
+        "word": "client",
+        "ms": 0.7999999970197678,
+        "hits": 1
+      },
+      {
+        "word": "compiler",
+        "ms": 0.7000000029802322,
+        "hits": 1
+      },
+      {
+        "word": "processor",
+        "ms": 0.6999999955296516,
+        "hits": 1
+      },
+      {
+        "word": "memory",
+        "ms": 0.6000000014901161,
+        "hits": 1
+      },
+      {
+        "word": "latency",
+        "ms": 0.6000000014901161,
+        "hits": 0
+      },
+      {
+        "word": "throughput",
+        "ms": 0.6000000014901161,
+        "hits": 0
+      },
+      {
+        "word": "concurrency",
+        "ms": 0.6000000014901161,
+        "hits": 0
+      },
+      {
+        "word": "cache",
+        "ms": 0.5999999940395355,
+        "hits": 1
+      },
+      {
+        "word": "kernel",
+        "ms": 0.6000000014901161,
+        "hits": 1
+      },
+      {
+        "word": "protocol",
+        "ms": 0.6000000014901161,
+        "hits": 1
+      },
+      {
+        "word": "architecture",
+        "ms": 0.6000000014901161,
+        "hits": 1
+      },
+      {
+        "word": "interface",
+        "ms": 0.5,
+        "hits": 1
+      },
+      {
+        "word": "deployment",
+        "ms": 0.5,
+        "hits": 0
+      },
+      {
+        "word": "encryption",
+        "ms": 0.5,
+        "hits": 1
+      },
+      {
+        "word": "authentication",
+        "ms": 0.5,
+        "hits": 1
+      },
+      {
+        "word": "vulnerability",
+        "ms": 0.5,
+        "hits": 1
+      },
+      {
+        "word": "repository",
+        "ms": 0.5,
+        "hits": 1
+      },
+      {
+        "word": "dependency",
+        "ms": 0.5,
+        "hits": 1
+      },
+      {
+        "word": "inference",
+        "ms": 0.3999999985098839,
+        "hits": 1
+      },
+      {
+        "word": "transformer",
+        "ms": 0.3999999985098839,
+        "hits": 1
+      },
+      {
+        "word": "embedding",
+        "ms": 0.5,
+        "hits": 0
+      },
+      {
+        "word": "quantization",
+        "ms": 0.3999999985098839,
+        "hits": 0
+      },
+      {
+        "word": "token",
+        "ms": 0.7000000029802322,
+        "hits": 1
+      },
+      {
+        "word": "tensor",
+        "ms": 0.7000000029802322,
+        "hits": 1
+      },
+      {
+        "word": "vector",
+        "ms": 0.3999999985098839,
+        "hits": 1
+      },
+      {
+        "word": "gradient",
+        "ms": 0.6000000014901161,
+        "hits": 0
+      },
+      {
+        "word": "benchmark",
+        "ms": 0.5,
+        "hits": 1
+      },
+      {
+        "word": "optimization",
+        "ms": 0.5,
+        "hits": 0
+      },
+      {
+        "word": "scalability",
+        "ms": 0.3999999985098839,
+        "hits": 0
+      },
+      {
+        "word": "asynchronous",
+        "ms": 0.6999999955296516,
+        "hits": 0
+      },
+      {
+        "word": "serialization",
+        "ms": 0.5,
+        "hits": 0
+      },
+      {
+        "word": "middleware",
+        "ms": 0.5,
+        "hits": 0
+      },
+      {
+        "word": "kubernetes",
+        "ms": 0.5,
+        "hits": 0
+      },
+      {
+        "word": "docker",
+        "ms": 0.4000000059604645,
+        "hits": 0
+      },
+      {
+        "word": "nginx",
+        "ms": 0.5,
+        "hits": 0
+      },
+      {
+        "word": "postgresql",
+        "ms": 0.3999999985098839,
+        "hits": 0
+      },
+      {
+        "word": "redis",
+        "ms": 0.5,
+        "hits": 0
+      },
+      {
+        "word": "sqlite",
+        "ms": 0.3999999985098839,
+        "hits": 0
+      },
+      {
+        "word": "pytorch",
+        "ms": 0.3999999985098839,
+        "hits": 0
+      },
+      {
+        "word": "tensorflow",
+        "ms": 0.5,
+        "hits": 0
+      },
+      {
+        "word": "typescript",
+        "ms": 0.6000000014901161,
+        "hits": 0
+      },
+      {
+        "word": "javascript",
+        "ms": 1.7000000029802322,
+        "hits": 1
+      },
+      {
+        "word": "wasm",
+        "ms": 0.5,
+        "hits": 0
+      },
+      {
+        "word": "webassembly",
+        "ms": 0.3999999985098839,
+        "hits": 0
+      },
+      {
+        "word": "serverless",
+        "ms": 0.3999999985098839,
+        "hits": 0
+      },
+      {
+        "word": "microservices",
+        "ms": 0.5,
+        "hits": 0
+      },
+      {
+        "word": "blockchain",
+        "ms": 0.5,
+        "hits": 1
+      },
+      {
+        "word": "cryptocurrency",
+        "ms": 0.3999999985098839,
+        "hits": 1
+      },
+      {
+        "word": "chatbot",
+        "ms": 0.5,
+        "hits": 0
+      },
+      {
+        "word": "multimodal",
+        "ms": 0.3999999985098839,
+        "hits": 0
+      },
+      {
+        "word": "tokenizer",
+        "ms": 0.4000000059604645,
+        "hits": 0
+      },
+      {
+        "word": "embeddings",
+        "ms": 0.5999999940395355,
+        "hits": 0
+      },
+      {
+        "word": "fine-tuning",
+        "ms": 0.30000000447034836,
+        "hits": 0
+      },
+      {
+        "word": "frontend",
+        "ms": 0.6000000014901161,
+        "hits": 0
+      },
+      {
+        "word": "backend",
+        "ms": 0.3999999985098839,
+        "hits": 0
+      },
+      {
+        "word": "devops",
+        "ms": 0.5,
+        "hits": 0
+      },
+      {
+        "word": "github",
+        "ms": 0.5,
+        "hits": 0
+      },
+      {
+        "word": "openai",
+        "ms": 0.6000000014901161,
+        "hits": 0
+      },
+      {
+        "word": "anthropic",
+        "ms": 0.5999999940395355,
+        "hits": 1
+      },
+      {
+        "word": "nvidia",
+        "ms": 0.4000000059604645,
+        "hits": 0
+      },
+      {
+        "word": "ollama",
+        "ms": 0.5,
+        "hits": 0
+      },
+      {
+        "word": "llama",
+        "ms": 0.5,
+        "hits": 1
+      },
+      {
+        "word": "claude",
+        "ms": 0.5,
+        "hits": 0
+      },
+      {
+        "word": "gemini",
+        "ms": 0.5,
+        "hits": 1
+      },
+      {
+        "word": "qwen",
+        "ms": 0.3999999985098839,
+        "hits": 0
+      },
+      {
+        "word": "API",
+        "ms": 0.5,
+        "hits": 0
+      },
+      {
+        "word": "CPU",
+        "ms": 0.3999999985098839,
+        "hits": 0
+      },
+      {
+        "word": "GPU",
+        "ms": 0.3999999985098839,
+        "hits": 0
+      },
+      {
+        "word": "LLM",
+        "ms": 0.5,
+        "hits": 0
+      },
+      {
+        "word": "RAG",
+        "ms": 0.7000000029802322,
+        "hits": 1
+      },
+      {
+        "word": "SQL",
+        "ms": 0.5,
+        "hits": 0
+      },
+      {
+        "word": "HTTP",
+        "ms": 0.3999999985098839,
+        "hits": 0
+      },
+      {
+        "word": "JSON",
+        "ms": 0.5,
+        "hits": 0
+      },
+      {
+        "word": "YAML",
+        "ms": 0.3999999985098839,
+        "hits": 0
+      },
+      {
+        "word": "SDK",
+        "ms": 0.5,
+        "hits": 0
+      },
+      {
+        "word": "CLI",
+        "ms": 0.3999999985098839,
+        "hits": 0
+      },
+      {
+        "word": "IDE",
+        "ms": 0.4000000059604645,
+        "hits": 0
+      },
+      {
+        "word": "GUI",
+        "ms": 0.5,
+        "hits": 0
+      },
+      {
+        "word": "TCP",
+        "ms": 0.3999999985098839,
+        "hits": 0
+      },
+      {
+        "word": "DNS",
+        "ms": 0.5,
+        "hits": 0
+      },
+      {
+        "word": "TLS",
+        "ms": 0.3999999985098839,
+        "hits": 0
+      },
+      {
+        "word": "OAuth",
+        "ms": 0.5,
+        "hits": 0
+      },
+      {
+        "word": "CUDA",
+        "ms": 0.3999999985098839,
+        "hits": 0
+      },
+      {
+        "word": "SIMD",
+        "ms": 0.30000000447034836,
+        "hits": 0
+      },
+      {
+        "word": "machine learning",
+        "ms": 0.5,
+        "hits": 1
+      },
+      {
+        "word": "large language model",
+        "ms": 0.5,
+        "hits": 0
+      },
+      {
+        "word": "retrieval augmented generation",
+        "ms": 0.3999999985098839,
+        "hits": 0
+      },
+      {
+        "word": "context window",
+        "ms": 0.5,
+        "hits": 0
+      },
+      {
+        "word": "prompt injection",
+        "ms": 0.3999999985098839,
+        "hits": 0
+      },
+      {
+        "word": "garbage collection",
+        "ms": 0.5,
+        "hits": 0
+      },
+      {
+        "word": "race condition",
+        "ms": 0.3999999985098839,
+        "hits": 0
+      },
+      {
+        "word": "fine tuning",
+        "ms": 0.5,
+        "hits": 0
+      },
+      {
+        "word": "open source",
+        "ms": 0.6000000014901161,
+        "hits": 0
+      },
+      {
+        "word": "pull request",
+        "ms": 0.3999999985098839,
+        "hits": 0
+      }
+    ],
+    [
+      {
+        "word": "software",
+        "ms": 0.6000000014901161,
+        "hits": 1
+      },
+      {
+        "word": "hardware",
+        "ms": 0.5,
+        "hits": 1
+      },
+      {
+        "word": "algorithm",
+        "ms": 0.5,
+        "hits": 1
+      },
+      {
+        "word": "database",
+        "ms": 0.3999999985098839,
+        "hits": 1
+      },
+      {
+        "word": "network",
+        "ms": 0.5,
+        "hits": 1
+      },
+      {
+        "word": "browser",
+        "ms": 0.3999999985098839,
+        "hits": 0
+      },
+      {
+        "word": "server",
+        "ms": 0.3999999985098839,
+        "hits": 1
+      },
+      {
+        "word": "client",
+        "ms": 0.5,
+        "hits": 1
+      },
+      {
+        "word": "compiler",
+        "ms": 0.5,
+        "hits": 1
+      },
+      {
+        "word": "processor",
+        "ms": 0.30000000447034836,
+        "hits": 1
+      },
+      {
+        "word": "memory",
+        "ms": 0.3999999985098839,
+        "hits": 1
+      },
+      {
+        "word": "latency",
+        "ms": 0.7999999970197678,
+        "hits": 0
+      },
+      {
+        "word": "throughput",
+        "ms": 0.5,
+        "hits": 0
+      },
+      {
+        "word": "concurrency",
+        "ms": 0.8999999985098839,
+        "hits": 0
+      },
+      {
+        "word": "cache",
+        "ms": 0.4000000059604645,
+        "hits": 1
+      },
+      {
+        "word": "kernel",
+        "ms": 0.5,
+        "hits": 1
+      },
+      {
+        "word": "protocol",
+        "ms": 0.5,
+        "hits": 1
+      },
+      {
+        "word": "architecture",
+        "ms": 0.3999999985098839,
+        "hits": 1
+      },
+      {
+        "word": "interface",
+        "ms": 0.3999999985098839,
+        "hits": 1
+      },
+      {
+        "word": "deployment",
+        "ms": 0.3999999985098839,
+        "hits": 0
+      },
+      {
+        "word": "encryption",
+        "ms": 0.3999999985098839,
+        "hits": 1
+      },
+      {
+        "word": "authentication",
+        "ms": 0.4000000059604645,
+        "hits": 1
+      },
+      {
+        "word": "vulnerability",
+        "ms": 0.3999999985098839,
+        "hits": 1
+      },
+      {
+        "word": "repository",
+        "ms": 0.3999999985098839,
+        "hits": 1
+      },
+      {
+        "word": "dependency",
+        "ms": 0.3999999985098839,
+        "hits": 1
+      },
+      {
+        "word": "inference",
+        "ms": 0.3999999985098839,
+        "hits": 1
+      },
+      {
+        "word": "transformer",
+        "ms": 0.4000000059604645,
+        "hits": 1
+      },
+      {
+        "word": "embedding",
+        "ms": 0.5999999940395355,
+        "hits": 0
+      },
+      {
+        "word": "quantization",
+        "ms": 0.5,
+        "hits": 0
+      },
+      {
+        "word": "token",
+        "ms": 0.4000000059604645,
+        "hits": 1
+      },
+      {
+        "word": "tensor",
+        "ms": 0.3999999985098839,
+        "hits": 1
+      },
+      {
+        "word": "vector",
+        "ms": 0.5,
+        "hits": 1
+      },
+      {
+        "word": "gradient",
+        "ms": 0.5,
+        "hits": 0
+      },
+      {
+        "word": "benchmark",
+        "ms": 0.5,
+        "hits": 1
+      },
+      {
+        "word": "optimization",
+        "ms": 0.3999999985098839,
+        "hits": 0
+      },
+      {
+        "word": "scalability",
+        "ms": 0.3999999985098839,
+        "hits": 0
+      },
+      {
+        "word": "asynchronous",
+        "ms": 0.3999999985098839,
+        "hits": 0
+      },
+      {
+        "word": "serialization",
+        "ms": 0.4000000059604645,
+        "hits": 0
+      },
+      {
+        "word": "middleware",
+        "ms": 0.3999999985098839,
+        "hits": 0
+      },
+      {
+        "word": "kubernetes",
+        "ms": 0.5,
+        "hits": 0
+      },
+      {
+        "word": "docker",
+        "ms": 0.5,
+        "hits": 0
+      },
+      {
+        "word": "nginx",
+        "ms": 0.3999999985098839,
+        "hits": 0
+      },
+      {
+        "word": "postgresql",
+        "ms": 0.3999999985098839,
+        "hits": 0
+      },
+      {
+        "word": "redis",
+        "ms": 0.3999999985098839,
+        "hits": 0
+      },
+      {
+        "word": "sqlite",
+        "ms": 0.4000000059604645,
+        "hits": 0
+      },
+      {
+        "word": "pytorch",
+        "ms": 0.3999999985098839,
+        "hits": 0
+      },
+      {
+        "word": "tensorflow",
+        "ms": 0.3999999985098839,
+        "hits": 0
+      },
+      {
+        "word": "typescript",
+        "ms": 0.5,
+        "hits": 0
+      },
+      {
+        "word": "javascript",
+        "ms": 0.5,
+        "hits": 1
+      },
+      {
+        "word": "wasm",
+        "ms": 0.3999999985098839,
+        "hits": 0
+      },
+      {
+        "word": "webassembly",
+        "ms": 0.3999999985098839,
+        "hits": 0
+      },
+      {
+        "word": "serverless",
+        "ms": 0.4000000059604645,
+        "hits": 0
+      },
+      {
+        "word": "microservices",
+        "ms": 0.29999999701976776,
+        "hits": 0
+      },
+      {
+        "word": "blockchain",
+        "ms": 0.5,
+        "hits": 1
+      },
+      {
+        "word": "cryptocurrency",
+        "ms": 0.3999999985098839,
+        "hits": 1
+      },
+      {
+        "word": "chatbot",
+        "ms": 0.5,
+        "hits": 0
+      },
+      {
+        "word": "multimodal",
+        "ms": 0.3999999985098839,
+        "hits": 0
+      },
+      {
+        "word": "tokenizer",
+        "ms": 0.4000000059604645,
+        "hits": 0
+      },
+      {
+        "word": "embeddings",
+        "ms": 0.3999999985098839,
+        "hits": 0
+      },
+      {
+        "word": "fine-tuning",
+        "ms": 0.3999999985098839,
+        "hits": 0
+      },
+      {
+        "word": "frontend",
+        "ms": 0.3999999985098839,
+        "hits": 0
+      },
+      {
+        "word": "backend",
+        "ms": 0.5,
+        "hits": 0
+      },
+      {
+        "word": "devops",
+        "ms": 0.30000000447034836,
+        "hits": 0
+      },
+      {
+        "word": "github",
+        "ms": 0.3999999985098839,
+        "hits": 0
+      },
+      {
+        "word": "openai",
+        "ms": 0.5,
+        "hits": 0
+      },
+      {
+        "word": "anthropic",
+        "ms": 0.5,
+        "hits": 1
+      },
+      {
+        "word": "nvidia",
+        "ms": 0.5,
+        "hits": 0
+      },
+      {
+        "word": "ollama",
+        "ms": 0.5,
+        "hits": 0
+      },
+      {
+        "word": "llama",
+        "ms": 0.3999999985098839,
+        "hits": 1
+      },
+      {
+        "word": "claude",
+        "ms": 0.5,
+        "hits": 0
+      },
+      {
+        "word": "gemini",
+        "ms": 0.3999999985098839,
+        "hits": 1
+      },
+      {
+        "word": "qwen",
+        "ms": 0.3999999985098839,
+        "hits": 0
+      },
+      {
+        "word": "API",
+        "ms": 0.5,
+        "hits": 0
+      },
+      {
+        "word": "CPU",
+        "ms": 0.4000000059604645,
+        "hits": 0
+      },
+      {
+        "word": "GPU",
+        "ms": 0.3999999985098839,
+        "hits": 0
+      },
+      {
+        "word": "LLM",
+        "ms": 0.29999999701976776,
+        "hits": 0
+      },
+      {
+        "word": "RAG",
+        "ms": 0.5,
+        "hits": 1
+      },
+      {
+        "word": "SQL",
+        "ms": 0.5,
+        "hits": 0
+      },
+      {
+        "word": "HTTP",
+        "ms": 0.3999999985098839,
+        "hits": 0
+      },
+      {
+        "word": "JSON",
+        "ms": 0.4000000059604645,
+        "hits": 0
+      },
+      {
+        "word": "YAML",
+        "ms": 0.3999999985098839,
+        "hits": 0
+      },
+      {
+        "word": "SDK",
+        "ms": 0.5,
+        "hits": 0
+      },
+      {
+        "word": "CLI",
+        "ms": 0.29999999701976776,
+        "hits": 0
+      },
+      {
+        "word": "IDE",
+        "ms": 0.5,
+        "hits": 0
+      },
+      {
+        "word": "GUI",
+        "ms": 0.3999999985098839,
+        "hits": 0
+      },
+      {
+        "word": "TCP",
+        "ms": 0.4000000059604645,
+        "hits": 0
+      },
+      {
+        "word": "DNS",
+        "ms": 0.3999999985098839,
+        "hits": 0
+      },
+      {
+        "word": "TLS",
+        "ms": 0.3999999985098839,
+        "hits": 0
+      },
+      {
+        "word": "OAuth",
+        "ms": 0.3999999985098839,
+        "hits": 0
+      },
+      {
+        "word": "CUDA",
+        "ms": 0.3999999985098839,
+        "hits": 0
+      },
+      {
+        "word": "SIMD",
+        "ms": 0.4000000059604645,
+        "hits": 0
+      },
+      {
+        "word": "machine learning",
+        "ms": 0.5,
+        "hits": 1
+      },
+      {
+        "word": "large language model",
+        "ms": 0.3999999985098839,
+        "hits": 0
+      },
+      {
+        "word": "retrieval augmented generation",
+        "ms": 0.29999999701976776,
+        "hits": 0
+      },
+      {
+        "word": "context window",
+        "ms": 0.5,
+        "hits": 0
+      },
+      {
+        "word": "prompt injection",
+        "ms": 0.5,
+        "hits": 0
+      },
+      {
+        "word": "garbage collection",
+        "ms": 0.30000000447034836,
+        "hits": 0
+      },
+      {
+        "word": "race condition",
+        "ms": 0.5,
+        "hits": 0
+      },
+      {
+        "word": "fine tuning",
+        "ms": 0.3999999985098839,
+        "hits": 0
+      },
+      {
+        "word": "open source",
+        "ms": 0.5,
+        "hits": 0
+      },
+      {
+        "word": "pull request",
+        "ms": 0.29999999701976776,
+        "hits": 0
+      }
+    ],
+    [
+      {
+        "word": "software",
+        "ms": 0.7000000029802322,
+        "hits": 1
+      },
+      {
+        "word": "hardware",
+        "ms": 0.5,
+        "hits": 1
+      },
+      {
+        "word": "algorithm",
+        "ms": 0.5,
+        "hits": 1
+      },
+      {
+        "word": "database",
+        "ms": 0.6000000014901161,
+        "hits": 1
+      },
+      {
+        "word": "network",
+        "ms": 0.5,
+        "hits": 1
+      },
+      {
+        "word": "browser",
+        "ms": 0.5,
+        "hits": 0
+      },
+      {
+        "word": "server",
+        "ms": 0.3999999985098839,
+        "hits": 1
+      },
+      {
+        "word": "client",
+        "ms": 0.5,
+        "hits": 1
+      },
+      {
+        "word": "compiler",
+        "ms": 0.3999999985098839,
+        "hits": 1
+      },
+      {
+        "word": "processor",
+        "ms": 0.5,
+        "hits": 1
+      },
+      {
+        "word": "memory",
+        "ms": 0.5,
+        "hits": 1
+      },
+      {
+        "word": "latency",
+        "ms": 0.3999999985098839,
+        "hits": 0
+      },
+      {
+        "word": "throughput",
+        "ms": 0.4000000059604645,
+        "hits": 0
+      },
+      {
+        "word": "concurrency",
+        "ms": 0.3999999985098839,
+        "hits": 0
+      },
+      {
+        "word": "cache",
+        "ms": 0.3999999985098839,
+        "hits": 1
+      },
+      {
+        "word": "kernel",
+        "ms": 0.5,
+        "hits": 1
+      },
+      {
+        "word": "protocol",
+        "ms": 0.3999999985098839,
+        "hits": 1
+      },
+      {
+        "word": "architecture",
+        "ms": 0.3999999985098839,
+        "hits": 1
+      },
+      {
+        "word": "interface",
+        "ms": 0.5,
+        "hits": 1
+      },
+      {
+        "word": "deployment",
+        "ms": 0.4000000059604645,
+        "hits": 0
+      },
+      {
+        "word": "encryption",
+        "ms": 0.3999999985098839,
+        "hits": 1
+      },
+      {
+        "word": "authentication",
+        "ms": 0.3999999985098839,
+        "hits": 1
+      },
+      {
+        "word": "vulnerability",
+        "ms": 0.3999999985098839,
+        "hits": 1
+      },
+      {
+        "word": "repository",
+        "ms": 0.3999999985098839,
+        "hits": 1
+      },
+      {
+        "word": "dependency",
+        "ms": 0.5,
+        "hits": 1
+      },
+      {
+        "word": "inference",
+        "ms": 0.4000000059604645,
+        "hits": 1
+      },
+      {
+        "word": "transformer",
+        "ms": 0.3999999985098839,
+        "hits": 1
+      },
+      {
+        "word": "embedding",
+        "ms": 0.3999999985098839,
+        "hits": 0
+      },
+      {
+        "word": "quantization",
+        "ms": 0.3999999985098839,
+        "hits": 0
+      },
+      {
+        "word": "token",
+        "ms": 0.3999999985098839,
+        "hits": 1
+      },
+      {
+        "word": "tensor",
+        "ms": 0.5,
+        "hits": 1
+      },
+      {
+        "word": "vector",
+        "ms": 0.4000000059604645,
+        "hits": 1
+      },
+      {
+        "word": "gradient",
+        "ms": 0.3999999985098839,
+        "hits": 0
+      },
+      {
+        "word": "benchmark",
+        "ms": 0.6000000014901161,
+        "hits": 1
+      },
+      {
+        "word": "optimization",
+        "ms": 0.3999999985098839,
+        "hits": 0
+      },
+      {
+        "word": "scalability",
+        "ms": 0.3999999985098839,
+        "hits": 0
+      },
+      {
+        "word": "asynchronous",
+        "ms": 0.3999999985098839,
+        "hits": 0
+      },
+      {
+        "word": "serialization",
+        "ms": 0.30000000447034836,
+        "hits": 0
+      },
+      {
+        "word": "middleware",
+        "ms": 0.5,
+        "hits": 0
+      },
+      {
+        "word": "kubernetes",
+        "ms": 0.3999999985098839,
+        "hits": 0
+      },
+      {
+        "word": "docker",
+        "ms": 0.29999999701976776,
+        "hits": 0
+      },
+      {
+        "word": "nginx",
+        "ms": 0.6000000014901161,
+        "hits": 0
+      },
+      {
+        "word": "postgresql",
+        "ms": 0.29999999701976776,
+        "hits": 0
+      },
+      {
+        "word": "redis",
+        "ms": 0.4000000059604645,
+        "hits": 0
+      },
+      {
+        "word": "sqlite",
+        "ms": 0.5999999940395355,
+        "hits": 0
+      },
+      {
+        "word": "pytorch",
+        "ms": 0.30000000447034836,
+        "hits": 0
+      },
+      {
+        "word": "tensorflow",
+        "ms": 0.3999999985098839,
+        "hits": 0
+      },
+      {
+        "word": "typescript",
+        "ms": 0.3999999985098839,
+        "hits": 0
+      },
+      {
+        "word": "javascript",
+        "ms": 0.5,
+        "hits": 1
+      },
+      {
+        "word": "wasm",
+        "ms": 0.3999999985098839,
+        "hits": 0
+      },
+      {
+        "word": "webassembly",
+        "ms": 0.4000000059604645,
+        "hits": 0
+      },
+      {
+        "word": "serverless",
+        "ms": 0.3999999985098839,
+        "hits": 0
+      },
+      {
+        "word": "microservices",
+        "ms": 0.5,
+        "hits": 0
+      },
+      {
+        "word": "blockchain",
+        "ms": 0.3999999985098839,
+        "hits": 1
+      },
+      {
+        "word": "cryptocurrency",
+        "ms": 0.5,
+        "hits": 1
+      },
+      {
+        "word": "chatbot",
+        "ms": 0.3999999985098839,
+        "hits": 0
+      },
+      {
+        "word": "multimodal",
+        "ms": 0.5,
+        "hits": 0
+      },
+      {
+        "word": "tokenizer",
+        "ms": 0.8000000044703484,
+        "hits": 0
+      },
+      {
+        "word": "embeddings",
+        "ms": 0.5,
+        "hits": 0
+      },
+      {
+        "word": "fine-tuning",
+        "ms": 0.5,
+        "hits": 0
+      },
+      {
+        "word": "frontend",
+        "ms": 0.3999999985098839,
+        "hits": 0
+      },
+      {
+        "word": "backend",
+        "ms": 0.3999999985098839,
+        "hits": 0
+      },
+      {
+        "word": "devops",
+        "ms": 0.3999999985098839,
+        "hits": 0
+      },
+      {
+        "word": "github",
+        "ms": 0.5,
+        "hits": 0
+      },
+      {
+        "word": "openai",
+        "ms": 0.3999999985098839,
+        "hits": 0
+      },
+      {
+        "word": "anthropic",
+        "ms": 0.30000000447034836,
+        "hits": 1
+      },
+      {
+        "word": "nvidia",
+        "ms": 0.3999999985098839,
+        "hits": 0
+      },
+      {
+        "word": "ollama",
+        "ms": 0.3999999985098839,
+        "hits": 0
+      },
+      {
+        "word": "llama",
+        "ms": 0.3999999985098839,
+        "hits": 1
+      },
+      {
+        "word": "claude",
+        "ms": 0.5,
+        "hits": 0
+      },
+      {
+        "word": "gemini",
+        "ms": 0.4000000059604645,
+        "hits": 1
+      },
+      {
+        "word": "qwen",
+        "ms": 0.5,
+        "hits": 0
+      },
+      {
+        "word": "API",
+        "ms": 0.6999999955296516,
+        "hits": 0
+      },
+      {
+        "word": "CPU",
+        "ms": 0.3999999985098839,
+        "hits": 0
+      },
+      {
+        "word": "GPU",
+        "ms": 0.5,
+        "hits": 0
+      },
+      {
+        "word": "LLM",
+        "ms": 0.4000000059604645,
+        "hits": 0
+      },
+      {
+        "word": "RAG",
+        "ms": 0.5999999940395355,
+        "hits": 1
+      },
+      {
+        "word": "SQL",
+        "ms": 0.4000000059604645,
+        "hits": 0
+      },
+      {
+        "word": "HTTP",
+        "ms": 0.3999999985098839,
+        "hits": 0
+      },
+      {
+        "word": "JSON",
+        "ms": 0.3999999985098839,
+        "hits": 0
+      },
+      {
+        "word": "YAML",
+        "ms": 0.5,
+        "hits": 0
+      },
+      {
+        "word": "SDK",
+        "ms": 0.29999999701976776,
+        "hits": 0
+      },
+      {
+        "word": "CLI",
+        "ms": 0.4000000059604645,
+        "hits": 0
+      },
+      {
+        "word": "IDE",
+        "ms": 0.5,
+        "hits": 0
+      },
+      {
+        "word": "GUI",
+        "ms": 0.5,
+        "hits": 0
+      },
+      {
+        "word": "TCP",
+        "ms": 0.3999999985098839,
+        "hits": 0
+      },
+      {
+        "word": "DNS",
+        "ms": 0.3999999985098839,
+        "hits": 0
+      },
+      {
+        "word": "TLS",
+        "ms": 0.3999999985098839,
+        "hits": 0
+      },
+      {
+        "word": "OAuth",
+        "ms": 0.3999999985098839,
+        "hits": 0
+      },
+      {
+        "word": "CUDA",
+        "ms": 0.4000000059604645,
+        "hits": 0
+      },
+      {
+        "word": "SIMD",
+        "ms": 0.4000000059604645,
+        "hits": 0
+      },
+      {
+        "word": "machine learning",
+        "ms": 0.3999999985098839,
+        "hits": 1
+      },
+      {
+        "word": "large language model",
+        "ms": 0.3999999985098839,
+        "hits": 0
+      },
+      {
+        "word": "retrieval augmented generation",
+        "ms": 0.3999999985098839,
+        "hits": 0
+      },
+      {
+        "word": "context window",
+        "ms": 0.3999999985098839,
+        "hits": 0
+      },
+      {
+        "word": "prompt injection",
+        "ms": 0.5,
+        "hits": 0
+      },
+      {
+        "word": "garbage collection",
+        "ms": 0.4000000059604645,
+        "hits": 0
+      },
+      {
+        "word": "race condition",
+        "ms": 0.3999999985098839,
+        "hits": 0
+      },
+      {
+        "word": "fine tuning",
+        "ms": 0.3999999985098839,
+        "hits": 0
+      },
+      {
+        "word": "open source",
+        "ms": 0.5,
+        "hits": 0
+      },
+      {
+        "word": "pull request",
+        "ms": 0.3999999985098839,
+        "hits": 0
+      }
+    ]
+  ],
+  "method": "Real extension; synthetic isolated browser profile. Import includes test file injection, staging, parsing, IndexedDB writes and polling observation. Firefox injection includes base64 test bridge overhead. Three fixed 101-word rounds: runtime messaging + indexed lookup, excludes rendering; browser caches not cleared. Not desktop GoldenDict or heap/RSS."
+}

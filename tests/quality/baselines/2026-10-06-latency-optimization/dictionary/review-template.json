@@ -1,0 +1,148 @@
+{
+  "kind": "dictionary",
+  "corpusHash": "dbef3d029f4c2a230b22a6fa2ddc0c00cf4da4458559a65c0bdfc0af7063d818",
+  "providerHash": "67db50f8bcd6d1259724c2fa05c271c67273cbcbac718b754d751a5f1590134e",
+  "model": "Qwen/Qwen3-1.7B-MLX-4bit",
+  "reviewer": null,
+  "method": null,
+  "rubric": {
+    "adequacy": "0–4: contextual sense and part of speech",
+    "completeness": "0–4: required card content including pronunciation",
+    "fluency": "0–4: natural Chinese and bilingual example",
+    "ipa": "correct / incorrect / missing / uncertain; expert review, never inferred from Zod"
+  },
+  "reviews": [
+    {
+      "id": "D01",
+      "outputHash": "5bc183a581cb710b4dfdb394e10996111b138d95425dc19367e9d4cde0327be6",
+      "adequacy": null,
+      "completeness": null,
+      "fluency": null,
+      "critical": null,
+      "ipaUs": null,
+      "ipaUk": null,
+      "notes": null
+    },
+    {
+      "id": "D02",
+      "outputHash": "ac2f3675f11262b8dbe03c574df185c2d0657d7a4af1861d8a0ff8499f90d5d2",
+      "adequacy": null,
+      "completeness": null,
+      "fluency": null,
+      "critical": null,
+      "ipaUs": null,
+      "ipaUk": null,
+      "notes": null
+    },
+    {
+      "id": "D03",
+      "outputHash": "1e2e5b1dbfc8aa543aab34c04068e496c4bc7a021b0c09cf6e6900250978fe41",
+      "adequacy": null,
+      "completeness": null,
+      "fluency": null,
+      "critical": null,
+      "ipaUs": null,
+      "ipaUk": null,
+      "notes": null
+    },
+    {
+      "id": "D04",
+      "outputHash": "586aa234d8cbdea330f3423cbcede9818b0834bffca92b0cb15e5f4337f45a6b",
+      "adequacy": null,
+      "completeness": null,
+      "fluency": null,
+      "critical": null,
+      "ipaUs": null,
+      "ipaUk": null,
+      "notes": null
+    },
+    {
+      "id": "D05",
+      "outputHash": "8744d97166d1e8faee4981758ef6bfd65d9006e849098acf970cfea72fdd8362",
+      "adequacy": null,
+      "completeness": null,
+      "fluency": null,
+      "critical": null,
+      "ipaUs": null,
+      "ipaUk": null,
+      "notes": null
+    },
+    {
+      "id": "D06",
+      "outputHash": "10b7302ac05383a40ddf78fb0d5843537ca63dd9d999b09d64c19d953b3cfeee",
+      "adequacy": null,
+      "completeness": null,
+      "fluency": null,
+      "critical": null,
+      "ipaUs": null,
+      "ipaUk": null,
+      "notes": null
+    },
+    {
+      "id": "D07",
+      "outputHash": "7b37df046f712e411df691b543dd48fa7751e1b6d396297996dc5e07db2b57f0",
+      "adequacy": null,
+      "completeness": null,
+      "fluency": null,
+      "critical": null,
+      "ipaUs": null,
+      "ipaUk": null,
+      "notes": null
+    },
+    {
+      "id": "D08",
+      "outputHash": "d8cd0dc3bae68aab651108905aa0c81d475e7d5fc29d089fc2d916694f3ad8ef",
+      "adequacy": null,
+      "completeness": null,
+      "fluency": null,
+      "critical": null,
+      "ipaUs": null,
+      "ipaUk": null,
+      "notes": null
+    },
+    {
+      "id": "D09",
+      "outputHash": "7091af3df6f3d7feadbeeb7bec25cabbed7fb8cb8810a97575ac731ce696a9c6",
+      "adequacy": null,
+      "completeness": null,
+      "fluency": null,
+      "critical": null,
+      "ipaUs": null,
+      "ipaUk": null,
+      "notes": null
+    },
+    {
+      "id": "D10",
+      "outputHash": "aae6c2756cb59e5ffda785c1c20f3dc3aadcdc8e026edc1bbd990a6a9b5f6e86",
+      "adequacy": null,
+      "completeness": null,
+      "fluency": null,
+      "critical": null,
+      "ipaUs": null,
+      "ipaUk": null,
+      "notes": null
+    },
+    {
+      "id": "D11",
+      "outputHash": "e76061abac73354b9ffeb24eb7525899f8cf2e2baf54ceaa15323e8e64da031d",
+      "adequacy": null,
+      "completeness": null,
+      "fluency": null,
+      "critical": null,
+      "ipaUs": null,
+      "ipaUk": null,
+      "notes": null
+    },
+    {
+      "id": "D12",
+      "outputHash": "bbcc03618b6aa54b1b5fcfa27ddb2a492547b725d675c7f72ac04893fe66cda7",
+      "adequacy": null,
+      "completeness": null,
+      "fluency": null,
+      "critical": null,
+      "ipaUs": null,
+      "ipaUk": null,
+      "notes": null
+    }
+  ]
+}

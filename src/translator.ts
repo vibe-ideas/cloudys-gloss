@@ -4,14 +4,15 @@ import { translationStyle } from './translation-style';
 import { TranslationLayout } from './translation-layout';
 import { ComponentHints } from './component-hints';
 import { createId } from './id';
-type Block = { element: Element; text: string; sourceText: string; chunks: string[]; translated: string[]; confirmed: boolean[]; next: number; near: boolean; visible: boolean; visibilityAt?: number; compact: boolean; node?: HTMLElement; rendered?: string; failed: boolean; error?: string; retry?: { id?: string }; active: number; layout?: string | false; description?: { target: Element; original: string | null; applied: string }; scroll?: ScrollRegion; scrollChecked?: boolean; localNear?: boolean };
+import type { RequestPriority } from './queue';
+type Block = { element: Element; text: string; sourceText: string; chunks: string[]; translated: string[]; confirmed: boolean[]; next: number; near: boolean; visible: boolean; visibilityAt?: number; compact: boolean; node?: HTMLElement; rendered?: string; failed: boolean; error?: string; retry?: { id?: string; translations?: string[] }; active: number; layout?: string | false; description?: { target: Element; original: string | null; applied: string }; scroll?: ScrollRegion; scrollChecked?: boolean; localNear?: boolean };
 type ScrollRegion = { element: Element; observer: IntersectionObserver; near: boolean; blocks: Set<Block> };
 export type TranslationStatus = { enabled: boolean; translated: number; pending: number; error: string };
 type Work = { block: Block; index: number; text: string };
 type Reading = { element: Element; iterator: Generator<void, string>; context: SemanticContext; revision: number };
 const inlineHiding = /(?:^|;)\s*(?:display\s*:\s*none|visibility\s*:\s*(?:hidden|collapse)|opacity\s*:\s*0(?:[;\s!]|$)|content-visibility\s*:\s*hidden)/i;
 const semanticClasses = /(?:^|\s)(?:badge|chip|button|btn|cta)(?:\s|$)/;
-export interface TranslationTransport { translate(id: string, texts: string[], onItem: (index: number, text: string, confirmed: boolean) => void, options?: { bypassCache?: boolean }): Promise<string[]>; cancel(id: string): void }
+export interface TranslationTransport { translate(id: string, texts: string[], onItem: (index: number, text: string, confirmed: boolean) => void, options?: { bypassCache?: boolean; priority?: RequestPriority }): Promise<string[]>; cancel(id: string): void }
 export class PageTranslator {
   private blocks = new Map<Element, Block>();
   private nearby = new Set<Block>();
@@ -45,6 +46,7 @@ export class PageTranslator {
     if (this.running) return;
     this.running = true; this.generation++; this.lastError = '';
     this.motion = mountTranslationMotion();
+    document.addEventListener('visibilitychange', this.visibilityChanged);
     this.intersections = new IntersectionObserver((entries) => {
       for (const entry of entries) {
         const block = this.blocks.get(entry.target); if (!block) continue;
@@ -117,6 +119,11 @@ export class PageTranslator {
     this.mutations.observe(document.body, { childList: true, subtree: true, characterData: true, attributes: true, attributeOldValue: true, attributeFilter: ['hidden', 'aria-hidden', 'inert', 'open', 'class', 'style'] });
     this.changed();
   }
+  private visibilityChanged = () => {
+    if (!this.running || document.visibilityState === 'hidden') return;
+    // Resume saved incremental scans and pending work; never rescan the page.
+    this.scanSlice(); this.schedule();
+  };
   private closestTracked(element: Element) {
     for (let current: Element | null = element; current; current = current.parentElement) if (this.blocks.has(current)) return current;
   }
@@ -195,7 +202,7 @@ export class PageTranslator {
   }
   private scan(root: Element) { this.scans.push({ iterator: semanticCandidates(root), context: semanticContext() }); this.scanSlice(); }
   private scanSlice = () => {
-    if (!this.running || this.scanTimer) return;
+    if (!this.running || this.scanTimer || document.visibilityState === 'hidden') return;
     const started = performance.now(); let visited = 0; let readNext = false;
     while ((this.scans.length || this.readings.size) && visited < 200 && performance.now() - started < 6) {
       // Give a large container a small quantum, then continue discovering its
@@ -316,7 +323,7 @@ export class PageTranslator {
     if (!block.compact && !unchanged) {
       block.node.tabIndex = 0; block.node.setAttribute('role', 'button');
       block.node.setAttribute('aria-label', block.failed ? '翻译失败：查看原因与重试' : '译文操作：重新翻译这一段');
-      block.node.title = '点击或聚焦译文查看操作';
+      block.node.title = '点击查看操作 · Enter / Alt+Enter';
     }
     if (actionable || hint && text && !unchanged) this.hints.update(source, text || '本段尚未完成翻译', actionable ? action : undefined);
     else this.hints.release(source);
@@ -346,13 +353,15 @@ export class PageTranslator {
   private async runRetry(block: Block) {
     const attempt = block.retry!;
     const current = () => this.running && block.retry === attempt && this.blocks.get(block.element) === block && block.element.isConnected;
-    const translations: string[] = [];
+    const translations = attempt.translations ??= [];
+    let paused = false;
     try {
       // Reserve one page queue slot for this paragraph, keeping request limits
       // even for long paragraphs. Preserve its last result until all chunks pass.
-      for (let index = 0; index < block.chunks.length; index += 2) {
+      for (let index = translations.length; index < block.chunks.length; index += 2) {
+        if (document.visibilityState === 'hidden') { paused = true; return; }
         attempt.id = createId();
-        const result = await this.transport.translate(attempt.id, block.chunks.slice(index, index + 2), () => {}, { bypassCache: true });
+        const result = await this.transport.translate(attempt.id, block.chunks.slice(index, index + 2), () => {}, { bypassCache: true, priority: 'interactive' });
         if (!current()) return;
         translations.push(...result);
       }
@@ -362,7 +371,8 @@ export class PageTranslator {
     } catch (error) {
       if (current()) { block.failed = true; block.error = this.errorMessage(error); }
     } finally {
-      if (current()) {
+      if (current() && paused) { attempt.id = undefined; this.dirty.add(block); this.schedule(); }
+      else if (current()) {
         block.retry = undefined; this.retries.delete(block);
         this.lastError = [...this.blocks.values()].find(value => value.error)?.error ?? '';
         this.dirty.add(block); this.schedule();
@@ -396,6 +406,7 @@ export class PageTranslator {
     for (const block of this.retries) if (!block.near || !block.element.isConnected || this.blocks.get(block.element) !== block) {
       this.cancelRetry(block); this.dirty.add(block);
     }
+    if (document.visibilityState === 'hidden') return;
     const slots = () => this.requests.size + [...this.retries].filter(block => block.retry?.id).length;
     for (const block of this.retries) {
       if (slots() >= 2) break;
@@ -432,7 +443,7 @@ export class PageTranslator {
         block.translated[index] = text; block.confirmed[index] = confirmed;
         this.dirty.add(block); this.schedule();
       };
-      void this.transport.translate(id, work.map((item) => item.text), receive).then((translations) => {
+      void this.transport.translate(id, work.map((item) => item.text), receive, { priority: work.some(({ block }) => block.visible) ? 'visible' : 'prefetch' }).then((translations) => {
         translations.forEach((text, index) => receive(index, text, true));
       }).catch((error: unknown) => {
         if (generation !== this.generation || !this.requests.has(id)) return;
@@ -446,6 +457,7 @@ export class PageTranslator {
   }
   stop() {
     this.running = false; this.generation++;
+    document.removeEventListener('visibilitychange', this.visibilityChanged);
     if (this.timer) clearTimeout(this.timer); this.timer = undefined;
     if (this.scanTimer) clearTimeout(this.scanTimer); this.scanTimer = undefined; this.scans = []; this.readings.clear();
     this.mutations?.disconnect(); this.intersections?.disconnect(); this.viewport?.disconnect(); this.scrollVisibility?.disconnect();

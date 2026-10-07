@@ -67,7 +67,7 @@ test('双语阅读：只请求视口附近语义块，SPA 增量翻译，关闭�
   await toggle(); await expect(page.locator('[data-cloudys-gloss="translation"]')).toHaveCount(0);
 });
 
-test('划词词卡：立即显示加载态，展示音标释义例句，隔离页面 CSS 且始终只有一个浮层', async ({ extension }, testInfo) => {
+test('划词仅显示小按钮，点击后才请求词卡并展示音标释义例句，全页只有一个浮层', async ({ extension }, testInfo) => {
   const { page, server } = extension; server.setDelay(600);
   const select = async () => {
     await page.locator('h1').click();
@@ -76,7 +76,13 @@ test('划词词卡：立即显示加载态，展示音标释义例句，隔离�
     await page.mouse.move(bounds.x + bounds.width, bounds.y + bounds.height / 2, { steps: 8 }); await page.mouse.up();
     await expect.poll(() => page.evaluate(() => getSelection()?.toString())).toBe('cloudy');
   };
-  await select(); await expect(page.getByRole('dialog')).toBeVisible(); await expect(page.getByText('正在理解上下文…')).toBeVisible();
+  await select();
+  await expect(page.getByRole('button', { name: '翻译所选内容', exact: true })).toBeVisible();
+  await expect(page.getByRole('dialog')).toHaveCount(0);
+  expect(server.calls).toHaveLength(0);
+  await page.screenshot({ animations: 'disabled', path: testInfo.outputPath('selection-launcher.png') });
+  await page.getByRole('button', { name: '翻译所选内容', exact: true }).click();
+  await expect(page.getByRole('dialog')).toBeVisible(); await expect(page.getByText('释义准备中')).toBeVisible();
   await expect(page.getByText('多云的；不清晰的')).toBeVisible();
   await expect(page.getByRole('button', { name: '美式发音' })).toContainText('/ˈkɫaʊdi/');
   await expect(page.getByRole('button', { name: '英式发音' })).toContainText('/klˈaʊdi/');
@@ -85,7 +91,8 @@ test('划词词卡：立即显示加载态，展示音标释义例句，隔离�
   const font = await page.getByRole('button', { name: '美式发音' }).evaluate((element) => getComputedStyle(element).fontSize); expect(font).toBe('12px');
   await page.screenshot({ path: testInfo.outputPath('word-card-light.png') });
   await page.emulateMedia({ colorScheme: 'dark' }); await page.screenshot({ path: testInfo.outputPath('word-card-dark.png') });
-  const calls = server.calls.length; await select(); await expect(page.getByText('多云的；不清晰的')).toBeVisible();
+  const calls = server.calls.length; await select();
+  await page.getByRole('button', { name: '翻译所选内容', exact: true }).click(); await expect(page.getByText('多云的；不清晰的')).toBeVisible();
   expect(server.calls).toHaveLength(calls); await expect(page.locator('[data-cloudys-gloss="popover"]')).toHaveCount(1);
   await page.setViewportSize({ width: 390, height: 500 });
   await expect.poll(async () => { const box = (await page.getByRole('dialog').boundingBox())!; return box.x >= 12 && box.x + box.width <= 390 && box.y + box.height <= 500; }).toBe(true);
@@ -161,7 +168,7 @@ test.describe('系统开启减少动态效果', () => {
 });
 
 
-test('网页拦截鼠标事件时，拖选单词仍展示词卡，点击卡外关闭', async ({ extension }) => {
+test('网页拦截鼠标事件时，拖选单词后仍可点击小按钮打开词卡，点击卡外关闭', async ({ extension }) => {
   const { page } = extension;
   await page.locator('main').evaluate((element) => {
     element.addEventListener('pointerup', (event) => event.stopPropagation());
@@ -171,6 +178,7 @@ test('网页拦截鼠标事件时，拖选单词仍展示词卡，点击卡外�
   await page.mouse.move(bounds.x, bounds.y + bounds.height / 2); await page.mouse.down();
   await page.mouse.move(bounds.x + bounds.width, bounds.y + bounds.height / 2, { steps: 8 }); await page.mouse.up();
   await expect.poll(() => page.evaluate(() => getSelection()?.toString())).toBe('cloudy');
+  await page.getByRole('button', { name: '翻译所选内容', exact: true }).click();
   await expect(page.getByRole('dialog', { name: 'AI 单词卡' })).toBeVisible({ timeout: 3000 });
   await expect(page.getByRole('button', { name: '美式发音' })).toContainText('/ˈkɫaʊdi/');
   await page.locator('h1').click();

@@ -1,0 +1,25 @@
+{
+  "method": "人工选择科技语境与必要概念；每组 alternatives 至少命中一个。仅为可复现的义项线索检查，不代表语义正确率，不负责口音、例句或完整解释质量。",
+  "cases": [
+    { "word": "software", "context": "The computer executes software instructions.", "concepts": [["instructions", "指令"], ["computer", "计算机", "電腦"]] },
+    { "word": "algorithm", "context": "The algorithm solves the problem in a finite number of steps.", "concepts": [["steps", "sequence", "步骤", "步驟"], ["finite", "有限"]] },
+    { "word": "database", "context": "The application queries structured records in a database.", "concepts": [["structured", "structure", "结构", "結構"], ["data", "information", "数据", "資料"]] },
+    { "word": "network", "context": "The computer network carries data between devices.", "concepts": [["computer", "计算机", "電腦"], ["communication", "connected", "连接", "通訊"]] },
+    { "word": "CPU", "context": "The CPU executes program instructions.", "concepts": [["central processing", "中央处理", "中央處理"]] },
+    { "word": "GPU", "context": "We run inference on a GPU.", "concepts": [["graphics processing", "图形处理", "圖形處理"]] },
+    { "word": "API", "context": "The app calls the public API.", "concepts": [["application program", "应用程序接口", "應用程式介面"]] },
+    { "word": "JSON", "context": "The API returns JSON data.", "concepts": [["javascript object notation", "javascript 对象表示"]] },
+    { "word": "SQL", "context": "Use SQL to query the database.", "concepts": [["structured query", "结构化查询", "結構化查詢"]] },
+    { "word": "latency", "context": "Network latency increased between the client and server.", "concepts": [["time", "delay", "延迟", "延遲"], ["network", "packet", "网络", "網路"]] },
+    { "word": "concurrency", "context": "The runtime supports concurrency between tasks.", "concepts": [["simultaneous", "concurrent", "同时", "同時"], ["process", "program", "task", "进程", "任務"]] },
+    { "word": "garbage collection", "context": "Garbage collection reclaims unused memory.", "concepts": [["memory", "存储", "内存", "記憶體"], ["reclaim", "recycl", "unused", "回收"]] },
+    { "word": "race condition", "context": "Two concurrent writes caused a race condition.", "concepts": [["timing", "sequence", "order", "时序", "顺序"], ["process", "thread", "并发", "並行"]] },
+    { "word": "transformer", "context": "This language model uses a transformer architecture.", "concepts": [["attention", "注意力"], ["neural", "神经", "神經"]] },
+    { "word": "embedding", "context": "The embedding represents the document as a vector.", "concepts": [["vector", "向量"], ["represent", "表示", "表征"]] },
+    { "word": "LLM", "context": "An LLM generates the answer token by token.", "concepts": [["large language model", "大语言模型", "大型語言模型"]] },
+    { "word": "RAG", "context": "RAG retrieves documents to ground a generated answer.", "concepts": [["retrieval", "检索", "檢索"], ["generation", "生成"]] },
+    { "word": "Kubernetes", "context": "Kubernetes orchestrates containers across the cluster.", "concepts": [["container", "容器"], ["orchestrat", "编排", "編排"]] },
+    { "word": "TypeScript", "context": "TypeScript adds static types to JavaScript.", "concepts": [["javascript"], ["type", "类型", "型別"]] },
+    { "word": "Docker", "context": "Docker packages the service into a container image.", "concepts": [["container", "容器"], ["software", "platform", "image", "软件", "平台", "镜像"]] }
+  ]
+}

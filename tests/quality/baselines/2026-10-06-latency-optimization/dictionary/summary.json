@@ -1,0 +1,108 @@
+{
+  "corpusHash": "dbef3d029f4c2a230b22a6fa2ddc0c00cf4da4458559a65c0bdfc0af7063d818",
+  "providerHash": "67db50f8bcd6d1259724c2fa05c271c67273cbcbac718b754d751a5f1590134e",
+  "baseline": "tests/quality/baselines/2026-10-05-tuning/final-dictionary",
+  "rows": 24,
+  "uniqueOutputs": 12,
+  "repetitions": 2,
+  "counts": {
+    "meaning": {
+      "passed": 22,
+      "total": 24,
+      "rate": 0.9166666666666666
+    },
+    "partOfSpeech": {
+      "passed": 24,
+      "total": 24,
+      "rate": 1.0
+    },
+    "contextMeaning": {
+      "passed": 22,
+      "total": 24,
+      "rate": 0.9166666666666666
+    },
+    "examples": {
+      "passed": 24,
+      "total": 24,
+      "rate": 1.0
+    },
+    "semanticAcceptable": {
+      "passed": 22,
+      "total": 24,
+      "rate": 0.9166666666666666
+    },
+    "ipaComplete": {
+      "passed": 20,
+      "total": 24,
+      "rate": 0.8333333333333334
+    },
+    "wholeCardAcceptable": {
+      "passed": 18,
+      "total": 24,
+      "rate": 0.75
+    }
+  },
+  "decision": {
+    "verdict": "reject_current_candidate_as_quality_preserving_replacement",
+    "reason": "The same one case still fails overall, but D08 is worse in two independently inspected fields: the sense loses the correct accusation wording and contextMeaning regresses from correct accusation to broader responsibility. Aggregate pass rates conceal this. Other eleven cases have no new failures.",
+    "scope": "This is a semantic release recommendation for this candidate, not a rejection of example-only repair as a general technique or a change to the rubric."
+  },
+  "comparison": {
+    "semanticPassed": {
+      "before": 22,
+      "after": 22
+    },
+    "contextMeaningPassed": {
+      "before": 24,
+      "after": 22
+    },
+    "wholeCardPassed": {
+      "before": 18,
+      "after": 18
+    },
+    "ipaComplete": {
+      "before": 20,
+      "after": 20
+    },
+    "newlyFailingCases": [],
+    "worsenedExistingFailures": [
+      "D08: both repetitions; adequacy 2 -> 1 and contextMeaning accepted -> rejected"
+    ],
+    "improvedCases": [
+      "D01: surprising nuance restored",
+      "D07: translated original sentence retains will and you",
+      "D12: after ten minutes restored"
+    ],
+    "remainingElevenCases": "All retain acceptable core semantics under the previous rubric; D04 missing yesterday and awkward Chinese remain explicitly recorded."
+  },
+  "requests": {
+    "before": 36,
+    "after": 30,
+    "reduction": 6,
+    "reductionRate": 0.16666666666666666,
+    "rowsByRequestCount": {
+      "2": 6,
+      "1": 18
+    },
+    "groundedInitial": 24,
+    "exampleTranslationRepair": 6,
+    "generatedFallback": 0,
+    "repairCases": [
+      "D01",
+      "D07",
+      "D08"
+    ],
+    "stageDerivation": "Captured pipeline plus raw attempts: these six rows each contain one grounded JSON response and one plain Chinese example-translation response; other rows make one request."
+  },
+  "timingObservation": {
+    "beforeMedianMs": 376.8365209999997,
+    "afterMedianMs": 666.6016454999999,
+    "beforeSumMs": 37389.41708299998,
+    "afterSumMs": 17929.319205999993,
+    "qualification": "Different recorded runs; this is descriptive evidence, not a controlled speed claim. Model revision is unrecorded in candidate metadata."
+  },
+  "missingIpa": [
+    "D11 give up and D12 take off, both repetitions; neither dialect has an attested whole-phrase entry"
+  ],
+  "limits": "91.7% acceptable core semantics on this repeated 12-case corpus does not mean 91.7% complete cards or general-world accuracy. Complete-card rate remains 75%; raw intermediate responses are intentionally not WordCard-shaped."
+}

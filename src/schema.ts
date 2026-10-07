@@ -24,7 +24,7 @@ export const defaults: Settings = SettingsSchema.parse({
 
 export const WordCardSchema = z.object({
   word: z.string().min(1).max(200),
-  ipa: z.object({ us: z.string().max(200), uk: z.string().max(200) }),
+  ipa: z.object({ us: z.string().max(200), uk: z.string().max(200), general: z.string().max(200).optional() }),
   senses: z.array(z.object({ partOfSpeech: z.string().min(1).max(80), meaning: z.string().min(1).max(1000) })).min(1).max(12),
   contextMeaning: z.string().min(1).max(2000),
   examples: z.array(z.object({ en: z.string().min(1).max(2000), zh: z.string().min(1).max(2000) })).min(1).max(4),
@@ -34,8 +34,14 @@ export const TranslationSchema = z.object({ translations: z.array(z.string().min
 
 const requestId = z.string().min(1).max(100);
 export const RequestSchema = z.discriminatedUnion('type', [
-  z.object({ type: z.literal('translate'), id: requestId, bypassCache: z.boolean().optional(), texts: z.array(z.string().min(1).max(12000)).min(1).max(16) }),
+  z.object({ type: z.literal('translate'), id: requestId, priority: z.enum(['interactive', 'visible', 'prefetch']).optional(), bypassCache: z.boolean().optional(), texts: z.array(z.string().min(1).max(12000)).min(1).max(16) }),
   z.object({ type: z.literal('dictionary'), id: requestId, word: z.string().min(1).max(200), context: z.string().max(3000) }),
+  z.object({ type: z.literal('pronunciation'), id: requestId, word: z.string().trim().min(1).max(200) }),
+  z.object({ type: z.literal('lexicon:lookup'), id: requestId, word: z.string().trim().min(1).max(200) }),
+  z.object({ type: z.literal('lexicon:list') }),
+  z.object({ type: z.literal('lexicon:delete'), dictionaryId: z.string().uuid() }),
+  z.object({ type: z.literal('lexicon:enable'), dictionaryId: z.string().uuid(), enabled: z.boolean() }),
+  z.object({ type: z.literal('speech:play'), id: requestId, word: z.string().trim().min(1).max(200), locale: z.enum(['en-US', 'en-GB']) }),
   z.object({ type: z.literal('cancel'), id: requestId }),
   z.object({ type: z.literal('preferences') }),
   z.object({ type: z.literal('settings:get') }),
