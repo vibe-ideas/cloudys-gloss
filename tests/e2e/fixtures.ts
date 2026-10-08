@@ -86,7 +86,13 @@ export const test = base.extend<Fixture>({
           ignoreDefaultArgs: true,
           args: ['--remote-debugging-port=0', ...(headed ? [] : ['-headless']), '-profile', profile, '-start-debugger-server', String(port)],
           viewport: { width: 1100, height: 800 },
-          firefoxUserPrefs: { 'ui.prefersReducedMotion': motion === 'reduce' ? 1 : 0, 'devtools.chrome.enabled': true, 'devtools.debugger.remote-enabled': true, 'devtools.debugger.prompt-connection': false },
+          firefoxUserPrefs: {
+            'ui.prefersReducedMotion': motion === 'reduce' ? 1 : 0,
+            'devtools.chrome.enabled': true, 'devtools.debugger.remote-enabled': true, 'devtools.debugger.prompt-connection': false,
+            // BiDi defaults keep top-level documents active even in background
+            // tabs. Visibility tests need the browser's real activation state.
+            ...(headed ? { 'layout.testing.top-level-always-active': false } : {}),
+          },
         });
         const client = await remote.connectWithMaxRetries({ port });
         try { await client.installTemporaryAddon(addon, false); } finally { client.disconnect(); }
