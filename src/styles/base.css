@@ -1,0 +1,31 @@
+/* Element defaults and shared primitives. Pages tune control density via
+ * --control-pad / --radius instead of redefining buttons. */
+@import './tokens.css';
+
+* { box-sizing: border-box; }
+:root { font: 14px/1.6 var(--font); color: var(--fg); background: var(--bg); font-synthesis: none; }
+body { margin: 0; }
+[hidden] { display: none !important; }
+button, input, select { font: inherit; }
+p { line-height: 1.7; }
+code { font: 12px var(--mono); padding: 1px 6px; border-radius: 6px; background: var(--tint); }
+
+button { cursor: pointer; border: 1px solid var(--line); border-radius: var(--radius); padding: var(--control-pad, 9px 16px); color: inherit; background: var(--card); white-space: nowrap; transition: background .15s, border-color .15s; }
+button:hover { background: var(--hover); }
+button:disabled { opacity: .5; cursor: not-allowed; }
+button:disabled:hover { background: var(--card); }
+:is(button, input, select, summary, [tabindex]):focus-visible { outline: 2px solid var(--focus); outline-offset: 3px; }
+.primary { background: var(--accent-solid); color: #fff; border-color: transparent; }
+.primary:hover { background: var(--accent-strong); }
+.primary:disabled, .primary:disabled:hover { background: var(--line); color: var(--muted); opacity: 1; }
+.ghost { border-color: transparent; background: transparent; }
+
+input, select { font-size: 14px; font-weight: 400; border: 1px solid var(--line); border-radius: var(--radius); padding: 10px 12px; background: var(--field); color: inherit; width: 100%; min-width: 0; }
+input:hover, select:hover { border-color: color-mix(in srgb, var(--accent) 35%, var(--line)); }
+
+.brand { display: flex; align-items: center; gap: 10px; font-size: 15px; font-weight: 650; letter-spacing: -.3px; }
+.logo { display: grid; place-items: center; flex-shrink: 0; width: var(--logo, 34px); height: var(--logo, 34px); border-radius: 30%; background: var(--accent-solid); color: #fff; font-size: calc(var(--logo, 34px) * .6); }
+.muted { color: var(--muted); }
+.eyebrow { font-size: 11px; font-weight: 600; letter-spacing: 1.6px; text-transform: uppercase; color: var(--accent); }
+.error { color: var(--error); }
+.visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }

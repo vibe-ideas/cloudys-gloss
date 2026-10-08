@@ -3,8 +3,12 @@ type Control = <T>(operation: string, args?: unknown[]) => Promise<T>;
 export class SettingsDriver {
   constructor(private page?: Page, private control?: Control) {}
   async fill(name: string, value: string) {
-    if (this.page) await this.page.locator(`[name="${name}"]`).fill(value);
-    else await this.control!('fill', [name, value]);
+    if (this.page) {
+      // Advanced fields sit in a collapsed <details>; open it like a person would.
+      const collapsed = this.page.locator(`details:not([open]):has([name="${name}"]) > summary`);
+      if (await collapsed.count()) await collapsed.click();
+      await this.page.locator(`[name="${name}"]`).fill(value);
+    } else await this.control!('fill', [name, value]);
   }
   async select(name: string, value: string) {
     if (this.page) await this.page.locator(`[name="${name}"]`).selectOption(value);

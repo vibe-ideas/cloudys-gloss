@@ -2,6 +2,14 @@ import { useEffect, useState } from 'preact/hooks';
 import { send } from './messaging';
 import type { LocalModelStatus, ModelAction } from './local-model';
 
+type Tone = 'ok' | 'idle' | 'warn' | 'error';
+function pill(model: LocalModelStatus | undefined, busy: boolean, error: boolean): [Tone, string] {
+  if (busy) return ['idle', '处理中…'];
+  if (!model) return error ? ['error', '未连接'] : ['idle', '检查中…'];
+  if (!model.installed) return ['warn', '未安装'];
+  return model.running ? ['ok', '运行中'] : ['idle', '已停止'];
+}
+
 export function ModelControls() {
   const [model, setModel] = useState<LocalModelStatus>();
   const [busy, setBusy] = useState(false);
@@ -19,17 +27,24 @@ export function ModelControls() {
     finally { setBusy(false); }
   };
   useEffect(() => { void control('status'); }, []);
-  return <section class="card" aria-label="本地模型服务">
-    <h2>本地模型服务</h2>
-    <p class="muted">Apple Silicon Mac 上管理默认 mlx-serve。首次运行一次 pnpm model:bridge 安装浏览器助手，之后可以在这里启停。</p>
-    <p class={`status ${error ? 'error' : ''}`} data-testid="model-status" aria-live="polite">{message}</p>
+  const [tone, label] = pill(model, busy, error);
+  const usable = !busy && !!model?.installed;
+  return <section class="card" aria-labelledby="service-heading">
+    <header class="card-head split"><div><h2 id="service-heading">本地模型服务</h2>
+      <p class="muted">在 Apple Silicon Mac 上管理默认 mlx-serve。首次使用先运行一次 <code>pnpm model:bridge</code>。</p></div>
+      <span class={`pill ${tone}`}>{label}</span></header>
+    <p class={`service-message${error ? ' error' : ''}`} data-testid="model-status" aria-live="polite">{message}</p>
     <div class="actions">
-      <button disabled={busy || !model?.installed} onClick={() => void control('start')}>启动模型</button>
-      <button disabled={busy || !model?.running} onClick={() => void control('stop')}>停止模型</button>
-      <button disabled={busy || !model?.installed} onClick={() => void control('restart')}>重启模型</button>
-      <button disabled={busy} onClick={() => void control('status')}>刷新状态</button>
-      <button disabled={busy || !model?.installed} onClick={() => void control('autostart', !model?.autostart)}>{model?.autostart ? '关闭登录自启' : '开启登录自启'}</button>
+      {model?.running
+        ? <button disabled={!usable} onClick={() => void control('stop')}>停止模型</button>
+        : <button class={usable ? 'primary' : ''} disabled={!usable} onClick={() => void control('start')}>启动模型</button>}
+      <button disabled={!usable} onClick={() => void control('restart')}>重启模型</button>
+      <button class="ghost" disabled={busy} onClick={() => void control('status')}>刷新状态</button>
     </div>
-    <small>启动与停止不改变登录自启偏好。切换自启时，正在运行的模型会重启。开启按需启动后，下次未命中缓存的翻译会再次启动模型。</small>
+    <div class="row switch-row">
+      <span class="row-text"><strong>登录时自动启动</strong><small>启停模型不改变此偏好；切换时正在运行的模型会重启。</small></span>
+      <button class="switch" data-on={!!model?.autostart} disabled={!usable} onClick={() => void control('autostart', !model?.autostart)}>
+        <span class="visually-hidden">{model?.autostart ? '关闭登录自启' : '开启登录自启'}</span></button>
+    </div>
   </section>;
 }

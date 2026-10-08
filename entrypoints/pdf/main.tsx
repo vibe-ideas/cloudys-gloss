@@ -71,19 +71,20 @@ function PdfReader() {
     if (!Number.isFinite(valid)) { setPageInput(String(number)); return; }
     setNumber(valid); setPageInput(String(valid)); window.scrollTo({ top: 0 });
   };
+  const picker = <section class="open-card" aria-label="打开 PDF">
+    <div class="file-action"><button class="file-button" disabled={loading} onClick={() => fileInput.current?.click()}>选择本地 PDF</button><span>最大 40 MB · 文件保留在本机</span>
+      <input ref={fileInput} tabIndex={-1} aria-label="本地 PDF 文件" type="file" accept="application/pdf,.pdf" onChange={(event) => { const file = event.currentTarget.files?.[0]; event.currentTarget.value = ''; if (file) void open(file); }} />
+    </div>
+    <form onSubmit={(event) => { event.preventDefault(); if (!loading) void open(url); }}>
+      <label for="pdf-url">或打开在线 PDF</label><div class="url-row"><input id="pdf-url" name="pdf-url" type="url" required placeholder="https://example.com/document.pdf" value={url} disabled={loading} onInput={(event) => setUrl(event.currentTarget.value)} /><button type="submit" disabled={loading}>打开</button></div>
+    </form>
+    {loading && <div class="load-status"><span role="status">正在打开 {name}…</span><button onClick={clear}>取消打开</button></div>}
+    {error && <p class="load-error" role="alert">{error}</p>}
+  </section>;
   return <main class={`pdf-reader ${document ? 'has-document' : ''}`}>
-    <header class="reader-heading"><div class="brand"><span class="cloud">☁</span>Cloudy’s Gloss</div><button onClick={() => void send({ type: 'settings:open' })}>模型设置</button></header>
+    <header class="reader-heading"><div class="brand"><span class="logo">☁</span>Cloudy’s Gloss</div><button onClick={() => void send({ type: 'settings:open' })}>模型设置</button></header>
     {!document && <div class="intro"><span class="eyebrow">PDF · 双语阅读</span><h1>原文与理解，同页展开。</h1><p>保留原始 PDF，逐页查看中文。开启双语后，当前页文字才会发送到你配置的模型。</p></div>}
-    <details class="file-picker" open={!document || loading || !!error}><summary>{document ? '打开其他文件' : '打开 PDF'}</summary><section class="open-card" aria-label="打开 PDF">
-      <div class="file-action"><button class="file-button" disabled={loading} onClick={() => fileInput.current?.click()}>选择本地 PDF</button><span>最大 40 MB · 文件保留在本机</span>
-        <input ref={fileInput} tabIndex={-1} aria-label="本地 PDF 文件" type="file" accept="application/pdf,.pdf" onChange={(event) => { const file = event.currentTarget.files?.[0]; event.currentTarget.value = ''; if (file) void open(file); }} />
-      </div>
-      <form onSubmit={(event) => { event.preventDefault(); if (!loading) void open(url); }}>
-        <label for="pdf-url">或打开在线 PDF</label><div class="url-row"><input id="pdf-url" name="pdf-url" type="url" required placeholder="https://example.com/document.pdf" value={url} disabled={loading} onInput={(event) => setUrl(event.currentTarget.value)} /><button type="submit" disabled={loading}>打开</button></div>
-      </form>
-      {loading && <div class="load-status"><span role="status">正在打开 {name}…</span><button onClick={clear}>取消打开</button></div>}
-      {error && <p class="load-error" role="alert">{error}</p>}
-    </section></details>
+    {document ? <details class="file-picker" open={loading || !!error}><summary>打开其他文件</summary>{picker}</details> : picker}
     {document && <>
       <div class="reader-toolbar"><div class="document-name" title={name}>{name}<small>{document.numPages} 页</small></div>
         <nav class="pagination" aria-label="PDF 分页"><button disabled={number === 1} onClick={() => go(number - 1)} aria-label="上一页">←</button>

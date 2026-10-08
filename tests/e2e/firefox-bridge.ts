@@ -39,7 +39,7 @@ export function firefoxBridge(url: string, token: string) {
           const input = document.querySelector('[name="' + args[0] + '"]');
           input.value = args[1]; input.dispatchEvent(new Event('change', {bubbles:true}));
         } else if (operation === 'click') {
-          const button = [...document.querySelectorAll('button')].find(item => item.textContent === args[0]);
+          const button = [...document.querySelectorAll('button')].find(item => (item.getAttribute('aria-label') ?? item.textContent.trim()) === args[0]);
           if (!button || button.disabled) throw new Error('Button unavailable: ' + args[0]);
           button.click();
         } else if (operation === 'toggle') {
