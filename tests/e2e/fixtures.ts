@@ -88,6 +88,10 @@ export const test = base.extend<Fixture>({
           viewport: { width: 1100, height: 800 },
           firefoxUserPrefs: {
             'ui.prefersReducedMotion': motion === 'reduce' ? 1 : 0,
+            // Stock headless Firefox reports no pointer by default. This
+            // desktop suite drives a fine mouse with hover capability.
+            'ui.primaryPointerCapabilities': 0x02 | 0x04,
+            'ui.allPointerCapabilities': 0x02 | 0x04,
             'devtools.chrome.enabled': true, 'devtools.debugger.remote-enabled': true, 'devtools.debugger.prompt-connection': false,
             // BiDi defaults keep top-level documents active even in background
             // tabs. Visibility tests need the browser's real activation state.
