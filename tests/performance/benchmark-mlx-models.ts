@@ -3,8 +3,8 @@ import { mkdirSync, openSync, closeSync, readFileSync, writeFileSync, appendFile
 import path from 'node:path';
 import { cpus, totalmem } from 'node:os';
 import { setTimeout as delay } from 'node:timers/promises';
-import { OpenAICompatibleProvider } from '../../src/provider';
-import { SettingsSchema } from '../../src/schema';
+import { OpenAICompatibleProvider } from '../../src/model/provider';
+import { SettingsSchema } from '../../src/core/schema';
 
 // Dedicated localhost server; never stops or changes the user's normal MLX service.
 const python = process.env.MLX_PYTHON;

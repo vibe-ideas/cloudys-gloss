@@ -3,8 +3,8 @@ import { createHash } from 'node:crypto';
 import { mkdirSync, readFileSync, writeFileSync, existsSync } from 'node:fs';
 import path from 'node:path';
 import { cpus } from 'node:os';
-import { OpenAICompatibleProvider } from '../../src/provider';
-import { SettingsSchema } from '../../src/schema';
+import { OpenAICompatibleProvider } from '../../src/model/provider';
+import { SettingsSchema } from '../../src/core/schema';
 import { parseCorpus, assess } from './corpus';
 
 const corpusPath = process.env.QUALITY_CORPUS ?? 'tests/quality/cases.json';
@@ -25,10 +25,10 @@ const sha = (value: string) => createHash('sha256').update(value).digest('hex');
 const corpusHash = sha(corpusText);
 const requestOptions = process.env.QUALITY_THINKING === 'enabled' && process.env.QUALITY_RUNTIME?.startsWith('mlx-serve')
   ? { enable_thinking: true, reasoning_budget_tokens: Number(process.env.QUALITY_REASONING_BUDGET ?? 128) } : {};
-const providerHash = sha(['provider', 'schema', 'stream'].map((name) => readFileSync(`src/${name}.ts`, 'utf8')).join('\n')
+const providerHash = sha(['model/provider', 'core/schema', 'core/stream'].map((name) => readFileSync(`src/${name}.ts`, 'utf8')).join('\n')
   + (Object.keys(requestOptions).length ? JSON.stringify(requestOptions) : ''));
 writeFileSync(path.join(output, 'pipeline.json'), JSON.stringify({ requestOptions, sources: Object.fromEntries(
-  ['provider', 'schema', 'stream'].map((name) => [`src/${name}.ts`, readFileSync(`src/${name}.ts`, 'utf8')])),
+  ['model/provider', 'core/schema', 'core/stream'].map((name) => [`src/${name}.ts`, readFileSync(`src/${name}.ts`, 'utf8')])),
 }, null, 2) + '\n');
 const modelLabel = process.env.MODEL_LABEL ?? settings.model;
 const metadata = { date: new Date().toISOString(), model: modelLabel, modelRevision: process.env.MODEL_REVISION ?? 'unrecorded',

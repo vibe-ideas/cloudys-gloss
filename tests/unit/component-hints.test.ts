@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { ComponentHints } from '../../src/component-hints';
+import { ComponentHints } from '../../src/page/component-hints';
 
 let hints: ComponentHints;
 const surface = () => document.querySelector<HTMLElement>('[data-cloudys-gloss="component-hint"]')!;

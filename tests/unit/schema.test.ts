@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { defaults, SettingsSchema } from '../../src/schema';
+import { defaults, SettingsSchema } from '../../src/core/schema';
 describe('模型设置', () => {
   it('新安装默认连接本地 MLX，使用单并发和 120 秒超时', () => {
     expect(SettingsSchema.parse(defaults)).toEqual({

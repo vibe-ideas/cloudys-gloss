@@ -51,7 +51,7 @@ jobs:
         run: |
           pnpm build
           pnpm build:firefox
-          xvfb-run -a pnpm exec playwright test tests/e2e/scheduler.spec.ts
+          xvfb-run -a pnpm exec playwright test tests/e2e/performance/scheduler.spec.ts
       - name: Test Chrome and Firefox extensions
         env:
           FIREFOX_BINARY: ${{ steps.mozilla-firefox.outputs.firefox-path }}

@@ -1,5 +1,5 @@
-import { test, expect } from '../e2e/fixtures';
-import { defaults } from '../../src/schema';
+import { test, expect } from '../e2e/support/fixtures';
+import { defaults } from '../../src/core/schema';
 
 test('浏览器启停真实 MLX 并保留自启偏好，服务停止后点击翻译会自动启动并显示中文', async ({ extension }, testInfo) => {
   const { options, page } = extension;

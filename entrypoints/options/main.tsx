@@ -1,5 +1,5 @@
 import { render } from 'preact';
-import { ModelControls } from '../../src/model-controls';
+import { ModelControls } from '../../src/model/model-controls';
 import { DictionarySettings } from '../../src/dictionaries/settings';
 import { useSettings } from './use-settings';
 import { Connection } from './connection';

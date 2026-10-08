@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'preact/hooks';
-import { send } from '../messaging';
+import { send } from '../core/messaging';
 import { importDictionary } from './client';
 import { DictionaryLookup } from './lookup';
 import type { ImportedDictionary } from './store';

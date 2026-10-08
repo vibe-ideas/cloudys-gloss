@@ -5,8 +5,8 @@ import { mkdirSync, readFileSync, writeFileSync, existsSync } from 'node:fs';
 import path from 'node:path';
 import { cpus } from 'node:os';
 import { packagedDictionary } from '../helpers/packaged-dictionary';
-import { OpenAICompatibleProvider } from '../../src/provider';
-import { SettingsSchema, WordCardSchema, type WordCard } from '../../src/schema';
+import { OpenAICompatibleProvider } from '../../src/model/provider';
+import { SettingsSchema, WordCardSchema, type WordCard } from '../../src/core/schema';
 
 const corpusText = readFileSync('tests/quality/dictionary-cases.json', 'utf8');
 const corpus = z.object({ version: z.string(), cases: z.array(z.object({
@@ -29,9 +29,9 @@ if (existsSync(path.join(output, 'metadata.json'))) throw new Error('词卡输�
 mkdirSync(output, { recursive: true });
 const sha = (value: string) => createHash('sha256').update(value).digest('hex');
 const corpusHash = sha(corpusText);
-const providerHash = sha(['provider', 'schema', 'stream', 'pronunciation', 'packaged-pronunciation', 'dictionary-context'].map((name) => readFileSync(`src/${name}.ts`, 'utf8')).join('\n'));
+const providerHash = sha(['model/provider', 'core/schema', 'core/stream', 'speech/pronunciation', 'speech/packaged-pronunciation', 'model/dictionary-context'].map((name) => readFileSync(`src/${name}.ts`, 'utf8')).join('\n'));
 writeFileSync(path.join(output, 'pipeline.json'), JSON.stringify({ sources: Object.fromEntries(
-  ['provider', 'schema', 'stream', 'pronunciation', 'packaged-pronunciation', 'dictionary-context'].map((name) => [`src/${name}.ts`, readFileSync(`src/${name}.ts`, 'utf8')])),
+  ['model/provider', 'core/schema', 'core/stream', 'speech/pronunciation', 'speech/packaged-pronunciation', 'model/dictionary-context'].map((name) => [`src/${name}.ts`, readFileSync(`src/${name}.ts`, 'utf8')])),
 }, null, 2) + '\n');
 const modelLabel = process.env.MODEL_LABEL ?? settings.model;
 writeFileSync(path.join(output, 'cases.json'), corpusText);

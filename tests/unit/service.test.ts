@@ -1,8 +1,8 @@
 import 'fake-indexeddb/auto';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { cacheKey, ResultCache } from '../../src/cache';
-import { TranslationService } from '../../src/service';
-import { defaults } from '../../src/schema';
+import { cacheKey, ResultCache } from '../../src/core/cache';
+import { TranslationService } from '../../src/model/service';
+import { defaults } from '../../src/core/schema';
 afterEach(() => vi.unstubAllGlobals());
 describe('输入框英文翻译的后台调度', () => {
   it('重复输入同一草稿也不读取或写入持久译文缓存，防止草稿留存和翻译方向混用', async () => {

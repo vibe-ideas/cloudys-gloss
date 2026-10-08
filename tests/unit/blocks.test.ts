@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { blockText, excludedElement, renderedSemanticText, semanticBlocks, semanticCandidates, semanticContext, semanticText, semanticTextSteps, splitText } from '../../src/blocks';
+import { blockText, excludedElement, renderedSemanticText, semanticBlocks, semanticCandidates, semanticContext, semanticText, semanticTextSteps, splitText } from '../../src/page/blocks';
 describe('全文翻译语义块提取', () => {
   beforeEach(() => { document.body.innerHTML = ''; });
   it.each([false, true])('扫描暂停后宿主删除当前位置（连同下一兄弟：%s），仍发现后续存活段落且不重复遍历先前子树', removeNext => {

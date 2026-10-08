@@ -26,6 +26,22 @@ WXT background → 输入 Zod 校验 → IndexedDB cache
 - **PDF**：独立扩展阅读页按需加载 PDF.js 和本地 worker，打开文件只解析原文；显式开启双语后复用同一 background 队列、流式接口和缓存。文件最大 40 MB；每次只渲染和提取当前页，三个画布合计上限 600 万物理像素，切页、关闭和取消均释放旧工作。几何提取、背景渲染与译文排版分层，普通页同坐标回填，不适合原位排版的几何采用阅读模式，可见性无法验证的绘制保留原稿且不发送提取文字；数值核对失败保留原稿，过长译文可展开。PDF.js 不进入普通网页内容脚本。
 - **词典扩展点**：`DictionaryProvider` 接口，可在后台组合本地词典与 LLM。IPA 通过 `PronunciationProvider` 从内置 US / UK 词典精确查询，缺失留空，多读音并列；发音使用浏览器 SpeechSynthesis，优先匹配本地 US / UK 系统语音。
 
+## 代码组织
+
+| 目录 | 职责 |
+| --- | --- |
+| `entrypoints/` | WXT 入口：background、content、popup、options（设置页组件）、pdf 阅读页 |
+| `src/core/` | 设置 Schema、消息、队列、缓存、流式解析、ID 等基础设施 |
+| `src/model/` | 模型 Provider、后台翻译服务、本地 MLX 管理与设置页服务卡片 |
+| `src/page/` | 网页语义块提取、翻译调度、译文排版与动效、组件提示、输入框翻译 |
+| `src/ui/` | 页内 Shadow DOM 界面：悬浮球、词卡，以及由共享色板生成的主题 |
+| `src/speech/` | 音标查询与系统发音 |
+| `src/pdf/` | PDF 链接识别、读取、几何提取、排版与渲染 |
+| `src/dictionaries/` | StarDict 离线词库的导入、存储、查询与设置界面 |
+| `src/styles/` | 扩展页面共享样式；`tokens.css` 是所有界面（含 Shadow DOM）的唯一色板 |
+
+依赖方向：`core` 不依赖其他目录；`model`、`page`、`speech`、`pdf`、`dictionaries` 只依赖 `core`（`page` 不依赖 `ui`）；`ui` 与 `entrypoints` 组装上述模块。
+
 全文关闭会移除扩展插入的节点，不重写或替换原文 HTML。SPA 中保留的段落沿用缓存，新增/变化的段落增量处理。第一版不遍历网页自身的 Shadow DOM、iframe 或虚拟化编辑器。
 
 首次划词立即展示浮层与加载态，完整 IPA / 释义在模型返回后展示；缓存命中更快。模型推理耗时取决于本地硬件与服务负载。

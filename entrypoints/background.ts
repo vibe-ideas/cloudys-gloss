@@ -2,11 +2,11 @@ import { defineBackground } from 'wxt/utils/define-background';
 import { browser } from 'wxt/browser';
 import { z } from 'zod';
 import { ImportedDictionaryStore } from '../src/dictionaries/store';
-import { defaults, RequestSchema, SettingsSchema, type Response } from '../src/schema';
-import { PackagedPronunciationDictionary } from '../src/packaged-pronunciation';
-import { NativeSpeech } from '../src/native-speech';
-import { TranslationService } from '../src/service';
-import { LocalModelManager, NATIVE_HOST, migrateManagedPreset } from '../src/local-model';
+import { defaults, RequestSchema, SettingsSchema, type Response } from '../src/core/schema';
+import { PackagedPronunciationDictionary } from '../src/speech/packaged-pronunciation';
+import { NativeSpeech } from '../src/speech/native-speech';
+import { TranslationService } from '../src/model/service';
+import { LocalModelManager, NATIVE_HOST, migrateManagedPreset } from '../src/model/local-model';
 
 export default defineBackground(() => {
   const dictionaries = new ImportedDictionaryStore();

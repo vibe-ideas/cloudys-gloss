@@ -51,4 +51,4 @@
 
 日常查询使用 IndexedDB 复合键索引，只读取少量匹配记录，不加载整本词库，也不占用模型并发队列。导入阶段会临时持有解压后的文件与批次数据，因此文件大小上限不是进程内存上限。解析器与 HTML 实体解码只进入设置页和后台，网页内容脚本只接收查询结果。
 
-校验代码：[stardict.ts](../../src/dictionaries/stardict.ts)；存储与发布：[store.ts](../../src/dictionaries/store.ts)；固定回归：[导入测试](../../tests/unit/imported-dictionary.test.ts)、[双浏览器测试](../../tests/e2e/dictionary-import.spec.ts)。
+校验代码：[stardict.ts](../../src/dictionaries/stardict.ts)；存储与发布：[store.ts](../../src/dictionaries/store.ts)；固定回归：[导入测试](../../tests/unit/imported-dictionary.test.ts)、[双浏览器测试](../../tests/e2e/settings/dictionary-import.spec.ts)。

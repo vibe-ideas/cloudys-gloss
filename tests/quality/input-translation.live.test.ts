@@ -3,8 +3,8 @@ import { createHash } from 'node:crypto';
 import { mkdirSync, readFileSync, writeFileSync, existsSync } from 'node:fs';
 import path from 'node:path';
 import { z } from 'zod';
-import { OpenAICompatibleProvider } from '../../src/provider';
-import { SettingsSchema } from '../../src/schema';
+import { OpenAICompatibleProvider } from '../../src/model/provider';
+import { SettingsSchema } from '../../src/core/schema';
 
 if (!process.env.MODEL_BASE_URL || !process.env.MODEL_NAME || !process.env.QUALITY_OUTPUT) throw new Error('输入框真实评测需要 MODEL_BASE_URL、MODEL_NAME、QUALITY_OUTPUT');
 const source = readFileSync('tests/quality/input-translation-cases.json', 'utf8');
@@ -15,7 +15,7 @@ if (existsSync(output)) throw new Error('结果已存在，请使用新 QUALITY_
 mkdirSync(path.dirname(output), { recursive: true });
 const rows: { id: string; title: string; source: string; translation?: string; elapsedMs: number; error?: string }[] = [];
 afterAll(() => writeFileSync(output, JSON.stringify({ date: new Date().toISOString(), model: settings.model, temperature: 0,
-  corpusHash: createHash('sha256').update(source).digest('hex'), providerHash: createHash('sha256').update(readFileSync('src/provider.ts')).digest('hex'),
+  corpusHash: createHash('sha256').update(source).digest('hex'), providerHash: createHash('sha256').update(readFileSync('src/model/provider.ts')).digest('hex'),
   method: 'OpenAICompatibleProvider.translateInput; no persistent result cache; lexical guards are not a semantic accuracy score.', rows }, null, 2) + '\n'));
 describe('真实模型将输入草稿翻译为英文', () => {
   test.each(cases)('$title', async item => {

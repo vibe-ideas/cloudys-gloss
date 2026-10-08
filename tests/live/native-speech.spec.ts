@@ -1,4 +1,4 @@
-import { test, expect } from '../e2e/fixtures';
+import { test, expect } from '../e2e/support/fixtures';
 
 test('Firefox macOS 词卡通过本地助手播放美式和英式发音，结束后恢复可播放状态', async ({ extension }) => {
   test.skip(process.platform !== 'darwin' || process.arch !== 'arm64', '需要已安装本地助手的 Apple Silicon macOS');

@@ -1,8 +1,8 @@
 import { describe, expect, it, vi } from 'vitest';
-import { placePopover, SelectionPopover, type DictionaryTransport } from '../../src/popover';
-import { FloatingControl } from '../../src/floating-control';
-import type { WordCard } from '../../src/schema';
-import type { WordSpeech } from '../../src/speech';
+import { placePopover, SelectionPopover, type DictionaryTransport } from '../../src/ui/popover';
+import { FloatingControl } from '../../src/ui/floating-control';
+import type { WordCard } from '../../src/core/schema';
+import type { WordSpeech } from '../../src/speech/speech';
 import type { LocalDefinition } from '../../src/dictionaries/store';
 
 function deferred<T>() {

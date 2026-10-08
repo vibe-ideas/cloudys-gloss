@@ -31,7 +31,7 @@
 
 ✅ 裁剪页不发送未经可见性确认的文字；扫描页显示原稿及 OCR 限制；被后绘白框覆盖的文字不出现在 UI 数据或请求中。
 
-技术审阅覆盖绘制操作校验、局部遮挡、取消代次、画布预算和读取边界。体验审阅覆盖真实桌面与窄屏截图、原稿入口、详情和缩放；稳定用例在 `tests/e2e/pdf-layout.spec.ts`、`tests/e2e/pdf.spec.ts`。
+技术审阅覆盖绘制操作校验、局部遮挡、取消代次、画布预算和读取边界。体验审阅覆盖真实桌面与窄屏截图、原稿入口、详情和缩放；稳定用例在 `tests/e2e/pdf/pdf-layout.spec.ts`、`tests/e2e/pdf/pdf.spec.ts`。
 
 Firefox 的扩展测试环境没有提供 `captureVisibleTab`，自动化输出明确的 unavailable 说明，不能将其当作截图。Firefox 的 DOM、几何、画布像素和交互断言完整运行；文档中的视觉截图来自 Chromium。
 

@@ -1,7 +1,7 @@
 import { createHash } from 'node:crypto';
 import { readFile, writeFile } from 'node:fs/promises';
 import { execFileSync } from 'node:child_process';
-import { test, expect } from '../e2e/fixtures';
+import { test, expect } from '../e2e/support/fixtures';
 
 // Download/hash-check the public snapshot with prepare-goldendict-research.py first.
 // The live suite is deliberately excluded from normal CI and never requires user dictionaries.

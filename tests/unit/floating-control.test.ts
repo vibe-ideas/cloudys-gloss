@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import { FloatingControl } from '../../src/floating-control';
+import { FloatingControl } from '../../src/ui/floating-control';
 
 const selector = '[data-cloudys-gloss="floating-control"]';
 describe('悬浮球实例交接', () => {

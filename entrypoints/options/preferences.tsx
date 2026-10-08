@@ -1,4 +1,4 @@
-import type { Settings } from '../../src/schema';
+import type { Settings } from '../../src/core/schema';
 import { Row } from './field';
 import type { SettingsForm } from './use-settings';
 

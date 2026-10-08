@@ -1,12 +1,12 @@
 import { defineContentScript } from 'wxt/utils/define-content-script';
 import { browser } from 'wxt/browser';
-import { send, cancel, translateStream } from '../src/messaging';
-import { PageTranslator } from '../src/translator';
-import { WordSpeaker } from '../src/speech';
-import { SelectionPopover } from '../src/popover';
-import { FloatingControl } from '../src/floating-control';
-import { InputTranslation } from '../src/input-translation';
-import type { Settings } from '../src/schema';
+import { send, cancel, translateStream } from '../src/core/messaging';
+import { PageTranslator } from '../src/page/translator';
+import { WordSpeaker } from '../src/speech/speech';
+import { SelectionPopover } from '../src/ui/popover';
+import { FloatingControl } from '../src/ui/floating-control';
+import { InputTranslation } from '../src/page/input-translation';
+import type { Settings } from '../src/core/schema';
 
 export default defineContentScript({
   matches: ['http://*/*', 'https://*/*'], runAt: 'document_idle',

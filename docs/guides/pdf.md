@@ -39,4 +39,4 @@
 
 本地文件由浏览器本机解析，文件本身不会上传。开启双语后，当前页提取的文字会发送到你配置的模型服务，译文进入扩展本地缓存。使用远程 API 时，这些文字会离开本机。在线 PDF 会直接向原地址下载，超时、超限或取消后停止读取。
 
-稳定回归用例位于 `tests/e2e/pdf.spec.ts`、`tests/e2e/pdf-layout.spec.ts`、`tests/e2e/pdf-retry.spec.ts`；下载、提取、渲染和排版测试位于 `tests/unit/pdf-*.test.ts`。技术选型与限制见 [PDF 原版式调研](../research/2026-10-05-pdf-layout.md)。
+稳定回归用例位于 `tests/e2e/pdf/pdf.spec.ts`、`tests/e2e/pdf/pdf-layout.spec.ts`、`tests/e2e/pdf/pdf-retry.spec.ts`；下载、提取、渲染和排版测试位于 `tests/unit/pdf-*.test.ts`。技术选型与限制见 [PDF 原版式调研](../research/2026-10-05-pdf-layout.md)。

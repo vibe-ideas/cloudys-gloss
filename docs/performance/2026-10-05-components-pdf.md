@@ -14,10 +14,10 @@
 ```sh
 pnpm build
 pnpm build:firefox
-pnpm exec playwright test tests/e2e/performance.spec.ts --repeat-each=3
+pnpm exec playwright test tests/e2e/performance/performance.spec.ts --repeat-each=3
 ```
 
-用例和页面在 [performance.spec.ts](../../tests/e2e/performance.spec.ts)、[performance-fixture.ts](../../tests/e2e/performance-fixture.ts)。首段显示时间从触发翻译前计时，到首段插入部分或完整译文；不是模型首 token 延迟。rAF 最大间隔覆盖开启、首段显示、跳到第 2000 张卡片、页尾译文显示的全过程。
+用例和页面在 [performance.spec.ts](../../tests/e2e/performance/performance.spec.ts)、[performance-fixture.ts](../../tests/e2e/performance/performance-fixture.ts)。首段显示时间从触发翻译前计时，到首段插入部分或完整译文；不是模型首 token 延迟。rAF 最大间隔覆盖开启、首段显示、跳到第 2000 张卡片、页尾译文显示的全过程。
 
 测试同时要求：首段正文在前 12 个请求文本内；首屏待处理占位少于 100 个；访问页头与页尾所请求的文本少于 120 块；离屏末段不能提前翻译；关闭后原有 DOM 完整恢复。这些断言不因采样波动放宽。
 

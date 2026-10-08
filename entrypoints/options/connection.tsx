@@ -1,5 +1,5 @@
 import { useRef, useState } from 'preact/hooks';
-import { defaults } from '../../src/schema';
+import { defaults } from '../../src/core/schema';
 import { Field } from './field';
 import type { SettingsForm } from './use-settings';
 

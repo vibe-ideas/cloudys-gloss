@@ -2,7 +2,7 @@ import { render } from 'preact';
 import { useEffect, useRef, useState } from 'preact/hooks';
 import { getDocument, PDFWorker, type PDFDocumentLoadingTask, type PDFDocumentProxy } from 'pdfjs-dist';
 import workerUrl from 'pdfjs-dist/build/pdf.worker.min.mjs?url';
-import { send } from '../../src/messaging';
+import { send } from '../../src/core/messaging';
 import { MAX_PDF_BYTES, pdfUrl, readPdfUrl, validatePdf } from '../../src/pdf/io';
 import { PdfPage, type PdfView } from './Page';
 import './style.css';

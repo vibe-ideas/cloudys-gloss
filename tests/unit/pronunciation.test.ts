@@ -2,7 +2,7 @@ import { describe, expect, it, vi } from 'vitest';
 import { readFileSync } from 'node:fs';
 import { createHash } from 'node:crypto';
 import { gzipSync } from 'node:zlib';
-import { OfflinePronunciationDictionary, type PronunciationDialect } from '../../src/pronunciation';
+import { OfflinePronunciationDictionary, type PronunciationDialect } from '../../src/speech/pronunciation';
 
 const signal = () => new AbortController().signal;
 const fixture = {

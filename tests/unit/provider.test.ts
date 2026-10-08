@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
-import { OpenAICompatibleProvider, completionUrl, type ProviderDiagnostic } from '../../src/provider';
-import { defaults } from '../../src/schema';
+import { OpenAICompatibleProvider, completionUrl, type ProviderDiagnostic } from '../../src/model/provider';
+import { defaults } from '../../src/core/schema';
 const signal = () => new AbortController().signal;
 const reply = (value: unknown) => new Response(JSON.stringify({ choices: [{ message: { content: JSON.stringify(value) } }] }));
 describe('OpenAI-compatible 模型请求', () => {

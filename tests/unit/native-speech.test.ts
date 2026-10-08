@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import { NativeSpeech } from '../../src/native-speech';
+import { NativeSpeech } from '../../src/speech/native-speech';
 
 const result = { ok: true, data: { audio: btoa('RIFF0000WAVE' + '\0'.repeat(40)), voice: 'Samantha' } };
 function player() {

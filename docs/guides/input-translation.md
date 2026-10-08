@@ -23,14 +23,14 @@
 ## 回归测试
 
 - [输入交互单测](../../tests/unit/input-translation.test.ts)：防误触、取消、迟到结果、失败保留原文和表单同步。
-- [Chrome / Firefox E2E](../../tests/e2e/input-translation.spec.ts)：真实扩展消息链路、原生撤销、富文本、Shadow DOM、失败重试和设置开关。
+- [Chrome / Firefox E2E](../../tests/e2e/settings/input-translation.spec.ts)：真实扩展消息链路、原生撤销、富文本、Shadow DOM、失败重试和设置开关。
 - [固定质量语料](../../tests/quality/input-translation-cases.json)与[本机实际输出](../../tests/quality/baselines/2026-10-09-input-translation/input-translation.json)：包含逐例耗时、语料和 provider 哈希。词面检查不等于语义评分。
 
 ```sh
 pnpm check
 pnpm build
 pnpm build:firefox
-pnpm exec playwright test tests/e2e/input-translation.spec.ts
+pnpm exec playwright test tests/e2e/settings/input-translation.spec.ts
 QUALITY_TASK=input MODEL_BASE_URL=http://127.0.0.1:8080/v1 \
   MODEL_NAME=Qwen/Qwen3-1.7B-MLX-4bit \
   QUALITY_OUTPUT=artifacts/input-quality-new pnpm test:quality

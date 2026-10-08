@@ -16,7 +16,7 @@ const root = resolve('artifacts/dictionary-research-2026-10-07');
 const destination = 'docs/performance/data/2026-10-07-dictionaries/browser-storage.json';
 const corpus = JSON.parse(await readFile('tests/performance/dictionary-tech-corpus.json', 'utf8'));
 const words = Object.values(corpus).flat().map(word => word.toLowerCase());
-const productionSource = await readFile('src/pronunciation.ts', 'utf8');
+const productionSource = await readFile('src/speech/pronunciation.ts', 'utf8');
 // Use the actual production binary search, not a faster research-only substitute.
 const lookupScript = ts.transpileModule(productionSource.replace(/^export /gm, '') + '\nwindow.dictionarySearch = findPronunciation;',
   { compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.None } }).outputText;

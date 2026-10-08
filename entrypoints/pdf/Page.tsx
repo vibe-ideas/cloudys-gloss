@@ -1,6 +1,6 @@
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'preact/hooks';
 import type { PDFDocumentProxy, PDFPageProxy } from 'pdfjs-dist';
-import { cancel, translateStream } from '../../src/messaging';
+import { cancel, translateStream } from '../../src/core/messaging';
 import { buildPdfLayout, type PdfLayout } from '../../src/pdf/layout';
 import { PdfPagePainter } from '../../src/pdf/render';
 import { pdfBatches } from '../../src/pdf/text';

@@ -1,8 +1,8 @@
 # PDF 原版式阅读性能记录
 
-日期：2026-10-05。本机 macOS，Playwright 1.63.0，PDF.js 固定 6.4.299。Chromium 生产扩展与 Firefox Developer Edition 独立临时配置；每个场景清空扩展缓存。模型为 `tests/e2e/server.ts` 的本地固定响应，不调用真实 MLX，因此下面不是模型 TPS，也不是网络或模型延迟预测。
+日期：2026-10-05。本机 macOS，Playwright 1.63.0，PDF.js 固定 6.4.299。Chromium 生产扩展与 Firefox Developer Edition 独立临时配置；每个场景清空扩展缓存。模型为 `tests/e2e/support/server.ts` 的本地固定响应，不调用真实 MLX，因此下面不是模型 TPS，也不是网络或模型延迟预测。
 
-输入是 `tests/e2e/pdf-layout-fixture.ts` 原创 4 页 PDF，首个报告页含 14 个提取块，其中 9 个翻译块、4 个数字块及 1 个邮箱块。每浏览器本轮记录 1 次完整通过的观测值，没有计算分位数或平均值。
+输入是 `tests/e2e/pdf/pdf-layout-fixture.ts` 原创 4 页 PDF，首个报告页含 14 个提取块，其中 9 个翻译块、4 个数字块及 1 个邮箱块。每浏览器本轮记录 1 次完整通过的观测值，没有计算分位数或平均值。
 
 | 指标 | Chromium | Firefox |
 | --- | ---: | ---: |
@@ -13,7 +13,7 @@
 | 译文覆盖区域外像素变化 | 0 | 0 |
 | 390px 测试三画布总像素 | 399,645 | 363,528 |
 
-计时通过轮询检测就绪，包含测试桥与轮询间隔，尤其 Firefox 与 Chromium 的驱动通道不同，不能把几十毫秒差异当作浏览器性能排名。首段显示后刻意暂停同批剩余输出，验证可边生成边阅读。JSON 证据见 [数据目录](data/2026-10-05-pdf-layout/)，可用 `pnpm exec playwright test tests/e2e/pdf-layout.spec.ts` 复测。
+计时通过轮询检测就绪，包含测试桥与轮询间隔，尤其 Firefox 与 Chromium 的驱动通道不同，不能把几十毫秒差异当作浏览器性能排名。首段显示后刻意暂停同批剩余输出，验证可边生成边阅读。JSON 证据见 [数据目录](data/2026-10-05-pdf-layout/)，可用 `pnpm exec playwright test tests/e2e/pdf/pdf-layout.spec.ts` 复测。
 
 渲染上限为三个画布合计 600 万物理像素，约 24 MB 原始 RGBA 缓冲；只维护当前页，切页取消请求并释放旧画布。该数字不包含 PDF 解析、字体、模型、GPU 副本或浏览器进程内存。本次未测 RSS，不声称大 PDF 总内存固定。
 

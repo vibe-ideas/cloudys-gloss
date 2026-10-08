@@ -1,7 +1,7 @@
 import { render } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
 import { browser } from 'wxt/browser';
-import { pdfReaderHash, pdfTabSource } from '../../src/pdf-link';
+import { pdfReaderHash, pdfTabSource } from '../../src/pdf/link';
 import '../../src/styles/popup.css';
 type Status = { enabled: boolean; translated: number; pending: number; error: string };
 type Pdf = ReturnType<typeof pdfTabSource>;

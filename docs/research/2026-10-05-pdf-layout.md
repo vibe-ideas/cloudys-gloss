@@ -18,7 +18,7 @@ BabelDOC 源码核对版本为 `38d3896dcde9b5a940c62cf5563cadea673a64d3`，查�
 
 隔离原型在 Chromium 与 Firefox 各运行 10 个场景。对普通彩底、表格、旋转 90°、UserUnit=2 和透明页面，过滤文字后的底图与手工制作的无字参考图逐像素一致。简单过滤在文字裁剪、Type3、图案文字和软蒙版中失败：分别出现 235,275、2,058、8,025、8,031 个不同像素。因此不能把删除 showText 当作通用去字算法。
 
-原型日志和截图保留在忽略目录 `artifacts/pdf-render-research/`，不把第三方源码或私人文件纳入产品。稳定验证维护在 `tests/unit/pdf-render.test.ts` 和 `tests/e2e/pdf-layout.spec.ts`。
+原型日志和截图保留在忽略目录 `artifacts/pdf-render-research/`，不把第三方源码或私人文件纳入产品。稳定验证维护在 `tests/unit/pdf-render.test.ts` 和 `tests/e2e/pdf/pdf-layout.spec.ts`。
 
 ## 实现
 

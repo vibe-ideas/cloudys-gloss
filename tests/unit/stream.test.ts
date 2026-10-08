@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
-import { readCompletionStream, TranslationStream } from '../../src/stream';
-import { OpenAICompatibleProvider } from '../../src/provider';
-import { defaults } from '../../src/schema';
+import { readCompletionStream, TranslationStream } from '../../src/core/stream';
+import { OpenAICompatibleProvider } from '../../src/model/provider';
+import { defaults } from '../../src/core/schema';
 const encoder = new TextEncoder();
 const frame = (content: string) => `data: ${JSON.stringify({ choices: [{ delta: { content } }] })}\r\n\r\n`;
 describe('模型流式翻译', () => {

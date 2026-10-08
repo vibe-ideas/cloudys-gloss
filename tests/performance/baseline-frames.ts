@@ -1,7 +1,7 @@
 import { chromium, firefox } from '@playwright/test';
 import { existsSync } from 'node:fs';
 import { mkdir, writeFile } from 'node:fs/promises';
-import { componentPerformanceFixture } from '../e2e/performance-fixture.ts';
+import { componentPerformanceFixture } from '../e2e/performance/performance-fixture.ts';
 
 // Diagnostic control for performance.spec.ts: same card markup and viewport,
 // with no extension or model requests. Run independently of other test jobs.

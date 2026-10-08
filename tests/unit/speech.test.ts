@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { WordSpeaker } from '../../src/speech';
+import { WordSpeaker } from '../../src/speech/speech';
 
 afterEach(() => vi.unstubAllGlobals());
 describe('单词卡发音', () => {

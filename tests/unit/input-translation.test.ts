@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { InputTranslation } from '../../src/input-translation';
+import { InputTranslation } from '../../src/page/input-translation';
 
 let controller: InputTranslation;
 afterEach(() => { controller?.destroy(); document.body.replaceChildren(); vi.restoreAllMocks(); });

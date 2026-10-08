@@ -1,10 +1,10 @@
 import 'fake-indexeddb/auto';
 import { existsSync, mkdirSync, readFileSync, writeFileSync, appendFileSync } from 'node:fs';
-import { resolve } from 'node:path';
+import { basename, resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
-import { TranslationService } from '../../src/service';
-import { ResultCache } from '../../src/cache';
-import { defaults } from '../../src/schema';
+import { TranslationService } from '../../src/model/service';
+import { ResultCache } from '../../src/core/cache';
+import { defaults } from '../../src/core/schema';
 
 // Real local inference, identical workloads, alternating before/after order.
 // IndexedDB is emulated here: this measures the background service, not browser rendering.
@@ -14,11 +14,11 @@ if (!output || existsSync(output) || !baseline) throw new Error('Set fresh BENCH
 const baseUrl = process.env.MODEL_BASE_URL ?? defaults.baseUrl;
 if (!['127.0.0.1', 'localhost'].includes(new URL(baseUrl).hostname)) throw new Error('Local model endpoint required');
 mkdirSync(output, { recursive: true });
-const before = await import(pathToFileURL(resolve(baseline, 'service.ts')).href) as typeof import('../../src/service');
+const before = await import(pathToFileURL(resolve(baseline, 'service.ts')).href) as typeof import('../../src/model/service');
 const settings = { ...defaults, baseUrl, model: process.env.MODEL_NAME ?? defaults.model, concurrency: 1 };
-const sourceFiles = ['service.ts', 'queue.ts', 'cache.ts', 'provider.ts', 'schema.ts', 'stream.ts', 'dictionary-context.ts', 'pronunciation.ts'];
+const sourceFiles = ['model/service.ts', 'core/queue.ts', 'core/cache.ts', 'model/provider.ts', 'core/schema.ts', 'core/stream.ts', 'model/dictionary-context.ts', 'speech/pronunciation.ts'];
 writeFileSync(`${output}/pipelines.json`, JSON.stringify(Object.fromEntries([['before', baseline], ['after', 'src']].map(([name, dir]) =>
-  [name, Object.fromEntries(sourceFiles.map((file) => [file, readFileSync(resolve(dir!, file), 'utf8')]))])), null, 2));
+  [name, Object.fromEntries(sourceFiles.map((file) => [basename(file), readFileSync(resolve(dir!, name === 'before' ? basename(file) : file), 'utf8')]))])), null, 2));
 writeFileSync(`${output}/metadata.json`, JSON.stringify({ date: new Date().toISOString(), settings: { ...settings, apiKey: undefined },
   order: ['before', 'after', 'after', 'before'], cache: 'fresh emulated IndexedDB per workload; server prompt cache unchanged',
   scope: 'service completion and request counts, no browser rendering; synthetic public corpus; 2 repetitions per version' }, null, 2));

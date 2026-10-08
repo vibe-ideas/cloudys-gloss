@@ -5,8 +5,8 @@ import { tmpdir } from 'node:os';
 import { resolve } from 'node:path';
 import { createHash } from 'node:crypto';
 import { gzipSync } from 'node:zlib';
-import { PackagedPronunciationDictionary } from '../../src/packaged-pronunciation';
-import { OfflinePronunciationDictionary } from '../../src/pronunciation';
+import { PackagedPronunciationDictionary } from '../../src/speech/packaged-pronunciation';
+import { OfflinePronunciationDictionary } from '../../src/speech/pronunciation';
 import { generateDictionaryAssets } from '../../scripts/dictionary-assets';
 
 const signal = () => new AbortController().signal;

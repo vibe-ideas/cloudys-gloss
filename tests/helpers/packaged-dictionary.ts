@@ -1,7 +1,7 @@
 import { readFile, mkdir } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import { generateDictionaryAssets } from '../../scripts/dictionary-assets';
-import { PackagedPronunciationDictionary } from '../../src/packaged-pronunciation';
+import { PackagedPronunciationDictionary } from '../../src/speech/packaged-pronunciation';
 
 /** Test the same packaged data and reader used by background, never test-only IPA answers. */
 export async function packagedDictionary() {

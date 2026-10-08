@@ -3,8 +3,8 @@ import { mkdirSync, openSync, closeSync, writeFileSync, appendFileSync, existsSy
 import { homedir, cpus, totalmem, release } from 'node:os';
 import path from 'node:path';
 import { setTimeout as delay } from 'node:timers/promises';
-import { OpenAICompatibleProvider } from '../../src/provider';
-import { SettingsSchema } from '../../src/schema';
+import { OpenAICompatibleProvider } from '../../src/model/provider';
+import { SettingsSchema } from '../../src/core/schema';
 
 // Benchmarks the actual provider, including streamed paragraphs, validation and retries.
 // No extension result cache. Only one backend runs at a time. See report for quantization caveats.

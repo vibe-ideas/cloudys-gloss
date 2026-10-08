@@ -49,7 +49,7 @@
 pnpm check
 pnpm build
 pnpm build:firefox
-pnpm exec playwright test tests/e2e/dictionary-import.spec.ts tests/e2e/dictionary-preview.spec.ts tests/e2e/extension.spec.ts --reporter=list
+pnpm exec playwright test tests/e2e/settings/dictionary-import.spec.ts tests/e2e/settings/dictionary-preview.spec.ts tests/e2e/reading/extension.spec.ts --reporter=list
 
 # 下载校验过的公开词库；与用户自有词库无关
 python3 tests/performance/prepare-goldendict-research.py --download

@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
-import { dictionaryExample } from '../../src/dictionary-context';
-import { OpenAICompatibleProvider } from '../../src/provider';
-import { defaults } from '../../src/schema';
+import { dictionaryExample } from '../../src/model/dictionary-context';
+import { OpenAICompatibleProvider } from '../../src/model/provider';
+import { defaults } from '../../src/core/schema';
 
 describe('词卡从上下文选择真实例句', () => {
   it('上下文只有一个含所选词的短句时保留完整原句及标点', () => {

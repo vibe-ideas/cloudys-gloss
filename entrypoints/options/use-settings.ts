@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'preact/hooks';
-import { defaults, SettingsSchema, type Settings } from '../../src/schema';
-import { send } from '../../src/messaging';
+import { defaults, SettingsSchema, type Settings } from '../../src/core/schema';
+import { send } from '../../src/core/messaging';
 
 export type Notice = { text: string; error: boolean };
 export type SettingsForm = ReturnType<typeof useSettings>;

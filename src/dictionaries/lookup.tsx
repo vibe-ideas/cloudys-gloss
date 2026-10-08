@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'preact/hooks';
-import { send } from '../messaging';
+import { send } from '../core/messaging';
 import type { LocalDefinition } from './store';
 
 /** Try a word against enabled dictionaries. `version` changes whenever the library changes, which clears stale results. */

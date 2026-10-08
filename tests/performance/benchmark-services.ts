@@ -1,8 +1,8 @@
 import { mkdirSync, readFileSync, writeFileSync, appendFileSync, existsSync } from 'node:fs';
 import { cpus } from 'node:os';
 import { packagedDictionary } from '../helpers/packaged-dictionary';
-import { OpenAICompatibleProvider, type ProviderDiagnostic } from '../../src/provider';
-import { SettingsSchema } from '../../src/schema';
+import { OpenAICompatibleProvider, type ProviderDiagnostic } from '../../src/model/provider';
+import { SettingsSchema } from '../../src/core/schema';
 
 // Compare already-running local services, without starting or stopping any process.
 const services = JSON.parse(process.env.BENCH_SERVICES ?? '[]') as { name: string; baseUrl: string }[];

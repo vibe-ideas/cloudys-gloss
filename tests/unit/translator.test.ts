@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { PageTranslator } from '../../src/translator';
+import { PageTranslator } from '../../src/page/translator';
 let observers: IntersectionObserverCallback[];
 type ObserverRecord = { callback: IntersectionObserverCallback; options?: IntersectionObserverInit; targets: Set<Element>; disconnected: boolean };
 let observerRecords: ObserverRecord[];
@@ -23,7 +23,7 @@ const intersect = (observer: ObserverRecord, elements: Element[], isIntersecting
 describe('双语阅读生命周期', () => {
   it('视口内正文发可见优先级，附近预取发低优先级，仍最多同时请求两批', async () => {
     document.body.innerHTML = '<p>Visible first.</p><p>Visible second.</p><p>Nearby third.</p><p>Nearby fourth.</p>';
-    const translate = vi.fn<import('../../src/translator').TranslationTransport['translate']>(() => new Promise(() => {}));
+    const translate = vi.fn<import('../../src/page/translator').TranslationTransport['translate']>(() => new Promise(() => {}));
     const translator = new PageTranslator({ translate, cancel: vi.fn() }); translator.start();
     const paragraphs = [...document.querySelectorAll('p')];
     intersect(observerRecords[0]!, paragraphs, true); intersect(observerRecords[1]!, paragraphs.slice(0, 2), true);
@@ -38,7 +38,7 @@ describe('双语阅读生命周期', () => {
     document.body.innerHTML = Array.from({ length: 8 }, (_, i) => `<p>Paragraph ${i}.</p>`).join('');
     const visibility = vi.spyOn(document, 'visibilityState', 'get').mockReturnValue('visible');
     const finish: (() => void)[] = [];
-    const translate = vi.fn<import('../../src/translator').TranslationTransport['translate']>((_id, texts) => new Promise(resolve => finish.push(() => resolve(texts.map(text => `译文：${text}`)))));
+    const translate = vi.fn<import('../../src/page/translator').TranslationTransport['translate']>((_id, texts) => new Promise(resolve => finish.push(() => resolve(texts.map(text => `译文：${text}`)))));
     const cancel = vi.fn(); const translator = new PageTranslator({ translate, cancel });
     try {
       translator.start(); visible(); await vi.waitFor(() => expect(translate).toHaveBeenCalledTimes(2));
@@ -53,7 +53,7 @@ describe('双语阅读生命周期', () => {
   });
   it('页面隐藏时新增段落不扫描也不请求，切回只扫描新增区域并保留原有译文', async () => {
     const visibility = vi.spyOn(document, 'visibilityState', 'get').mockReturnValue('visible');
-    const translate = vi.fn<import('../../src/translator').TranslationTransport['translate']>(async (_id, texts) => texts.map(text => `译文：${text}`));
+    const translate = vi.fn<import('../../src/page/translator').TranslationTransport['translate']>(async (_id, texts) => texts.map(text => `译文：${text}`));
     const translator = new PageTranslator({ translate, cancel: vi.fn() });
     const scan = vi.spyOn(document, 'createTreeWalker');
     try {
@@ -431,7 +431,7 @@ describe('双语阅读生命周期', () => {
     translator.stop();
   });
   it('网页各段保留各自错误，单段重试绕过缓存且再次失败保留成功译文，不重新扫描全文', async () => {
-    const translate = vi.fn<import('../../src/translator').TranslationTransport['translate']>()
+    const translate = vi.fn<import('../../src/page/translator').TranslationTransport['translate']>()
       .mockRejectedValueOnce(new Error('HTTP 503 服务不可用'))
       .mockResolvedValueOnce(['新的第一段译文'])
       .mockRejectedValueOnce(new Error('HTTP 429 请求过多'));
@@ -457,7 +457,7 @@ describe('双语阅读生命周期', () => {
   });
   it('长段落重新翻译按两块以内分批，全部成功才替换旧译文，不重复请求其他段落', async () => {
     document.body.innerHTML = `<p>${'A long sentence for careful reading. '.repeat(70)}</p><p>Other paragraph.</p>`;
-    const translate = vi.fn<import('../../src/translator').TranslationTransport['translate']>(async (_id, texts) => texts.map(text => `旧译文：${text}`));
+    const translate = vi.fn<import('../../src/page/translator').TranslationTransport['translate']>(async (_id, texts) => texts.map(text => `旧译文：${text}`));
     const translator = new PageTranslator({ translate, cancel: vi.fn() }); translator.start(); await vi.waitFor(() => expect(observed.size).toBe(2)); visible();
     await vi.waitFor(() => expect(translator.status.translated).toBe(2));
     const first = document.querySelector<HTMLElement>('p [data-cloudys-gloss]')!; const previous = first.textContent;
@@ -481,7 +481,7 @@ describe('双语阅读生命周期', () => {
   it('长段重翻在切出标签页后暂停下一批，切回续接已完成片段并一次替换旧译文', async () => {
     document.body.innerHTML = `<p>${'A long sentence for careful reading. '.repeat(70)}</p>`;
     const visibility = vi.spyOn(document, 'visibilityState', 'get').mockReturnValue('visible');
-    const translate = vi.fn<import('../../src/translator').TranslationTransport['translate']>(async (_id, texts) => texts.map(() => '旧译文'));
+    const translate = vi.fn<import('../../src/page/translator').TranslationTransport['translate']>(async (_id, texts) => texts.map(() => '旧译文'));
     const translator = new PageTranslator({ translate, cancel: vi.fn() });
     try {
       translator.start(); await vi.waitFor(() => expect(observed.size).toBe(1)); visible();
@@ -504,7 +504,7 @@ describe('双语阅读生命周期', () => {
   it('网页同时重试三段仍最多占用两个请求，关闭翻译取消运行请求且迟到结果不恢复译文', async () => {
     document.body.innerHTML = '<p>First paragraph.</p><p>Second paragraph.</p><p>Third paragraph.</p>';
     const original = document.body.innerHTML;
-    const translate = vi.fn<import('../../src/translator').TranslationTransport['translate']>(async (_id, texts) => texts.map(text => `译文：${text}`));
+    const translate = vi.fn<import('../../src/page/translator').TranslationTransport['translate']>(async (_id, texts) => texts.map(text => `译文：${text}`));
     const cancel = vi.fn(); const translator = new PageTranslator({ translate, cancel }); translator.start(); visible();
     await vi.waitFor(() => expect(translator.status.translated).toBe(3));
     const finish: (() => void)[] = [];

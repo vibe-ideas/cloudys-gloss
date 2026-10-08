@@ -18,6 +18,6 @@
 
 [390px 窄屏截图](images/bilingual-mobile.png)
 
-回归入口：`tests/e2e/reading-design.spec.ts` 与 `tests/e2e/component-design.spec.ts`，覆盖正文排版、组件译文、受限控件提示、浅深颜色、宿主 CSS 污染、文章链接、主题切换、窄屏无横向溢出与完整恢复。Firefox 出现垂直滚动条时可用宽度会自然变窄，测试按页面实际宽度验收。
+回归入口：`tests/e2e/reading/reading-design.spec.ts` 与 `tests/e2e/layout/component-design.spec.ts`，覆盖正文排版、组件译文、受限控件提示、浅深颜色、宿主 CSS 污染、文章链接、主题切换、窄屏无横向溢出与完整恢复。Firefox 出现垂直滚动条时可用宽度会自然变窄，测试按页面实际宽度验收。
 
 进一步的多站点实测、布局用例和设计师复核见 [多样化网页体验回归](2026-10-05-diverse-web-ux.md)。页面仍使用原有模型与缓存，本次不重评翻译语义质量。

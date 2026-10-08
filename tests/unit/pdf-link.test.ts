@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { pdfReaderHash, pdfTabSource } from '../../src/pdf-link';
+import { pdfReaderHash, pdfTabSource } from '../../src/pdf/link';
 
 describe('PDF 阅读入口', () => {
   it('当前页是在线 PDF 或带 PDF 格式参数的下载时预填原始地址，本地文件要求用户选择', () => {

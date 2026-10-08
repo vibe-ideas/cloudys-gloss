@@ -1,7 +1,7 @@
 import 'fake-indexeddb/auto';
 import { describe, expect, it, vi } from 'vitest';
-import { ConcurrencyQueue } from '../../src/queue';
-import { ResultCache } from '../../src/cache';
+import { ConcurrencyQueue } from '../../src/core/queue';
+import { ResultCache } from '../../src/core/cache';
 describe('后台并发与本地缓存', () => {
   it('并发限制为 1 时等待中的请求不会提前执行且可以取消', async () => {
     const queue = new ConcurrencyQueue(1); const controller = new AbortController();

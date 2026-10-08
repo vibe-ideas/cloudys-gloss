@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { LocalModelManager, migrateManagedPreset } from '../../src/local-model';
-import { defaults } from '../../src/schema';
+import { LocalModelManager, migrateManagedPreset } from '../../src/model/local-model';
+import { defaults } from '../../src/core/schema';
 
 const state = { installed: true, running: true, autostart: false, model: defaults.model, baseUrl: defaults.baseUrl };
 afterEach(() => vi.unstubAllGlobals());

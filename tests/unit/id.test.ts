@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { createId } from '../../src/id';
+import { createId } from '../../src/core/id';
 
 afterEach(() => vi.unstubAllGlobals());
 

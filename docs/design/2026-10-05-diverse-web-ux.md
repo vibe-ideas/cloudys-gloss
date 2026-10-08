@@ -23,12 +23,12 @@
 
 | 体验问题 | 修复 | 回归入口 |
 | --- | --- | --- |
-| 固定高度卡片裁字、网格卡片覆盖下一行 | 新增译文溢出时允许正常流容器增长，普通自动排列网格按内容撑开 | `tests/e2e/layout-design.spec.ts`、`diverse-layout.spec.ts` |
+| 固定高度卡片裁字、网格卡片覆盖下一行 | 新增译文溢出时允许正常流容器增长，普通自动排列网格按内容撑开 | `tests/e2e/layout/layout-design.spec.ts`、`diverse-layout.spec.ts` |
 | 关闭翻译误还原网页的新样式 | 记录宿主在会话中的更新，跟踪相关祖先尺寸，恢复时保留最新高度和颜色 | `layout-design.spec.ts` 的“网页在翻译期间更新卡片高度后…” |
 | 巨型展示标题下面出现小号灰字 | 插入前识别大号主要子元素的字体和颜色，中文标题最高 28px | `layout-design.spec.ts` |
-| 控件、多链接导航与隐藏辅助文字产生孤立译文 | 排除操作控件、搜索区和工具条；仅对附近语义块检查样式隐藏和读屏裁剪 | `tests/e2e/auxiliary.spec.ts`、`tests/unit/blocks.test.ts` |
+| 控件、多链接导航与隐藏辅助文字产生孤立译文 | 排除操作控件、搜索区和工具条；仅对附近语义块检查样式隐藏和读屏裁剪 | `tests/e2e/layout/auxiliary.spec.ts`、`tests/unit/blocks.test.ts` |
 | 内部滚动面板被撑高或末段一直等待 | 保留滚动壳尺寸，共享容器 IO 提前处理附近段落，并以外层可见性门控 | `diverse-layout.spec.ts`、`tests/unit/translator.test.ts` |
-| 小窗口词卡遮选区、窗口重排后离开原词 | 依据实时 Range 避让，空间不足时限制高度并在卡内滚动 | `tests/e2e/interaction-design.spec.ts` |
+| 小窗口词卡遮选区、窗口重排后离开原词 | 依据实时 Range 避让，空间不足时限制高度并在卡内滚动 | `tests/e2e/reading/interaction-design.spec.ts` |
 | 网页拦截事件导致菜单无法关闭、Esc 抢焦点 | 捕获阶段处理外部点击；仅在菜单内部有焦点时将其还给入口 | `interaction-design.spec.ts`、`extension.spec.ts` |
 
 原有 2000 段大页面、渐进返回、缓存、取消任务、SPA 增量处理、主题和减少动态效果测试继续执行。首次提取保持分片；只测量附近待翻译块及已跟踪的相关祖先；布局更新由共享 ResizeObserver 与帧回调合并，不重复扫描全页。
