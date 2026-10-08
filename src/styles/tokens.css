@@ -1,10 +1,11 @@
-/* Shared design tokens for extension pages (settings, popup, PDF reader).
- * In-page UI lives in shadow roots and keeps its own scoped palette. */
+/* Single palette for every surface. Extension pages read :root directly; in-page
+ * shadow UI (floating control, word card) reuses these blocks via src/ui/theme.ts,
+ * which expects exactly two :root blocks: light first, then dark. */
 :root {
   color-scheme: light dark;
   --font: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   --mono: ui-monospace, SFMono-Regular, Menlo, monospace;
-  --bg: #f5f4f9; --fg: #29263c; --card: #fff; --field: #fcfbfe;
+  --bg: #f5f4f9; --fg: #29263c; --card: #fff; --field: #f6f5fa;
   --line: #e9e6f0; --muted: #787386; --hover: #8970e514; --tint: #efeafc;
   --accent: #7257d6; --accent-solid: #7257d6; --accent-strong: #6245c7; --focus: #a591ef;
   --error: #b5405a; --error-tint: #fbeef1; --success: #2e8a58; --warn: #a96b12;

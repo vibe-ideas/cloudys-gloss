@@ -1,4 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
+import { readFileSync } from 'node:fs';
 import { placePopover, SelectionPopover, type DictionaryTransport } from '../../src/ui/popover';
 import { FloatingControl } from '../../src/ui/floating-control';
 import type { WordCard } from '../../src/core/schema';
@@ -236,4 +237,38 @@ it('悬浮菜单打开后用户已返回网页输入，按Esc关闭菜单时保�
     input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
     expect(shadow.querySelector('.menu')).toBeNull(); expect(document.activeElement).toBe(input);
   } finally { control.destroy(); }
+});
+
+describe('页内组件共用设置页色板', () => {
+  const tokens = readFileSync('src/styles/tokens.css', 'utf8');
+  const [lightAccent, darkAccent] = [...tokens.matchAll(/--accent:\s*([^;]+);/g)].map(match => match[1]);
+  // Variables come from the stylesheet or from inline styles the component sets while open.
+  const undefinedVars = (root: ShadowRoot) => {
+    const style = root.querySelector('style')!.textContent!;
+    const inline = [...root.querySelectorAll<HTMLElement>('[style]')].map(element => element.getAttribute('style')).join(';');
+    const defined = new Set([...`${style};${inline}`.matchAll(/(--[\w-]+)\s*:/g)].map(match => match[1]));
+    return [...new Set([...style.matchAll(/var\((--[\w-]+)/g)].map(match => match[1]))].filter(name => !defined.has(name));
+  };
+  it('悬浮球的浅色、深色和跟随系统主题都取自 tokens.css，且引用的变量均有定义', () => {
+    const control = new FloatingControl(vi.fn(), vi.fn());
+    try {
+      const root = document.querySelector('[data-cloudys-gloss="floating-control"]')!.shadowRoot!;
+      const style = root.querySelector('style')!.textContent!;
+      root.querySelector<HTMLButtonElement>('.more')!.click();
+      expect(style).toMatch(new RegExp(`\\.dock\\{[^}]*--accent: ${lightAccent}`));
+      expect(style).toMatch(new RegExp(`\\.dock\\.dark\\{[^}]*--accent: ${darkAccent}`));
+      expect(style).toMatch(new RegExp(`prefers-color-scheme:dark\\)\\{\\.dock\\.system\\{[^}]*--accent: ${darkAccent}`));
+      expect(style).not.toMatch(/\.dock\{[^}]*color-scheme/);
+      expect(root.querySelector('.menu')).not.toBeNull(); expect(undefinedVars(root)).toEqual([]);
+    } finally { control.destroy(); }
+  });
+  it('词卡与悬浮球使用同一色板，引用的变量均有定义', async () => {
+    const popover = new SelectionPopover({ lookup: async (_id, word) => ({ ...cloudyCard, word }), cancel: vi.fn() });
+    try {
+      const root = await selectAndOpen('cloudy'); const style = root.querySelector('style')!.textContent!;
+      expect(style).toMatch(new RegExp(`\\.panel\\{[^}]*--accent: ${lightAccent}`));
+      expect(style).toMatch(new RegExp(`\\.panel\\.dark\\{[^}]*--accent: ${darkAccent}`));
+      expect(undefinedVars(root)).toEqual([]);
+    } finally { popover.destroy(); window.getSelection()!.removeAllRanges(); }
+  });
 });
