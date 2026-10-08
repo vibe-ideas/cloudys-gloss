@@ -28,7 +28,7 @@ function Options() {
     <form onSubmit={(event) => { event.preventDefault(); void perform('save'); }}>
       <section class="card"><h2>模型连接</h2><p class="muted">所有模型请求均由扩展后台发起。选择预设，或连接自己的兼容服务。</p>
         <div class="presets">
-          <button type="button" onClick={() => setSettings({ ...defaults, theme: settings.theme })}>mlx-serve · 默认</button>
+          <button type="button" onClick={() => setSettings({ ...defaults, theme: settings.theme, inputTranslation: settings.inputTranslation })}>mlx-serve · 默认</button>
           <button type="button" onClick={() => setSettings({ ...settings, baseUrl: 'http://localhost:11434/v1', model: 'qwen2.5:7b' })}>Ollama</button>
           <span class="muted" style={{ padding: '9px 4px', fontSize: 12 }}>Magpie / 其他兼容服务：填写下方地址</span>
         </div>
@@ -41,6 +41,7 @@ function Options() {
           <label>Timeout（毫秒）<input name="timeout" type="number" min="1000" max="300000" step="1000" value={settings.timeout} onInput={(event) => update('timeout', event.currentTarget.valueAsNumber)} /></label>
           <label>Concurrency<input name="concurrency" type="number" min="1" max="8" step="1" value={settings.concurrency} onInput={(event) => update('concurrency', event.currentTarget.valueAsNumber)} /><small>本地模型建议 1–2，所有页面共享并发上限。</small></label>
           <label>词卡外观<select name="theme" value={settings.theme} onChange={(event) => update('theme', event.currentTarget.value as Settings['theme'])}><option value="system">跟随系统</option><option value="light">Light · 浅色</option><option value="dark">Dark · 深色</option></select></label>
+          <label class="full">输入框快捷翻译<select name="inputTranslation" value={String(settings.inputTranslation)} onChange={(event) => update('inputTranslation', event.currentTarget.value === 'true')}><option value="true">开启 · 连按四下空格翻译为英文</option><option value="false">关闭</option></select><small>翻译当前输入框全部文字，完成后替换，可撤销。继续编辑或按 Esc 取消；长按和输入法选词不触发。保存后立即生效。</small></label>
           <label class="full">本地模型按需启动<select name="autoStartLocalModel" value={String(settings.autoStartLocalModel)} onChange={(event) => update('autoStartLocalModel', event.currentTarget.value === 'true')}><option value="true">开启 · 翻译时自动启动 MLX</option><option value="false">关闭 · 仅手动启动</option></select><small>仅针对 8080 端口上的默认 MLX 模型。命中缓存时不会启动；冷启动完成后自动继续翻译。</small></label>
         </div>
         <div class="actions"><button class="primary" disabled={busy || !ready} type="submit">保存设置</button><button type="button" disabled={busy || !ready} onClick={() => void perform('test')}>测试连接</button></div>
@@ -50,7 +51,7 @@ function Options() {
     <ModelControls />
     <DictionarySettings />
     <section class="card"><h2>留在本地的阅读记忆</h2><p class="muted">译文和词卡缓存在当前浏览器，最多 1,500 条，30 天过期。模型、地址或温度变更后自动使用独立缓存。</p><button disabled={busy || !ready} onClick={() => void perform('clear')}>清空缓存</button></section>
-    <p class="footer">只有开启翻译或划词时，相关文本才会发送到你配置的服务。<br />API Key 保存在本机扩展存储中，不同步到云端。音标来自内置离线词典，缺失时留空；多读音会并列显示。发音使用浏览器系统语音。</p>
+    <p class="footer">开启翻译、确认划词翻译或在输入框连按四下空格时，相关文本会发送到你配置的服务。输入框草稿不写入译文缓存。<br />API Key 保存在本机扩展存储中，不同步到云端。音标来自内置离线词典，缺失时留空；多读音会并列显示。发音使用浏览器系统语音。</p>
   </main>;
 }
 render(<Options />, document.getElementById('app')!);

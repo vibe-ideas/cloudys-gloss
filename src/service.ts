@@ -133,6 +133,19 @@ export class TranslationService {
     signal.throwIfAborted();
     return texts.map((text) => results.get(text)!);
   }
+  async translateInput(settings: Settings, text: string, signal: AbortSignal) {
+    this.queue.setLimit(settings.concurrency);
+    // Drafts are transient: share the interactive queue but never persist them
+    // in the page-translation cache or reuse a Chinese translation for English.
+    return this.queue.run(async () => {
+      signal.throwIfAborted();
+      await this.ensureModel(settings, signal);
+      signal.throwIfAborted();
+      const result = await new OpenAICompatibleProvider(settings).translateInput(text, signal);
+      signal.throwIfAborted();
+      return result;
+    }, signal, 'interactive');
+  }
   async dictionary(settings: Settings, word: string, context: string, signal: AbortSignal) {
     this.queue.setLimit(settings.concurrency);
     const key = await this.key(settings, 'dictionary-v2', [word, context]);

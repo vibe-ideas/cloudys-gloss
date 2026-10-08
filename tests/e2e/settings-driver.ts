@@ -6,6 +6,10 @@ export class SettingsDriver {
     if (this.page) await this.page.locator(`[name="${name}"]`).fill(value);
     else await this.control!('fill', [name, value]);
   }
+  async select(name: string, value: string) {
+    if (this.page) await this.page.locator(`[name="${name}"]`).selectOption(value);
+    else await this.control!('select', [name, value]);
+  }
   async click(name: string) {
     if (this.page) await this.page.getByRole('button', { name, exact: true }).click();
     else await this.control!('click', [name]);

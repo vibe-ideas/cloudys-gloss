@@ -12,6 +12,7 @@ export const SettingsSchema = z.object({
   concurrency: z.number().int().min(1).max(8).default(2),
   theme: z.enum(['system', 'light', 'dark']).default('system'),
   autoStartLocalModel: z.boolean().default(true),
+  inputTranslation: z.boolean().default(true),
 });
 export type Settings = z.infer<typeof SettingsSchema>;
 export const defaults: Settings = SettingsSchema.parse({
@@ -34,6 +35,7 @@ export const TranslationSchema = z.object({ translations: z.array(z.string().min
 
 const requestId = z.string().min(1).max(100);
 export const RequestSchema = z.discriminatedUnion('type', [
+  z.object({ type: z.literal('input:translate'), id: requestId, text: z.string().trim().min(1).max(12000) }),
   z.object({ type: z.literal('translate'), id: requestId, priority: z.enum(['interactive', 'visible', 'prefetch']).optional(), bypassCache: z.boolean().optional(), texts: z.array(z.string().min(1).max(12000)).min(1).max(16) }),
   z.object({ type: z.literal('dictionary'), id: requestId, word: z.string().min(1).max(200), context: z.string().max(3000) }),
   z.object({ type: z.literal('pronunciation'), id: requestId, word: z.string().trim().min(1).max(200) }),

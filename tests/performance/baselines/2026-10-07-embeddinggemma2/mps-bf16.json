@@ -1,0 +1,6611 @@
+{
+  "date": "2026-10-07T13:38:31.695581+00:00",
+  "model": "google/embeddinggemma-2",
+  "revision": "914f7f89142e33e77833254d9c9b90c3cef7303b",
+  "device": "mps",
+  "dtype": "bfloat16",
+  "system": "macOS-27.0.1-arm64-arm-64bit",
+  "machine": "arm64",
+  "torch_cpu_threads": 4,
+  "fixture_sha256": "d5c8a166267337ddea188de6918a3a5832bb81f4b15c025db4e9a602872e4a12",
+  "corpus_count": 48,
+  "query_count": 48,
+  "versions": {
+    "sentence-transformers": "6.1.0",
+    "transformers": "5.19.0",
+    "torch": "2.14.1",
+    "numpy": "2.5.3",
+    "psutil": "7.2.2",
+    "huggingface-hub": "1.33.0"
+  },
+  "prompts": {
+    "search": "task: search result | query: ",
+    "code": "task: code retrieval | query: ",
+    "document": "title: {title} | text: {content}"
+  },
+  "active_parameters": 271002624,
+  "active_parameter_bytes": 542005248,
+  "snapshot_bytes": 1525810123,
+  "safetensors_bytes": 1488915288,
+  "load_from_disk_ms": 1061.5144999901531,
+  "first_query_ms": 1515.3411669889465,
+  "corpus_encoding_ms": 1944.4969579926692,
+  "quality_queries_encoding_ms": 645.6474169972353,
+  "memory": {
+    "before_load": {
+      "rss_bytes": 428212224,
+      "mps_tensor_bytes": 0,
+      "mps_driver_bytes": 475136
+    },
+    "after_load": {
+      "rss_bytes": 759332864,
+      "mps_tensor_bytes": 542014720,
+      "mps_driver_bytes": 1174896640
+    },
+    "after_quality_encoding": {
+      "rss_bytes": 925548544,
+      "mps_tensor_bytes": 542014720,
+      "mps_driver_bytes": 1206042624
+    },
+    "sampled_peak": {
+      "rss_bytes": 1145110528,
+      "mps_tensor_bytes": 582703104,
+      "mps_driver_bytes": 1342685184
+    },
+    "interval_ms": 20,
+    "method": "Process RSS and PyTorch MPS tensor/driver counters sampled every 20ms. Not physical footprint; overlapping counters must not be added. Includes runtime and allocator caches. Weights downloaded before load. Other local services are left running."
+  },
+  "single_query_latency": {
+    "summary": {
+      "count": 144,
+      "median_ms": 22.494520497275516,
+      "p95_ms": 24.216062406048877,
+      "min_ms": 20.828208012972027,
+      "max_ms": 58.8104999915231
+    },
+    "runs": [
+      {
+        "round": 0,
+        "id": "sense-transformer-power",
+        "ms": 22.115665997262113
+      },
+      {
+        "round": 0,
+        "id": "sense-token-llm",
+        "ms": 21.749082996393554
+      },
+      {
+        "round": 0,
+        "id": "sense-kernel-math",
+        "ms": 22.069917002227157
+      },
+      {
+        "round": 0,
+        "id": "code-viewport",
+        "ms": 21.925042005022988
+      },
+      {
+        "round": 0,
+        "id": "sense-race-sport",
+        "ms": 20.828208012972027
+      },
+      {
+        "round": 0,
+        "id": "retrieve-rag",
+        "ms": 28.474292004830204
+      },
+      {
+        "round": 0,
+        "id": "retrieve-latency",
+        "ms": 27.446416002931073
+      },
+      {
+        "round": 0,
+        "id": "sense-cache-hidden",
+        "ms": 22.44608300679829
+      },
+      {
+        "round": 0,
+        "id": "retrieve-oauth",
+        "ms": 22.34024999779649
+      },
+      {
+        "round": 0,
+        "id": "retrieve-quantization",
+        "ms": 21.51074999710545
+      },
+      {
+        "round": 0,
+        "id": "sense-port-network",
+        "ms": 26.728416996775195
+      },
+      {
+        "round": 0,
+        "id": "code-escape",
+        "ms": 22.065625002142042
+      },
+      {
+        "round": 0,
+        "id": "code-lru",
+        "ms": 28.034666000166908
+      },
+      {
+        "round": 0,
+        "id": "sense-race-concurrency",
+        "ms": 22.488499991595745
+      },
+      {
+        "round": 0,
+        "id": "code-debounce",
+        "ms": 22.466000009444542
+      },
+      {
+        "round": 0,
+        "id": "retrieve-injection",
+        "ms": 22.82241699867882
+      },
+      {
+        "round": 0,
+        "id": "retrieve-transaction",
+        "ms": 29.308291006600484
+      },
+      {
+        "round": 0,
+        "id": "sense-inference-logic",
+        "ms": 24.254250005469657
+      },
+      {
+        "round": 0,
+        "id": "sense-thread-textile",
+        "ms": 22.95837498968467
+      },
+      {
+        "round": 0,
+        "id": "sense-container-shipping",
+        "ms": 22.533625000505708
+      },
+      {
+        "round": 0,
+        "id": "sense-memory-human",
+        "ms": 21.978125005261973
+      },
+      {
+        "round": 0,
+        "id": "retrieve-vector-db",
+        "ms": 23.14679200935643
+      },
+      {
+        "round": 0,
+        "id": "code-stale",
+        "ms": 21.776292007416487
+      },
+      {
+        "round": 0,
+        "id": "sense-memory-computer",
+        "ms": 21.929915994405746
+      },
+      {
+        "round": 0,
+        "id": "retrieve-kubernetes",
+        "ms": 22.169209012645297
+      },
+      {
+        "round": 0,
+        "id": "retrieve-gc",
+        "ms": 58.8104999915231
+      },
+      {
+        "round": 0,
+        "id": "sense-embedding-material",
+        "ms": 23.34162499755621
+      },
+      {
+        "round": 0,
+        "id": "code-batch",
+        "ms": 23.116249998565763
+      },
+      {
+        "round": 0,
+        "id": "sense-token-auth",
+        "ms": 23.099999991245568
+      },
+      {
+        "round": 0,
+        "id": "sense-branch-tree",
+        "ms": 22.500541002955288
+      },
+      {
+        "round": 0,
+        "id": "retrieve-typescript",
+        "ms": 28.969332997803576
+      },
+      {
+        "round": 0,
+        "id": "sense-cache-computer",
+        "ms": 23.055458994349465
+      },
+      {
+        "round": 0,
+        "id": "sense-transformer-ml",
+        "ms": 23.8097910041688
+      },
+      {
+        "round": 0,
+        "id": "retrieve-tls",
+        "ms": 22.34883299388457
+      },
+      {
+        "round": 0,
+        "id": "code-abort",
+        "ms": 21.630749994073994
+      },
+      {
+        "round": 0,
+        "id": "code-limit",
+        "ms": 22.125959003460594
+      },
+      {
+        "round": 0,
+        "id": "retrieve-cuda",
+        "ms": 23.451834000297822
+      },
+      {
+        "round": 0,
+        "id": "retrieve-wasm",
+        "ms": 22.978166001848876
+      },
+      {
+        "round": 0,
+        "id": "sense-kernel-os",
+        "ms": 22.776625002734363
+      },
+      {
+        "round": 0,
+        "id": "sense-port-harbor",
+        "ms": 22.746000002371147
+      },
+      {
+        "round": 0,
+        "id": "sense-inference-ml",
+        "ms": 21.776084002340212
+      },
+      {
+        "round": 0,
+        "id": "retrieve-batching",
+        "ms": 21.49004199600313
+      },
+      {
+        "round": 0,
+        "id": "retrieve-idf",
+        "ms": 22.616332993493415
+      },
+      {
+        "round": 0,
+        "id": "retrieve-attention",
+        "ms": 22.53424999071285
+      },
+      {
+        "round": 0,
+        "id": "sense-container-software",
+        "ms": 21.763666998595
+      },
+      {
+        "round": 0,
+        "id": "sense-embedding-ml",
+        "ms": 23.186166989034973
+      },
+      {
+        "round": 0,
+        "id": "sense-branch-git",
+        "ms": 22.727290997863747
+      },
+      {
+        "round": 0,
+        "id": "sense-thread-computer",
+        "ms": 22.475040997960605
+      },
+      {
+        "round": 1,
+        "id": "retrieve-injection",
+        "ms": 21.98612500797026
+      },
+      {
+        "round": 1,
+        "id": "sense-cache-hidden",
+        "ms": 22.34604199475143
+      },
+      {
+        "round": 1,
+        "id": "sense-thread-textile",
+        "ms": 22.363208001479506
+      },
+      {
+        "round": 1,
+        "id": "sense-branch-tree",
+        "ms": 22.398750006686896
+      },
+      {
+        "round": 1,
+        "id": "retrieve-vector-db",
+        "ms": 21.849999990081415
+      },
+      {
+        "round": 1,
+        "id": "sense-container-shipping",
+        "ms": 22.876999995787628
+      },
+      {
+        "round": 1,
+        "id": "sense-branch-git",
+        "ms": 22.206958004971966
+      },
+      {
+        "round": 1,
+        "id": "retrieve-tls",
+        "ms": 23.029458010569215
+      },
+      {
+        "round": 1,
+        "id": "retrieve-attention",
+        "ms": 23.244000010890886
+      },
+      {
+        "round": 1,
+        "id": "sense-memory-computer",
+        "ms": 23.08854200236965
+      },
+      {
+        "round": 1,
+        "id": "sense-embedding-material",
+        "ms": 22.366874996805564
+      },
+      {
+        "round": 1,
+        "id": "sense-inference-ml",
+        "ms": 23.36233400274068
+      },
+      {
+        "round": 1,
+        "id": "retrieve-latency",
+        "ms": 22.746874994481914
+      },
+      {
+        "round": 1,
+        "id": "sense-transformer-ml",
+        "ms": 22.84170799248386
+      },
+      {
+        "round": 1,
+        "id": "sense-kernel-math",
+        "ms": 22.384500000043772
+      },
+      {
+        "round": 1,
+        "id": "code-batch",
+        "ms": 22.1687080047559
+      },
+      {
+        "round": 1,
+        "id": "sense-race-sport",
+        "ms": 22.811832997831516
+      },
+      {
+        "round": 1,
+        "id": "retrieve-oauth",
+        "ms": 22.1810410002945
+      },
+      {
+        "round": 1,
+        "id": "sense-thread-computer",
+        "ms": 22.851417001220398
+      },
+      {
+        "round": 1,
+        "id": "code-stale",
+        "ms": 22.983834001934156
+      },
+      {
+        "round": 1,
+        "id": "sense-memory-human",
+        "ms": 22.609917010413483
+      },
+      {
+        "round": 1,
+        "id": "retrieve-gc",
+        "ms": 23.924833003547974
+      },
+      {
+        "round": 1,
+        "id": "retrieve-kubernetes",
+        "ms": 22.702209011185914
+      },
+      {
+        "round": 1,
+        "id": "sense-port-network",
+        "ms": 22.53499999642372
+      },
+      {
+        "round": 1,
+        "id": "sense-token-llm",
+        "ms": 22.32754100987222
+      },
+      {
+        "round": 1,
+        "id": "sense-embedding-ml",
+        "ms": 22.519666992593557
+      },
+      {
+        "round": 1,
+        "id": "code-lru",
+        "ms": 22.609292005654424
+      },
+      {
+        "round": 1,
+        "id": "retrieve-batching",
+        "ms": 22.8900420042919
+      },
+      {
+        "round": 1,
+        "id": "retrieve-transaction",
+        "ms": 21.22645900817588
+      },
+      {
+        "round": 1,
+        "id": "sense-port-harbor",
+        "ms": 21.380374993896112
+      },
+      {
+        "round": 1,
+        "id": "code-escape",
+        "ms": 21.570874989265576
+      },
+      {
+        "round": 1,
+        "id": "sense-kernel-os",
+        "ms": 22.37754200177733
+      },
+      {
+        "round": 1,
+        "id": "retrieve-rag",
+        "ms": 22.484958011773415
+      },
+      {
+        "round": 1,
+        "id": "retrieve-cuda",
+        "ms": 21.65358400088735
+      },
+      {
+        "round": 1,
+        "id": "retrieve-quantization",
+        "ms": 22.326209000311792
+      },
+      {
+        "round": 1,
+        "id": "code-viewport",
+        "ms": 22.377375003998168
+      },
+      {
+        "round": 1,
+        "id": "sense-cache-computer",
+        "ms": 22.272374990279786
+      },
+      {
+        "round": 1,
+        "id": "code-debounce",
+        "ms": 21.801916998811066
+      },
+      {
+        "round": 1,
+        "id": "retrieve-idf",
+        "ms": 22.60245800425764
+      },
+      {
+        "round": 1,
+        "id": "code-abort",
+        "ms": 22.333792003337294
+      },
+      {
+        "round": 1,
+        "id": "sense-race-concurrency",
+        "ms": 21.996374998707324
+      },
+      {
+        "round": 1,
+        "id": "sense-token-auth",
+        "ms": 22.015041002305225
+      },
+      {
+        "round": 1,
+        "id": "sense-container-software",
+        "ms": 22.354500004439615
+      },
+      {
+        "round": 1,
+        "id": "code-limit",
+        "ms": 22.601416989346035
+      },
+      {
+        "round": 1,
+        "id": "sense-inference-logic",
+        "ms": 22.4551659921417
+      },
+      {
+        "round": 1,
+        "id": "retrieve-typescript",
+        "ms": 22.43633399484679
+      },
+      {
+        "round": 1,
+        "id": "sense-transformer-power",
+        "ms": 22.284792008576915
+      },
+      {
+        "round": 1,
+        "id": "retrieve-wasm",
+        "ms": 23.818207992007956
+      },
+      {
+        "round": 2,
+        "id": "sense-container-software",
+        "ms": 23.637583013623953
+      },
+      {
+        "round": 2,
+        "id": "retrieve-kubernetes",
+        "ms": 22.712042002240196
+      },
+      {
+        "round": 2,
+        "id": "code-limit",
+        "ms": 23.269333003554493
+      },
+      {
+        "round": 2,
+        "id": "retrieve-tls",
+        "ms": 23.705917003098875
+      },
+      {
+        "round": 2,
+        "id": "retrieve-rag",
+        "ms": 23.47512499545701
+      },
+      {
+        "round": 2,
+        "id": "code-lru",
+        "ms": 22.753833007300273
+      },
+      {
+        "round": 2,
+        "id": "sense-inference-logic",
+        "ms": 22.421500005293638
+      },
+      {
+        "round": 2,
+        "id": "sense-thread-textile",
+        "ms": 23.19875000102911
+      },
+      {
+        "round": 2,
+        "id": "retrieve-batching",
+        "ms": 23.344832996372133
+      },
+      {
+        "round": 2,
+        "id": "sense-token-llm",
+        "ms": 23.066957990522496
+      },
+      {
+        "round": 2,
+        "id": "retrieve-quantization",
+        "ms": 23.091457987902686
+      },
+      {
+        "round": 2,
+        "id": "retrieve-wasm",
+        "ms": 22.332332999212667
+      },
+      {
+        "round": 2,
+        "id": "sense-container-shipping",
+        "ms": 23.486834004870616
+      },
+      {
+        "round": 2,
+        "id": "sense-thread-computer",
+        "ms": 23.999666009331122
+      },
+      {
+        "round": 2,
+        "id": "code-batch",
+        "ms": 22.72195799741894
+      },
+      {
+        "round": 2,
+        "id": "sense-memory-human",
+        "ms": 22.032665990991518
+      },
+      {
+        "round": 2,
+        "id": "code-viewport",
+        "ms": 22.871165987453423
+      },
+      {
+        "round": 2,
+        "id": "sense-cache-hidden",
+        "ms": 23.223750002216548
+      },
+      {
+        "round": 2,
+        "id": "sense-memory-computer",
+        "ms": 21.822417009389028
+      },
+      {
+        "round": 2,
+        "id": "retrieve-attention",
+        "ms": 21.912125012022443
+      },
+      {
+        "round": 2,
+        "id": "sense-branch-git",
+        "ms": 21.860957989702
+      },
+      {
+        "round": 2,
+        "id": "retrieve-idf",
+        "ms": 21.81712500168942
+      },
+      {
+        "round": 2,
+        "id": "sense-race-concurrency",
+        "ms": 21.894999998039566
+      },
+      {
+        "round": 2,
+        "id": "code-stale",
+        "ms": 21.74624998588115
+      },
+      {
+        "round": 2,
+        "id": "retrieve-injection",
+        "ms": 22.279540993622504
+      },
+      {
+        "round": 2,
+        "id": "retrieve-typescript",
+        "ms": 22.22987500135787
+      },
+      {
+        "round": 2,
+        "id": "retrieve-transaction",
+        "ms": 23.42537499498576
+      },
+      {
+        "round": 2,
+        "id": "sense-embedding-ml",
+        "ms": 23.436207993654534
+      },
+      {
+        "round": 2,
+        "id": "retrieve-gc",
+        "ms": 23.04270899912808
+      },
+      {
+        "round": 2,
+        "id": "sense-transformer-power",
+        "ms": 22.797708996222354
+      },
+      {
+        "round": 2,
+        "id": "sense-kernel-math",
+        "ms": 22.846583000500686
+      },
+      {
+        "round": 2,
+        "id": "sense-port-network",
+        "ms": 22.524125000927597
+      },
+      {
+        "round": 2,
+        "id": "code-escape",
+        "ms": 22.00979100598488
+      },
+      {
+        "round": 2,
+        "id": "sense-branch-tree",
+        "ms": 21.5476659941487
+      },
+      {
+        "round": 2,
+        "id": "sense-port-harbor",
+        "ms": 21.268500000587665
+      },
+      {
+        "round": 2,
+        "id": "sense-cache-computer",
+        "ms": 22.479542007204145
+      },
+      {
+        "round": 2,
+        "id": "sense-inference-ml",
+        "ms": 22.594999987632036
+      },
+      {
+        "round": 2,
+        "id": "code-debounce",
+        "ms": 22.628042002907023
+      },
+      {
+        "round": 2,
+        "id": "retrieve-oauth",
+        "ms": 22.580666991416365
+      },
+      {
+        "round": 2,
+        "id": "sense-embedding-material",
+        "ms": 22.246459004236385
+      },
+      {
+        "round": 2,
+        "id": "retrieve-vector-db",
+        "ms": 22.827875000075437
+      },
+      {
+        "round": 2,
+        "id": "sense-race-sport",
+        "ms": 22.646458994131535
+      },
+      {
+        "round": 2,
+        "id": "sense-kernel-os",
+        "ms": 22.332166001433507
+      },
+      {
+        "round": 2,
+        "id": "code-abort",
+        "ms": 21.631874988088384
+      },
+      {
+        "round": 2,
+        "id": "sense-transformer-ml",
+        "ms": 22.1967920078896
+      },
+      {
+        "round": 2,
+        "id": "sense-token-auth",
+        "ms": 21.73741700244136
+      },
+      {
+        "round": 2,
+        "id": "retrieve-latency",
+        "ms": 21.57845899637323
+      },
+      {
+        "round": 2,
+        "id": "retrieve-cuda",
+        "ms": 21.15195798978675
+      }
+    ],
+    "method": "5 warmups then shuffled fixed queries; GPU synchronized; includes tokenization, encoder, pooling, normalization and NumPy output. No HTTP, browser rendering or result cache."
+  },
+  "batch_latency": [
+    {
+      "round": 0,
+      "batch_size": 1,
+      "inputs": 32,
+      "ms": 641.5085000044201,
+      "inputs_per_second": 49.882425563775875
+    },
+    {
+      "round": 0,
+      "batch_size": 8,
+      "inputs": 32,
+      "ms": 146.68754099693615,
+      "inputs_per_second": 218.15076987805244
+    },
+    {
+      "round": 0,
+      "batch_size": 16,
+      "inputs": 32,
+      "ms": 171.57849999784958,
+      "inputs_per_second": 186.50355376927214
+    },
+    {
+      "round": 0,
+      "batch_size": 32,
+      "inputs": 32,
+      "ms": 128.23975000355858,
+      "inputs_per_second": 249.53261371074115
+    },
+    {
+      "round": 1,
+      "batch_size": 32,
+      "inputs": 32,
+      "ms": 122.66550000640564,
+      "inputs_per_second": 260.8720463237744
+    },
+    {
+      "round": 1,
+      "batch_size": 16,
+      "inputs": 32,
+      "ms": 132.4460839969106,
+      "inputs_per_second": 241.60774735134052
+    },
+    {
+      "round": 1,
+      "batch_size": 8,
+      "inputs": 32,
+      "ms": 147.88299999781884,
+      "inputs_per_second": 216.38727913601952
+    },
+    {
+      "round": 1,
+      "batch_size": 1,
+      "inputs": 32,
+      "ms": 648.3302499982528,
+      "inputs_per_second": 49.35756121218505
+    },
+    {
+      "round": 2,
+      "batch_size": 1,
+      "inputs": 32,
+      "ms": 639.5678340049926,
+      "inputs_per_second": 50.03378578252608
+    },
+    {
+      "round": 2,
+      "batch_size": 8,
+      "inputs": 32,
+      "ms": 145.11279200087301,
+      "inputs_per_second": 220.51811944881803
+    },
+    {
+      "round": 2,
+      "batch_size": 16,
+      "inputs": 32,
+      "ms": 130.32245900831185,
+      "inputs_per_second": 245.5447836351758
+    },
+    {
+      "round": 2,
+      "batch_size": 32,
+      "inputs": 32,
+      "ms": 121.28087499877438,
+      "inputs_per_second": 263.8503391431121
+    }
+  ],
+  "scoring": {
+    "768": {
+      "all_queries_ms": 0.07491699943784624,
+      "float32_bytes_per_document": 3072,
+      "float32_bytes_per_100k_documents": 307200000
+    },
+    "512": {
+      "all_queries_ms": 0.006999995093792677,
+      "float32_bytes_per_document": 2048,
+      "float32_bytes_per_100k_documents": 204800000
+    },
+    "256": {
+      "all_queries_ms": 0.003708992153406143,
+      "float32_bytes_per_document": 1024,
+      "float32_bytes_per_100k_documents": 102400000
+    },
+    "128": {
+      "all_queries_ms": 0.0027080095605924726,
+      "float32_bytes_per_document": 512,
+      "float32_bytes_per_100k_documents": 51200000
+    }
+  },
+  "evaluations": {
+    "bm25": {
+      "summary": {
+        "all": {
+          "count": 48,
+          "hit1": 0.6041666666666666,
+          "hit3": 0.6666666666666666,
+          "mrr": 0.6587557699712631
+        },
+        "sense": {
+          "count": 24,
+          "hit1": 0.6666666666666666,
+          "hit3": 0.7916666666666666,
+          "mrr": 0.7603835978835979,
+          "same_headword_hit1": 0.7916666666666666
+        },
+        "cross-language": {
+          "count": 8,
+          "hit1": 0.125,
+          "hit3": 0.125,
+          "mrr": 0.15615046054370998
+        },
+        "retrieval": {
+          "count": 8,
+          "hit1": 1.0,
+          "hit3": 1.0,
+          "mrr": 1.0
+        },
+        "code": {
+          "count": 8,
+          "hit1": 0.5,
+          "hit3": 0.5,
+          "mrr": 0.515233365633075
+        }
+      },
+      "cases": [
+        {
+          "id": "sense-transformer-ml",
+          "scenario": "阅读模型架构时将 transformer 排为神经网络义项",
+          "category": "sense",
+          "query": "What does transformer mean here? The transformer attends to earlier words while generating an answer.",
+          "expected": "transformer-ml",
+          "rank": 5,
+          "top3": [
+            {
+              "id": "rag",
+              "score": 9.351882889490708
+            },
+            {
+              "id": "memory-human",
+              "score": 7.2725794451820045
+            },
+            {
+              "id": "idf",
+              "score": 4.8195242779663126
+            }
+          ],
+          "sense_rank": 2,
+          "sense_selected": "transformer-power"
+        },
+        {
+          "id": "sense-transformer-power",
+          "scenario": "阅读电路时将 transformer 排为变压器义项",
+          "category": "sense",
+          "query": "What does transformer mean here? The transformer steps the mains voltage down before the rectifier.",
+          "expected": "transformer-power",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "transformer-power",
+              "score": 7.183271190062028
+            },
+            {
+              "id": "rag",
+              "score": 4.112270615871084
+            },
+            {
+              "id": "race-sport",
+              "score": 4.047579502285093
+            }
+          ],
+          "sense_rank": 1,
+          "sense_selected": "transformer-power"
+        },
+        {
+          "id": "sense-token-llm",
+          "scenario": "阅读生成速度时将 token 排为分词单位",
+          "category": "sense",
+          "query": "What does token mean here? The decoder emits one token at each generation step.",
+          "expected": "token-llm",
+          "rank": 6,
+          "top3": [
+            {
+              "id": "attention",
+              "score": 6.177505624973116
+            },
+            {
+              "id": "code-stale",
+              "score": 5.034258121864272
+            },
+            {
+              "id": "rag",
+              "score": 4.433711258554218
+            }
+          ],
+          "sense_rank": 2,
+          "sense_selected": "token-auth"
+        },
+        {
+          "id": "sense-token-auth",
+          "scenario": "阅读登录请求时将 token 排为访问凭据",
+          "category": "sense",
+          "query": "What does token mean here? Include the token in the Authorization header after signing in.",
+          "expected": "token-auth",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "token-auth",
+              "score": 7.085409158928092
+            },
+            {
+              "id": "oauth",
+              "score": 4.509427511767233
+            },
+            {
+              "id": "attention",
+              "score": 4.315981241634021
+            }
+          ],
+          "sense_rank": 1,
+          "sense_selected": "token-auth"
+        },
+        {
+          "id": "sense-embedding-ml",
+          "scenario": "阅读语义搜索时将 embedding 排为向量表示",
+          "category": "sense",
+          "query": "What does embedding mean here? We compare each document embedding to find semantically related passages.",
+          "expected": "embedding-ml",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "embedding-ml",
+              "score": 7.168746530145404
+            },
+            {
+              "id": "attention",
+              "score": 3.5160046328175336
+            },
+            {
+              "id": "embedding-material",
+              "score": 2.8426004644491965
+            }
+          ],
+          "sense_rank": 1,
+          "sense_selected": "embedding-ml"
+        },
+        {
+          "id": "sense-embedding-material",
+          "scenario": "阅读制造工艺时将 embedding 排为嵌入材料",
+          "category": "sense",
+          "query": "What does embedding mean here? Embedding the metal insert in molten resin keeps it fixed after cooling.",
+          "expected": "embedding-material",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "embedding-material",
+              "score": 11.682606977701738
+            },
+            {
+              "id": "branch-git",
+              "score": 5.414236714172857
+            },
+            {
+              "id": "wasm",
+              "score": 4.957676779308526
+            }
+          ],
+          "sense_rank": 1,
+          "sense_selected": "embedding-material"
+        },
+        {
+          "id": "sense-inference-ml",
+          "scenario": "阅读部署时将 inference 排为模型推理执行",
+          "category": "sense",
+          "query": "What does inference mean here? Inference on this checkpoint runs faster when the weights fit on the GPU.",
+          "expected": "inference-ml",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "inference-ml",
+              "score": 7.021770554099325
+            },
+            {
+              "id": "race-concurrency",
+              "score": 5.997041464674979
+            },
+            {
+              "id": "cuda",
+              "score": 5.942192669066692
+            }
+          ],
+          "sense_rank": 1,
+          "sense_selected": "inference-ml"
+        },
+        {
+          "id": "sense-inference-logic",
+          "scenario": "阅读论证时将 inference 排为逻辑推断",
+          "category": "sense",
+          "query": "What does inference mean here? The inference does not follow from the premises in the argument.",
+          "expected": "inference-logic",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "inference-logic",
+              "score": 9.981447167582242
+            },
+            {
+              "id": "quantization",
+              "score": 5.284241630181734
+            },
+            {
+              "id": "attention",
+              "score": 3.8601522447485737
+            }
+          ],
+          "sense_rank": 1,
+          "sense_selected": "inference-logic"
+        },
+        {
+          "id": "sense-kernel-os",
+          "scenario": "阅读系统调用时将 kernel 排为操作系统内核",
+          "category": "sense",
+          "query": "What does kernel mean here? The kernel handles the syscall and wakes the blocked process.",
+          "expected": "kernel-os",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "kernel-os",
+              "score": 8.53501823693267
+            },
+            {
+              "id": "container-software",
+              "score": 6.60635225543135
+            },
+            {
+              "id": "thread-computer",
+              "score": 3.842471675206524
+            }
+          ],
+          "sense_rank": 1,
+          "sense_selected": "kernel-os"
+        },
+        {
+          "id": "sense-kernel-math",
+          "scenario": "阅读支持向量机时将 kernel 排为相似度函数",
+          "category": "sense",
+          "query": "What does kernel mean here? The SVM uses a radial basis kernel to separate nonlinear classes.",
+          "expected": "kernel-math",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "kernel-math",
+              "score": 4.428836197010051
+            },
+            {
+              "id": "container-software",
+              "score": 4.285292631646618
+            },
+            {
+              "id": "kernel-os",
+              "score": 3.8945331701199155
+            }
+          ],
+          "sense_rank": 1,
+          "sense_selected": "kernel-math"
+        },
+        {
+          "id": "sense-memory-computer",
+          "scenario": "阅读设备容量时将 memory 排为计算机内存",
+          "category": "sense",
+          "query": "What does memory mean here? The laptop cannot allocate enough memory to load the model.",
+          "expected": "memory-computer",
+          "rank": 14,
+          "top3": [
+            {
+              "id": "quantization",
+              "score": 6.2810142075582
+            },
+            {
+              "id": "port-harbor",
+              "score": 5.202208715164758
+            },
+            {
+              "id": "memory-human",
+              "score": 4.583099742199796
+            }
+          ],
+          "sense_rank": 2,
+          "sense_selected": "memory-human"
+        },
+        {
+          "id": "sense-memory-human",
+          "scenario": "阅读童年经历时将 memory 排为人的记忆",
+          "category": "sense",
+          "query": "What does memory mean here? Her earliest memory was visiting the beach with her grandmother.",
+          "expected": "memory-human",
+          "rank": 2,
+          "top3": [
+            {
+              "id": "kernel-os",
+              "score": 3.258426359906431
+            },
+            {
+              "id": "memory-human",
+              "score": 3.258426359906431
+            },
+            {
+              "id": "gc",
+              "score": 3.258426359906431
+            }
+          ],
+          "sense_rank": 1,
+          "sense_selected": "memory-human"
+        },
+        {
+          "id": "sense-cache-computer",
+          "scenario": "阅读重复请求时将 cache 排为数据缓存",
+          "category": "sense",
+          "query": "What does cache mean here? A cache hit avoids recomputing the expensive response.",
+          "expected": "cache-computer",
+          "rank": 5,
+          "top3": [
+            {
+              "id": "code-lru",
+              "score": 5.379506314563075
+            },
+            {
+              "id": "rag",
+              "score": 4.796997681203951
+            },
+            {
+              "id": "latency",
+              "score": 3.4051490778070175
+            }
+          ],
+          "sense_rank": 2,
+          "sense_selected": "cache-hidden"
+        },
+        {
+          "id": "sense-cache-hidden",
+          "scenario": "阅读探险补给时将 cache 排为隐藏物资",
+          "category": "sense",
+          "query": "What does cache mean here? The explorers dug up a cache of food beneath the rocks.",
+          "expected": "cache-hidden",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "cache-hidden",
+              "score": 7.952074688604572
+            },
+            {
+              "id": "code-lru",
+              "score": 5.379506314563075
+            },
+            {
+              "id": "cache-computer",
+              "score": 4.195194826109219
+            }
+          ],
+          "sense_rank": 1,
+          "sense_selected": "cache-hidden"
+        },
+        {
+          "id": "sense-thread-computer",
+          "scenario": "阅读程序调度时将 thread 排为线程",
+          "category": "sense",
+          "query": "What does thread mean here? The worker thread waits on a mutex before updating the shared counter.",
+          "expected": "thread-computer",
+          "rank": 9,
+          "top3": [
+            {
+              "id": "race-concurrency",
+              "score": 7.545987411405836
+            },
+            {
+              "id": "inference-ml",
+              "score": 6.105185506014185
+            },
+            {
+              "id": "race-sport",
+              "score": 4.616695041572821
+            }
+          ],
+          "sense_rank": 1,
+          "sense_selected": "thread-computer"
+        },
+        {
+          "id": "sense-thread-textile",
+          "scenario": "阅读缝纫时将 thread 排为线材",
+          "category": "sense",
+          "query": "What does thread mean here? Pass the thread through the needle to mend the torn shirt.",
+          "expected": "thread-textile",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "thread-textile",
+              "score": 6.768001341622364
+            },
+            {
+              "id": "oauth",
+              "score": 3.6854999974008136
+            },
+            {
+              "id": "thread-computer",
+              "score": 3.1164882779566576
+            }
+          ],
+          "sense_rank": 1,
+          "sense_selected": "thread-textile"
+        },
+        {
+          "id": "sense-port-network",
+          "scenario": "阅读监听服务时将 port 排为网络端口",
+          "category": "sense",
+          "query": "What does port mean here? The HTTP service is listening on port 8080 on loopback.",
+          "expected": "port-network",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "port-network",
+              "score": 10.632894268120218
+            },
+            {
+              "id": "race-concurrency",
+              "score": 3.4961848617964617
+            },
+            {
+              "id": "token-auth",
+              "score": 3.39019381517675
+            }
+          ],
+          "sense_rank": 1,
+          "sense_selected": "port-network"
+        },
+        {
+          "id": "sense-port-harbor",
+          "scenario": "阅读航运时将 port 排为港口",
+          "category": "sense",
+          "query": "What does port mean here? The cargo ship arrived at the port before sunrise.",
+          "expected": "port-harbor",
+          "rank": 2,
+          "top3": [
+            {
+              "id": "container-shipping",
+              "score": 8.044184186912004
+            },
+            {
+              "id": "port-harbor",
+              "score": 6.4828277085675365
+            },
+            {
+              "id": "port-network",
+              "score": 5.212922128192759
+            }
+          ],
+          "sense_rank": 1,
+          "sense_selected": "port-harbor"
+        },
+        {
+          "id": "sense-container-software",
+          "scenario": "阅读服务部署时将 container 排为软件容器",
+          "category": "sense",
+          "query": "What does container mean here? We restart the container when its health check fails.",
+          "expected": "container-software",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "container-software",
+              "score": 6.348108807902436
+            },
+            {
+              "id": "transactions",
+              "score": 6.1523696665442245
+            },
+            {
+              "id": "race-concurrency",
+              "score": 3.7063618592739935
+            }
+          ],
+          "sense_rank": 1,
+          "sense_selected": "container-software"
+        },
+        {
+          "id": "sense-container-shipping",
+          "scenario": "阅读货运时将 container 排为货箱",
+          "category": "sense",
+          "query": "What does container mean here? A crane lifted the steel container from the ship onto a truck.",
+          "expected": "container-shipping",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "container-shipping",
+              "score": 10.465392074126463
+            },
+            {
+              "id": "container-software",
+              "score": 4.285292631646618
+            },
+            {
+              "id": "branch-tree",
+              "score": 4.213390993959917
+            }
+          ],
+          "sense_rank": 1,
+          "sense_selected": "container-shipping"
+        },
+        {
+          "id": "sense-race-concurrency",
+          "scenario": "阅读并发写入时将 race 排为竞态",
+          "category": "sense",
+          "query": "What does race mean here? Two asynchronous writes introduce a race and corrupt the shared state.",
+          "expected": "race-concurrency",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "race-concurrency",
+              "score": 13.299491992916854
+            },
+            {
+              "id": "race-sport",
+              "score": 4.976031351764128
+            },
+            {
+              "id": "tls",
+              "score": 3.2773415608323377
+            }
+          ],
+          "sense_rank": 1,
+          "sense_selected": "race-concurrency"
+        },
+        {
+          "id": "sense-race-sport",
+          "scenario": "阅读赛事时将 race 排为竞赛",
+          "category": "sense",
+          "query": "What does race mean here? The cyclist won the race by crossing the finish line first.",
+          "expected": "race-sport",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "race-sport",
+              "score": 11.30790071543693
+            },
+            {
+              "id": "branch-git",
+              "score": 5.86652777037491
+            },
+            {
+              "id": "race-concurrency",
+              "score": 5.598176379641773
+            }
+          ],
+          "sense_rank": 1,
+          "sense_selected": "race-sport"
+        },
+        {
+          "id": "sense-branch-git",
+          "scenario": "阅读版本管理时将 branch 排为代码分支",
+          "category": "sense",
+          "query": "What does branch mean here? Commit the patch on a new branch and merge it after review.",
+          "expected": "branch-git",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "branch-git",
+              "score": 17.541349681696722
+            },
+            {
+              "id": "branch-tree",
+              "score": 6.193925592492285
+            },
+            {
+              "id": "inference-ml",
+              "score": 5.250681865352234
+            }
+          ],
+          "sense_rank": 1,
+          "sense_selected": "branch-git"
+        },
+        {
+          "id": "sense-branch-tree",
+          "scenario": "阅读植物时将 branch 排为树枝",
+          "category": "sense",
+          "query": "What does branch mean here? A bird built its nest on a branch above the garden.",
+          "expected": "branch-tree",
+          "rank": 2,
+          "top3": [
+            {
+              "id": "branch-git",
+              "score": 7.714642276373408
+            },
+            {
+              "id": "branch-tree",
+              "score": 5.072302510214582
+            },
+            {
+              "id": "inference-ml",
+              "score": 4.997230152611246
+            }
+          ],
+          "sense_rank": 2,
+          "sense_selected": "branch-git"
+        },
+        {
+          "id": "retrieve-quantization",
+          "scenario": "中文描述低精度权重时检索到量化说明",
+          "category": "cross-language",
+          "query": "把神经网络参数从十六位降低到四位以节省显存",
+          "expected": "quantization",
+          "rank": 25,
+          "top3": [
+            {
+              "id": "transformer-ml",
+              "score": 0.0
+            },
+            {
+              "id": "transformer-power",
+              "score": 0.0
+            },
+            {
+              "id": "token-llm",
+              "score": 0.0
+            }
+          ]
+        },
+        {
+          "id": "retrieve-rag",
+          "scenario": "中文描述先查资料再回答时检索到 RAG",
+          "category": "cross-language",
+          "query": "让语言模型先查找外部资料，再依据找到的内容回答问题",
+          "expected": "rag",
+          "rank": 26,
+          "top3": [
+            {
+              "id": "transformer-ml",
+              "score": 0.0
+            },
+            {
+              "id": "transformer-power",
+              "score": 0.0
+            },
+            {
+              "id": "token-llm",
+              "score": 0.0
+            }
+          ]
+        },
+        {
+          "id": "retrieve-gc",
+          "scenario": "中文描述自动回收无引用对象时检索到垃圾回收",
+          "category": "cross-language",
+          "query": "自动释放程序已经无法访问的对象占用的内存",
+          "expected": "gc",
+          "rank": 27,
+          "top3": [
+            {
+              "id": "transformer-ml",
+              "score": 0.0
+            },
+            {
+              "id": "transformer-power",
+              "score": 0.0
+            },
+            {
+              "id": "token-llm",
+              "score": 0.0
+            }
+          ]
+        },
+        {
+          "id": "retrieve-latency",
+          "scenario": "中文比较响应时间和处理量时检索到延迟吞吐说明",
+          "category": "cross-language",
+          "query": "一次请求等多久，与每秒能处理多少请求有什么区别",
+          "expected": "latency",
+          "rank": 28,
+          "top3": [
+            {
+              "id": "transformer-ml",
+              "score": 0.0
+            },
+            {
+              "id": "transformer-power",
+              "score": 0.0
+            },
+            {
+              "id": "token-llm",
+              "score": 0.0
+            }
+          ]
+        },
+        {
+          "id": "retrieve-kubernetes",
+          "scenario": "中文描述集群调度容器时检索到 Kubernetes",
+          "category": "cross-language",
+          "query": "在多台机器上自动调度容器，故障后替换实例并扩缩容",
+          "expected": "kubernetes",
+          "rank": 29,
+          "top3": [
+            {
+              "id": "transformer-ml",
+              "score": 0.0
+            },
+            {
+              "id": "transformer-power",
+              "score": 0.0
+            },
+            {
+              "id": "token-llm",
+              "score": 0.0
+            }
+          ]
+        },
+        {
+          "id": "retrieve-typescript",
+          "scenario": "中文描述运行前检查 JavaScript 类型时检索到 TypeScript",
+          "category": "cross-language",
+          "query": "给 JavaScript 增加静态类型，在执行之前发现类型错误",
+          "expected": "typescript",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "typescript",
+              "score": 5.077825188341779
+            },
+            {
+              "id": "transformer-ml",
+              "score": 0.0
+            },
+            {
+              "id": "transformer-power",
+              "score": 0.0
+            }
+          ]
+        },
+        {
+          "id": "retrieve-tls",
+          "scenario": "中文描述 HTTPS 加密与证书时检索到 TLS",
+          "category": "cross-language",
+          "query": "浏览器和服务器之间的加密通道，用证书确认服务器身份",
+          "expected": "tls",
+          "rank": 31,
+          "top3": [
+            {
+              "id": "transformer-ml",
+              "score": 0.0
+            },
+            {
+              "id": "transformer-power",
+              "score": 0.0
+            },
+            {
+              "id": "token-llm",
+              "score": 0.0
+            }
+          ]
+        },
+        {
+          "id": "retrieve-oauth",
+          "scenario": "中文描述第三方授权时检索到 OAuth",
+          "category": "cross-language",
+          "query": "不用把密码交给第三方应用，就能授予它有限的账号资源访问权限",
+          "expected": "oauth",
+          "rank": 32,
+          "top3": [
+            {
+              "id": "transformer-ml",
+              "score": 0.0
+            },
+            {
+              "id": "transformer-power",
+              "score": 0.0
+            },
+            {
+              "id": "token-llm",
+              "score": 0.0
+            }
+          ]
+        },
+        {
+          "id": "retrieve-wasm",
+          "scenario": "英文描述浏览器运行编译代码时检索到 WebAssembly",
+          "category": "retrieval",
+          "query": "A compact binary format lets a browser execute sandboxed code compiled from Rust.",
+          "expected": "wasm",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "wasm",
+              "score": 16.600148669560518
+            },
+            {
+              "id": "branch-tree",
+              "score": 2.959562616959184
+            },
+            {
+              "id": "inference-logic",
+              "score": 2.853958388872476
+            }
+          ]
+        },
+        {
+          "id": "retrieve-injection",
+          "scenario": "网页内容试图改写助手指令时检索到提示注入说明",
+          "category": "retrieval",
+          "query": "A retrieved article tells the assistant to ignore its instructions and disclose private data.",
+          "expected": "prompt-injection",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "prompt-injection",
+              "score": 15.074353887511108
+            },
+            {
+              "id": "memory-computer",
+              "score": 9.427224859545685
+            },
+            {
+              "id": "thread-computer",
+              "score": 4.403858264070728
+            }
+          ]
+        },
+        {
+          "id": "retrieve-vector-db",
+          "scenario": "描述按向量距离查询时检索到向量索引",
+          "category": "retrieval",
+          "query": "How can I search a large collection by finding approximate nearest neighbours of sentence vectors?",
+          "expected": "vector-database",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "vector-database",
+              "score": 11.881104374850826
+            },
+            {
+              "id": "gc",
+              "score": 10.29867523518238
+            },
+            {
+              "id": "code-batch",
+              "score": 6.632175832165944
+            }
+          ]
+        },
+        {
+          "id": "retrieve-cuda",
+          "scenario": "描述 NVIDIA 并行计算平台时检索到 CUDA",
+          "category": "retrieval",
+          "query": "The NVIDIA toolkit for launching general-purpose parallel computations on graphics hardware.",
+          "expected": "cuda",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "cuda",
+              "score": 18.799830683415173
+            },
+            {
+              "id": "kernel-os",
+              "score": 4.765191978080159
+            },
+            {
+              "id": "race-concurrency",
+              "score": 3.4961848617964617
+            }
+          ]
+        },
+        {
+          "id": "retrieve-batching",
+          "scenario": "描述合并模型输入时检索到批处理",
+          "category": "retrieval",
+          "query": "Send several texts through a model together to spread startup overhead across the inputs.",
+          "expected": "batching",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "batching",
+              "score": 9.610448175205986
+            },
+            {
+              "id": "transactions",
+              "score": 5.146785278922214
+            },
+            {
+              "id": "attention",
+              "score": 4.811661664633472
+            }
+          ]
+        },
+        {
+          "id": "retrieve-transaction",
+          "scenario": "描述写入全部成功或回滚时检索到数据库事务",
+          "category": "retrieval",
+          "query": "If any database update fails, undo every change in the group instead of leaving a partial write.",
+          "expected": "transactions",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "transactions",
+              "score": 8.79829834258792
+            },
+            {
+              "id": "code-lru",
+              "score": 4.386771364625879
+            },
+            {
+              "id": "embedding-material",
+              "score": 4.3557644327083045
+            }
+          ]
+        },
+        {
+          "id": "retrieve-attention",
+          "scenario": "描述 query key value 时检索到注意力机制",
+          "category": "retrieval",
+          "query": "Use query and key dot products to choose how much each position contributes through its value.",
+          "expected": "attention",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "attention",
+              "score": 22.735224920463228
+            },
+            {
+              "id": "code-lru",
+              "score": 10.973053905329412
+            },
+            {
+              "id": "latency",
+              "score": 4.061707703926071
+            }
+          ]
+        },
+        {
+          "id": "retrieve-idf",
+          "scenario": "描述低频词权重时检索到逆文档频率",
+          "category": "retrieval",
+          "query": "Why should a rare search term receive a larger weight than a term appearing in almost every file?",
+          "expected": "idf",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "idf",
+              "score": 8.591736617574977
+            },
+            {
+              "id": "attention",
+              "score": 5.553993760222488
+            },
+            {
+              "id": "wasm",
+              "score": 2.7242615183006347
+            }
+          ]
+        },
+        {
+          "id": "code-limit",
+          "scenario": "按并发上限描述检索到任务队列代码",
+          "category": "code",
+          "query": "Find the function that runs a list of jobs with at most N active operations at once.",
+          "expected": "code-limit",
+          "rank": 18,
+          "top3": [
+            {
+              "id": "race-concurrency",
+              "score": 5.995638998130694
+            },
+            {
+              "id": "wasm",
+              "score": 5.244167603737301
+            },
+            {
+              "id": "cache-computer",
+              "score": 4.830859506776663
+            }
+          ]
+        },
+        {
+          "id": "code-abort",
+          "scenario": "按请求超时取消描述检索到 AbortController 代码",
+          "category": "code",
+          "query": "Locate the request helper that cancels a network operation when its deadline expires and releases the timer.",
+          "expected": "code-abort",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "code-abort",
+              "score": 8.123415407852143
+            },
+            {
+              "id": "memory-computer",
+              "score": 5.825532904144843
+            },
+            {
+              "id": "transactions",
+              "score": 5.617344880835175
+            }
+          ]
+        },
+        {
+          "id": "code-batch",
+          "scenario": "中文按分块描述检索到数组批处理代码",
+          "category": "code",
+          "query": "查找把一个数组拆成指定大小的多个小数组的函数",
+          "expected": "code-batch",
+          "rank": 43,
+          "top3": [
+            {
+              "id": "transformer-ml",
+              "score": 0.0
+            },
+            {
+              "id": "transformer-power",
+              "score": 0.0
+            },
+            {
+              "id": "token-llm",
+              "score": 0.0
+            }
+          ]
+        },
+        {
+          "id": "code-lru",
+          "scenario": "按最近最少使用淘汰描述检索到缓存代码",
+          "category": "code",
+          "query": "Find a bounded cache that refreshes recency on reads and evicts the least recently accessed item.",
+          "expected": "code-lru",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "code-lru",
+              "score": 5.379506314563075
+            },
+            {
+              "id": "tls",
+              "score": 4.931821810310776
+            },
+            {
+              "id": "branch-git",
+              "score": 4.619566476302338
+            }
+          ]
+        },
+        {
+          "id": "code-escape",
+          "scenario": "中文按 HTML 转义描述检索到实体替换代码",
+          "category": "code",
+          "query": "查找将字符串中的尖括号和引号转成 HTML 实体以便安全显示的代码",
+          "expected": "code-escape",
+          "rank": 45,
+          "top3": [
+            {
+              "id": "transformer-ml",
+              "score": 0.0
+            },
+            {
+              "id": "transformer-power",
+              "score": 0.0
+            },
+            {
+              "id": "token-llm",
+              "score": 0.0
+            }
+          ]
+        },
+        {
+          "id": "code-debounce",
+          "scenario": "按等待连续事件停止描述检索到防抖代码",
+          "category": "code",
+          "query": "Locate a wrapper that only calls its callback after incoming events stop for a quiet interval.",
+          "expected": "code-debounce",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "code-debounce",
+              "score": 8.97051057010494
+            },
+            {
+              "id": "kernel-os",
+              "score": 5.268237594293866
+            },
+            {
+              "id": "cuda",
+              "score": 4.403955426229877
+            }
+          ]
+        },
+        {
+          "id": "code-stale",
+          "scenario": "按忽略旧选区结果描述检索到代次检查代码",
+          "category": "code",
+          "query": "Find the code that prevents an old asynchronous translation response from replacing the current selection's result.",
+          "expected": "code-stale",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "code-stale",
+              "score": 8.660303081613456
+            },
+            {
+              "id": "rag",
+              "score": 7.62263925235978
+            },
+            {
+              "id": "oauth",
+              "score": 6.8960910222286245
+            }
+          ]
+        },
+        {
+          "id": "code-viewport",
+          "scenario": "中文按靠近可视区域排队描述检索到观察器代码",
+          "category": "code",
+          "query": "查找只在元素接近浏览器可视区域时才把它加入处理队列的代码",
+          "expected": "code-viewport",
+          "rank": 48,
+          "top3": [
+            {
+              "id": "transformer-ml",
+              "score": 0.0
+            },
+            {
+              "id": "transformer-power",
+              "score": 0.0
+            },
+            {
+              "id": "token-llm",
+              "score": 0.0
+            }
+          ]
+        }
+      ]
+    },
+    "768": {
+      "summary": {
+        "all": {
+          "count": 48,
+          "hit1": 0.9583333333333334,
+          "hit3": 1.0,
+          "mrr": 0.9756944444444445
+        },
+        "sense": {
+          "count": 24,
+          "hit1": 0.9166666666666666,
+          "hit3": 1.0,
+          "mrr": 0.9513888888888888,
+          "same_headword_hit1": 1.0
+        },
+        "cross-language": {
+          "count": 8,
+          "hit1": 1.0,
+          "hit3": 1.0,
+          "mrr": 1.0
+        },
+        "retrieval": {
+          "count": 8,
+          "hit1": 1.0,
+          "hit3": 1.0,
+          "mrr": 1.0
+        },
+        "code": {
+          "count": 8,
+          "hit1": 1.0,
+          "hit3": 1.0,
+          "mrr": 1.0
+        }
+      },
+      "cases": [
+        {
+          "id": "sense-transformer-ml",
+          "scenario": "阅读模型架构时将 transformer 排为神经网络义项",
+          "category": "sense",
+          "query": "What does transformer mean here? The transformer attends to earlier words while generating an answer.",
+          "expected": "transformer-ml",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "transformer-ml",
+              "score": 0.7767327427864075
+            },
+            {
+              "id": "transformer-power",
+              "score": 0.7481759786605835
+            },
+            {
+              "id": "token-llm",
+              "score": 0.700705885887146
+            }
+          ],
+          "sense_rank": 1,
+          "sense_selected": "transformer-ml"
+        },
+        {
+          "id": "sense-transformer-power",
+          "scenario": "阅读电路时将 transformer 排为变压器义项",
+          "category": "sense",
+          "query": "What does transformer mean here? The transformer steps the mains voltage down before the rectifier.",
+          "expected": "transformer-power",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "transformer-power",
+              "score": 0.7411167025566101
+            },
+            {
+              "id": "transformer-ml",
+              "score": 0.6544972658157349
+            },
+            {
+              "id": "port-network",
+              "score": 0.6119842529296875
+            }
+          ],
+          "sense_rank": 1,
+          "sense_selected": "transformer-power"
+        },
+        {
+          "id": "sense-token-llm",
+          "scenario": "阅读生成速度时将 token 排为分词单位",
+          "category": "sense",
+          "query": "What does token mean here? The decoder emits one token at each generation step.",
+          "expected": "token-llm",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "token-llm",
+              "score": 0.7451992630958557
+            },
+            {
+              "id": "token-auth",
+              "score": 0.7061102390289307
+            },
+            {
+              "id": "code-stale",
+              "score": 0.6836237907409668
+            }
+          ],
+          "sense_rank": 1,
+          "sense_selected": "token-llm"
+        },
+        {
+          "id": "sense-token-auth",
+          "scenario": "阅读登录请求时将 token 排为访问凭据",
+          "category": "sense",
+          "query": "What does token mean here? Include the token in the Authorization header after signing in.",
+          "expected": "token-auth",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "token-auth",
+              "score": 0.7802658677101135
+            },
+            {
+              "id": "oauth",
+              "score": 0.7151479721069336
+            },
+            {
+              "id": "token-llm",
+              "score": 0.6567593812942505
+            }
+          ],
+          "sense_rank": 1,
+          "sense_selected": "token-auth"
+        },
+        {
+          "id": "sense-embedding-ml",
+          "scenario": "阅读语义搜索时将 embedding 排为向量表示",
+          "category": "sense",
+          "query": "What does embedding mean here? We compare each document embedding to find semantically related passages.",
+          "expected": "embedding-ml",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "embedding-ml",
+              "score": 0.7931076288223267
+            },
+            {
+              "id": "embedding-material",
+              "score": 0.7332255840301514
+            },
+            {
+              "id": "vector-database",
+              "score": 0.7092626094818115
+            }
+          ],
+          "sense_rank": 1,
+          "sense_selected": "embedding-ml"
+        },
+        {
+          "id": "sense-embedding-material",
+          "scenario": "阅读制造工艺时将 embedding 排为嵌入材料",
+          "category": "sense",
+          "query": "What does embedding mean here? Embedding the metal insert in molten resin keeps it fixed after cooling.",
+          "expected": "embedding-material",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "embedding-material",
+              "score": 0.8518619537353516
+            },
+            {
+              "id": "embedding-ml",
+              "score": 0.6771593689918518
+            },
+            {
+              "id": "cache-hidden",
+              "score": 0.6424216628074646
+            }
+          ],
+          "sense_rank": 1,
+          "sense_selected": "embedding-material"
+        },
+        {
+          "id": "sense-inference-ml",
+          "scenario": "阅读部署时将 inference 排为模型推理执行",
+          "category": "sense",
+          "query": "What does inference mean here? Inference on this checkpoint runs faster when the weights fit on the GPU.",
+          "expected": "inference-ml",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "inference-ml",
+              "score": 0.7518405914306641
+            },
+            {
+              "id": "batching",
+              "score": 0.7390502095222473
+            },
+            {
+              "id": "inference-logic",
+              "score": 0.6726533770561218
+            }
+          ],
+          "sense_rank": 1,
+          "sense_selected": "inference-ml"
+        },
+        {
+          "id": "sense-inference-logic",
+          "scenario": "阅读论证时将 inference 排为逻辑推断",
+          "category": "sense",
+          "query": "What does inference mean here? The inference does not follow from the premises in the argument.",
+          "expected": "inference-logic",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "inference-logic",
+              "score": 0.7747635841369629
+            },
+            {
+              "id": "inference-ml",
+              "score": 0.7409470081329346
+            },
+            {
+              "id": "batching",
+              "score": 0.6739504933357239
+            }
+          ],
+          "sense_rank": 1,
+          "sense_selected": "inference-logic"
+        },
+        {
+          "id": "sense-kernel-os",
+          "scenario": "阅读系统调用时将 kernel 排为操作系统内核",
+          "category": "sense",
+          "query": "What does kernel mean here? The kernel handles the syscall and wakes the blocked process.",
+          "expected": "kernel-os",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "kernel-os",
+              "score": 0.7760888338088989
+            },
+            {
+              "id": "kernel-math",
+              "score": 0.67451411485672
+            },
+            {
+              "id": "container-software",
+              "score": 0.6695820689201355
+            }
+          ],
+          "sense_rank": 1,
+          "sense_selected": "kernel-os"
+        },
+        {
+          "id": "sense-kernel-math",
+          "scenario": "阅读支持向量机时将 kernel 排为相似度函数",
+          "category": "sense",
+          "query": "What does kernel mean here? The SVM uses a radial basis kernel to separate nonlinear classes.",
+          "expected": "kernel-math",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "kernel-math",
+              "score": 0.7826451063156128
+            },
+            {
+              "id": "kernel-os",
+              "score": 0.6613085269927979
+            },
+            {
+              "id": "inference-ml",
+              "score": 0.6542421579360962
+            }
+          ],
+          "sense_rank": 1,
+          "sense_selected": "kernel-math"
+        },
+        {
+          "id": "sense-memory-computer",
+          "scenario": "阅读设备容量时将 memory 排为计算机内存",
+          "category": "sense",
+          "query": "What does memory mean here? The laptop cannot allocate enough memory to load the model.",
+          "expected": "memory-computer",
+          "rank": 3,
+          "top3": [
+            {
+              "id": "inference-ml",
+              "score": 0.6906648278236389
+            },
+            {
+              "id": "quantization",
+              "score": 0.6881783604621887
+            },
+            {
+              "id": "memory-computer",
+              "score": 0.6730351448059082
+            }
+          ],
+          "sense_rank": 1,
+          "sense_selected": "memory-computer"
+        },
+        {
+          "id": "sense-memory-human",
+          "scenario": "阅读童年经历时将 memory 排为人的记忆",
+          "category": "sense",
+          "query": "What does memory mean here? Her earliest memory was visiting the beach with her grandmother.",
+          "expected": "memory-human",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "memory-human",
+              "score": 0.7210662364959717
+            },
+            {
+              "id": "embedding-ml",
+              "score": 0.6662070155143738
+            },
+            {
+              "id": "port-harbor",
+              "score": 0.6484307646751404
+            }
+          ],
+          "sense_rank": 1,
+          "sense_selected": "memory-human"
+        },
+        {
+          "id": "sense-cache-computer",
+          "scenario": "阅读重复请求时将 cache 排为数据缓存",
+          "category": "sense",
+          "query": "What does cache mean here? A cache hit avoids recomputing the expensive response.",
+          "expected": "cache-computer",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "cache-computer",
+              "score": 0.7453851103782654
+            },
+            {
+              "id": "code-lru",
+              "score": 0.7254735231399536
+            },
+            {
+              "id": "cache-hidden",
+              "score": 0.7230257987976074
+            }
+          ],
+          "sense_rank": 1,
+          "sense_selected": "cache-computer"
+        },
+        {
+          "id": "sense-cache-hidden",
+          "scenario": "阅读探险补给时将 cache 排为隐藏物资",
+          "category": "sense",
+          "query": "What does cache mean here? The explorers dug up a cache of food beneath the rocks.",
+          "expected": "cache-hidden",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "cache-hidden",
+              "score": 0.8365636467933655
+            },
+            {
+              "id": "cache-computer",
+              "score": 0.6792193055152893
+            },
+            {
+              "id": "code-lru",
+              "score": 0.6520037055015564
+            }
+          ],
+          "sense_rank": 1,
+          "sense_selected": "cache-hidden"
+        },
+        {
+          "id": "sense-thread-computer",
+          "scenario": "阅读程序调度时将 thread 排为线程",
+          "category": "sense",
+          "query": "What does thread mean here? The worker thread waits on a mutex before updating the shared counter.",
+          "expected": "thread-computer",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "thread-computer",
+              "score": 0.7197203636169434
+            },
+            {
+              "id": "race-concurrency",
+              "score": 0.7012528777122498
+            },
+            {
+              "id": "code-limit",
+              "score": 0.6671890020370483
+            }
+          ],
+          "sense_rank": 1,
+          "sense_selected": "thread-computer"
+        },
+        {
+          "id": "sense-thread-textile",
+          "scenario": "阅读缝纫时将 thread 排为线材",
+          "category": "sense",
+          "query": "What does thread mean here? Pass the thread through the needle to mend the torn shirt.",
+          "expected": "thread-textile",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "thread-textile",
+              "score": 0.781732439994812
+            },
+            {
+              "id": "embedding-material",
+              "score": 0.6491045951843262
+            },
+            {
+              "id": "thread-computer",
+              "score": 0.6446975469589233
+            }
+          ],
+          "sense_rank": 1,
+          "sense_selected": "thread-textile"
+        },
+        {
+          "id": "sense-port-network",
+          "scenario": "阅读监听服务时将 port 排为网络端口",
+          "category": "sense",
+          "query": "What does port mean here? The HTTP service is listening on port 8080 on loopback.",
+          "expected": "port-network",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "port-network",
+              "score": 0.8177969455718994
+            },
+            {
+              "id": "port-harbor",
+              "score": 0.6532171368598938
+            },
+            {
+              "id": "latency",
+              "score": 0.6511363387107849
+            }
+          ],
+          "sense_rank": 1,
+          "sense_selected": "port-network"
+        },
+        {
+          "id": "sense-port-harbor",
+          "scenario": "阅读航运时将 port 排为港口",
+          "category": "sense",
+          "query": "What does port mean here? The cargo ship arrived at the port before sunrise.",
+          "expected": "port-harbor",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "port-harbor",
+              "score": 0.7986411452293396
+            },
+            {
+              "id": "port-network",
+              "score": 0.7079487442970276
+            },
+            {
+              "id": "container-shipping",
+              "score": 0.6785754561424255
+            }
+          ],
+          "sense_rank": 1,
+          "sense_selected": "port-harbor"
+        },
+        {
+          "id": "sense-container-software",
+          "scenario": "阅读服务部署时将 container 排为软件容器",
+          "category": "sense",
+          "query": "What does container mean here? We restart the container when its health check fails.",
+          "expected": "container-software",
+          "rank": 2,
+          "top3": [
+            {
+              "id": "kubernetes",
+              "score": 0.6934123635292053
+            },
+            {
+              "id": "container-software",
+              "score": 0.6888670921325684
+            },
+            {
+              "id": "container-shipping",
+              "score": 0.6322194337844849
+            }
+          ],
+          "sense_rank": 1,
+          "sense_selected": "container-software"
+        },
+        {
+          "id": "sense-container-shipping",
+          "scenario": "阅读货运时将 container 排为货箱",
+          "category": "sense",
+          "query": "What does container mean here? A crane lifted the steel container from the ship onto a truck.",
+          "expected": "container-shipping",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "container-shipping",
+              "score": 0.7938646078109741
+            },
+            {
+              "id": "port-harbor",
+              "score": 0.7078260779380798
+            },
+            {
+              "id": "container-software",
+              "score": 0.6981920003890991
+            }
+          ],
+          "sense_rank": 1,
+          "sense_selected": "container-shipping"
+        },
+        {
+          "id": "sense-race-concurrency",
+          "scenario": "阅读并发写入时将 race 排为竞态",
+          "category": "sense",
+          "query": "What does race mean here? Two asynchronous writes introduce a race and corrupt the shared state.",
+          "expected": "race-concurrency",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "race-concurrency",
+              "score": 0.7740225791931152
+            },
+            {
+              "id": "race-sport",
+              "score": 0.6822479367256165
+            },
+            {
+              "id": "code-lru",
+              "score": 0.6775500178337097
+            }
+          ],
+          "sense_rank": 1,
+          "sense_selected": "race-concurrency"
+        },
+        {
+          "id": "sense-race-sport",
+          "scenario": "阅读赛事时将 race 排为竞赛",
+          "category": "sense",
+          "query": "What does race mean here? The cyclist won the race by crossing the finish line first.",
+          "expected": "race-sport",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "race-sport",
+              "score": 0.8159983158111572
+            },
+            {
+              "id": "race-concurrency",
+              "score": 0.703722357749939
+            },
+            {
+              "id": "latency",
+              "score": 0.6276882886886597
+            }
+          ],
+          "sense_rank": 1,
+          "sense_selected": "race-sport"
+        },
+        {
+          "id": "sense-branch-git",
+          "scenario": "阅读版本管理时将 branch 排为代码分支",
+          "category": "sense",
+          "query": "What does branch mean here? Commit the patch on a new branch and merge it after review.",
+          "expected": "branch-git",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "branch-git",
+              "score": 0.7347952127456665
+            },
+            {
+              "id": "transactions",
+              "score": 0.6586923003196716
+            },
+            {
+              "id": "branch-tree",
+              "score": 0.6477338075637817
+            }
+          ],
+          "sense_rank": 1,
+          "sense_selected": "branch-git"
+        },
+        {
+          "id": "sense-branch-tree",
+          "scenario": "阅读植物时将 branch 排为树枝",
+          "category": "sense",
+          "query": "What does branch mean here? A bird built its nest on a branch above the garden.",
+          "expected": "branch-tree",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "branch-tree",
+              "score": 0.7708808779716492
+            },
+            {
+              "id": "branch-git",
+              "score": 0.6724207401275635
+            },
+            {
+              "id": "port-harbor",
+              "score": 0.6432146430015564
+            }
+          ],
+          "sense_rank": 1,
+          "sense_selected": "branch-tree"
+        },
+        {
+          "id": "retrieve-quantization",
+          "scenario": "中文描述低精度权重时检索到量化说明",
+          "category": "cross-language",
+          "query": "把神经网络参数从十六位降低到四位以节省显存",
+          "expected": "quantization",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "quantization",
+              "score": 0.7544429302215576
+            },
+            {
+              "id": "attention",
+              "score": 0.6526458263397217
+            },
+            {
+              "id": "batching",
+              "score": 0.6515300869941711
+            }
+          ]
+        },
+        {
+          "id": "retrieve-rag",
+          "scenario": "中文描述先查资料再回答时检索到 RAG",
+          "category": "cross-language",
+          "query": "让语言模型先查找外部资料，再依据找到的内容回答问题",
+          "expected": "rag",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "rag",
+              "score": 0.7106911540031433
+            },
+            {
+              "id": "prompt-injection",
+              "score": 0.6868783831596375
+            },
+            {
+              "id": "token-llm",
+              "score": 0.6766296625137329
+            }
+          ]
+        },
+        {
+          "id": "retrieve-gc",
+          "scenario": "中文描述自动回收无引用对象时检索到垃圾回收",
+          "category": "cross-language",
+          "query": "自动释放程序已经无法访问的对象占用的内存",
+          "expected": "gc",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "gc",
+              "score": 0.7222933769226074
+            },
+            {
+              "id": "race-concurrency",
+              "score": 0.6349149942398071
+            },
+            {
+              "id": "code-viewport",
+              "score": 0.6292356252670288
+            }
+          ]
+        },
+        {
+          "id": "retrieve-latency",
+          "scenario": "中文比较响应时间和处理量时检索到延迟吞吐说明",
+          "category": "cross-language",
+          "query": "一次请求等多久，与每秒能处理多少请求有什么区别",
+          "expected": "latency",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "latency",
+              "score": 0.7378142476081848
+            },
+            {
+              "id": "code-abort",
+              "score": 0.7061870098114014
+            },
+            {
+              "id": "batching",
+              "score": 0.6761510968208313
+            }
+          ]
+        },
+        {
+          "id": "retrieve-kubernetes",
+          "scenario": "中文描述集群调度容器时检索到 Kubernetes",
+          "category": "cross-language",
+          "query": "在多台机器上自动调度容器，故障后替换实例并扩缩容",
+          "expected": "kubernetes",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "kubernetes",
+              "score": 0.7102897763252258
+            },
+            {
+              "id": "batching",
+              "score": 0.6778196692466736
+            },
+            {
+              "id": "gc",
+              "score": 0.6514601707458496
+            }
+          ]
+        },
+        {
+          "id": "retrieve-typescript",
+          "scenario": "中文描述运行前检查 JavaScript 类型时检索到 TypeScript",
+          "category": "cross-language",
+          "query": "给 JavaScript 增加静态类型，在执行之前发现类型错误",
+          "expected": "typescript",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "typescript",
+              "score": 0.741392970085144
+            },
+            {
+              "id": "wasm",
+              "score": 0.6232526302337646
+            },
+            {
+              "id": "code-escape",
+              "score": 0.6192924380302429
+            }
+          ]
+        },
+        {
+          "id": "retrieve-tls",
+          "scenario": "中文描述 HTTPS 加密与证书时检索到 TLS",
+          "category": "cross-language",
+          "query": "浏览器和服务器之间的加密通道，用证书确认服务器身份",
+          "expected": "tls",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "tls",
+              "score": 0.7159324884414673
+            },
+            {
+              "id": "token-auth",
+              "score": 0.656170129776001
+            },
+            {
+              "id": "prompt-injection",
+              "score": 0.6317740678787231
+            }
+          ]
+        },
+        {
+          "id": "retrieve-oauth",
+          "scenario": "中文描述第三方授权时检索到 OAuth",
+          "category": "cross-language",
+          "query": "不用把密码交给第三方应用，就能授予它有限的账号资源访问权限",
+          "expected": "oauth",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "oauth",
+              "score": 0.7564040422439575
+            },
+            {
+              "id": "token-auth",
+              "score": 0.6644353270530701
+            },
+            {
+              "id": "prompt-injection",
+              "score": 0.6396098732948303
+            }
+          ]
+        },
+        {
+          "id": "retrieve-wasm",
+          "scenario": "英文描述浏览器运行编译代码时检索到 WebAssembly",
+          "category": "retrieval",
+          "query": "A compact binary format lets a browser execute sandboxed code compiled from Rust.",
+          "expected": "wasm",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "wasm",
+              "score": 0.823100209236145
+            },
+            {
+              "id": "container-software",
+              "score": 0.6785209774971008
+            },
+            {
+              "id": "code-escape",
+              "score": 0.6598700284957886
+            }
+          ]
+        },
+        {
+          "id": "retrieve-injection",
+          "scenario": "网页内容试图改写助手指令时检索到提示注入说明",
+          "category": "retrieval",
+          "query": "A retrieved article tells the assistant to ignore its instructions and disclose private data.",
+          "expected": "prompt-injection",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "prompt-injection",
+              "score": 0.7110428214073181
+            },
+            {
+              "id": "code-abort",
+              "score": 0.6465680599212646
+            },
+            {
+              "id": "rag",
+              "score": 0.6453163027763367
+            }
+          ]
+        },
+        {
+          "id": "retrieve-vector-db",
+          "scenario": "描述按向量距离查询时检索到向量索引",
+          "category": "retrieval",
+          "query": "How can I search a large collection by finding approximate nearest neighbours of sentence vectors?",
+          "expected": "vector-database",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "vector-database",
+              "score": 0.7972521781921387
+            },
+            {
+              "id": "embedding-ml",
+              "score": 0.7119626998901367
+            },
+            {
+              "id": "kernel-math",
+              "score": 0.6880692839622498
+            }
+          ]
+        },
+        {
+          "id": "retrieve-cuda",
+          "scenario": "描述 NVIDIA 并行计算平台时检索到 CUDA",
+          "category": "retrieval",
+          "query": "The NVIDIA toolkit for launching general-purpose parallel computations on graphics hardware.",
+          "expected": "cuda",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "cuda",
+              "score": 0.7300351858139038
+            },
+            {
+              "id": "inference-ml",
+              "score": 0.5996111035346985
+            },
+            {
+              "id": "batching",
+              "score": 0.5975527167320251
+            }
+          ]
+        },
+        {
+          "id": "retrieve-batching",
+          "scenario": "描述合并模型输入时检索到批处理",
+          "category": "retrieval",
+          "query": "Send several texts through a model together to spread startup overhead across the inputs.",
+          "expected": "batching",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "batching",
+              "score": 0.6569754481315613
+            },
+            {
+              "id": "prompt-injection",
+              "score": 0.65583336353302
+            },
+            {
+              "id": "inference-ml",
+              "score": 0.6505802869796753
+            }
+          ]
+        },
+        {
+          "id": "retrieve-transaction",
+          "scenario": "描述写入全部成功或回滚时检索到数据库事务",
+          "category": "retrieval",
+          "query": "If any database update fails, undo every change in the group instead of leaving a partial write.",
+          "expected": "transactions",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "transactions",
+              "score": 0.7777352929115295
+            },
+            {
+              "id": "code-lru",
+              "score": 0.6308000683784485
+            },
+            {
+              "id": "code-viewport",
+              "score": 0.6102040410041809
+            }
+          ]
+        },
+        {
+          "id": "retrieve-attention",
+          "scenario": "描述 query key value 时检索到注意力机制",
+          "category": "retrieval",
+          "query": "Use query and key dot products to choose how much each position contributes through its value.",
+          "expected": "attention",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "attention",
+              "score": 0.7088748216629028
+            },
+            {
+              "id": "idf",
+              "score": 0.6532437801361084
+            },
+            {
+              "id": "code-lru",
+              "score": 0.6500189304351807
+            }
+          ]
+        },
+        {
+          "id": "retrieve-idf",
+          "scenario": "描述低频词权重时检索到逆文档频率",
+          "category": "retrieval",
+          "query": "Why should a rare search term receive a larger weight than a term appearing in almost every file?",
+          "expected": "idf",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "idf",
+              "score": 0.7681068778038025
+            },
+            {
+              "id": "vector-database",
+              "score": 0.6445358395576477
+            },
+            {
+              "id": "attention",
+              "score": 0.6444883346557617
+            }
+          ]
+        },
+        {
+          "id": "code-limit",
+          "scenario": "按并发上限描述检索到任务队列代码",
+          "category": "code",
+          "query": "Find the function that runs a list of jobs with at most N active operations at once.",
+          "expected": "code-limit",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "code-limit",
+              "score": 0.7552837133407593
+            },
+            {
+              "id": "batching",
+              "score": 0.7089318037033081
+            },
+            {
+              "id": "code-abort",
+              "score": 0.691633403301239
+            }
+          ]
+        },
+        {
+          "id": "code-abort",
+          "scenario": "按请求超时取消描述检索到 AbortController 代码",
+          "category": "code",
+          "query": "Locate the request helper that cancels a network operation when its deadline expires and releases the timer.",
+          "expected": "code-abort",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "code-abort",
+              "score": 0.7845507264137268
+            },
+            {
+              "id": "code-debounce",
+              "score": 0.6990879774093628
+            },
+            {
+              "id": "code-lru",
+              "score": 0.6738536357879639
+            }
+          ]
+        },
+        {
+          "id": "code-batch",
+          "scenario": "中文按分块描述检索到数组批处理代码",
+          "category": "code",
+          "query": "查找把一个数组拆成指定大小的多个小数组的函数",
+          "expected": "code-batch",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "code-batch",
+              "score": 0.7296095490455627
+            },
+            {
+              "id": "code-lru",
+              "score": 0.6889166235923767
+            },
+            {
+              "id": "code-viewport",
+              "score": 0.6887221336364746
+            }
+          ]
+        },
+        {
+          "id": "code-lru",
+          "scenario": "按最近最少使用淘汰描述检索到缓存代码",
+          "category": "code",
+          "query": "Find a bounded cache that refreshes recency on reads and evicts the least recently accessed item.",
+          "expected": "code-lru",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "code-lru",
+              "score": 0.7450597286224365
+            },
+            {
+              "id": "cache-computer",
+              "score": 0.7033513188362122
+            },
+            {
+              "id": "code-viewport",
+              "score": 0.7000051140785217
+            }
+          ]
+        },
+        {
+          "id": "code-escape",
+          "scenario": "中文按 HTML 转义描述检索到实体替换代码",
+          "category": "code",
+          "query": "查找将字符串中的尖括号和引号转成 HTML 实体以便安全显示的代码",
+          "expected": "code-escape",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "code-escape",
+              "score": 0.7655874490737915
+            },
+            {
+              "id": "code-stale",
+              "score": 0.6845303773880005
+            },
+            {
+              "id": "wasm",
+              "score": 0.6769095063209534
+            }
+          ]
+        },
+        {
+          "id": "code-debounce",
+          "scenario": "按等待连续事件停止描述检索到防抖代码",
+          "category": "code",
+          "query": "Locate a wrapper that only calls its callback after incoming events stop for a quiet interval.",
+          "expected": "code-debounce",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "code-debounce",
+              "score": 0.786720871925354
+            },
+            {
+              "id": "code-viewport",
+              "score": 0.7374897599220276
+            },
+            {
+              "id": "code-abort",
+              "score": 0.7189226150512695
+            }
+          ]
+        },
+        {
+          "id": "code-stale",
+          "scenario": "按忽略旧选区结果描述检索到代次检查代码",
+          "category": "code",
+          "query": "Find the code that prevents an old asynchronous translation response from replacing the current selection's result.",
+          "expected": "code-stale",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "code-stale",
+              "score": 0.8242394924163818
+            },
+            {
+              "id": "code-abort",
+              "score": 0.7148404121398926
+            },
+            {
+              "id": "code-escape",
+              "score": 0.7015300989151001
+            }
+          ]
+        },
+        {
+          "id": "code-viewport",
+          "scenario": "中文按靠近可视区域排队描述检索到观察器代码",
+          "category": "code",
+          "query": "查找只在元素接近浏览器可视区域时才把它加入处理队列的代码",
+          "expected": "code-viewport",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "code-viewport",
+              "score": 0.7582246661186218
+            },
+            {
+              "id": "code-stale",
+              "score": 0.6982601284980774
+            },
+            {
+              "id": "code-lru",
+              "score": 0.6885332465171814
+            }
+          ]
+        }
+      ]
+    },
+    "512": {
+      "summary": {
+        "all": {
+          "count": 48,
+          "hit1": 0.9791666666666666,
+          "hit3": 1.0,
+          "mrr": 0.9861111111111112
+        },
+        "sense": {
+          "count": 24,
+          "hit1": 0.9583333333333334,
+          "hit3": 1.0,
+          "mrr": 0.9722222222222222,
+          "same_headword_hit1": 1.0
+        },
+        "cross-language": {
+          "count": 8,
+          "hit1": 1.0,
+          "hit3": 1.0,
+          "mrr": 1.0
+        },
+        "retrieval": {
+          "count": 8,
+          "hit1": 1.0,
+          "hit3": 1.0,
+          "mrr": 1.0
+        },
+        "code": {
+          "count": 8,
+          "hit1": 1.0,
+          "hit3": 1.0,
+          "mrr": 1.0
+        }
+      },
+      "cases": [
+        {
+          "id": "sense-transformer-ml",
+          "scenario": "阅读模型架构时将 transformer 排为神经网络义项",
+          "category": "sense",
+          "query": "What does transformer mean here? The transformer attends to earlier words while generating an answer.",
+          "expected": "transformer-ml",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "transformer-ml",
+              "score": 0.7847097516059875
+            },
+            {
+              "id": "transformer-power",
+              "score": 0.7501175403594971
+            },
+            {
+              "id": "token-llm",
+              "score": 0.7202728390693665
+            }
+          ],
+          "sense_rank": 1,
+          "sense_selected": "transformer-ml"
+        },
+        {
+          "id": "sense-transformer-power",
+          "scenario": "阅读电路时将 transformer 排为变压器义项",
+          "category": "sense",
+          "query": "What does transformer mean here? The transformer steps the mains voltage down before the rectifier.",
+          "expected": "transformer-power",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "transformer-power",
+              "score": 0.7424818277359009
+            },
+            {
+              "id": "transformer-ml",
+              "score": 0.6649687886238098
+            },
+            {
+              "id": "port-network",
+              "score": 0.6165805459022522
+            }
+          ],
+          "sense_rank": 1,
+          "sense_selected": "transformer-power"
+        },
+        {
+          "id": "sense-token-llm",
+          "scenario": "阅读生成速度时将 token 排为分词单位",
+          "category": "sense",
+          "query": "What does token mean here? The decoder emits one token at each generation step.",
+          "expected": "token-llm",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "token-llm",
+              "score": 0.7589530348777771
+            },
+            {
+              "id": "token-auth",
+              "score": 0.7239032983779907
+            },
+            {
+              "id": "code-stale",
+              "score": 0.6953925490379333
+            }
+          ],
+          "sense_rank": 1,
+          "sense_selected": "token-llm"
+        },
+        {
+          "id": "sense-token-auth",
+          "scenario": "阅读登录请求时将 token 排为访问凭据",
+          "category": "sense",
+          "query": "What does token mean here? Include the token in the Authorization header after signing in.",
+          "expected": "token-auth",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "token-auth",
+              "score": 0.7824674844741821
+            },
+            {
+              "id": "oauth",
+              "score": 0.7262766361236572
+            },
+            {
+              "id": "token-llm",
+              "score": 0.6632257699966431
+            }
+          ],
+          "sense_rank": 1,
+          "sense_selected": "token-auth"
+        },
+        {
+          "id": "sense-embedding-ml",
+          "scenario": "阅读语义搜索时将 embedding 排为向量表示",
+          "category": "sense",
+          "query": "What does embedding mean here? We compare each document embedding to find semantically related passages.",
+          "expected": "embedding-ml",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "embedding-ml",
+              "score": 0.7955482602119446
+            },
+            {
+              "id": "embedding-material",
+              "score": 0.7343308329582214
+            },
+            {
+              "id": "vector-database",
+              "score": 0.7155280113220215
+            }
+          ],
+          "sense_rank": 1,
+          "sense_selected": "embedding-ml"
+        },
+        {
+          "id": "sense-embedding-material",
+          "scenario": "阅读制造工艺时将 embedding 排为嵌入材料",
+          "category": "sense",
+          "query": "What does embedding mean here? Embedding the metal insert in molten resin keeps it fixed after cooling.",
+          "expected": "embedding-material",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "embedding-material",
+              "score": 0.857332170009613
+            },
+            {
+              "id": "embedding-ml",
+              "score": 0.6710618138313293
+            },
+            {
+              "id": "cache-hidden",
+              "score": 0.6470959782600403
+            }
+          ],
+          "sense_rank": 1,
+          "sense_selected": "embedding-material"
+        },
+        {
+          "id": "sense-inference-ml",
+          "scenario": "阅读部署时将 inference 排为模型推理执行",
+          "category": "sense",
+          "query": "What does inference mean here? Inference on this checkpoint runs faster when the weights fit on the GPU.",
+          "expected": "inference-ml",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "inference-ml",
+              "score": 0.7528917193412781
+            },
+            {
+              "id": "batching",
+              "score": 0.7419768571853638
+            },
+            {
+              "id": "inference-logic",
+              "score": 0.6816756129264832
+            }
+          ],
+          "sense_rank": 1,
+          "sense_selected": "inference-ml"
+        },
+        {
+          "id": "sense-inference-logic",
+          "scenario": "阅读论证时将 inference 排为逻辑推断",
+          "category": "sense",
+          "query": "What does inference mean here? The inference does not follow from the premises in the argument.",
+          "expected": "inference-logic",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "inference-logic",
+              "score": 0.7826883792877197
+            },
+            {
+              "id": "inference-ml",
+              "score": 0.7500869631767273
+            },
+            {
+              "id": "batching",
+              "score": 0.6931036114692688
+            }
+          ],
+          "sense_rank": 1,
+          "sense_selected": "inference-logic"
+        },
+        {
+          "id": "sense-kernel-os",
+          "scenario": "阅读系统调用时将 kernel 排为操作系统内核",
+          "category": "sense",
+          "query": "What does kernel mean here? The kernel handles the syscall and wakes the blocked process.",
+          "expected": "kernel-os",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "kernel-os",
+              "score": 0.7738997936248779
+            },
+            {
+              "id": "race-concurrency",
+              "score": 0.6732050180435181
+            },
+            {
+              "id": "container-software",
+              "score": 0.6694245338439941
+            }
+          ],
+          "sense_rank": 1,
+          "sense_selected": "kernel-os"
+        },
+        {
+          "id": "sense-kernel-math",
+          "scenario": "阅读支持向量机时将 kernel 排为相似度函数",
+          "category": "sense",
+          "query": "What does kernel mean here? The SVM uses a radial basis kernel to separate nonlinear classes.",
+          "expected": "kernel-math",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "kernel-math",
+              "score": 0.7864087224006653
+            },
+            {
+              "id": "inference-ml",
+              "score": 0.6714672446250916
+            },
+            {
+              "id": "kernel-os",
+              "score": 0.6698496341705322
+            }
+          ],
+          "sense_rank": 1,
+          "sense_selected": "kernel-math"
+        },
+        {
+          "id": "sense-memory-computer",
+          "scenario": "阅读设备容量时将 memory 排为计算机内存",
+          "category": "sense",
+          "query": "What does memory mean here? The laptop cannot allocate enough memory to load the model.",
+          "expected": "memory-computer",
+          "rank": 3,
+          "top3": [
+            {
+              "id": "quantization",
+              "score": 0.6894245147705078
+            },
+            {
+              "id": "inference-ml",
+              "score": 0.6886785626411438
+            },
+            {
+              "id": "memory-computer",
+              "score": 0.6729384660720825
+            }
+          ],
+          "sense_rank": 1,
+          "sense_selected": "memory-computer"
+        },
+        {
+          "id": "sense-memory-human",
+          "scenario": "阅读童年经历时将 memory 排为人的记忆",
+          "category": "sense",
+          "query": "What does memory mean here? Her earliest memory was visiting the beach with her grandmother.",
+          "expected": "memory-human",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "memory-human",
+              "score": 0.7318123579025269
+            },
+            {
+              "id": "embedding-ml",
+              "score": 0.6655848026275635
+            },
+            {
+              "id": "port-harbor",
+              "score": 0.6521053910255432
+            }
+          ],
+          "sense_rank": 1,
+          "sense_selected": "memory-human"
+        },
+        {
+          "id": "sense-cache-computer",
+          "scenario": "阅读重复请求时将 cache 排为数据缓存",
+          "category": "sense",
+          "query": "What does cache mean here? A cache hit avoids recomputing the expensive response.",
+          "expected": "cache-computer",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "cache-computer",
+              "score": 0.7462847232818604
+            },
+            {
+              "id": "cache-hidden",
+              "score": 0.7310934662818909
+            },
+            {
+              "id": "code-lru",
+              "score": 0.7309576272964478
+            }
+          ],
+          "sense_rank": 1,
+          "sense_selected": "cache-computer"
+        },
+        {
+          "id": "sense-cache-hidden",
+          "scenario": "阅读探险补给时将 cache 排为隐藏物资",
+          "category": "sense",
+          "query": "What does cache mean here? The explorers dug up a cache of food beneath the rocks.",
+          "expected": "cache-hidden",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "cache-hidden",
+              "score": 0.8417148590087891
+            },
+            {
+              "id": "cache-computer",
+              "score": 0.6935611963272095
+            },
+            {
+              "id": "code-lru",
+              "score": 0.6546217203140259
+            }
+          ],
+          "sense_rank": 1,
+          "sense_selected": "cache-hidden"
+        },
+        {
+          "id": "sense-thread-computer",
+          "scenario": "阅读程序调度时将 thread 排为线程",
+          "category": "sense",
+          "query": "What does thread mean here? The worker thread waits on a mutex before updating the shared counter.",
+          "expected": "thread-computer",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "thread-computer",
+              "score": 0.7229862213134766
+            },
+            {
+              "id": "race-concurrency",
+              "score": 0.6983655095100403
+            },
+            {
+              "id": "code-viewport",
+              "score": 0.6717307567596436
+            }
+          ],
+          "sense_rank": 1,
+          "sense_selected": "thread-computer"
+        },
+        {
+          "id": "sense-thread-textile",
+          "scenario": "阅读缝纫时将 thread 排为线材",
+          "category": "sense",
+          "query": "What does thread mean here? Pass the thread through the needle to mend the torn shirt.",
+          "expected": "thread-textile",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "thread-textile",
+              "score": 0.7879324555397034
+            },
+            {
+              "id": "embedding-material",
+              "score": 0.6518924832344055
+            },
+            {
+              "id": "code-stale",
+              "score": 0.6440349817276001
+            }
+          ],
+          "sense_rank": 1,
+          "sense_selected": "thread-textile"
+        },
+        {
+          "id": "sense-port-network",
+          "scenario": "阅读监听服务时将 port 排为网络端口",
+          "category": "sense",
+          "query": "What does port mean here? The HTTP service is listening on port 8080 on loopback.",
+          "expected": "port-network",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "port-network",
+              "score": 0.8110413551330566
+            },
+            {
+              "id": "port-harbor",
+              "score": 0.6540964245796204
+            },
+            {
+              "id": "latency",
+              "score": 0.6513593196868896
+            }
+          ],
+          "sense_rank": 1,
+          "sense_selected": "port-network"
+        },
+        {
+          "id": "sense-port-harbor",
+          "scenario": "阅读航运时将 port 排为港口",
+          "category": "sense",
+          "query": "What does port mean here? The cargo ship arrived at the port before sunrise.",
+          "expected": "port-harbor",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "port-harbor",
+              "score": 0.7980467081069946
+            },
+            {
+              "id": "port-network",
+              "score": 0.7138177752494812
+            },
+            {
+              "id": "container-shipping",
+              "score": 0.6756733059883118
+            }
+          ],
+          "sense_rank": 1,
+          "sense_selected": "port-harbor"
+        },
+        {
+          "id": "sense-container-software",
+          "scenario": "阅读服务部署时将 container 排为软件容器",
+          "category": "sense",
+          "query": "What does container mean here? We restart the container when its health check fails.",
+          "expected": "container-software",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "container-software",
+              "score": 0.7014089226722717
+            },
+            {
+              "id": "kubernetes",
+              "score": 0.6916077136993408
+            },
+            {
+              "id": "race-concurrency",
+              "score": 0.6395429968833923
+            }
+          ],
+          "sense_rank": 1,
+          "sense_selected": "container-software"
+        },
+        {
+          "id": "sense-container-shipping",
+          "scenario": "阅读货运时将 container 排为货箱",
+          "category": "sense",
+          "query": "What does container mean here? A crane lifted the steel container from the ship onto a truck.",
+          "expected": "container-shipping",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "container-shipping",
+              "score": 0.7972782254219055
+            },
+            {
+              "id": "container-software",
+              "score": 0.7114859819412231
+            },
+            {
+              "id": "port-harbor",
+              "score": 0.7095992565155029
+            }
+          ],
+          "sense_rank": 1,
+          "sense_selected": "container-shipping"
+        },
+        {
+          "id": "sense-race-concurrency",
+          "scenario": "阅读并发写入时将 race 排为竞态",
+          "category": "sense",
+          "query": "What does race mean here? Two asynchronous writes introduce a race and corrupt the shared state.",
+          "expected": "race-concurrency",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "race-concurrency",
+              "score": 0.781825065612793
+            },
+            {
+              "id": "transactions",
+              "score": 0.6787147521972656
+            },
+            {
+              "id": "code-lru",
+              "score": 0.6704566478729248
+            }
+          ],
+          "sense_rank": 1,
+          "sense_selected": "race-concurrency"
+        },
+        {
+          "id": "sense-race-sport",
+          "scenario": "阅读赛事时将 race 排为竞赛",
+          "category": "sense",
+          "query": "What does race mean here? The cyclist won the race by crossing the finish line first.",
+          "expected": "race-sport",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "race-sport",
+              "score": 0.8123666048049927
+            },
+            {
+              "id": "race-concurrency",
+              "score": 0.7054948210716248
+            },
+            {
+              "id": "code-viewport",
+              "score": 0.6265483498573303
+            }
+          ],
+          "sense_rank": 1,
+          "sense_selected": "race-sport"
+        },
+        {
+          "id": "sense-branch-git",
+          "scenario": "阅读版本管理时将 branch 排为代码分支",
+          "category": "sense",
+          "query": "What does branch mean here? Commit the patch on a new branch and merge it after review.",
+          "expected": "branch-git",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "branch-git",
+              "score": 0.7341706156730652
+            },
+            {
+              "id": "transactions",
+              "score": 0.6604044437408447
+            },
+            {
+              "id": "branch-tree",
+              "score": 0.6448683738708496
+            }
+          ],
+          "sense_rank": 1,
+          "sense_selected": "branch-git"
+        },
+        {
+          "id": "sense-branch-tree",
+          "scenario": "阅读植物时将 branch 排为树枝",
+          "category": "sense",
+          "query": "What does branch mean here? A bird built its nest on a branch above the garden.",
+          "expected": "branch-tree",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "branch-tree",
+              "score": 0.7770006060600281
+            },
+            {
+              "id": "branch-git",
+              "score": 0.6724337339401245
+            },
+            {
+              "id": "port-harbor",
+              "score": 0.6476864814758301
+            }
+          ],
+          "sense_rank": 1,
+          "sense_selected": "branch-tree"
+        },
+        {
+          "id": "retrieve-quantization",
+          "scenario": "中文描述低精度权重时检索到量化说明",
+          "category": "cross-language",
+          "query": "把神经网络参数从十六位降低到四位以节省显存",
+          "expected": "quantization",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "quantization",
+              "score": 0.7589835524559021
+            },
+            {
+              "id": "batching",
+              "score": 0.6655649542808533
+            },
+            {
+              "id": "attention",
+              "score": 0.6609116792678833
+            }
+          ]
+        },
+        {
+          "id": "retrieve-rag",
+          "scenario": "中文描述先查资料再回答时检索到 RAG",
+          "category": "cross-language",
+          "query": "让语言模型先查找外部资料，再依据找到的内容回答问题",
+          "expected": "rag",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "rag",
+              "score": 0.719375729560852
+            },
+            {
+              "id": "token-llm",
+              "score": 0.6995715498924255
+            },
+            {
+              "id": "prompt-injection",
+              "score": 0.6956254243850708
+            }
+          ]
+        },
+        {
+          "id": "retrieve-gc",
+          "scenario": "中文描述自动回收无引用对象时检索到垃圾回收",
+          "category": "cross-language",
+          "query": "自动释放程序已经无法访问的对象占用的内存",
+          "expected": "gc",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "gc",
+              "score": 0.7289552688598633
+            },
+            {
+              "id": "race-concurrency",
+              "score": 0.6369942426681519
+            },
+            {
+              "id": "code-viewport",
+              "score": 0.6290966868400574
+            }
+          ]
+        },
+        {
+          "id": "retrieve-latency",
+          "scenario": "中文比较响应时间和处理量时检索到延迟吞吐说明",
+          "category": "cross-language",
+          "query": "一次请求等多久，与每秒能处理多少请求有什么区别",
+          "expected": "latency",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "latency",
+              "score": 0.7523903250694275
+            },
+            {
+              "id": "code-abort",
+              "score": 0.7013849020004272
+            },
+            {
+              "id": "batching",
+              "score": 0.6724878549575806
+            }
+          ]
+        },
+        {
+          "id": "retrieve-kubernetes",
+          "scenario": "中文描述集群调度容器时检索到 Kubernetes",
+          "category": "cross-language",
+          "query": "在多台机器上自动调度容器，故障后替换实例并扩缩容",
+          "expected": "kubernetes",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "kubernetes",
+              "score": 0.7241032123565674
+            },
+            {
+              "id": "batching",
+              "score": 0.6790722608566284
+            },
+            {
+              "id": "gc",
+              "score": 0.657209575176239
+            }
+          ]
+        },
+        {
+          "id": "retrieve-typescript",
+          "scenario": "中文描述运行前检查 JavaScript 类型时检索到 TypeScript",
+          "category": "cross-language",
+          "query": "给 JavaScript 增加静态类型，在执行之前发现类型错误",
+          "expected": "typescript",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "typescript",
+              "score": 0.7394804358482361
+            },
+            {
+              "id": "code-escape",
+              "score": 0.6195492148399353
+            },
+            {
+              "id": "wasm",
+              "score": 0.6195146441459656
+            }
+          ]
+        },
+        {
+          "id": "retrieve-tls",
+          "scenario": "中文描述 HTTPS 加密与证书时检索到 TLS",
+          "category": "cross-language",
+          "query": "浏览器和服务器之间的加密通道，用证书确认服务器身份",
+          "expected": "tls",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "tls",
+              "score": 0.7245408892631531
+            },
+            {
+              "id": "token-auth",
+              "score": 0.6615816950798035
+            },
+            {
+              "id": "prompt-injection",
+              "score": 0.644862949848175
+            }
+          ]
+        },
+        {
+          "id": "retrieve-oauth",
+          "scenario": "中文描述第三方授权时检索到 OAuth",
+          "category": "cross-language",
+          "query": "不用把密码交给第三方应用，就能授予它有限的账号资源访问权限",
+          "expected": "oauth",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "oauth",
+              "score": 0.7652751803398132
+            },
+            {
+              "id": "token-auth",
+              "score": 0.672728955745697
+            },
+            {
+              "id": "prompt-injection",
+              "score": 0.6596882939338684
+            }
+          ]
+        },
+        {
+          "id": "retrieve-wasm",
+          "scenario": "英文描述浏览器运行编译代码时检索到 WebAssembly",
+          "category": "retrieval",
+          "query": "A compact binary format lets a browser execute sandboxed code compiled from Rust.",
+          "expected": "wasm",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "wasm",
+              "score": 0.819765567779541
+            },
+            {
+              "id": "container-software",
+              "score": 0.6824800968170166
+            },
+            {
+              "id": "code-escape",
+              "score": 0.6733075380325317
+            }
+          ]
+        },
+        {
+          "id": "retrieve-injection",
+          "scenario": "网页内容试图改写助手指令时检索到提示注入说明",
+          "category": "retrieval",
+          "query": "A retrieved article tells the assistant to ignore its instructions and disclose private data.",
+          "expected": "prompt-injection",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "prompt-injection",
+              "score": 0.7225046753883362
+            },
+            {
+              "id": "code-stale",
+              "score": 0.6561982035636902
+            },
+            {
+              "id": "code-abort",
+              "score": 0.6561501026153564
+            }
+          ]
+        },
+        {
+          "id": "retrieve-vector-db",
+          "scenario": "描述按向量距离查询时检索到向量索引",
+          "category": "retrieval",
+          "query": "How can I search a large collection by finding approximate nearest neighbours of sentence vectors?",
+          "expected": "vector-database",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "vector-database",
+              "score": 0.7971516251564026
+            },
+            {
+              "id": "embedding-ml",
+              "score": 0.7124307155609131
+            },
+            {
+              "id": "kernel-math",
+              "score": 0.6920120716094971
+            }
+          ]
+        },
+        {
+          "id": "retrieve-cuda",
+          "scenario": "描述 NVIDIA 并行计算平台时检索到 CUDA",
+          "category": "retrieval",
+          "query": "The NVIDIA toolkit for launching general-purpose parallel computations on graphics hardware.",
+          "expected": "cuda",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "cuda",
+              "score": 0.7435905933380127
+            },
+            {
+              "id": "inference-ml",
+              "score": 0.6066378355026245
+            },
+            {
+              "id": "batching",
+              "score": 0.6039333939552307
+            }
+          ]
+        },
+        {
+          "id": "retrieve-batching",
+          "scenario": "描述合并模型输入时检索到批处理",
+          "category": "retrieval",
+          "query": "Send several texts through a model together to spread startup overhead across the inputs.",
+          "expected": "batching",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "batching",
+              "score": 0.6757303476333618
+            },
+            {
+              "id": "prompt-injection",
+              "score": 0.670913577079773
+            },
+            {
+              "id": "inference-ml",
+              "score": 0.6670374274253845
+            }
+          ]
+        },
+        {
+          "id": "retrieve-transaction",
+          "scenario": "描述写入全部成功或回滚时检索到数据库事务",
+          "category": "retrieval",
+          "query": "If any database update fails, undo every change in the group instead of leaving a partial write.",
+          "expected": "transactions",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "transactions",
+              "score": 0.7860395312309265
+            },
+            {
+              "id": "code-lru",
+              "score": 0.6236264705657959
+            },
+            {
+              "id": "code-viewport",
+              "score": 0.6007038950920105
+            }
+          ]
+        },
+        {
+          "id": "retrieve-attention",
+          "scenario": "描述 query key value 时检索到注意力机制",
+          "category": "retrieval",
+          "query": "Use query and key dot products to choose how much each position contributes through its value.",
+          "expected": "attention",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "attention",
+              "score": 0.7080285549163818
+            },
+            {
+              "id": "code-lru",
+              "score": 0.6636121869087219
+            },
+            {
+              "id": "idf",
+              "score": 0.6628004908561707
+            }
+          ]
+        },
+        {
+          "id": "retrieve-idf",
+          "scenario": "描述低频词权重时检索到逆文档频率",
+          "category": "retrieval",
+          "query": "Why should a rare search term receive a larger weight than a term appearing in almost every file?",
+          "expected": "idf",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "idf",
+              "score": 0.7726970314979553
+            },
+            {
+              "id": "vector-database",
+              "score": 0.6587159037590027
+            },
+            {
+              "id": "code-viewport",
+              "score": 0.6513853073120117
+            }
+          ]
+        },
+        {
+          "id": "code-limit",
+          "scenario": "按并发上限描述检索到任务队列代码",
+          "category": "code",
+          "query": "Find the function that runs a list of jobs with at most N active operations at once.",
+          "expected": "code-limit",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "code-limit",
+              "score": 0.751797080039978
+            },
+            {
+              "id": "batching",
+              "score": 0.7174895405769348
+            },
+            {
+              "id": "inference-ml",
+              "score": 0.6901101469993591
+            }
+          ]
+        },
+        {
+          "id": "code-abort",
+          "scenario": "按请求超时取消描述检索到 AbortController 代码",
+          "category": "code",
+          "query": "Locate the request helper that cancels a network operation when its deadline expires and releases the timer.",
+          "expected": "code-abort",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "code-abort",
+              "score": 0.7821936011314392
+            },
+            {
+              "id": "code-debounce",
+              "score": 0.710455060005188
+            },
+            {
+              "id": "code-viewport",
+              "score": 0.6725286245346069
+            }
+          ]
+        },
+        {
+          "id": "code-batch",
+          "scenario": "中文按分块描述检索到数组批处理代码",
+          "category": "code",
+          "query": "查找把一个数组拆成指定大小的多个小数组的函数",
+          "expected": "code-batch",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "code-batch",
+              "score": 0.7223618626594543
+            },
+            {
+              "id": "code-viewport",
+              "score": 0.689408004283905
+            },
+            {
+              "id": "code-lru",
+              "score": 0.6842405796051025
+            }
+          ]
+        },
+        {
+          "id": "code-lru",
+          "scenario": "按最近最少使用淘汰描述检索到缓存代码",
+          "category": "code",
+          "query": "Find a bounded cache that refreshes recency on reads and evicts the least recently accessed item.",
+          "expected": "code-lru",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "code-lru",
+              "score": 0.7456405162811279
+            },
+            {
+              "id": "cache-computer",
+              "score": 0.7096847295761108
+            },
+            {
+              "id": "code-viewport",
+              "score": 0.7037805318832397
+            }
+          ]
+        },
+        {
+          "id": "code-escape",
+          "scenario": "中文按 HTML 转义描述检索到实体替换代码",
+          "category": "code",
+          "query": "查找将字符串中的尖括号和引号转成 HTML 实体以便安全显示的代码",
+          "expected": "code-escape",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "code-escape",
+              "score": 0.7680724859237671
+            },
+            {
+              "id": "code-stale",
+              "score": 0.7023953795433044
+            },
+            {
+              "id": "wasm",
+              "score": 0.6916826963424683
+            }
+          ]
+        },
+        {
+          "id": "code-debounce",
+          "scenario": "按等待连续事件停止描述检索到防抖代码",
+          "category": "code",
+          "query": "Locate a wrapper that only calls its callback after incoming events stop for a quiet interval.",
+          "expected": "code-debounce",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "code-debounce",
+              "score": 0.7923184633255005
+            },
+            {
+              "id": "code-viewport",
+              "score": 0.7413894534111023
+            },
+            {
+              "id": "code-abort",
+              "score": 0.7249069809913635
+            }
+          ]
+        },
+        {
+          "id": "code-stale",
+          "scenario": "按忽略旧选区结果描述检索到代次检查代码",
+          "category": "code",
+          "query": "Find the code that prevents an old asynchronous translation response from replacing the current selection's result.",
+          "expected": "code-stale",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "code-stale",
+              "score": 0.8291014432907104
+            },
+            {
+              "id": "code-abort",
+              "score": 0.7214115858078003
+            },
+            {
+              "id": "code-escape",
+              "score": 0.7066773772239685
+            }
+          ]
+        },
+        {
+          "id": "code-viewport",
+          "scenario": "中文按靠近可视区域排队描述检索到观察器代码",
+          "category": "code",
+          "query": "查找只在元素接近浏览器可视区域时才把它加入处理队列的代码",
+          "expected": "code-viewport",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "code-viewport",
+              "score": 0.7647636532783508
+            },
+            {
+              "id": "code-stale",
+              "score": 0.7066867351531982
+            },
+            {
+              "id": "wasm",
+              "score": 0.6917392015457153
+            }
+          ]
+        }
+      ]
+    },
+    "256": {
+      "summary": {
+        "all": {
+          "count": 48,
+          "hit1": 0.9583333333333334,
+          "hit3": 1.0,
+          "mrr": 0.9756944444444445
+        },
+        "sense": {
+          "count": 24,
+          "hit1": 0.9166666666666666,
+          "hit3": 1.0,
+          "mrr": 0.9513888888888888,
+          "same_headword_hit1": 1.0
+        },
+        "cross-language": {
+          "count": 8,
+          "hit1": 1.0,
+          "hit3": 1.0,
+          "mrr": 1.0
+        },
+        "retrieval": {
+          "count": 8,
+          "hit1": 1.0,
+          "hit3": 1.0,
+          "mrr": 1.0
+        },
+        "code": {
+          "count": 8,
+          "hit1": 1.0,
+          "hit3": 1.0,
+          "mrr": 1.0
+        }
+      },
+      "cases": [
+        {
+          "id": "sense-transformer-ml",
+          "scenario": "阅读模型架构时将 transformer 排为神经网络义项",
+          "category": "sense",
+          "query": "What does transformer mean here? The transformer attends to earlier words while generating an answer.",
+          "expected": "transformer-ml",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "transformer-ml",
+              "score": 0.8180325627326965
+            },
+            {
+              "id": "transformer-power",
+              "score": 0.7873913049697876
+            },
+            {
+              "id": "token-llm",
+              "score": 0.7440075874328613
+            }
+          ],
+          "sense_rank": 1,
+          "sense_selected": "transformer-ml"
+        },
+        {
+          "id": "sense-transformer-power",
+          "scenario": "阅读电路时将 transformer 排为变压器义项",
+          "category": "sense",
+          "query": "What does transformer mean here? The transformer steps the mains voltage down before the rectifier.",
+          "expected": "transformer-power",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "transformer-power",
+              "score": 0.7724907398223877
+            },
+            {
+              "id": "transformer-ml",
+              "score": 0.6872415542602539
+            },
+            {
+              "id": "code-viewport",
+              "score": 0.6290828585624695
+            }
+          ],
+          "sense_rank": 1,
+          "sense_selected": "transformer-power"
+        },
+        {
+          "id": "sense-token-llm",
+          "scenario": "阅读生成速度时将 token 排为分词单位",
+          "category": "sense",
+          "query": "What does token mean here? The decoder emits one token at each generation step.",
+          "expected": "token-llm",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "token-llm",
+              "score": 0.7841841578483582
+            },
+            {
+              "id": "token-auth",
+              "score": 0.7432546019554138
+            },
+            {
+              "id": "attention",
+              "score": 0.717551589012146
+            }
+          ],
+          "sense_rank": 1,
+          "sense_selected": "token-llm"
+        },
+        {
+          "id": "sense-token-auth",
+          "scenario": "阅读登录请求时将 token 排为访问凭据",
+          "category": "sense",
+          "query": "What does token mean here? Include the token in the Authorization header after signing in.",
+          "expected": "token-auth",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "token-auth",
+              "score": 0.7935953736305237
+            },
+            {
+              "id": "oauth",
+              "score": 0.7421936392784119
+            },
+            {
+              "id": "transformer-ml",
+              "score": 0.6837623119354248
+            }
+          ],
+          "sense_rank": 1,
+          "sense_selected": "token-auth"
+        },
+        {
+          "id": "sense-embedding-ml",
+          "scenario": "阅读语义搜索时将 embedding 排为向量表示",
+          "category": "sense",
+          "query": "What does embedding mean here? We compare each document embedding to find semantically related passages.",
+          "expected": "embedding-ml",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "embedding-ml",
+              "score": 0.8236786127090454
+            },
+            {
+              "id": "embedding-material",
+              "score": 0.7533362507820129
+            },
+            {
+              "id": "vector-database",
+              "score": 0.7344486713409424
+            }
+          ],
+          "sense_rank": 1,
+          "sense_selected": "embedding-ml"
+        },
+        {
+          "id": "sense-embedding-material",
+          "scenario": "阅读制造工艺时将 embedding 排为嵌入材料",
+          "category": "sense",
+          "query": "What does embedding mean here? Embedding the metal insert in molten resin keeps it fixed after cooling.",
+          "expected": "embedding-material",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "embedding-material",
+              "score": 0.8683468103408813
+            },
+            {
+              "id": "embedding-ml",
+              "score": 0.6918343901634216
+            },
+            {
+              "id": "memory-human",
+              "score": 0.6566777229309082
+            }
+          ],
+          "sense_rank": 1,
+          "sense_selected": "embedding-material"
+        },
+        {
+          "id": "sense-inference-ml",
+          "scenario": "阅读部署时将 inference 排为模型推理执行",
+          "category": "sense",
+          "query": "What does inference mean here? Inference on this checkpoint runs faster when the weights fit on the GPU.",
+          "expected": "inference-ml",
+          "rank": 2,
+          "top3": [
+            {
+              "id": "batching",
+              "score": 0.768180787563324
+            },
+            {
+              "id": "inference-ml",
+              "score": 0.7616426944732666
+            },
+            {
+              "id": "inference-logic",
+              "score": 0.7044245004653931
+            }
+          ],
+          "sense_rank": 1,
+          "sense_selected": "inference-ml"
+        },
+        {
+          "id": "sense-inference-logic",
+          "scenario": "阅读论证时将 inference 排为逻辑推断",
+          "category": "sense",
+          "query": "What does inference mean here? The inference does not follow from the premises in the argument.",
+          "expected": "inference-logic",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "inference-logic",
+              "score": 0.8000308275222778
+            },
+            {
+              "id": "inference-ml",
+              "score": 0.7696610689163208
+            },
+            {
+              "id": "batching",
+              "score": 0.7290084958076477
+            }
+          ],
+          "sense_rank": 1,
+          "sense_selected": "inference-logic"
+        },
+        {
+          "id": "sense-kernel-os",
+          "scenario": "阅读系统调用时将 kernel 排为操作系统内核",
+          "category": "sense",
+          "query": "What does kernel mean here? The kernel handles the syscall and wakes the blocked process.",
+          "expected": "kernel-os",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "kernel-os",
+              "score": 0.8030720353126526
+            },
+            {
+              "id": "container-software",
+              "score": 0.6974807977676392
+            },
+            {
+              "id": "race-concurrency",
+              "score": 0.6862668395042419
+            }
+          ],
+          "sense_rank": 1,
+          "sense_selected": "kernel-os"
+        },
+        {
+          "id": "sense-kernel-math",
+          "scenario": "阅读支持向量机时将 kernel 排为相似度函数",
+          "category": "sense",
+          "query": "What does kernel mean here? The SVM uses a radial basis kernel to separate nonlinear classes.",
+          "expected": "kernel-math",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "kernel-math",
+              "score": 0.8064046502113342
+            },
+            {
+              "id": "kernel-os",
+              "score": 0.7043920159339905
+            },
+            {
+              "id": "inference-ml",
+              "score": 0.6974813938140869
+            }
+          ],
+          "sense_rank": 1,
+          "sense_selected": "kernel-math"
+        },
+        {
+          "id": "sense-memory-computer",
+          "scenario": "阅读设备容量时将 memory 排为计算机内存",
+          "category": "sense",
+          "query": "What does memory mean here? The laptop cannot allocate enough memory to load the model.",
+          "expected": "memory-computer",
+          "rank": 3,
+          "top3": [
+            {
+              "id": "quantization",
+              "score": 0.7302680015563965
+            },
+            {
+              "id": "inference-ml",
+              "score": 0.7191418409347534
+            },
+            {
+              "id": "memory-computer",
+              "score": 0.7025678157806396
+            }
+          ],
+          "sense_rank": 1,
+          "sense_selected": "memory-computer"
+        },
+        {
+          "id": "sense-memory-human",
+          "scenario": "阅读童年经历时将 memory 排为人的记忆",
+          "category": "sense",
+          "query": "What does memory mean here? Her earliest memory was visiting the beach with her grandmother.",
+          "expected": "memory-human",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "memory-human",
+              "score": 0.7501930594444275
+            },
+            {
+              "id": "embedding-material",
+              "score": 0.6802376508712769
+            },
+            {
+              "id": "embedding-ml",
+              "score": 0.6747248768806458
+            }
+          ],
+          "sense_rank": 1,
+          "sense_selected": "memory-human"
+        },
+        {
+          "id": "sense-cache-computer",
+          "scenario": "阅读重复请求时将 cache 排为数据缓存",
+          "category": "sense",
+          "query": "What does cache mean here? A cache hit avoids recomputing the expensive response.",
+          "expected": "cache-computer",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "cache-computer",
+              "score": 0.7608411312103271
+            },
+            {
+              "id": "code-lru",
+              "score": 0.7576825022697449
+            },
+            {
+              "id": "cache-hidden",
+              "score": 0.7494296431541443
+            }
+          ],
+          "sense_rank": 1,
+          "sense_selected": "cache-computer"
+        },
+        {
+          "id": "sense-cache-hidden",
+          "scenario": "阅读探险补给时将 cache 排为隐藏物资",
+          "category": "sense",
+          "query": "What does cache mean here? The explorers dug up a cache of food beneath the rocks.",
+          "expected": "cache-hidden",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "cache-hidden",
+              "score": 0.8711557388305664
+            },
+            {
+              "id": "cache-computer",
+              "score": 0.7189285159111023
+            },
+            {
+              "id": "code-lru",
+              "score": 0.6912310719490051
+            }
+          ],
+          "sense_rank": 1,
+          "sense_selected": "cache-hidden"
+        },
+        {
+          "id": "sense-thread-computer",
+          "scenario": "阅读程序调度时将 thread 排为线程",
+          "category": "sense",
+          "query": "What does thread mean here? The worker thread waits on a mutex before updating the shared counter.",
+          "expected": "thread-computer",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "thread-computer",
+              "score": 0.7455355525016785
+            },
+            {
+              "id": "race-concurrency",
+              "score": 0.7380346655845642
+            },
+            {
+              "id": "latency",
+              "score": 0.7002871036529541
+            }
+          ],
+          "sense_rank": 1,
+          "sense_selected": "thread-computer"
+        },
+        {
+          "id": "sense-thread-textile",
+          "scenario": "阅读缝纫时将 thread 排为线材",
+          "category": "sense",
+          "query": "What does thread mean here? Pass the thread through the needle to mend the torn shirt.",
+          "expected": "thread-textile",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "thread-textile",
+              "score": 0.8138817548751831
+            },
+            {
+              "id": "embedding-material",
+              "score": 0.6714839339256287
+            },
+            {
+              "id": "thread-computer",
+              "score": 0.667777419090271
+            }
+          ],
+          "sense_rank": 1,
+          "sense_selected": "thread-textile"
+        },
+        {
+          "id": "sense-port-network",
+          "scenario": "阅读监听服务时将 port 排为网络端口",
+          "category": "sense",
+          "query": "What does port mean here? The HTTP service is listening on port 8080 on loopback.",
+          "expected": "port-network",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "port-network",
+              "score": 0.8323080539703369
+            },
+            {
+              "id": "port-harbor",
+              "score": 0.6898067593574524
+            },
+            {
+              "id": "latency",
+              "score": 0.6886564493179321
+            }
+          ],
+          "sense_rank": 1,
+          "sense_selected": "port-network"
+        },
+        {
+          "id": "sense-port-harbor",
+          "scenario": "阅读航运时将 port 排为港口",
+          "category": "sense",
+          "query": "What does port mean here? The cargo ship arrived at the port before sunrise.",
+          "expected": "port-harbor",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "port-harbor",
+              "score": 0.8217573165893555
+            },
+            {
+              "id": "port-network",
+              "score": 0.7255414128303528
+            },
+            {
+              "id": "container-shipping",
+              "score": 0.6796207427978516
+            }
+          ],
+          "sense_rank": 1,
+          "sense_selected": "port-harbor"
+        },
+        {
+          "id": "sense-container-software",
+          "scenario": "阅读服务部署时将 container 排为软件容器",
+          "category": "sense",
+          "query": "What does container mean here? We restart the container when its health check fails.",
+          "expected": "container-software",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "container-software",
+              "score": 0.7410609722137451
+            },
+            {
+              "id": "kubernetes",
+              "score": 0.7256099581718445
+            },
+            {
+              "id": "container-shipping",
+              "score": 0.6596855521202087
+            }
+          ],
+          "sense_rank": 1,
+          "sense_selected": "container-software"
+        },
+        {
+          "id": "sense-container-shipping",
+          "scenario": "阅读货运时将 container 排为货箱",
+          "category": "sense",
+          "query": "What does container mean here? A crane lifted the steel container from the ship onto a truck.",
+          "expected": "container-shipping",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "container-shipping",
+              "score": 0.807672381401062
+            },
+            {
+              "id": "port-harbor",
+              "score": 0.716751754283905
+            },
+            {
+              "id": "container-software",
+              "score": 0.7107617259025574
+            }
+          ],
+          "sense_rank": 1,
+          "sense_selected": "container-shipping"
+        },
+        {
+          "id": "sense-race-concurrency",
+          "scenario": "阅读并发写入时将 race 排为竞态",
+          "category": "sense",
+          "query": "What does race mean here? Two asynchronous writes introduce a race and corrupt the shared state.",
+          "expected": "race-concurrency",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "race-concurrency",
+              "score": 0.7961881160736084
+            },
+            {
+              "id": "race-sport",
+              "score": 0.715896725654602
+            },
+            {
+              "id": "code-lru",
+              "score": 0.6841477751731873
+            }
+          ],
+          "sense_rank": 1,
+          "sense_selected": "race-concurrency"
+        },
+        {
+          "id": "sense-race-sport",
+          "scenario": "阅读赛事时将 race 排为竞赛",
+          "category": "sense",
+          "query": "What does race mean here? The cyclist won the race by crossing the finish line first.",
+          "expected": "race-sport",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "race-sport",
+              "score": 0.831878125667572
+            },
+            {
+              "id": "race-concurrency",
+              "score": 0.7235002517700195
+            },
+            {
+              "id": "latency",
+              "score": 0.6722639799118042
+            }
+          ],
+          "sense_rank": 1,
+          "sense_selected": "race-sport"
+        },
+        {
+          "id": "sense-branch-git",
+          "scenario": "阅读版本管理时将 branch 排为代码分支",
+          "category": "sense",
+          "query": "What does branch mean here? Commit the patch on a new branch and merge it after review.",
+          "expected": "branch-git",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "branch-git",
+              "score": 0.7366323471069336
+            },
+            {
+              "id": "transactions",
+              "score": 0.6723615527153015
+            },
+            {
+              "id": "code-escape",
+              "score": 0.6614642143249512
+            }
+          ],
+          "sense_rank": 1,
+          "sense_selected": "branch-git"
+        },
+        {
+          "id": "sense-branch-tree",
+          "scenario": "阅读植物时将 branch 排为树枝",
+          "category": "sense",
+          "query": "What does branch mean here? A bird built its nest on a branch above the garden.",
+          "expected": "branch-tree",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "branch-tree",
+              "score": 0.8036053776741028
+            },
+            {
+              "id": "branch-git",
+              "score": 0.6815923452377319
+            },
+            {
+              "id": "port-harbor",
+              "score": 0.6682032942771912
+            }
+          ],
+          "sense_rank": 1,
+          "sense_selected": "branch-tree"
+        },
+        {
+          "id": "retrieve-quantization",
+          "scenario": "中文描述低精度权重时检索到量化说明",
+          "category": "cross-language",
+          "query": "把神经网络参数从十六位降低到四位以节省显存",
+          "expected": "quantization",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "quantization",
+              "score": 0.7855055332183838
+            },
+            {
+              "id": "batching",
+              "score": 0.6974735260009766
+            },
+            {
+              "id": "attention",
+              "score": 0.6817179918289185
+            }
+          ]
+        },
+        {
+          "id": "retrieve-rag",
+          "scenario": "中文描述先查资料再回答时检索到 RAG",
+          "category": "cross-language",
+          "query": "让语言模型先查找外部资料，再依据找到的内容回答问题",
+          "expected": "rag",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "rag",
+              "score": 0.7372709512710571
+            },
+            {
+              "id": "token-llm",
+              "score": 0.7260236740112305
+            },
+            {
+              "id": "prompt-injection",
+              "score": 0.7042778134346008
+            }
+          ]
+        },
+        {
+          "id": "retrieve-gc",
+          "scenario": "中文描述自动回收无引用对象时检索到垃圾回收",
+          "category": "cross-language",
+          "query": "自动释放程序已经无法访问的对象占用的内存",
+          "expected": "gc",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "gc",
+              "score": 0.747493326663971
+            },
+            {
+              "id": "memory-computer",
+              "score": 0.6597383618354797
+            },
+            {
+              "id": "race-concurrency",
+              "score": 0.6582143902778625
+            }
+          ]
+        },
+        {
+          "id": "retrieve-latency",
+          "scenario": "中文比较响应时间和处理量时检索到延迟吞吐说明",
+          "category": "cross-language",
+          "query": "一次请求等多久，与每秒能处理多少请求有什么区别",
+          "expected": "latency",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "latency",
+              "score": 0.7850420475006104
+            },
+            {
+              "id": "code-abort",
+              "score": 0.7210081219673157
+            },
+            {
+              "id": "batching",
+              "score": 0.6911365985870361
+            }
+          ]
+        },
+        {
+          "id": "retrieve-kubernetes",
+          "scenario": "中文描述集群调度容器时检索到 Kubernetes",
+          "category": "cross-language",
+          "query": "在多台机器上自动调度容器，故障后替换实例并扩缩容",
+          "expected": "kubernetes",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "kubernetes",
+              "score": 0.760217547416687
+            },
+            {
+              "id": "batching",
+              "score": 0.6974180340766907
+            },
+            {
+              "id": "container-software",
+              "score": 0.680706262588501
+            }
+          ]
+        },
+        {
+          "id": "retrieve-typescript",
+          "scenario": "中文描述运行前检查 JavaScript 类型时检索到 TypeScript",
+          "category": "cross-language",
+          "query": "给 JavaScript 增加静态类型，在执行之前发现类型错误",
+          "expected": "typescript",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "typescript",
+              "score": 0.7543579936027527
+            },
+            {
+              "id": "code-stale",
+              "score": 0.6587424278259277
+            },
+            {
+              "id": "wasm",
+              "score": 0.6587336659431458
+            }
+          ]
+        },
+        {
+          "id": "retrieve-tls",
+          "scenario": "中文描述 HTTPS 加密与证书时检索到 TLS",
+          "category": "cross-language",
+          "query": "浏览器和服务器之间的加密通道，用证书确认服务器身份",
+          "expected": "tls",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "tls",
+              "score": 0.7396719455718994
+            },
+            {
+              "id": "token-auth",
+              "score": 0.6900290846824646
+            },
+            {
+              "id": "prompt-injection",
+              "score": 0.6636890172958374
+            }
+          ]
+        },
+        {
+          "id": "retrieve-oauth",
+          "scenario": "中文描述第三方授权时检索到 OAuth",
+          "category": "cross-language",
+          "query": "不用把密码交给第三方应用，就能授予它有限的账号资源访问权限",
+          "expected": "oauth",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "oauth",
+              "score": 0.763037383556366
+            },
+            {
+              "id": "token-auth",
+              "score": 0.7132039070129395
+            },
+            {
+              "id": "prompt-injection",
+              "score": 0.6733587384223938
+            }
+          ]
+        },
+        {
+          "id": "retrieve-wasm",
+          "scenario": "英文描述浏览器运行编译代码时检索到 WebAssembly",
+          "category": "retrieval",
+          "query": "A compact binary format lets a browser execute sandboxed code compiled from Rust.",
+          "expected": "wasm",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "wasm",
+              "score": 0.8359238505363464
+            },
+            {
+              "id": "inference-ml",
+              "score": 0.704863965511322
+            },
+            {
+              "id": "code-escape",
+              "score": 0.6965505480766296
+            }
+          ]
+        },
+        {
+          "id": "retrieve-injection",
+          "scenario": "网页内容试图改写助手指令时检索到提示注入说明",
+          "category": "retrieval",
+          "query": "A retrieved article tells the assistant to ignore its instructions and disclose private data.",
+          "expected": "prompt-injection",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "prompt-injection",
+              "score": 0.7407970428466797
+            },
+            {
+              "id": "token-auth",
+              "score": 0.6663704514503479
+            },
+            {
+              "id": "rag",
+              "score": 0.6661432385444641
+            }
+          ]
+        },
+        {
+          "id": "retrieve-vector-db",
+          "scenario": "描述按向量距离查询时检索到向量索引",
+          "category": "retrieval",
+          "query": "How can I search a large collection by finding approximate nearest neighbours of sentence vectors?",
+          "expected": "vector-database",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "vector-database",
+              "score": 0.8319319486618042
+            },
+            {
+              "id": "embedding-ml",
+              "score": 0.7307543158531189
+            },
+            {
+              "id": "kernel-math",
+              "score": 0.708966851234436
+            }
+          ]
+        },
+        {
+          "id": "retrieve-cuda",
+          "scenario": "描述 NVIDIA 并行计算平台时检索到 CUDA",
+          "category": "retrieval",
+          "query": "The NVIDIA toolkit for launching general-purpose parallel computations on graphics hardware.",
+          "expected": "cuda",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "cuda",
+              "score": 0.762569010257721
+            },
+            {
+              "id": "batching",
+              "score": 0.6293646097183228
+            },
+            {
+              "id": "inference-ml",
+              "score": 0.629023551940918
+            }
+          ]
+        },
+        {
+          "id": "retrieve-batching",
+          "scenario": "描述合并模型输入时检索到批处理",
+          "category": "retrieval",
+          "query": "Send several texts through a model together to spread startup overhead across the inputs.",
+          "expected": "batching",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "batching",
+              "score": 0.7113401889801025
+            },
+            {
+              "id": "prompt-injection",
+              "score": 0.6883994936943054
+            },
+            {
+              "id": "token-llm",
+              "score": 0.6839589476585388
+            }
+          ]
+        },
+        {
+          "id": "retrieve-transaction",
+          "scenario": "描述写入全部成功或回滚时检索到数据库事务",
+          "category": "retrieval",
+          "query": "If any database update fails, undo every change in the group instead of leaving a partial write.",
+          "expected": "transactions",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "transactions",
+              "score": 0.8023057579994202
+            },
+            {
+              "id": "code-lru",
+              "score": 0.6608136892318726
+            },
+            {
+              "id": "batching",
+              "score": 0.6504275798797607
+            }
+          ]
+        },
+        {
+          "id": "retrieve-attention",
+          "scenario": "描述 query key value 时检索到注意力机制",
+          "category": "retrieval",
+          "query": "Use query and key dot products to choose how much each position contributes through its value.",
+          "expected": "attention",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "attention",
+              "score": 0.737547755241394
+            },
+            {
+              "id": "idf",
+              "score": 0.694639265537262
+            },
+            {
+              "id": "code-viewport",
+              "score": 0.6742266416549683
+            }
+          ]
+        },
+        {
+          "id": "retrieve-idf",
+          "scenario": "描述低频词权重时检索到逆文档频率",
+          "category": "retrieval",
+          "query": "Why should a rare search term receive a larger weight than a term appearing in almost every file?",
+          "expected": "idf",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "idf",
+              "score": 0.8035746216773987
+            },
+            {
+              "id": "vector-database",
+              "score": 0.7035653591156006
+            },
+            {
+              "id": "attention",
+              "score": 0.6707522869110107
+            }
+          ]
+        },
+        {
+          "id": "code-limit",
+          "scenario": "按并发上限描述检索到任务队列代码",
+          "category": "code",
+          "query": "Find the function that runs a list of jobs with at most N active operations at once.",
+          "expected": "code-limit",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "code-limit",
+              "score": 0.7606400847434998
+            },
+            {
+              "id": "batching",
+              "score": 0.7587642073631287
+            },
+            {
+              "id": "code-abort",
+              "score": 0.7161533236503601
+            }
+          ]
+        },
+        {
+          "id": "code-abort",
+          "scenario": "按请求超时取消描述检索到 AbortController 代码",
+          "category": "code",
+          "query": "Locate the request helper that cancels a network operation when its deadline expires and releases the timer.",
+          "expected": "code-abort",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "code-abort",
+              "score": 0.8068214058876038
+            },
+            {
+              "id": "code-debounce",
+              "score": 0.7166486382484436
+            },
+            {
+              "id": "code-lru",
+              "score": 0.6910932660102844
+            }
+          ]
+        },
+        {
+          "id": "code-batch",
+          "scenario": "中文按分块描述检索到数组批处理代码",
+          "category": "code",
+          "query": "查找把一个数组拆成指定大小的多个小数组的函数",
+          "expected": "code-batch",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "code-batch",
+              "score": 0.7352420091629028
+            },
+            {
+              "id": "code-viewport",
+              "score": 0.7053182721138
+            },
+            {
+              "id": "gc",
+              "score": 0.6988129615783691
+            }
+          ]
+        },
+        {
+          "id": "code-lru",
+          "scenario": "按最近最少使用淘汰描述检索到缓存代码",
+          "category": "code",
+          "query": "Find a bounded cache that refreshes recency on reads and evicts the least recently accessed item.",
+          "expected": "code-lru",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "code-lru",
+              "score": 0.7631081938743591
+            },
+            {
+              "id": "cache-computer",
+              "score": 0.7322340607643127
+            },
+            {
+              "id": "cache-hidden",
+              "score": 0.7297009825706482
+            }
+          ]
+        },
+        {
+          "id": "code-escape",
+          "scenario": "中文按 HTML 转义描述检索到实体替换代码",
+          "category": "code",
+          "query": "查找将字符串中的尖括号和引号转成 HTML 实体以便安全显示的代码",
+          "expected": "code-escape",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "code-escape",
+              "score": 0.7698594331741333
+            },
+            {
+              "id": "wasm",
+              "score": 0.7219729423522949
+            },
+            {
+              "id": "code-stale",
+              "score": 0.7170794010162354
+            }
+          ]
+        },
+        {
+          "id": "code-debounce",
+          "scenario": "按等待连续事件停止描述检索到防抖代码",
+          "category": "code",
+          "query": "Locate a wrapper that only calls its callback after incoming events stop for a quiet interval.",
+          "expected": "code-debounce",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "code-debounce",
+              "score": 0.7924633622169495
+            },
+            {
+              "id": "code-viewport",
+              "score": 0.760776698589325
+            },
+            {
+              "id": "code-abort",
+              "score": 0.7247164845466614
+            }
+          ]
+        },
+        {
+          "id": "code-stale",
+          "scenario": "按忽略旧选区结果描述检索到代次检查代码",
+          "category": "code",
+          "query": "Find the code that prevents an old asynchronous translation response from replacing the current selection's result.",
+          "expected": "code-stale",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "code-stale",
+              "score": 0.8458271622657776
+            },
+            {
+              "id": "code-abort",
+              "score": 0.7449123859405518
+            },
+            {
+              "id": "code-lru",
+              "score": 0.7319653630256653
+            }
+          ]
+        },
+        {
+          "id": "code-viewport",
+          "scenario": "中文按靠近可视区域排队描述检索到观察器代码",
+          "category": "code",
+          "query": "查找只在元素接近浏览器可视区域时才把它加入处理队列的代码",
+          "expected": "code-viewport",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "code-viewport",
+              "score": 0.7715632915496826
+            },
+            {
+              "id": "code-stale",
+              "score": 0.7057636380195618
+            },
+            {
+              "id": "code-lru",
+              "score": 0.7020034193992615
+            }
+          ]
+        }
+      ]
+    },
+    "128": {
+      "summary": {
+        "all": {
+          "count": 48,
+          "hit1": 0.8125,
+          "hit3": 1.0,
+          "mrr": 0.8993055555555555
+        },
+        "sense": {
+          "count": 24,
+          "hit1": 0.8333333333333334,
+          "hit3": 1.0,
+          "mrr": 0.9166666666666666,
+          "same_headword_hit1": 1.0
+        },
+        "cross-language": {
+          "count": 8,
+          "hit1": 1.0,
+          "hit3": 1.0,
+          "mrr": 1.0
+        },
+        "retrieval": {
+          "count": 8,
+          "hit1": 0.75,
+          "hit3": 1.0,
+          "mrr": 0.875
+        },
+        "code": {
+          "count": 8,
+          "hit1": 0.625,
+          "hit3": 1.0,
+          "mrr": 0.7708333333333334
+        }
+      },
+      "cases": [
+        {
+          "id": "sense-transformer-ml",
+          "scenario": "阅读模型架构时将 transformer 排为神经网络义项",
+          "category": "sense",
+          "query": "What does transformer mean here? The transformer attends to earlier words while generating an answer.",
+          "expected": "transformer-ml",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "transformer-ml",
+              "score": 0.8884527087211609
+            },
+            {
+              "id": "transformer-power",
+              "score": 0.8580237030982971
+            },
+            {
+              "id": "token-llm",
+              "score": 0.8331563472747803
+            }
+          ],
+          "sense_rank": 1,
+          "sense_selected": "transformer-ml"
+        },
+        {
+          "id": "sense-transformer-power",
+          "scenario": "阅读电路时将 transformer 排为变压器义项",
+          "category": "sense",
+          "query": "What does transformer mean here? The transformer steps the mains voltage down before the rectifier.",
+          "expected": "transformer-power",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "transformer-power",
+              "score": 0.8323861956596375
+            },
+            {
+              "id": "transformer-ml",
+              "score": 0.8100667595863342
+            },
+            {
+              "id": "transactions",
+              "score": 0.7643373012542725
+            }
+          ],
+          "sense_rank": 1,
+          "sense_selected": "transformer-power"
+        },
+        {
+          "id": "sense-token-llm",
+          "scenario": "阅读生成速度时将 token 排为分词单位",
+          "category": "sense",
+          "query": "What does token mean here? The decoder emits one token at each generation step.",
+          "expected": "token-llm",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "token-llm",
+              "score": 0.862011194229126
+            },
+            {
+              "id": "token-auth",
+              "score": 0.8415359258651733
+            },
+            {
+              "id": "attention",
+              "score": 0.8038102984428406
+            }
+          ],
+          "sense_rank": 1,
+          "sense_selected": "token-llm"
+        },
+        {
+          "id": "sense-token-auth",
+          "scenario": "阅读登录请求时将 token 排为访问凭据",
+          "category": "sense",
+          "query": "What does token mean here? Include the token in the Authorization header after signing in.",
+          "expected": "token-auth",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "token-auth",
+              "score": 0.8722562789916992
+            },
+            {
+              "id": "oauth",
+              "score": 0.8176517486572266
+            },
+            {
+              "id": "transformer-ml",
+              "score": 0.7865001559257507
+            }
+          ],
+          "sense_rank": 1,
+          "sense_selected": "token-auth"
+        },
+        {
+          "id": "sense-embedding-ml",
+          "scenario": "阅读语义搜索时将 embedding 排为向量表示",
+          "category": "sense",
+          "query": "What does embedding mean here? We compare each document embedding to find semantically related passages.",
+          "expected": "embedding-ml",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "embedding-ml",
+              "score": 0.8815438151359558
+            },
+            {
+              "id": "vector-database",
+              "score": 0.847017228603363
+            },
+            {
+              "id": "embedding-material",
+              "score": 0.8431776165962219
+            }
+          ],
+          "sense_rank": 1,
+          "sense_selected": "embedding-ml"
+        },
+        {
+          "id": "sense-embedding-material",
+          "scenario": "阅读制造工艺时将 embedding 排为嵌入材料",
+          "category": "sense",
+          "query": "What does embedding mean here? Embedding the metal insert in molten resin keeps it fixed after cooling.",
+          "expected": "embedding-material",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "embedding-material",
+              "score": 0.9095737934112549
+            },
+            {
+              "id": "cache-hidden",
+              "score": 0.762603759765625
+            },
+            {
+              "id": "branch-tree",
+              "score": 0.758743941783905
+            }
+          ],
+          "sense_rank": 1,
+          "sense_selected": "embedding-material"
+        },
+        {
+          "id": "sense-inference-ml",
+          "scenario": "阅读部署时将 inference 排为模型推理执行",
+          "category": "sense",
+          "query": "What does inference mean here? Inference on this checkpoint runs faster when the weights fit on the GPU.",
+          "expected": "inference-ml",
+          "rank": 2,
+          "top3": [
+            {
+              "id": "batching",
+              "score": 0.8240011930465698
+            },
+            {
+              "id": "inference-ml",
+              "score": 0.8069236874580383
+            },
+            {
+              "id": "inference-logic",
+              "score": 0.8018400073051453
+            }
+          ],
+          "sense_rank": 1,
+          "sense_selected": "inference-ml"
+        },
+        {
+          "id": "sense-inference-logic",
+          "scenario": "阅读论证时将 inference 排为逻辑推断",
+          "category": "sense",
+          "query": "What does inference mean here? The inference does not follow from the premises in the argument.",
+          "expected": "inference-logic",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "inference-logic",
+              "score": 0.8885806202888489
+            },
+            {
+              "id": "inference-ml",
+              "score": 0.8460969924926758
+            },
+            {
+              "id": "prompt-injection",
+              "score": 0.8368624448776245
+            }
+          ],
+          "sense_rank": 1,
+          "sense_selected": "inference-logic"
+        },
+        {
+          "id": "sense-kernel-os",
+          "scenario": "阅读系统调用时将 kernel 排为操作系统内核",
+          "category": "sense",
+          "query": "What does kernel mean here? The kernel handles the syscall and wakes the blocked process.",
+          "expected": "kernel-os",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "kernel-os",
+              "score": 0.8596725463867188
+            },
+            {
+              "id": "kernel-math",
+              "score": 0.8011569976806641
+            },
+            {
+              "id": "port-network",
+              "score": 0.7819517850875854
+            }
+          ],
+          "sense_rank": 1,
+          "sense_selected": "kernel-os"
+        },
+        {
+          "id": "sense-kernel-math",
+          "scenario": "阅读支持向量机时将 kernel 排为相似度函数",
+          "category": "sense",
+          "query": "What does kernel mean here? The SVM uses a radial basis kernel to separate nonlinear classes.",
+          "expected": "kernel-math",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "kernel-math",
+              "score": 0.8573176860809326
+            },
+            {
+              "id": "idf",
+              "score": 0.8113465309143066
+            },
+            {
+              "id": "embedding-ml",
+              "score": 0.807007372379303
+            }
+          ],
+          "sense_rank": 1,
+          "sense_selected": "kernel-math"
+        },
+        {
+          "id": "sense-memory-computer",
+          "scenario": "阅读设备容量时将 memory 排为计算机内存",
+          "category": "sense",
+          "query": "What does memory mean here? The laptop cannot allocate enough memory to load the model.",
+          "expected": "memory-computer",
+          "rank": 2,
+          "top3": [
+            {
+              "id": "quantization",
+              "score": 0.8108447790145874
+            },
+            {
+              "id": "memory-computer",
+              "score": 0.7981855869293213
+            },
+            {
+              "id": "inference-ml",
+              "score": 0.7829608917236328
+            }
+          ],
+          "sense_rank": 1,
+          "sense_selected": "memory-computer"
+        },
+        {
+          "id": "sense-memory-human",
+          "scenario": "阅读童年经历时将 memory 排为人的记忆",
+          "category": "sense",
+          "query": "What does memory mean here? Her earliest memory was visiting the beach with her grandmother.",
+          "expected": "memory-human",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "memory-human",
+              "score": 0.8252722024917603
+            },
+            {
+              "id": "embedding-ml",
+              "score": 0.7820419669151306
+            },
+            {
+              "id": "branch-tree",
+              "score": 0.7793161869049072
+            }
+          ],
+          "sense_rank": 1,
+          "sense_selected": "memory-human"
+        },
+        {
+          "id": "sense-cache-computer",
+          "scenario": "阅读重复请求时将 cache 排为数据缓存",
+          "category": "sense",
+          "query": "What does cache mean here? A cache hit avoids recomputing the expensive response.",
+          "expected": "cache-computer",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "cache-computer",
+              "score": 0.8123007416725159
+            },
+            {
+              "id": "latency",
+              "score": 0.811696469783783
+            },
+            {
+              "id": "cache-hidden",
+              "score": 0.8106558322906494
+            }
+          ],
+          "sense_rank": 1,
+          "sense_selected": "cache-computer"
+        },
+        {
+          "id": "sense-cache-hidden",
+          "scenario": "阅读探险补给时将 cache 排为隐藏物资",
+          "category": "sense",
+          "query": "What does cache mean here? The explorers dug up a cache of food beneath the rocks.",
+          "expected": "cache-hidden",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "cache-hidden",
+              "score": 0.912482500076294
+            },
+            {
+              "id": "embedding-material",
+              "score": 0.7838560342788696
+            },
+            {
+              "id": "cache-computer",
+              "score": 0.7830206751823425
+            }
+          ],
+          "sense_rank": 1,
+          "sense_selected": "cache-hidden"
+        },
+        {
+          "id": "sense-thread-computer",
+          "scenario": "阅读程序调度时将 thread 排为线程",
+          "category": "sense",
+          "query": "What does thread mean here? The worker thread waits on a mutex before updating the shared counter.",
+          "expected": "thread-computer",
+          "rank": 2,
+          "top3": [
+            {
+              "id": "race-concurrency",
+              "score": 0.8152111172676086
+            },
+            {
+              "id": "thread-computer",
+              "score": 0.8147414326667786
+            },
+            {
+              "id": "transactions",
+              "score": 0.8139299154281616
+            }
+          ],
+          "sense_rank": 1,
+          "sense_selected": "thread-computer"
+        },
+        {
+          "id": "sense-thread-textile",
+          "scenario": "阅读缝纫时将 thread 排为线材",
+          "category": "sense",
+          "query": "What does thread mean here? Pass the thread through the needle to mend the torn shirt.",
+          "expected": "thread-textile",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "thread-textile",
+              "score": 0.8850252628326416
+            },
+            {
+              "id": "embedding-material",
+              "score": 0.8069141507148743
+            },
+            {
+              "id": "cache-hidden",
+              "score": 0.7957952618598938
+            }
+          ],
+          "sense_rank": 1,
+          "sense_selected": "thread-textile"
+        },
+        {
+          "id": "sense-port-network",
+          "scenario": "阅读监听服务时将 port 排为网络端口",
+          "category": "sense",
+          "query": "What does port mean here? The HTTP service is listening on port 8080 on loopback.",
+          "expected": "port-network",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "port-network",
+              "score": 0.8734872937202454
+            },
+            {
+              "id": "port-harbor",
+              "score": 0.8018566966056824
+            },
+            {
+              "id": "cache-hidden",
+              "score": 0.7694408893585205
+            }
+          ],
+          "sense_rank": 1,
+          "sense_selected": "port-network"
+        },
+        {
+          "id": "sense-port-harbor",
+          "scenario": "阅读航运时将 port 排为港口",
+          "category": "sense",
+          "query": "What does port mean here? The cargo ship arrived at the port before sunrise.",
+          "expected": "port-harbor",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "port-harbor",
+              "score": 0.8913890719413757
+            },
+            {
+              "id": "port-network",
+              "score": 0.7899029850959778
+            },
+            {
+              "id": "idf",
+              "score": 0.788490355014801
+            }
+          ],
+          "sense_rank": 1,
+          "sense_selected": "port-harbor"
+        },
+        {
+          "id": "sense-container-software",
+          "scenario": "阅读服务部署时将 container 排为软件容器",
+          "category": "sense",
+          "query": "What does container mean here? We restart the container when its health check fails.",
+          "expected": "container-software",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "container-software",
+              "score": 0.8117284774780273
+            },
+            {
+              "id": "kubernetes",
+              "score": 0.7897936701774597
+            },
+            {
+              "id": "container-shipping",
+              "score": 0.7693852186203003
+            }
+          ],
+          "sense_rank": 1,
+          "sense_selected": "container-software"
+        },
+        {
+          "id": "sense-container-shipping",
+          "scenario": "阅读货运时将 container 排为货箱",
+          "category": "sense",
+          "query": "What does container mean here? A crane lifted the steel container from the ship onto a truck.",
+          "expected": "container-shipping",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "container-shipping",
+              "score": 0.8672522902488708
+            },
+            {
+              "id": "container-software",
+              "score": 0.7913309335708618
+            },
+            {
+              "id": "port-harbor",
+              "score": 0.7837509512901306
+            }
+          ],
+          "sense_rank": 1,
+          "sense_selected": "container-shipping"
+        },
+        {
+          "id": "sense-race-concurrency",
+          "scenario": "阅读并发写入时将 race 排为竞态",
+          "category": "sense",
+          "query": "What does race mean here? Two asynchronous writes introduce a race and corrupt the shared state.",
+          "expected": "race-concurrency",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "race-concurrency",
+              "score": 0.8216858506202698
+            },
+            {
+              "id": "code-viewport",
+              "score": 0.7923046946525574
+            },
+            {
+              "id": "code-lru",
+              "score": 0.7909853458404541
+            }
+          ],
+          "sense_rank": 1,
+          "sense_selected": "race-concurrency"
+        },
+        {
+          "id": "sense-race-sport",
+          "scenario": "阅读赛事时将 race 排为竞赛",
+          "category": "sense",
+          "query": "What does race mean here? The cyclist won the race by crossing the finish line first.",
+          "expected": "race-sport",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "race-sport",
+              "score": 0.8873870372772217
+            },
+            {
+              "id": "race-concurrency",
+              "score": 0.7865777611732483
+            },
+            {
+              "id": "latency",
+              "score": 0.7831548452377319
+            }
+          ],
+          "sense_rank": 1,
+          "sense_selected": "race-sport"
+        },
+        {
+          "id": "sense-branch-git",
+          "scenario": "阅读版本管理时将 branch 排为代码分支",
+          "category": "sense",
+          "query": "What does branch mean here? Commit the patch on a new branch and merge it after review.",
+          "expected": "branch-git",
+          "rank": 2,
+          "top3": [
+            {
+              "id": "transactions",
+              "score": 0.8107284307479858
+            },
+            {
+              "id": "branch-git",
+              "score": 0.7940717339515686
+            },
+            {
+              "id": "code-lru",
+              "score": 0.7719032764434814
+            }
+          ],
+          "sense_rank": 1,
+          "sense_selected": "branch-git"
+        },
+        {
+          "id": "sense-branch-tree",
+          "scenario": "阅读植物时将 branch 排为树枝",
+          "category": "sense",
+          "query": "What does branch mean here? A bird built its nest on a branch above the garden.",
+          "expected": "branch-tree",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "branch-tree",
+              "score": 0.8648772239685059
+            },
+            {
+              "id": "cache-hidden",
+              "score": 0.7877767086029053
+            },
+            {
+              "id": "embedding-ml",
+              "score": 0.7780753970146179
+            }
+          ],
+          "sense_rank": 1,
+          "sense_selected": "branch-tree"
+        },
+        {
+          "id": "retrieve-quantization",
+          "scenario": "中文描述低精度权重时检索到量化说明",
+          "category": "cross-language",
+          "query": "把神经网络参数从十六位降低到四位以节省显存",
+          "expected": "quantization",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "quantization",
+              "score": 0.8497820496559143
+            },
+            {
+              "id": "batching",
+              "score": 0.8233380913734436
+            },
+            {
+              "id": "gc",
+              "score": 0.7762675285339355
+            }
+          ]
+        },
+        {
+          "id": "retrieve-rag",
+          "scenario": "中文描述先查资料再回答时检索到 RAG",
+          "category": "cross-language",
+          "query": "让语言模型先查找外部资料，再依据找到的内容回答问题",
+          "expected": "rag",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "rag",
+              "score": 0.8011732697486877
+            },
+            {
+              "id": "inference-logic",
+              "score": 0.784044623374939
+            },
+            {
+              "id": "prompt-injection",
+              "score": 0.7826460599899292
+            }
+          ]
+        },
+        {
+          "id": "retrieve-gc",
+          "scenario": "中文描述自动回收无引用对象时检索到垃圾回收",
+          "category": "cross-language",
+          "query": "自动释放程序已经无法访问的对象占用的内存",
+          "expected": "gc",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "gc",
+              "score": 0.8059183955192566
+            },
+            {
+              "id": "wasm",
+              "score": 0.7540972232818604
+            },
+            {
+              "id": "race-concurrency",
+              "score": 0.7535744905471802
+            }
+          ]
+        },
+        {
+          "id": "retrieve-latency",
+          "scenario": "中文比较响应时间和处理量时检索到延迟吞吐说明",
+          "category": "cross-language",
+          "query": "一次请求等多久，与每秒能处理多少请求有什么区别",
+          "expected": "latency",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "latency",
+              "score": 0.8516214489936829
+            },
+            {
+              "id": "code-abort",
+              "score": 0.7978553771972656
+            },
+            {
+              "id": "transactions",
+              "score": 0.7871705889701843
+            }
+          ]
+        },
+        {
+          "id": "retrieve-kubernetes",
+          "scenario": "中文描述集群调度容器时检索到 Kubernetes",
+          "category": "cross-language",
+          "query": "在多台机器上自动调度容器，故障后替换实例并扩缩容",
+          "expected": "kubernetes",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "kubernetes",
+              "score": 0.8177717924118042
+            },
+            {
+              "id": "batching",
+              "score": 0.807231068611145
+            },
+            {
+              "id": "gc",
+              "score": 0.7571577429771423
+            }
+          ]
+        },
+        {
+          "id": "retrieve-typescript",
+          "scenario": "中文描述运行前检查 JavaScript 类型时检索到 TypeScript",
+          "category": "cross-language",
+          "query": "给 JavaScript 增加静态类型，在执行之前发现类型错误",
+          "expected": "typescript",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "typescript",
+              "score": 0.8191627860069275
+            },
+            {
+              "id": "code-lru",
+              "score": 0.7636640071868896
+            },
+            {
+              "id": "code-viewport",
+              "score": 0.7573015093803406
+            }
+          ]
+        },
+        {
+          "id": "retrieve-tls",
+          "scenario": "中文描述 HTTPS 加密与证书时检索到 TLS",
+          "category": "cross-language",
+          "query": "浏览器和服务器之间的加密通道，用证书确认服务器身份",
+          "expected": "tls",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "tls",
+              "score": 0.8115570545196533
+            },
+            {
+              "id": "token-auth",
+              "score": 0.7915109992027283
+            },
+            {
+              "id": "wasm",
+              "score": 0.754112720489502
+            }
+          ]
+        },
+        {
+          "id": "retrieve-oauth",
+          "scenario": "中文描述第三方授权时检索到 OAuth",
+          "category": "cross-language",
+          "query": "不用把密码交给第三方应用，就能授予它有限的账号资源访问权限",
+          "expected": "oauth",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "oauth",
+              "score": 0.8364471197128296
+            },
+            {
+              "id": "token-auth",
+              "score": 0.7773450016975403
+            },
+            {
+              "id": "prompt-injection",
+              "score": 0.7496119737625122
+            }
+          ]
+        },
+        {
+          "id": "retrieve-wasm",
+          "scenario": "英文描述浏览器运行编译代码时检索到 WebAssembly",
+          "category": "retrieval",
+          "query": "A compact binary format lets a browser execute sandboxed code compiled from Rust.",
+          "expected": "wasm",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "wasm",
+              "score": 0.8778082728385925
+            },
+            {
+              "id": "code-lru",
+              "score": 0.7926780581474304
+            },
+            {
+              "id": "container-software",
+              "score": 0.7879534363746643
+            }
+          ]
+        },
+        {
+          "id": "retrieve-injection",
+          "scenario": "网页内容试图改写助手指令时检索到提示注入说明",
+          "category": "retrieval",
+          "query": "A retrieved article tells the assistant to ignore its instructions and disclose private data.",
+          "expected": "prompt-injection",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "prompt-injection",
+              "score": 0.8441961407661438
+            },
+            {
+              "id": "token-auth",
+              "score": 0.7704777121543884
+            },
+            {
+              "id": "vector-database",
+              "score": 0.7698922753334045
+            }
+          ]
+        },
+        {
+          "id": "retrieve-vector-db",
+          "scenario": "描述按向量距离查询时检索到向量索引",
+          "category": "retrieval",
+          "query": "How can I search a large collection by finding approximate nearest neighbours of sentence vectors?",
+          "expected": "vector-database",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "vector-database",
+              "score": 0.8801103234291077
+            },
+            {
+              "id": "embedding-ml",
+              "score": 0.8215311765670776
+            },
+            {
+              "id": "code-stale",
+              "score": 0.788547694683075
+            }
+          ]
+        },
+        {
+          "id": "retrieve-cuda",
+          "scenario": "描述 NVIDIA 并行计算平台时检索到 CUDA",
+          "category": "retrieval",
+          "query": "The NVIDIA toolkit for launching general-purpose parallel computations on graphics hardware.",
+          "expected": "cuda",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "cuda",
+              "score": 0.7993250489234924
+            },
+            {
+              "id": "race-sport",
+              "score": 0.7079020738601685
+            },
+            {
+              "id": "batching",
+              "score": 0.6938584446907043
+            }
+          ]
+        },
+        {
+          "id": "retrieve-batching",
+          "scenario": "描述合并模型输入时检索到批处理",
+          "category": "retrieval",
+          "query": "Send several texts through a model together to spread startup overhead across the inputs.",
+          "expected": "batching",
+          "rank": 2,
+          "top3": [
+            {
+              "id": "vector-database",
+              "score": 0.807366132736206
+            },
+            {
+              "id": "batching",
+              "score": 0.7982240319252014
+            },
+            {
+              "id": "kernel-math",
+              "score": 0.7874888777732849
+            }
+          ]
+        },
+        {
+          "id": "retrieve-transaction",
+          "scenario": "描述写入全部成功或回滚时检索到数据库事务",
+          "category": "retrieval",
+          "query": "If any database update fails, undo every change in the group instead of leaving a partial write.",
+          "expected": "transactions",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "transactions",
+              "score": 0.8833335638046265
+            },
+            {
+              "id": "batching",
+              "score": 0.7919658422470093
+            },
+            {
+              "id": "code-lru",
+              "score": 0.7911795377731323
+            }
+          ]
+        },
+        {
+          "id": "retrieve-attention",
+          "scenario": "描述 query key value 时检索到注意力机制",
+          "category": "retrieval",
+          "query": "Use query and key dot products to choose how much each position contributes through its value.",
+          "expected": "attention",
+          "rank": 2,
+          "top3": [
+            {
+              "id": "idf",
+              "score": 0.7901554703712463
+            },
+            {
+              "id": "attention",
+              "score": 0.7789367437362671
+            },
+            {
+              "id": "port-harbor",
+              "score": 0.7603076100349426
+            }
+          ]
+        },
+        {
+          "id": "retrieve-idf",
+          "scenario": "描述低频词权重时检索到逆文档频率",
+          "category": "retrieval",
+          "query": "Why should a rare search term receive a larger weight than a term appearing in almost every file?",
+          "expected": "idf",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "idf",
+              "score": 0.8523716926574707
+            },
+            {
+              "id": "vector-database",
+              "score": 0.7652394771575928
+            },
+            {
+              "id": "latency",
+              "score": 0.7631289958953857
+            }
+          ]
+        },
+        {
+          "id": "code-limit",
+          "scenario": "按并发上限描述检索到任务队列代码",
+          "category": "code",
+          "query": "Find the function that runs a list of jobs with at most N active operations at once.",
+          "expected": "code-limit",
+          "rank": 3,
+          "top3": [
+            {
+              "id": "batching",
+              "score": 0.8435768485069275
+            },
+            {
+              "id": "cache-hidden",
+              "score": 0.8216283917427063
+            },
+            {
+              "id": "code-limit",
+              "score": 0.8209226727485657
+            }
+          ]
+        },
+        {
+          "id": "code-abort",
+          "scenario": "按请求超时取消描述检索到 AbortController 代码",
+          "category": "code",
+          "query": "Locate the request helper that cancels a network operation when its deadline expires and releases the timer.",
+          "expected": "code-abort",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "code-abort",
+              "score": 0.8547996282577515
+            },
+            {
+              "id": "cache-hidden",
+              "score": 0.8006398677825928
+            },
+            {
+              "id": "code-debounce",
+              "score": 0.7985804677009583
+            }
+          ]
+        },
+        {
+          "id": "code-batch",
+          "scenario": "中文按分块描述检索到数组批处理代码",
+          "category": "code",
+          "query": "查找把一个数组拆成指定大小的多个小数组的函数",
+          "expected": "code-batch",
+          "rank": 3,
+          "top3": [
+            {
+              "id": "gc",
+              "score": 0.819822371006012
+            },
+            {
+              "id": "batching",
+              "score": 0.8096871376037598
+            },
+            {
+              "id": "code-batch",
+              "score": 0.8076603412628174
+            }
+          ]
+        },
+        {
+          "id": "code-lru",
+          "scenario": "按最近最少使用淘汰描述检索到缓存代码",
+          "category": "code",
+          "query": "Find a bounded cache that refreshes recency on reads and evicts the least recently accessed item.",
+          "expected": "code-lru",
+          "rank": 2,
+          "top3": [
+            {
+              "id": "cache-hidden",
+              "score": 0.8526927828788757
+            },
+            {
+              "id": "code-lru",
+              "score": 0.8410763144493103
+            },
+            {
+              "id": "batching",
+              "score": 0.8213840126991272
+            }
+          ]
+        },
+        {
+          "id": "code-escape",
+          "scenario": "中文按 HTML 转义描述检索到实体替换代码",
+          "category": "code",
+          "query": "查找将字符串中的尖括号和引号转成 HTML 实体以便安全显示的代码",
+          "expected": "code-escape",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "code-escape",
+              "score": 0.8550758957862854
+            },
+            {
+              "id": "code-lru",
+              "score": 0.7958744764328003
+            },
+            {
+              "id": "wasm",
+              "score": 0.794514536857605
+            }
+          ]
+        },
+        {
+          "id": "code-debounce",
+          "scenario": "按等待连续事件停止描述检索到防抖代码",
+          "category": "code",
+          "query": "Locate a wrapper that only calls its callback after incoming events stop for a quiet interval.",
+          "expected": "code-debounce",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "code-debounce",
+              "score": 0.8537232279777527
+            },
+            {
+              "id": "code-abort",
+              "score": 0.828309178352356
+            },
+            {
+              "id": "code-viewport",
+              "score": 0.8282591104507446
+            }
+          ]
+        },
+        {
+          "id": "code-stale",
+          "scenario": "按忽略旧选区结果描述检索到代次检查代码",
+          "category": "code",
+          "query": "Find the code that prevents an old asynchronous translation response from replacing the current selection's result.",
+          "expected": "code-stale",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "code-stale",
+              "score": 0.8812769651412964
+            },
+            {
+              "id": "transactions",
+              "score": 0.8303479552268982
+            },
+            {
+              "id": "code-lru",
+              "score": 0.8225547075271606
+            }
+          ]
+        },
+        {
+          "id": "code-viewport",
+          "scenario": "中文按靠近可视区域排队描述检索到观察器代码",
+          "category": "code",
+          "query": "查找只在元素接近浏览器可视区域时才把它加入处理队列的代码",
+          "expected": "code-viewport",
+          "rank": 1,
+          "top3": [
+            {
+              "id": "code-viewport",
+              "score": 0.8399907946586609
+            },
+            {
+              "id": "gc",
+              "score": 0.8195956349372864
+            },
+            {
+              "id": "code-debounce",
+              "score": 0.8164502382278442
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "limitations": [
+    "Small synthetic authored diagnostic, not random real-world accuracy or a translation test.",
+    "Sense ranking uses known matching headwords; global corpus search is reported separately.",
+    "No quantized model, MLX backend, multimodal, energy or browser integration measured.",
+    "Vector shortening reduces index storage, not encoder inference cost."
+  ]
+}

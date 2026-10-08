@@ -2,6 +2,8 @@
 
 ## 使用指南
 
+- [四下空格：输入框草稿翻译为英文](guides/input-translation.md)
+
 - [导入、管理与使用离线 StarDict 词库](guides/dictionary-import.md)
 - [安装、开发启动与网页操作](guides/getting-started.md)
 - [MLX、Ollama 与兼容 API 配置](guides/models.md)
@@ -33,6 +35,7 @@
 
 ## 性能
 
+- [EmbeddingGemma 2：科技词义、中英和代码检索实测](performance/2026-10-07-embeddinggemma2.md)
 - [PDF 原版式首屏、逐块回填与画布预算](performance/2026-10-05-pdf-layout.md)
 
 - [报告索引、指标口径与模型选择](performance/README.md)

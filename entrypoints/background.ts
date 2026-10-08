@@ -95,7 +95,7 @@ export default defineBackground(() => {
           // Options tabs have a sender.tab on Firefox. Verify the extension origin too.
           if (!sender.url?.startsWith(browser.runtime.getURL('/'))) throw new Error('此操作仅允许在扩展设置页执行');
         }
-        if (request.type === 'preferences') { const value = await settings(); return { ok: true, data: { theme: value.theme } }; }
+        if (request.type === 'preferences') { const value = await settings(); return { ok: true, data: { theme: value.theme, inputTranslation: value.inputTranslation } }; }
         if (request.type === 'settings:get') return { ok: true, data: await settings() };
         if (request.type === 'lexicon:list') return { ok: true, data: await dictionaries.list() };
         if (request.type === 'lexicon:delete') { await dictionaries.remove(request.dictionaryId); return { ok: true, data: null }; }
@@ -122,6 +122,10 @@ export default defineBackground(() => {
             return { ok: true, data: native ? await nativeSpeech.play(request.word, request.locale, controller.signal) : { backend: 'browser' } };
           }
           const config = request.type === 'connection:test' ? request.settings : await settings();
+          if (request.type === 'input:translate') {
+            if (!config.inputTranslation) throw new Error('输入框快捷翻译已关闭');
+            return { ok: true, data: await service.translateInput(config, request.text, controller.signal) };
+          }
           const data = request.type === 'translate' ? await service.translate(config, request.texts, controller.signal, undefined, request.bypassCache, request.priority)
             : request.type === 'dictionary' ? await service.dictionary(config, request.word, request.context, controller.signal)
               : await service.test(config, controller.signal);

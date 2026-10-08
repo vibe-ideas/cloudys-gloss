@@ -4,6 +4,28 @@ import { defaults } from '../../src/schema';
 const signal = () => new AbortController().signal;
 const reply = (value: unknown) => new Response(JSON.stringify({ choices: [{ message: { content: JSON.stringify(value) } }] }));
 describe('OpenAI-compatible 模型请求', () => {
+  it('模型合并多行草稿时要求修复换行，第二次仍丢段落则拒绝替换', async () => {
+    const fetcher = vi.fn<typeof fetch>().mockImplementation(async () => reply({ translation: 'Hello. Thank you.' }));
+    await expect(new OpenAICompatibleProvider(defaults, fetcher).translateInput('你好。\n谢谢。', signal())).rejects.toThrow('结构');
+    expect(fetcher).toHaveBeenCalledTimes(2);
+    const repair = JSON.parse(fetcher.mock.calls[1]![1]!.body as string).messages.at(-1).content;
+    expect(repair).toContain('line break');
+  });
+  it('输入框草稿独立翻译为英文，中文方向规则不会混入请求', async () => {
+    const fetcher = vi.fn<typeof fetch>().mockResolvedValue(reply({ translation: 'Please review the change before Friday.' }));
+    const text = '请在周五前审核修改。';
+    expect(await new OpenAICompatibleProvider(defaults, fetcher).translateInput(text, signal())).toBe('Please review the change before Friday.');
+    const body = JSON.parse(fetcher.mock.calls[0]![1]!.body as string);
+    expect(body.messages[0].content).toContain('natural English');
+    expect(body.messages[0].content).not.toContain('Simplified Chinese');
+    expect(JSON.parse(body.messages[1].content)).toEqual({ text });
+  });
+  it('输入框模型只复述中文或返回错误结构时要求修复，校验通过才替换', async () => {
+    const fetcher = vi.fn<typeof fetch>().mockResolvedValueOnce(reply({ translation: '请审核修改。' }))
+      .mockResolvedValueOnce(reply({ translation: 'Please review the change.' }));
+    expect(await new OpenAICompatibleProvider(defaults, fetcher).translateInput('请审核修改。', signal())).toBe('Please review the change.');
+    expect(fetcher).toHaveBeenCalledTimes(2);
+  });
   it('批量翻译只有一段照抄原文时保留成功译文，只重新请求失败的段落', async () => {
     const sources = ['The library is open now.', 'The service is ready now.'];
     const payload = JSON.stringify({ translations: ['图书馆现在开放了。', sources[1]] });

@@ -17,6 +17,10 @@ test('窄屏文章划词后词卡不遮挡原词，卡内可滚动，文章滚�
 
   const card = page.getByRole('dialog', { name: 'AI 单词卡' });
   await expect(card.getByRole('button', { name: '美式发音' })).toBeVisible();
+  // Offline IPA arrives before the full card. Scrolling is meaningful only
+  // after the model's definitions and examples have expanded the content.
+  await expect(card).toHaveAttribute('aria-busy', 'false');
+  await expect(card.locator('.examples')).toHaveCount(1);
   const source = (await page.locator('#first strong').boundingBox())!;
   const bounds = (await card.boundingBox())!;
   expect(bounds.x).toBeGreaterThanOrEqual(12);

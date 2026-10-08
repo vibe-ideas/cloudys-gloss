@@ -4,6 +4,31 @@ import { cacheKey, ResultCache } from '../../src/cache';
 import { TranslationService } from '../../src/service';
 import { defaults } from '../../src/schema';
 afterEach(() => vi.unstubAllGlobals());
+describe('输入框英文翻译的后台调度', () => {
+  it('重复输入同一草稿也不读取或写入持久译文缓存，防止草稿留存和翻译方向混用', async () => {
+    const cache = new ResultCache(crypto.randomUUID());
+    const read = vi.spyOn(cache, 'get'); const write = vi.spyOn(cache, 'set');
+    const fetcher = vi.fn().mockImplementation(async () => new Response(JSON.stringify({ choices: [{ message: { content: '{"translation":"Please review this change."}' } }] })));
+    vi.stubGlobal('fetch', fetcher);
+    const service = new TranslationService(cache);
+    for (let i = 0; i < 2; i++) expect(await service.translateInput(defaults, '请审核这个修改。', new AbortController().signal)).toBe('Please review this change.');
+    expect(fetcher).toHaveBeenCalledTimes(2); expect(read).not.toHaveBeenCalled(); expect(write).not.toHaveBeenCalled();
+  });
+  it('等待网页翻译占用的并发槽期间取消输入框请求，不再唤醒模型或发送草稿', async () => {
+    let finish!: (value: Response) => void;
+    const fetcher = vi.fn(() => new Promise<Response>(resolve => { finish = resolve; }));
+    vi.stubGlobal('fetch', fetcher);
+    const service = new TranslationService(new ResultCache(crypto.randomUUID()));
+    const page = service.translate(defaults, ['Hello'], new AbortController().signal);
+    await vi.waitFor(() => expect(fetcher).toHaveBeenCalledOnce());
+    const controller = new AbortController();
+    const input = service.translateInput(defaults, '不要发送这段草稿', controller.signal);
+    const rejected = expect(input).rejects.toThrow('取消'); controller.abort(new Error('取消'));
+    await rejected;
+    finish(new Response(JSON.stringify({ choices: [{ message: { content: '{"translations":["你好"]}' } }] })));
+    await page; expect(fetcher).toHaveBeenCalledOnce();
+  });
+});
 describe('跨页面翻译缓存', () => {
   it.each([1, 2])('并发 %i 时两个页面的重叠段落只推理一次，各自返回原顺序结果', async (concurrency) => {
     const finishes: (() => void)[] = [];

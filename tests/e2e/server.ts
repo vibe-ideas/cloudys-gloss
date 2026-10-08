@@ -9,7 +9,7 @@ import { pdfFixture } from './pdf-fixture';
 import { pdfLayoutFixture, pdfLayoutTranslations } from './pdf-layout-fixture';
 import { componentFixture, componentTranslations } from './component-fixture';
 export async function startServer() {
-  const calls: { texts?: string[]; word?: string; context?: string; example?: string }[] = [];
+  const calls: { texts?: string[]; text?: string; word?: string; context?: string; example?: string }[] = [];
   let delay = 0; let invalid = false; let translationFailure = 0;
   const translationOverrides = new Map<string, string>();
   let streamGate: Promise<void> | undefined; let releaseStream: (() => void) | undefined;
@@ -57,9 +57,9 @@ export async function startServer() {
         return;
       }
       const data = JSON.parse(requestBody.messages[1].content) as typeof calls[number]; calls.push(data);
-      if (data.texts && translationFailure) { response.writeHead(translationFailure); response.end('test failure'); return; }
+      if ((data.texts || data.text) && translationFailure) { response.writeHead(translationFailure); response.end('test failure'); return; }
       if (delay) await new Promise((resolve) => setTimeout(resolve, delay));
-      const content = invalid ? { broken: true } : data.texts ? { translations: data.texts.map((text) => translationOverrides.get(text) ?? pdfLayoutTranslations[text] ?? componentTranslations[text] ?? diverseTranslations[text] ?? layoutTranslations[text] ?? readingTranslations[text] ?? `中文译文：${text}`) } : {
+      const content = invalid ? { broken: true } : data.text ? { translation: translationOverrides.get(data.text) ?? 'Please review this change before Friday.' } : data.texts ? { translations: data.texts.map((text) => translationOverrides.get(text) ?? pdfLayoutTranslations[text] ?? componentTranslations[text] ?? diverseTranslations[text] ?? layoutTranslations[text] ?? readingTranslations[text] ?? `中文译文：${text}`) } : {
         word: data.word, ipa: { us: '/ˈklaʊdi/', uk: '/ˈklaʊdi/' },
         senses: [{ partOfSpeech: 'adjective', meaning: '多云的；不清晰的' }], contextMeaning: '在当前句子中表示多云的天气',
         examples: data.example ? [{ zh: '多云的早晨让人思绪宁静。' }]

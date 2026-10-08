@@ -5,7 +5,7 @@ describe('模型设置', () => {
     expect(SettingsSchema.parse(defaults)).toEqual({
       baseUrl: 'http://127.0.0.1:8080/v1',
       model: 'Qwen/Qwen3-1.7B-MLX-4bit',
-      apiKey: '', temperature: 0, concurrency: 1, timeout: 120000, theme: 'system', autoStartLocalModel: true,
+      apiKey: '', temperature: 0, concurrency: 1, timeout: 120000, theme: 'system', autoStartLocalModel: true, inputTranslation: true,
     });
   });
   it('用户输入非 HTTP 地址或过高并发时拒绝保存', () => {
