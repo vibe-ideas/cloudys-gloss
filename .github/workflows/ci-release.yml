@@ -40,8 +40,22 @@ jobs:
       - run: pnpm check
       - name: Install test browsers
         run: pnpm exec playwright install --with-deps chromium firefox
+      - name: Install Mozilla Firefox for native BiDi testing
+        id: mozilla-firefox
+        uses: browser-actions/setup-firefox@0bc507ddf224827e3b1af68e014d5e42ab93e795
+        with:
+          firefox-version: latest
+      - name: Build and verify native tab visibility
+        env:
+          FIREFOX_BINARY: ${{ steps.mozilla-firefox.outputs.firefox-path }}
+        run: |
+          pnpm build
+          pnpm build:firefox
+          xvfb-run -a pnpm exec playwright test tests/e2e/scheduler.spec.ts
       - name: Test Chrome and Firefox extensions
-        run: xvfb-run -a pnpm test:e2e
+        env:
+          FIREFOX_BINARY: ${{ steps.mozilla-firefox.outputs.firefox-path }}
+        run: xvfb-run -a pnpm exec playwright test
       - name: Build release packages
         run: |
           pnpm zip

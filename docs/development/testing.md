@@ -31,7 +31,7 @@ pnpm smoke:live
 
 ## 网页体验回归
 
-`scheduler.spec.ts` 用真实有界面的浏览器验证切出标签页后暂停新增翻译、切回续译。Firefox BiDi 默认将 `layout.testing.top-level-always-active` 设为 `true`，会干扰后台文档可见性；测试夹具在 `headed` 场景中显式改为 `false`。Chromium 则通过 CDP 的 `noDefaults` 避开自动化的强制聚焦。两者都检查浏览器实际的 `document.visibilityState`，不伪造可见性事件、不跳过后台暂停断言；这些设置只影响临时测试配置。
+`scheduler.spec.ts` 用真实有界面的浏览器验证切出标签页后暂停新增翻译、切回续译。Firefox BiDi 默认将 `layout.testing.top-level-always-active` 设为 `true`，会干扰后台文档可见性；测试夹具在 `headed` 场景中显式改为 `false`。Chromium 则通过 CDP 的 `noDefaults` 避开自动化的强制聚焦。CI 必须通过 `FIREFOX_BINARY` 使用 Mozilla 官方 Firefox：Playwright 定制版本的 [Juggler 源码](https://github.com/microsoft/playwright/blob/v1.63.0/browser_patches/firefox/juggler/content/main.js#L46-L49)还会强制设置 `docShell.forceActiveState`，仅修改偏好不足以恢复原生可见性。工作流先运行该场景，再运行完整回归。两者都检查浏览器实际的 `document.visibilityState`，不伪造可见性事件、不跳过后台暂停断言；这些设置只影响临时测试配置。
 
 布局用例统一位于 `tests/e2e/`，固定返回较长中文，避免短译文掩盖裁切和叠压。`layout-design.spec.ts` 覆盖产品页大标题、控件、固定高度、flex、窗口缩窄后恢复，以及宿主在翻译期间更新样式；`diverse-layout.spec.ts` 覆盖技术文档、表格、资讯网格、长文图注、折叠内容、SPA 和内部滚动面板。`interaction-design.spec.ts` 覆盖词卡避让、重排、内部滚动、菜单事件与键盘焦点。所有场景在 Chromium 和 Firefox 上运行，断言几何边界、交互和关闭后的恢复，截图辅助设计复核。
 

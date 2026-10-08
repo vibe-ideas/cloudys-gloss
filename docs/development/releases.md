@@ -32,7 +32,7 @@ git push origin v0.1.1  # 填入上一条命令输出的实际标签
 
 1. 使用锁文件安装依赖，Node.js 24、Python 3.12、packageManager 指定的 pnpm。
 2. `pnpm check`：lint、TypeScript、Vitest 单元测试。
-3. 安装 Playwright Chromium / Firefox，执行 `pnpm test:e2e`，实际加载两个浏览器的扩展。使用仓库模拟模型服务，不依赖 Mac、MLX 或付费 API。
+3. 安装 Playwright Chromium 和 Mozilla 官方 Firefox（通过 BiDi 自动化），构建后先验证原生标签页可见性，再执行完整 Playwright E2E，实际加载两个浏览器的扩展。使用仓库模拟模型服务，不依赖 Mac、MLX 或付费 API。
 4. WXT 分别构建 ZIP，发布脚本检查 ZIP 完整性、内置 manifest 版本、MV3/MV2 类型和 Firefox ID，并生成 SHA-256 校验和。
 5. 发布任务下载同一次运行的产物、复核校验和，创建草稿、上传附件，最后公开发布。更新说明包含安装方法并追加 GitHub 自动生成的变更记录。
 
