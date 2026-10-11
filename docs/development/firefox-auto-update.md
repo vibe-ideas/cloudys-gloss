@@ -38,4 +38,10 @@ python3 tests/updates/firefox-native.py
 
 测试在临时配置中永久安装低版本夹具，调用 Firefox 原生更新检查，通过公开清单下载正式 XPI，验证版本与原有模型设置，并重启验证持久化。夹具具有同一扩展 ID、权限和更新地址；它不是 0.1.9 原包，因此不代表旧包能免覆盖安装迁移。仅测试子进程允许未签名扩展和系统自动化访问，不触碰日常浏览器配置。首次清单尚未发布时，可用 `--install-only` 只检查夹具安装。
 
+## v0.1.10 验收记录（2026-10-12）
+
+- [CI 与发布运行](https://github.com/vibe-ideas/cloudys-gloss/actions/runs/38164624495)：382 项单测、18 项原生交互检查、116 项扩展 E2E、8 项产品页测试通过。扩展 E2E 另有 2 项既有 Firefox 站点 DOM 用例按配置跳过。
+- macOS 上的 Firefox Developer Edition 158.0b5：运行 `python3 tests/updates/firefox-native.py`，低版本夹具通过公开 HTTPS 更新清单升级到真实 Release 的 0.1.10。扩展永久安装且启用，模型设置保留，退出重启后再次通过版本、启用状态和设置断言。
+- 上述结果来自隔离测试配置，不代表用户日常配置已经完成安装。日常 Firefox 已收到本地 XPI 打开请求，但窗口自动化接口超时，无法代替用户确认安装结果。
+
 Mozilla 参考：[更新扩展](https://extensionworkshop.com/documentation/manage/updating-your-extension/) · [自行分发](https://extensionworkshop.com/documentation/publish/self-distribution/)。
