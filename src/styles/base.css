@@ -24,7 +24,7 @@ input, select { font-size: 14px; font-weight: 400; border: 1px solid var(--line)
 input:hover, select:hover { border-color: color-mix(in srgb, var(--accent) 35%, var(--line)); }
 
 .brand { display: flex; align-items: center; gap: 10px; font-size: 15px; font-weight: 650; letter-spacing: -.3px; }
-.logo { display: grid; place-items: center; flex-shrink: 0; width: var(--logo, 34px); height: var(--logo, 34px); border-radius: 30%; background: var(--accent-solid); color: #fff; font-size: calc(var(--logo, 34px) * .6); }
+.logo { display: block; flex-shrink: 0; width: var(--logo, 34px); height: var(--logo, 34px); }
 .muted { color: var(--muted); }
 .eyebrow { font-size: 11px; font-weight: 600; letter-spacing: 1.6px; text-transform: uppercase; color: var(--accent); }
 .error { color: var(--error); }

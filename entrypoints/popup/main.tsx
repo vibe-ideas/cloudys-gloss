@@ -1,4 +1,5 @@
 import { render } from 'preact';
+import { BrandMark } from '../../src/ui/brand-mark';
 import { useEffect, useState } from 'preact/hooks';
 import { browser } from 'wxt/browser';
 import { pdfReaderHash, pdfTabSource } from '../../src/pdf/link';
@@ -38,7 +39,7 @@ function Popup() {
   const view = describe(status, pdf, error);
   const pageAction = !!status && !pdf;
   return <main class="popup">
-    <header class="popup-head"><div class="brand"><span class="logo">☁</span>Cloudy’s Gloss</div>
+    <header class="popup-head"><div class="brand"><BrandMark className="logo" />Cloudy’s Gloss</div>
       <button class="ghost icon" title="模型设置" aria-label="模型设置" onClick={() => void browser.runtime.openOptionsPage()}>⚙</button></header>
     <section class={`state ${view.tone}`} role="status"><strong>{view.title}</strong>{view.detail && <span>{view.detail}</span>}</section>
     {pageAction

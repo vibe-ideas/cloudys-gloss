@@ -22,6 +22,8 @@
 
 ## 体验设计
 
+- [品牌标识、图标导出与小尺寸预览](design/brand/README.md)
+
 - [PDF 原版式对照、长译文和视觉验证](design/2026-10-05-pdf-layout.md)
 
 - [页眉、常见组件与 PDF 体验修复](design/2026-10-05-components-pdf.md)

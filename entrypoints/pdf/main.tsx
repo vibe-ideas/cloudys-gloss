@@ -1,4 +1,5 @@
 import { render } from 'preact';
+import { BrandMark } from '../../src/ui/brand-mark';
 import { useEffect, useRef, useState } from 'preact/hooks';
 import { getDocument, PDFWorker, type PDFDocumentLoadingTask, type PDFDocumentProxy } from 'pdfjs-dist';
 import workerUrl from 'pdfjs-dist/build/pdf.worker.min.mjs?url';
@@ -82,7 +83,7 @@ function PdfReader() {
     {error && <p class="load-error" role="alert">{error}</p>}
   </section>;
   return <main class={`pdf-reader ${document ? 'has-document' : ''}`}>
-    <header class="reader-heading"><div class="brand"><span class="logo">☁</span>Cloudy’s Gloss</div><button onClick={() => void send({ type: 'settings:open' })}>模型设置</button></header>
+    <header class="reader-heading"><div class="brand"><BrandMark className="logo" />Cloudy’s Gloss</div><button onClick={() => void send({ type: 'settings:open' })}>模型设置</button></header>
     {!document && <div class="intro"><span class="eyebrow">PDF · 双语阅读</span><h1>原文与理解，同页展开。</h1><p>保留原始 PDF，逐页查看中文。开启双语后，当前页文字才会发送到你配置的模型。</p></div>}
     {document ? <details class="file-picker" open={loading || !!error}><summary>打开其他文件</summary>{picker}</details> : picker}
     {document && <>

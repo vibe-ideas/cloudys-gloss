@@ -38,7 +38,7 @@ export default defineConfig({
     },
   },
   zip: {
-    includeSources: ['entrypoints/**', 'src/**', 'public/**', 'scripts/native-key.json', 'scripts/dictionary-assets.ts', 'scripts/build-tech-pronunciation.py', 'scripts/build-icons.mjs', 'data/pronunciation/**', 'data/firefox-update.json', 'wxt.config.ts', 'tsconfig.json', 'package.json', 'pnpm-lock.yaml', 'README.md'],
+    includeSources: ['entrypoints/**', 'src/**', 'public/**', 'scripts/native-key.json', 'scripts/dictionary-assets.ts', 'scripts/build-tech-pronunciation.py', 'scripts/build-icons.mjs', 'data/pronunciation/**', 'data/firefox-update.json', 'data/brand-mark.json', 'wxt.config.ts', 'tsconfig.json', 'package.json', 'pnpm-lock.yaml', 'README.md'],
   },
   vite: () => ({ plugins: [preact()] }),
   webExt: {

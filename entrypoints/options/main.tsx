@@ -1,4 +1,5 @@
 import { render } from 'preact';
+import { BrandMark } from '../../src/ui/brand-mark';
 import { ModelControls } from '../../src/model/model-controls';
 import { DictionarySettings } from '../../src/dictionaries/settings';
 import { useSettings } from './use-settings';
@@ -12,7 +13,7 @@ const FORM_ID = 'settings-form';
 function Options() {
   const form = useSettings();
   return <main class="layout">
-    <header class="topbar"><div class="brand"><span class="logo">☁</span>Cloudy’s Gloss</div><span class="badge">LOCAL FIRST</span></header>
+    <header class="topbar"><div class="brand"><BrandMark className="logo" />Cloudy’s Gloss</div><span class="badge">LOCAL FIRST</span></header>
     <div class="intro"><div class="eyebrow">A little clarity, in every word.</div><h1>让阅读，多一层理解。</h1><p class="muted">保留原文的节奏，用你选择的模型翻译与理解。</p></div>
     <form id={FORM_ID} onSubmit={(event) => { event.preventDefault(); void form.perform('save'); }}>
       <Connection form={form} />

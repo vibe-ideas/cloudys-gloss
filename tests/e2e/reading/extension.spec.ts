@@ -158,7 +158,7 @@ test.describe('系统开启减少动态效果', () => {
     await expect(page.locator('[data-state="partial"]').first()).toContainText('中文译文');
     await expect(host.locator('.busy-ring')).toBeVisible();
     expect(await host.locator('.busy-ring').evaluate(element => getComputedStyle(element).animationName)).toBe('none');
-    expect(await host.locator('.cloud-line').first().evaluate(element => getComputedStyle(element).animationName)).toBe('none');
+    expect(await host.locator('.gloss-fold').first().evaluate(element => getComputedStyle(element).animationName)).toBe('none');
     const dot = page.locator('[data-state="translating"] [data-gloss-part="loader"] i').first();
     await expect(dot).toBeVisible();
     expect(await dot.evaluate((element) => getComputedStyle(element).animationName)).toBe('none');
@@ -186,7 +186,7 @@ test('网页拦截鼠标事件时，拖选单词后仍可点击小按钮打开�
 });
 
 
-test('云朵悬浮球只在翻译期间显示进度动效，完成后静止，展开和忙碌状态不改变页面宽度', async ({ extension }, testInfo) => {
+test('悬浮球只在翻译期间显示进度动效，完成后静止，展开和忙碌状态不改变页面宽度', async ({ extension }, testInfo) => {
   const { page, server } = extension;
   const host = page.locator('[data-cloudys-gloss="floating-control"]');
   await expect(host).toHaveCount(1);
@@ -196,7 +196,7 @@ test('云朵悬浮球只在翻译期间显示进度动效，完成后静止，�
   const box = (await host.locator('.capsule').boundingBox())!;
   const moving = () => host.locator('.capsule').evaluate(node => node.getAnimations({ subtree: true }).some(animation => animation.playState === 'running'));
   await expect.poll(moving).toBe(false);
-  await host.locator('.capsule').screenshot({ path: testInfo.outputPath('cloud-orb-idle.png') });
+  await host.locator('.capsule').screenshot({ path: testInfo.outputPath('gloss-orb-idle.png') });
   server.holdStreams();
   await host.getByRole('button', { name: '翻译当前网页', exact: true }).click();
   await expect(host.locator('.orb')).toHaveAttribute('aria-busy', 'true');
@@ -204,7 +204,7 @@ test('云朵悬浮球只在翻译期间显示进度动效，完成后静止，�
   await expect.poll(moving).toBe(true);
   expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBe(width);
   expect((await host.locator('.capsule').boundingBox())!).toEqual(box);
-  await host.locator('.capsule').screenshot({ path: testInfo.outputPath('cloud-orb-busy.png'), animations: 'disabled' });
+  await host.locator('.capsule').screenshot({ path: testInfo.outputPath('gloss-orb-busy.png'), animations: 'disabled' });
   server.releaseStreams();
   await expect(host.locator('.orb')).toHaveAttribute('aria-busy', 'false');
   await expect(host.locator('.busy-ring')).toHaveCount(0);
