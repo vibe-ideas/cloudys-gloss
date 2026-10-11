@@ -45,13 +45,13 @@ jobs:
         uses: browser-actions/setup-firefox@0bc507ddf224827e3b1af68e014d5e42ab93e795
         with:
           firefox-version: latest
-      - name: Build and verify native tab visibility
+      - name: Build and verify native desktop interaction
         env:
           FIREFOX_BINARY: ${{ steps.mozilla-firefox.outputs.firefox-path }}
         run: |
           pnpm build
           pnpm build:firefox
-          xvfb-run -a pnpm exec playwright test tests/e2e/performance/scheduler.spec.ts
+          xvfb-run -a pnpm exec playwright test tests/e2e/performance/scheduler.spec.ts tests/e2e/reading/extension.spec.ts
       - name: Test Chrome and Firefox extensions
         env:
           FIREFOX_BINARY: ${{ steps.mozilla-firefox.outputs.firefox-path }}

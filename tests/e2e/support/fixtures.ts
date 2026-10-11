@@ -43,20 +43,26 @@ export const test = base.extend<Fixture>({
         if (headed) {
           // Playwright normally forces every Chromium page to remain focused.
           // Connect without those overrides to test genuine tab visibility.
-          chromeProcess = spawn(chromium.executablePath(), [`--user-data-dir=${profile}`, '--remote-debugging-port=0', '--no-first-run', '--no-default-browser-check', '--disable-component-extensions-with-background-pages', '--no-sandbox', '--window-size=1100,800', ...extensionArgs, 'about:blank'], { stdio: 'ignore' });
+          chromeProcess = spawn(chromium.executablePath(), [`--user-data-dir=${profile}`, '--remote-debugging-port=0', '--no-first-run', '--no-default-browser-check', '--disable-component-extensions-with-background-pages', '--no-sandbox', '--disable-dev-shm-usage', '--window-size=1100,800', ...extensionArgs, 'about:blank'], { stdio: ['ignore', 'ignore', 'pipe'] });
+          let browserLog = '';
+          chromeProcess.stderr?.on('data', (chunk: Buffer) => { browserLog = (browserLog + chunk.toString()).slice(-16_384); });
           let startupError: Error | undefined;
           chromeProcess.once('error', error => { startupError = error; });
           let endpoint = '';
-          for (let attempt = 0; attempt < 100; attempt++) {
+          // CI can need more than ten seconds to start a native window.
+          const startupDeadline = Date.now() + 30_000;
+          while (Date.now() < startupDeadline) {
             if (startupError) throw startupError;
-            if (chromeProcess.exitCode !== null) throw new Error('Test Chromium exited before CDP was ready');
+            if (chromeProcess.exitCode !== null || chromeProcess.signalCode !== null) throw new Error(`Test Chromium exited before CDP was ready: ${browserLog}`);
+            endpoint = browserLog.match(/DevTools listening on (ws:\/\/127\.0\.0\.1:\d+\/devtools\/browser\/[^\s]+)/)?.[1] ?? '';
+            if (endpoint) break;
             try {
               const [port, websocket] = (await readFile(path.join(profile, 'DevToolsActivePort'), 'utf8')).trim().split('\n');
               if (port && websocket) { endpoint = `ws://127.0.0.1:${port}${websocket}`; break; }
             } catch { /* The isolated browser is still starting. */ }
             await delay(100);
           }
-          if (!endpoint) throw new Error('Test Chromium CDP endpoint did not become ready');
+          if (!endpoint) throw new Error(`Test Chromium CDP endpoint did not become ready within 30 seconds: ${browserLog}`);
           const browser = await chromium.connectOverCDP(endpoint, { noDefaults: true });
           context = browser.contexts()[0]!;
         } else context = await chromium.launchPersistentContext(profile, { channel: 'chromium', headless: true, reducedMotion: motion, viewport: { width: 1100, height: 800 }, args: extensionArgs });
@@ -88,6 +94,10 @@ export const test = base.extend<Fixture>({
           viewport: { width: 1100, height: 800 },
           firefoxUserPrefs: {
             'ui.prefersReducedMotion': motion === 'reduce' ? 1 : 0,
+            // Stock headless Firefox reports no pointer by default. This
+            // desktop suite drives a fine mouse with hover capability.
+            'ui.primaryPointerCapabilities': 0x02 | 0x04,
+            'ui.allPointerCapabilities': 0x02 | 0x04,
             'devtools.chrome.enabled': true, 'devtools.debugger.remote-enabled': true, 'devtools.debugger.prompt-connection': false,
             // BiDi defaults keep top-level documents active even in background
             // tabs. Visibility tests need the browser's real activation state.
@@ -111,14 +121,24 @@ export const test = base.extend<Fixture>({
       };
       await use({ context, options, page, server, toggle });
     } finally {
-      await context?.close();
-      if (chromeProcess?.pid && chromeProcess.exitCode === null && chromeProcess.signalCode === null) {
-        const exited = new Promise<void>(resolve => chromeProcess!.once('exit', () => resolve()));
-        chromeProcess.kill('SIGTERM');
-        await Promise.race([exited, delay(3000, undefined, { ref: false })]);
-        if (chromeProcess.exitCode === null && chromeProcess.signalCode === null) { chromeProcess.kill('SIGKILL'); await exited; }
+      try {
+        await context?.close();
+      } finally {
+        try {
+          if (chromeProcess?.pid && chromeProcess.exitCode === null && chromeProcess.signalCode === null) {
+            const exited = new Promise<void>(resolve => chromeProcess!.once('exit', () => resolve()));
+            chromeProcess.kill('SIGTERM');
+            await Promise.race([exited, delay(3000, undefined, { ref: false })]);
+            if (chromeProcess.exitCode === null && chromeProcess.signalCode === null) { chromeProcess.kill('SIGKILL'); await exited; }
+          }
+        } finally {
+          try { await server.close(); } finally {
+            // Chromium child processes can briefly keep writing after the
+            // parent exits. Retry transient EBUSY/ENOTEMPTY, not test failures.
+            await rm(profile, { recursive: true, force: true, maxRetries: 10, retryDelay: 100 });
+          }
+        }
       }
-      await server.close(); await rm(profile, { recursive: true, force: true });
     }
   },
 });
