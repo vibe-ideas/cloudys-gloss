@@ -56,6 +56,10 @@ jobs:
         env:
           FIREFOX_BINARY: ${{ steps.mozilla-firefox.outputs.firefox-path }}
         run: xvfb-run -a pnpm exec playwright test
+      - name: Test product page
+        env:
+          FIREFOX_BINARY: ${{ steps.mozilla-firefox.outputs.firefox-path }}
+        run: pnpm exec playwright test -c playwright.site.config.ts
       - name: Build release packages
         run: |
           pnpm zip
@@ -113,5 +117,34 @@ jobs:
               --title "Cloudy's Gloss $RELEASE_TAG" \
               --notes-file release/RELEASE_NOTES.md --generate-notes
           fi
-          gh release upload "$RELEASE_TAG" release/*.zip release/SHA256SUMS --clobber
+          gh release upload "$RELEASE_TAG" release/*.zip release/*.xpi release/firefox-updates.json release/SHA256SUMS --clobber
           gh release edit "$RELEASE_TAG" --draft=false
+
+
+  pages:
+    name: Publish product page
+    needs: [verify, release]
+    if: ${{ !cancelled() && needs.verify.result == 'success' && (needs.release.result == 'success' || github.event_name == 'workflow_dispatch') }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    concurrency:
+      group: github-pages
+      cancel-in-progress: false
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+        with:
+          persist-credentials: false
+      - run: python3 scripts/build-site.py
+      - uses: actions/upload-pages-artifact@56afc609e74202658d3ffba0e8f6dda462b719fa # v3
+        with:
+          path: .output/site
+      - name: Deploy GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e # v4

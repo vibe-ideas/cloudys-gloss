@@ -4,7 +4,7 @@ import path from 'node:path';
 import { describe, expect, it } from 'vitest';
 
 function evaluate(body: string) {
-  const setup = `import importlib.util, sys, json, tempfile, zipfile\nfrom pathlib import Path\nspec = importlib.util.spec_from_file_location('release', sys.argv[1])\nrelease = importlib.util.module_from_spec(spec)\nspec.loader.exec_module(release)\n`;
+  const setup = `import importlib.util, sys, json, tempfile, zipfile\nfrom pathlib import Path\nspec = importlib.util.spec_from_file_location('release', sys.argv[1])\nrelease = importlib.util.module_from_spec(spec)\nsys.path.insert(0, str(Path(sys.argv[1]).parent))\nspec.loader.exec_module(release)\n`;
   return execFileSync('python3', ['-c', setup + body, path.resolve('scripts/release.py')], { encoding: 'utf8', stdio: ['pipe', 'pipe', 'pipe'] }).trim();
 }
 
@@ -14,9 +14,9 @@ describe('GitHub Release 发布保护', () => {
     expect(rejected.split('\n')).toEqual(['0.1.0', ...Array(5).fill('rejected')]);
   });
 
-  it('两个浏览器 ZIP 通过检查后仅输出安装包、校验和及安装说明，明确 Firefox 未签名', () => {
-    const result = JSON.parse(evaluate(`import hashlib\nwith tempfile.TemporaryDirectory() as folder:\n    root = Path(folder)\n    (root / '.output').mkdir()\n    for browser, mv in [('chrome',3),('firefox',2)]:\n        with zipfile.ZipFile(root / f'.output/cloudys-gloss-0.1.0-{browser}.zip','w') as z:\n            z.writestr('manifest.json',json.dumps({'version':'0.1.0','manifest_version':mv,'browser_specific_settings':{'gecko':{'id':'cloudys-gloss@local.dev'}}}))\n    import contextlib, io\n    with contextlib.redirect_stdout(io.StringIO()):\n        release.prepare(root,'0.1.0')\n    out = root / '.output/release'\n    valid = all(hashlib.sha256((out / line.split()[1]).read_bytes()).hexdigest() == line.split()[0] for line in (out/'SHA256SUMS').read_text().splitlines())\n    print(json.dumps({'files':sorted(p.name for p in out.iterdir()),'checksumsValid':valid,'notes':(out/'RELEASE_NOTES.md').read_text()}))`));
-    expect(result.files).toEqual(['RELEASE_NOTES.md', 'SHA256SUMS', 'cloudys-gloss-0.1.0-chrome.zip', 'cloudys-gloss-0.1.0-firefox-unsigned.zip']);
+  it('两个浏览器 ZIP 通过检查后输出未签名 XPI、原生更新清单和校验和', () => {
+    const result = JSON.parse(evaluate(`import hashlib\nwith tempfile.TemporaryDirectory() as folder:\n    root = Path(folder)\n    (root / '.output').mkdir()\n    for browser, mv in [('chrome',3),('firefox',2)]:\n        with zipfile.ZipFile(root / f'.output/cloudys-gloss-0.1.0-{browser}.zip','w') as z:\n            z.writestr('manifest.json',json.dumps({'version':'0.1.0','manifest_version':mv,'browser_specific_settings':{'gecko':{'id':'cloudys-gloss@local.dev','update_url':release.UPDATE_URL}}}))\n    import contextlib, io\n    with contextlib.redirect_stdout(io.StringIO()):\n        release.prepare(root,'0.1.0')\n    out = root / '.output/release'\n    valid = all(hashlib.sha256((out / line.split()[1]).read_bytes()).hexdigest() == line.split()[0] for line in (out/'SHA256SUMS').read_text().splitlines())\n    print(json.dumps({'files':sorted(p.name for p in out.iterdir()),'checksumsValid':valid,'notes':(out/'RELEASE_NOTES.md').read_text()}))`));
+    expect(result.files).toEqual(['RELEASE_NOTES.md', 'SHA256SUMS', 'cloudys-gloss-0.1.0-chrome.zip', 'cloudys-gloss-0.1.0-firefox-unsigned.zip', 'cloudys-gloss-firefox-unsigned.xpi', 'firefox-updates.json']);
     expect(result.checksumsValid).toBe(true);
     expect(result.notes).toContain('未签名');
   });

@@ -1,0 +1,5 @@
+{
+  "addonId": "cloudys-gloss@local.dev",
+  "updateUrl": "https://github.com/vibe-ideas/cloudys-gloss/releases/latest/download/firefox-updates.json",
+  "downloadBaseUrl": "https://github.com/vibe-ideas/cloudys-gloss/releases/download"
+}

@@ -2,6 +2,8 @@
 
 轻量双语阅读扩展：全文与组件双语翻译、划词词卡、贴边悬浮球、PDF 逐页阅读。WXT + TypeScript + Preact，同一套代码支持 Chrome/Chromium 和 Firefox；默认连接本地 mlx-serve，也支持 Ollama 与 OpenAI-compatible API。
 
+[产品页与演示视频](https://vibe-ideas.github.io/cloudys-gloss/) · [下载最新版本](https://github.com/vibe-ideas/cloudys-gloss/releases/latest) · [Firefox 自动更新](docs/development/firefox-auto-update.md)
+
 ## 快速开始
 
 需要 Node.js 24 或 22.13+、pnpm 10；本地 mlx-serve 需要 Apple Silicon、macOS 26.2+、Python 3.12+ 和 uv。

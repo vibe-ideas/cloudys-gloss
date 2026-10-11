@@ -8,7 +8,7 @@ import subprocess
 import sys
 from pathlib import Path
 
-from release import validate_archive, validate_version
+from release import UPDATE_URL, validate_archive, validate_version
 
 DEFAULT_APP = Path('/Applications/Firefox Developer Edition.app')
 

@@ -15,6 +15,8 @@
 - [架构与性能设计](development/architecture.md)
 - [单元测试、浏览器 E2E 与真实模型测试](development/testing.md)
 - [GitHub CI、版本标签与自动发布](development/releases.md)
+- [Firefox 原生自动更新](development/firefox-auto-update.md) · [本地覆盖安装](development/local-firefox-update.md)
+- [产品页、Pages 部署与演示视频](development/product-site.md)
 - [翻译质量回归与模型切换](development/translation-quality.md)
 - [数据与权限](reference/privacy.md)
 

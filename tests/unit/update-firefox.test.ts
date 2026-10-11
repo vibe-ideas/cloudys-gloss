@@ -17,7 +17,7 @@ def fixture(folder, version='0.1.0'):
     (root / 'package.json').write_text(json.dumps({'version':'0.1.0'}))
     (root / '.output').mkdir()
     with zipfile.ZipFile(root / '.output/cloudys-gloss-0.1.0-firefox.zip', 'w') as archive:
-        archive.writestr('manifest.json', json.dumps({'version':version,'manifest_version':2,'browser_specific_settings':{'gecko':{'id':'cloudys-gloss@local.dev'}}}))
+        archive.writestr('manifest.json', json.dumps({'version':version,'manifest_version':2,'browser_specific_settings':{'gecko':{'id':'cloudys-gloss@local.dev','update_url':updater.UPDATE_URL}}}))
     return root
 `;
   return JSON.parse(execFileSync('python3', ['-c', setup + body, path.resolve('scripts/update-firefox.py')], { encoding: 'utf8' }));

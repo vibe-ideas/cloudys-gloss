@@ -7,6 +7,11 @@ import shutil
 import zipfile
 from pathlib import Path
 
+from firefox_updates import create_update_manifest
+
+UPDATE_CONFIG = json.loads((Path(__file__).resolve().parent.parent / "data/firefox-update.json").read_text())
+UPDATE_URL = UPDATE_CONFIG["updateUrl"]
+
 
 def validate_version(version, tag=None):
     if not isinstance(version, str) or not re.fullmatch(r"(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)", version):
@@ -29,6 +34,8 @@ def validate_archive(archive, version, manifest_version):
             raise ValueError(f"{archive.name} 的 manifest 版本或浏览器类型不一致")
         if manifest_version == 2 and manifest.get("browser_specific_settings", {}).get("gecko", {}).get("id") != "cloudys-gloss@local.dev":
             raise ValueError("Firefox 扩展 ID 意外改变")
+        if manifest_version == 2 and manifest.get("browser_specific_settings", {}).get("gecko", {}).get("update_url") != UPDATE_URL:
+            raise ValueError("Firefox 安装包缺少正确的自动更新地址")
 
 
 def prepare(root, version):
@@ -37,6 +44,9 @@ def prepare(root, version):
     # Validate both packages before staging either, so a stale mixed-version build cannot be published.
     for source, _, manifest_version in sources:
         validate_archive(source, version, manifest_version)
+    xpi_name = "cloudys-gloss-firefox-unsigned.xpi"
+    feed = create_update_manifest(sources[1][0], version, UPDATE_URL,
+                                  f"{UPDATE_CONFIG['downloadBaseUrl']}/v{version}/{xpi_name}")
     destination = root / ".output/release"
     if destination.exists():
         shutil.rmtree(destination)
@@ -46,12 +56,20 @@ def prepare(root, version):
         target = destination / name
         shutil.copyfile(source, target)
         checksums.append(f"{hashlib.sha256(target.read_bytes()).hexdigest()}  {name}")
+    xpi = destination / xpi_name
+    shutil.copyfile(sources[1][0], xpi)
+    feed_path = destination / "firefox-updates.json"
+    feed_path.write_text(json.dumps(feed, indent=2) + "\n")
+    for target in (xpi, feed_path):
+        checksums.append(f"{hashlib.sha256(target.read_bytes()).hexdigest()}  {target.name}")
     (destination / "SHA256SUMS").write_text("\n".join(checksums) + "\n")
     (destination / "RELEASE_NOTES.md").write_text(f"""## 下载与安装
 
 - **Chrome / Chromium**：下载 `cloudys-gloss-{version}-chrome.zip`，解压后在 `chrome://extensions` 开启开发者模式，选择“加载已解压的扩展程序”。
 - **Firefox**：下载 `cloudys-gloss-{version}-firefox-unsigned.zip`，解压后在 `about:debugging#/runtime/this-firefox` 临时载入 `manifest.json`。这是**未签名**的开发安装包，Firefox 重启后需重新载入，不是商店签名 XPI。
-- `SHA256SUMS` 可用于核验两个 ZIP。源码使用本 Release 的 Source code 下载入口。
+- **Firefox Developer Edition 自动更新**：已允许此项目未签名扩展的开发者版，可从附加组件管理器安装 `cloudys-gloss-firefox-unsigned.xpi`。0.1.9 及以前版本需要覆盖安装一次；此后 Firefox 通过内置 HTTPS 更新地址发现更高版本。普通 Firefox 仍需要签名包；临时载入不属于自动更新安装方式。
+- `firefox-updates.json` 是原生更新清单，含版本、XPI 下载地址及 SHA-256。
+- `SHA256SUMS` 可用于核验安装包和更新清单。源码使用本 Release 的 Source code 下载入口。
 
 ## 本地模型
 

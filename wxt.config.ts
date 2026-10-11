@@ -4,6 +4,7 @@ import { existsSync } from 'node:fs';
 import { readdir } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import nativeKey from './scripts/native-key.json';
+import firefoxUpdate from './data/firefox-update.json';
 import { generateDictionaryAssets } from './scripts/dictionary-assets';
 
 const firefoxBinary = process.env.FIREFOX_BINARY ?? (existsSync('/Applications/Firefox Developer Edition.app/Contents/MacOS/firefox') ? '/Applications/Firefox Developer Edition.app/Contents/MacOS/firefox' : undefined);
@@ -37,7 +38,7 @@ export default defineConfig({
     },
   },
   zip: {
-    includeSources: ['entrypoints/**', 'src/**', 'public/**', 'scripts/native-key.json', 'scripts/dictionary-assets.ts', 'scripts/build-tech-pronunciation.py', 'scripts/build-icons.mjs', 'data/pronunciation/**', 'wxt.config.ts', 'tsconfig.json', 'package.json', 'pnpm-lock.yaml', 'README.md'],
+    includeSources: ['entrypoints/**', 'src/**', 'public/**', 'scripts/native-key.json', 'scripts/dictionary-assets.ts', 'scripts/build-tech-pronunciation.py', 'scripts/build-icons.mjs', 'data/pronunciation/**', 'data/firefox-update.json', 'wxt.config.ts', 'tsconfig.json', 'package.json', 'pnpm-lock.yaml', 'README.md'],
   },
   vite: () => ({ plugins: [preact()] }),
   webExt: {
@@ -50,6 +51,6 @@ export default defineConfig({
     description: '本地模型驱动的双语阅读与 AI 单词卡',
     permissions: ['storage', 'nativeMessaging'],
     host_permissions: ['http://*/*', 'https://*/*'],
-    browser_specific_settings: { gecko: { id: 'cloudys-gloss@local.dev', strict_min_version: '140.0', data_collection_permissions: { required: ['websiteContent'] } } },
+    browser_specific_settings: { gecko: { id: firefoxUpdate.addonId, ...(browser === 'firefox' ? { update_url: firefoxUpdate.updateUrl } : {}), strict_min_version: '140.0', data_collection_permissions: { required: ['websiteContent'] } } },
   }),
 });
