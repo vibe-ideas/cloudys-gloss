@@ -22,6 +22,8 @@
 
 ## 体验设计
 
+- [产品页第三版：深黑与冷白](design/product-page-v3.md)
+
 - [品牌标识、图标导出与小尺寸预览](design/brand/README.md)
 
 - [PDF 原版式对照、长译文和视觉验证](design/2026-10-05-pdf-layout.md)

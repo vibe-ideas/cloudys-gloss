@@ -25,3 +25,24 @@ fetch('https://api.github.com/repos/vibe-ideas/cloudys-gloss/releases/latest', {
     const asset = release.assets?.find(item => /^cloudys-gloss-[0-9.]+-chrome\.zip$/.test(item.name));
     if (asset && new URL(asset.browser_download_url).origin === 'https://github.com') document.querySelector('[data-download="chrome"]').href = asset.browser_download_url;
   }).catch(() => {});
+
+const navigation = document.querySelector('#main-nav');
+const menuToggle = document.querySelector('.menu-toggle');
+const mobileNavigation = matchMedia('(max-width: 760px)');
+function closeNavigation(restoreFocus = false) {
+  const wasOpen = menuToggle.getAttribute('aria-expanded') === 'true';
+  navigation.classList.remove('is-open');
+  menuToggle.setAttribute('aria-expanded', 'false');
+  menuToggle.setAttribute('aria-label', '打开导航');
+  if (wasOpen && restoreFocus) menuToggle.focus();
+}
+menuToggle.addEventListener('click', () => {
+  const open = menuToggle.getAttribute('aria-expanded') !== 'true';
+  navigation.classList.toggle('is-open', open);
+  menuToggle.setAttribute('aria-expanded', String(open));
+  menuToggle.setAttribute('aria-label', open ? '关闭导航' : '打开导航');
+});
+navigation.addEventListener('click', event => { if (event.target.closest('a')) closeNavigation(); });
+document.addEventListener('keydown', event => { if (event.key === 'Escape') closeNavigation(true); });
+document.addEventListener('click', event => { if (!event.target.closest('.nav')) closeNavigation(); });
+mobileNavigation.addEventListener('change', () => closeNavigation());

@@ -35,7 +35,7 @@ git push origin v0.1.1  # 填入上一条命令输出的实际标签
 3. 安装 Playwright Chromium 和 Mozilla 官方 Firefox（通过 BiDi 自动化），构建后先验证原生标签页可见性，再执行完整 Playwright E2E，实际加载两个浏览器的扩展。使用仓库模拟模型服务，不依赖 Mac、MLX 或付费 API。
 4. 产品页通过 Chrome / Firefox 移动与桌面宽度、键盘操作、资源加载测试。WXT 分别构建 ZIP，发布脚本检查 ZIP 完整性、内置 manifest 版本、MV3/MV2 类型和 Firefox ID，并生成 SHA-256 校验和。
 5. 生成同内容 XPI 和 Firefox 原生更新清单，校验内置更新地址并写入 XPI 的 SHA-256。发布任务下载同一次运行的产物、复核校验和，创建草稿、上传附件，最后公开发布。更新说明包含安装方法并追加 GitHub 自动生成的变更记录。
-6. 发布成功后部署 [GitHub Pages 产品页](https://vibe-ideas.github.io/cloudys-gloss/)，普通 main 推送不会部署。
+6. 发布成功后部署 [GitHub Pages 产品页](https://vibe-ideas.github.io/cloudys-gloss/)。产品页相关改动推送 main 时，独立的 [Product Site 工作流](../../.github/workflows/site.yml) 会在页面检查通过后部署，无需发布插件版本；详见 [产品页维护](product-site.md)。
 
 发布任务才拥有 `contents: write`；普通检查和 PR 只有读取权限。使用 GitHub 自动提供的 `GITHUB_TOKEN`，无需新增仓库密钥。第三方 Actions 固定到提交 SHA。
 

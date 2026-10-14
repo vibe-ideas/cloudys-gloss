@@ -4,7 +4,7 @@ from pathlib import Path
 
 root = Path(__file__).resolve().parent.parent
 source = root / "site"
-required = ["index.html", "style.css", "app.js", "assets/logo.svg", "assets/demo.mp4", "assets/demo-poster.jpg", "assets/demo.vtt"]
+required = ["index.html", "style.css", "app.js", "assets/logo.svg", "assets/demo.mp4", "assets/demo-poster.jpg", "assets/demo.vtt", "assets/social-cover.png"]
 for name in required:
     if not (source / name).is_file() or not (source / name).stat().st_size:
         raise ValueError(f"产品页缺少资源：{name}")
