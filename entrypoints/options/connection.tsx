@@ -17,7 +17,7 @@ export function Connection({ form }: { form: SettingsForm }) {
     { id: 'ollama', title: 'Ollama', note: '本地 11434', pick: () => replace({ ...settings, ...OLLAMA }) },
     { id: 'custom', title: '自定义', note: 'OpenAI 兼容', pick: () => baseUrl.current?.select() },
   ];
-  return <section class="card" aria-labelledby="connection-heading">
+  return <section id="connection" tabIndex={-1} class="card" aria-labelledby="connection-heading">
     <header class="card-head"><h2 id="connection-heading">模型连接</h2><p class="muted">请求均由扩展后台发起。选一个预设，或填写自己的兼容服务。</p></header>
     <div class="segmented" role="group" aria-label="服务预设">
       {presets.map((preset) => <button type="button" key={preset.id} aria-pressed={active === preset.id}

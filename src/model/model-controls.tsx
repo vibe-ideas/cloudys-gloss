@@ -29,7 +29,7 @@ export function ModelControls() {
   useEffect(() => { void control('status'); }, []);
   const [tone, label] = pill(model, busy, error);
   const usable = !busy && !!model?.installed;
-  return <section class="card" aria-labelledby="service-heading">
+  return <section id="service" tabIndex={-1} class="card" aria-labelledby="service-heading">
     <header class="card-head split"><div><h2 id="service-heading">本地模型服务</h2>
       <p class="muted">在 Apple Silicon Mac 上管理默认 mlx-serve。首次使用先运行一次 <code>pnpm model:bridge</code>。</p></div>
       <span class={`pill ${tone}`}>{label}</span></header>

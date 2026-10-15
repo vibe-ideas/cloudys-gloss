@@ -3,7 +3,7 @@ import { Row } from './field';
 import type { SettingsForm } from './use-settings';
 
 export function Preferences({ form: { settings, update } }: { form: SettingsForm }) {
-  return <section class="card" aria-labelledby="preferences-heading">
+  return <section id="preferences" tabIndex={-1} class="card" aria-labelledby="preferences-heading">
     <header class="card-head"><h2 id="preferences-heading">阅读偏好</h2></header>
     <div class="rows">
       <Row label="词卡与悬浮球外观" hint="更新后刷新网页生效。">

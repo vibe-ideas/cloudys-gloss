@@ -28,7 +28,7 @@ export function DictionarySettings() {
     const result = await importDictionary(files, abort.signal, setProgress);
     await refresh(); setFiles([]); setStatus(`已导入「${result.name}」· ${result.entries.toLocaleString()} 条词条`);
   });
-  return <section class="card" aria-labelledby="dictionary-heading">
+  return <section id="dictionary" tabIndex={-1} class="card" aria-labelledby="dictionary-heading">
     <header class="card-head split"><div><h2 id="dictionary-heading">我的离线词库</h2>
       <p class="muted">划词时先显示本地释义，AI 随后补充语境解释。词库只保存在当前浏览器，不会上传。</p></div>
       <span class="pill count" title="已导入词库数量">{items.length} / {MAX_DICTIONARIES}</span></header>

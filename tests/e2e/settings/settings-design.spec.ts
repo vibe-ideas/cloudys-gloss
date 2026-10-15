@@ -38,3 +38,46 @@ test('弹窗在无法翻译的页面给出警示，并把打开 PDF 作为可用
   await popup.getByRole('button', { name: '打开 PDF 文件或链接' }).click();
   await expect.poll(async () => (await reader).url()).toContain('/pdf.html');
 });
+
+
+test('从工具栏打开设置时使用独立标签页，再次打开复用该页并保留未保存草稿', async ({ extension }) => {
+  const { context } = extension;
+  const initial = optionsPage(context); const url = initial.url();
+  await initial.close();
+  const popup = await context.newPage();
+  await popup.goto(new URL('popup.html', url).href);
+  const opened = context.waitForEvent('page');
+  await popup.getByRole('button', { name: '模型设置', exact: true }).click();
+  const settings = await opened;
+  await expect(settings).toHaveURL(url);
+  await expect(settings.getByRole('heading', { name: '设置', exact: true })).toBeVisible();
+  await expect(settings.getByRole('button', { name: '保存设置', exact: true })).toBeEnabled();
+  await settings.locator('[name="model"]').fill('unsaved-model');
+  await popup.bringToFront();
+  await popup.getByRole('button', { name: '模型设置', exact: true }).click();
+  await expect.poll(() => settings.evaluate(async () => {
+    const api = (globalThis as unknown as { chrome: typeof import('wxt/browser').browser }).chrome;
+    return (await api.tabs.getCurrent())?.active;
+  })).toBe(true);
+  expect(context.pages().filter(page => page.url() === url)).toHaveLength(1);
+  expect(context.pages().some(page => page.url().startsWith('chrome://extensions'))).toBe(false);
+  await expect(settings.locator('[name="model"]')).toHaveValue('unsaved-model');
+});
+
+test('设置页在桌面和窄窗口中可按分区导航，表单与保存按钮不横向溢出', async ({ extension }, testInfo) => {
+  const page = optionsPage(extension.context);
+  for (const width of [1280, 390]) {
+    await page.setViewportSize({ width, height: 900 });
+    const navigation = page.getByRole('navigation', { name: '设置分区' });
+    await navigation.getByRole('link', { name: '离线词库', exact: true }).focus();
+    await page.keyboard.press('Enter');
+    await expect(page).toHaveURL(/#dictionary$/);
+    await expect(page.locator('#dictionary')).toBeFocused();
+    await expect(page.getByRole('heading', { name: '我的离线词库' })).toBeInViewport();
+    await expect(page.getByRole('button', { name: '保存设置', exact: true })).toBeInViewport();
+    await navigation.getByRole('link', { name: '模型连接', exact: true }).click();
+    await expect(page.locator('[name="baseUrl"]')).toBeInViewport();
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+    await page.screenshot({ path: testInfo.outputPath(`settings-${width}.png`), fullPage: true });
+  }
+});
