@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { chineseSpacing, chineseCardSpacing } from '../core/chinese-spacing';
 import { cacheKey, ResultCache } from '../core/cache';
 import { ConcurrencyQueue } from '../core/queue';
 import { OpenAICompatibleProvider, type PronunciationProvider } from './provider';
@@ -87,7 +88,11 @@ export class TranslationService {
     const cancel = () => operation.abort(signal.reason);
     signal.addEventListener('abort', cancel, { once: true });
     try {
-      return await this.translatePending(settings, texts, operation.signal, onItem, bypassCache, priority);
+      // Normalize at the delivery boundary, including old cache hits and provisional
+      // stream items. Keep raw cache values so typography changes need no refill.
+      const result = await this.translatePending(settings, texts, operation.signal,
+        onItem ? (index, text, confirmed) => onItem(index, chineseSpacing(text), confirmed) : undefined, bypassCache, priority);
+      return result.map(text => chineseSpacing(text));
     } finally {
       signal.removeEventListener('abort', cancel);
       operation.abort(new DOMException('翻译操作已结束', 'AbortError'));
@@ -152,10 +157,10 @@ export class TranslationService {
     const cached = WordCardSchema.safeParse(await this.cache.get(key));
     signal.throwIfAborted();
     if (cached.success) {
-      if (!this.pronunciation) return cached.data;
+      if (!this.pronunciation) return chineseCardSpacing(cached.data);
       const ipa = await this.pronunciation.lookup(word, signal).catch(() => ({ us: '', uk: '' }));
       signal.throwIfAborted();
-      return WordCardSchema.parse({ ...cached.data, ipa });
+      return chineseCardSpacing(WordCardSchema.parse({ ...cached.data, ipa }));
     }
     const card = await this.queue.run(async () => {
       await this.ensureModel(settings, signal);
@@ -163,7 +168,7 @@ export class TranslationService {
     }, signal, true);
     signal.throwIfAborted();
     await this.cache.set(key, card);
-    return card;
+    return chineseCardSpacing(card);
   }
   test(settings: Settings, signal: AbortSignal) {
     this.queue.setLimit(settings.concurrency);

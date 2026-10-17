@@ -49,8 +49,8 @@ describe('跨页面翻译缓存', () => {
     finishes[0]!();
     await vi.waitFor(() => expect(sent).toHaveLength(2));
     finishes[1]!();
-    expect(await first).toEqual(['中文Shared', '中文First']);
-    expect(await second).toEqual(['中文Second', '中文Shared']);
+    expect(await first).toEqual(['中文 Shared', '中文 First']);
+    expect(await second).toEqual(['中文 Second', '中文 Shared']);
     expect(sent.flat().filter((text) => text === 'Shared')).toHaveLength(1);
   });
   it('共享段落时一个页面关闭不会取消另一页，全部关闭才中止模型且再次进入可重新请求', async () => {
@@ -198,7 +198,7 @@ describe('跨页面翻译缓存', () => {
     vi.stubGlobal('fetch', fetcher);
     const service = new TranslationService(new ResultCache(crypto.randomUUID()));
     const signal = new AbortController().signal;
-    expect(await service.translate(defaults, ['Hello', 'Hello'], signal)).toEqual(['中文Hello', '中文Hello']);
+    expect(await service.translate(defaults, ['Hello', 'Hello'], signal)).toEqual(['中文 Hello', '中文 Hello']);
     await service.translate(defaults, ['Hello'], signal); expect(fetcher).toHaveBeenCalledTimes(1);
     await service.translate({ ...defaults, model: 'another-model' }, ['Hello'], signal); expect(fetcher).toHaveBeenCalledTimes(2);
   });
@@ -241,5 +241,52 @@ describe('翻译进度接收异常后的请求清理', () => {
     expect(await first).toEqual(['共享译文']);
     expect(await service.translate(defaults, ['Shared'], signal)).toEqual(['共享译文']);
     expect(fetcher).toHaveBeenCalledTimes(1);
+  });
+});
+
+
+describe('后台统一整理中文译文格式', () => {
+  it('旧版缓存命中时也补齐科技文档间距，不唤醒模型、不修改缓存和原文', async () => {
+    const cache = new ResultCache(crypto.randomUUID());
+    const source = 'Use React and 3 APIs.';
+    const key = await cacheKey([defaults.baseUrl, defaults.model, defaults.temperature, defaults.apiKey, 'zh-CN', 'translation-v4', source]);
+    await cache.set(key, '使用React和3个API。');
+    const ensureModel = vi.fn(); const item = vi.fn();
+    const write = vi.spyOn(cache, 'set');
+    const service = new TranslationService(cache, ensureModel);
+    expect(await service.translate(defaults, [source], new AbortController().signal, item)).toEqual(['使用 React 和 3 个 API。']);
+    expect(item).toHaveBeenCalledWith(0, '使用 React 和 3 个 API。', true);
+    expect(ensureModel).not.toHaveBeenCalled(); expect(write).not.toHaveBeenCalled();
+    expect(await cache.get(key)).toBe('使用React和3个API。');
+  });
+  it('模型流首段抵达时立即整理并发送，最终确认和后续缓存命中保持相同格式', async () => {
+    let stream!: ReadableStreamDefaultController<Uint8Array>;
+    const fetcher = vi.fn(async () => new Response(new ReadableStream<Uint8Array>({ start(controller) { stream = controller; } }), { headers: { 'Content-Type': 'text/event-stream' } }));
+    vi.stubGlobal('fetch', fetcher);
+    const service = new TranslationService(new ResultCache(crypto.randomUUID()));
+    const item = vi.fn(); let settled = false;
+    const result = service.translate(defaults, ['Use React.', 'Call APIs.'], new AbortController().signal, item).then(value => { settled = true; return value; });
+    await vi.waitFor(() => expect(fetcher).toHaveBeenCalledOnce());
+    const write = (content: string) => stream.enqueue(new TextEncoder().encode(`data: ${JSON.stringify({ choices: [{ delta: { content } }] })}\n\n`));
+    write('{"translations":["使用React。"');
+    await vi.waitFor(() => expect(item).toHaveBeenCalledWith(0, '使用 React。', false));
+    expect(settled).toBe(false);
+    write(',"调用API。"]}'); stream.enqueue(new TextEncoder().encode('data: [DONE]\n\n')); stream.close();
+    expect(await result).toEqual(['使用 React。', '调用 API。']);
+    expect(item).toHaveBeenCalledWith(0, '使用 React。', true);
+    expect(await service.translate(defaults, ['Use React.'], new AbortController().signal)).toEqual(['使用 React。']);
+    expect(fetcher).toHaveBeenCalledOnce();
+  });
+  it('旧词卡命中缓存时中文释义补空格，离线音标与英文例句不受影响', async () => {
+    const cache = new ResultCache(crypto.randomUUID());
+    const card = { word: 'API', ipa: { us: '', uk: '' }, senses: [{ partOfSpeech: 'noun', meaning: 'API接口' }], contextMeaning: '连接2个服务', examples: [{ en: 'Use the API.', zh: '使用API。' }] };
+    const key = await cacheKey([defaults.baseUrl, defaults.model, defaults.temperature, defaults.apiKey, 'zh-CN', 'dictionary-v2', ['API', '']]);
+    await cache.set(key, card);
+    const ensureModel = vi.fn();
+    const service = new TranslationService(cache, ensureModel, { lookup: async () => ({ us: '/eɪ/', uk: '/eɪ/' }) });
+    expect(await service.dictionary(defaults, 'API', '', new AbortController().signal)).toMatchObject({
+      ipa: { us: '/eɪ/', uk: '/eɪ/' }, senses: [{ meaning: 'API 接口' }], contextMeaning: '连接 2 个服务', examples: [{ en: 'Use the API.', zh: '使用 API。' }],
+    });
+    expect(ensureModel).not.toHaveBeenCalled();
   });
 });

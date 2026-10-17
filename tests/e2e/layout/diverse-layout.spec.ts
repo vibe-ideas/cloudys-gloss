@@ -142,13 +142,13 @@ for (const position of ['fixed', 'absolute']) {
     });
     await toggle();
     await expect(page.locator(`#reader-heading > ${translation}`)).toContainText('有限的阅读面板');
-    await expect(page.locator(`#reader-note-1 > ${translation}`)).toContainText('面板笔记1');
+    await expect(page.locator(`#reader-note-1 > ${translation}`)).toContainText('面板笔记 1');
     await expect(shell).toHaveCSS('position', position);
     await expect(shell).toHaveCSS('overflow-y', 'auto');
     await expect.poll(async () => (await shell.boundingBox())!.height).toBe(before.height);
     await page.locator('#reader-note-8').scrollIntoViewIfNeeded();
     try {
-      await expect(page.locator(`#reader-note-8 > ${translation}`)).toContainText('面板笔记8');
+      await expect(page.locator(`#reader-note-8 > ${translation}`)).toContainText('面板笔记 8');
     } finally {
       const diagnosticsPath = testInfo.outputPath('reader-viewport-diagnostics.json');
       await writeFile(diagnosticsPath, JSON.stringify({

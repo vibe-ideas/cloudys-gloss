@@ -22,6 +22,8 @@
 
 ## 体验设计
 
+- [中文译文的中西文混排规则](design/chinese-spacing.md)
+
 - [产品页第三版：深黑与冷白](design/product-page-v3.md)
 
 - [品牌标识、图标导出与小尺寸预览](design/brand/README.md)
@@ -40,6 +42,8 @@
 - [PDF 原版式翻译：竞品、BabelDOC、PDF.js 与实现取舍](research/2026-10-05-pdf-layout.md)
 
 ## 性能
+
+- [中文间距整理的本地处理开销](performance/2026-10-18-chinese-spacing.md)
 
 - [EmbeddingGemma 2：科技词义、中英和代码检索实测](performance/2026-10-07-embeddinggemma2.md)
 - [PDF 原版式首屏、逐块回填与画布预算](performance/2026-10-05-pdf-layout.md)
