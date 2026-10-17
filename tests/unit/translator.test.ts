@@ -21,6 +21,26 @@ afterEach(() => vi.unstubAllGlobals());
 const visible = () => observers.forEach((enter) => enter([...observed].map((target) => ({ target, isIntersecting: true } as IntersectionObserverEntry)), {} as IntersectionObserver));
 const intersect = (observer: ObserverRecord, elements: Element[], isIntersecting: boolean) => observer.callback(elements.map((target) => ({ target, isIntersecting } as IntersectionObserverEntry)), {} as IntersectionObserver);
 describe('双语阅读生命周期', () => {
+  it('中文含技术名词的段落不注册翻译观察器或请求，SPA 改成英文后增量翻译，改回中文时移除旧译文', async () => {
+    document.body.innerHTML = '<p id="chinese">使用 Kubernetes 与 PostgreSQL 部署服务。</p><p id="english">Read this English paragraph.</p>';
+    const chinese = document.querySelector('#chinese')!; const english = document.querySelector('#english')!;
+    const translate = vi.fn<import('../../src/page/translator').TranslationTransport['translate']>(async (_id, texts) => texts.map(() => '新的中文译文'));
+    const translator = new PageTranslator({ translate, cancel: vi.fn() });
+    try {
+      translator.start();
+      await vi.waitFor(() => expect(observed.has(english)).toBe(true));
+      expect(observed.has(chinese)).toBe(false);
+      visible(); await vi.waitFor(() => expect(translator.status.translated).toBe(1));
+      expect(translate.mock.calls.flatMap(([, texts]) => texts)).toEqual(['Read this English paragraph.']);
+      chinese.textContent = 'This paragraph has changed to English.';
+      await vi.waitFor(() => expect(observed.has(chinese)).toBe(true));
+      visible(); await vi.waitFor(() => expect(chinese.querySelector('[data-state="done"]')).not.toBeNull());
+      english.textContent = '这段改为中文，API 名称不需要再翻译。';
+      await vi.waitFor(() => expect(observed.has(english)).toBe(false));
+      expect(english.querySelector('[data-cloudys-gloss]')).toBeNull();
+      expect(translate.mock.calls.flatMap(([, texts]) => texts)).toEqual(['Read this English paragraph.', 'This paragraph has changed to English.']);
+    } finally { translator.stop(); }
+  });
   it('视口内正文发可见优先级，附近预取发低优先级，仍最多同时请求两批', async () => {
     document.body.innerHTML = '<p>Visible first.</p><p>Visible second.</p><p>Nearby third.</p><p>Nearby fourth.</p>';
     const translate = vi.fn<import('../../src/page/translator').TranslationTransport['translate']>(() => new Promise(() => {}));

@@ -2,6 +2,18 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { blockText, excludedElement, renderedSemanticText, semanticBlocks, semanticCandidates, semanticContext, semanticText, semanticTextSteps, splitText } from '../../src/page/blocks';
 describe('全文翻译语义块提取', () => {
   beforeEach(() => { document.body.innerHTML = ''; });
+  it('中文正文、含英文术语的中文标题和标签在三种提取路径中均跳过，相邻英文段落保留', () => {
+    document.body.innerHTML = '<header><h1>API 设置</h1><button>保存 API Key</button></header><p id="chinese">使用 Kubernetes 与 PostgreSQL 部署服务。</p><p id="english">Read the 中文 guide before deployment.</p>';
+    for (const element of document.querySelectorAll('h1,button,p')) {
+      const expected = element.id === 'english' ? element.textContent : '';
+      expect(semanticText(element)).toBe(expected);
+      expect(renderedSemanticText(element)).toBe(expected);
+      const iterator = semanticTextSteps(element, semanticContext());
+      let result = iterator.next(); while (!result.done) result = iterator.next();
+      expect(result.value).toBe(expected);
+    }
+    expect(semanticBlocks(document.body)).toEqual([document.querySelector('#english')]);
+  });
   it.each([false, true])('扫描暂停后宿主删除当前位置（连同下一兄弟：%s），仍发现后续存活段落且不重复遍历先前子树', removeNext => {
     document.body.innerHTML = '<main><article id="done"><p>Earlier copy.</p></article><article id="first"><p>Removed copy.</p></article><p id="middle">Middle copy.</p><p id="last">Last copy.</p></main>';
     const iterator = semanticCandidates(document.querySelector('main')!);

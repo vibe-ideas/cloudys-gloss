@@ -22,6 +22,7 @@
 
 ## 体验设计
 
+- [中文正文跳过网页翻译](design/source-language.md)
 - [中文译文的中西文混排规则](design/chinese-spacing.md)
 
 - [产品页第三版：深黑与冷白](design/product-page-v3.md)
@@ -43,6 +44,7 @@
 
 ## 性能
 
+- [网页中文段落判断的本地开销](performance/2026-10-18-source-language.md)
 - [中文间距整理的本地处理开销](performance/2026-10-18-chinese-spacing.md)
 
 - [EmbeddingGemma 2：科技词义、中英和代码检索实测](performance/2026-10-07-embeddinggemma2.md)

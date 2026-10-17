@@ -1,3 +1,5 @@
+import { needsChineseTranslation } from '../core/source-language';
+
 export const OWN = 'data-cloudys-gloss';
 const excluded = `script,style,noscript,pre,code,textarea,input,select,option,svg,canvas,iframe,[contenteditable]:not([contenteditable="false"]),[translate="no"],[${OWN}]`;
 const hidden = '[hidden],[aria-hidden="true"],[inert]';
@@ -111,13 +113,13 @@ export function semanticBlocks(root: Element): Element[] {
 export function semanticText(element: Element, context: SemanticContext = semanticContext()) {
   if (!translationKind(element, context)) return '';
   const text = blockText(element, false, undefined, context);
-  return text.length >= 2 && /[a-zA-Z\u00c0-\u024f]/.test(text) ? text : '';
+  return needsChineseTranslation(text) ? text : '';
 }
 /** Incremental equivalent of semanticText, including rejected child boundaries. */
 export function* semanticTextSteps(element: Element, context: SemanticContext): Generator<void, string> {
   if (!translationKind(element, context)) return '';
   const text = yield* blockTextSteps(element, false, undefined, context);
-  return text.length >= 2 && /[a-zA-Z\u00c0-\u024f]/.test(text) ? text : '';
+  return needsChineseTranslation(text) ? text : '';
 }
 /** Resolve stylesheet-only hiding for one nearby block, never a full DOM scan. */
 export function renderedSemanticText(element: Element, context = semanticContext()) {
@@ -134,7 +136,7 @@ export function renderedSemanticText(element: Element, context = semanticContext
   };
   for (let ancestor = element.parentElement; ancestor; ancestor = ancestor.parentElement) if (!visible(ancestor)) return '';
   const text = blockText(element, false, visible, context);
-  return text.length >= 2 && /[a-zA-Z\u00c0-\u024f]/.test(text) ? text : '';
+  return needsChineseTranslation(text) ? text : '';
 }
 /** Yield every visited node so the caller can time-slice even text-sparse pages. */
 export function* semanticCandidates(root: Element): Generator<Element> {

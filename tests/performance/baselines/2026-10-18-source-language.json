@@ -1,0 +1,24 @@
+{
+  "node": "v24.14.0",
+  "platform": "darwin",
+  "arch": "arm64",
+  "note": "仅测段落语言启发式，不含 DOM 扫描、网络或模型推理。",
+  "results": [
+    {
+      "name": "中文技术段落",
+      "characters": 800,
+      "translate": false,
+      "iterations": 1000,
+      "meanMs": 0.03030569999999967,
+      "p95Ms": 0.03462499999999835
+    },
+    {
+      "name": "英文段落",
+      "characters": 900,
+      "translate": true,
+      "iterations": 1000,
+      "meanMs": 0.00007297399999995946,
+      "p95Ms": 0.00008400000000108321
+    }
+  ]
+}
