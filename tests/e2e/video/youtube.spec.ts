@@ -3,7 +3,7 @@ import type { BrowserContext, Page } from '@playwright/test';
 import { test, expect } from '../support/fixtures';
 import { subtitleTrack, youtubeColumnFixture, youtubeFixture } from './youtube-fixture';
 
-async function openPlayer(extension: { context: BrowserContext; page: Page }, track = subtitleTrack, fixture = youtubeFixture) {
+async function openPlayer(extension: { context: BrowserContext; page: Page }, track: string | ((url: string) => string) = subtitleTrack, fixture = youtubeFixture) {
   const video = await readFile('tests/e2e/video/timeline.webm');
   await extension.context.route('https://www.youtube.com/**', route => {
     if (route.request().url().endsWith('/timeline.webm')) {
@@ -11,7 +11,7 @@ async function openPlayer(extension: { context: BrowserContext; page: Page }, tr
       const start = range ? Number(range[1]) : 0; const end = range?.[2] ? Math.min(Number(range[2]), video.length - 1) : video.length - 1;
       return route.fulfill({ status: range ? 206 : 200, contentType: 'video/webm', headers: { 'Accept-Ranges': 'bytes', ...(range ? { 'Content-Range': `bytes ${start}-${end}/${video.length}` } : {}) }, body: video.subarray(start, end + 1) });
     }
-    return route.fulfill({ status: 200, contentType: route.request().url().includes('/api/timedtext') ? 'application/json' : 'text/html', body: route.request().url().includes('/api/timedtext') ? track : fixture });
+    return route.fulfill({ status: 200, contentType: route.request().url().includes('/api/timedtext') ? 'application/json' : 'text/html', body: route.request().url().includes('/api/timedtext') ? (typeof track === 'function' ? track(route.request().url()) : track) : fixture });
   });
   await extension.page.goto('https://www.youtube.com/watch?v=owned-video');
   await expect.poll(() => extension.page.locator('video').evaluate(video => (video as HTMLVideoElement).readyState)).toBeGreaterThan(0);
@@ -285,4 +285,51 @@ test('切回标签页复用完整轨道，随后换语言失败时退回新 CC �
   await expect(toggle).toHaveAttribute('title', /当前 CC · 实时翻译/);
   await expect(overlay.locator('.original')).toHaveText('Bonjour le monde.');
   await expect(overlay.locator('.translation')).toContainText('Bonjour le monde.');
+});
+
+for (const transport of ['fetch', 'XHR'] as const) {
+  test(`播放器通过 ${transport} 首次获得字幕但重复下载为空时，仍提前备好两分钟且关闭后恢复请求方法`, async ({ extension }) => {
+    const { page, context, server } = extension;
+    const fixture = youtubeColumnFixture.replace('const cc =', `
+      window.nativeFetch = null; window.nativeOpen = null; window.nativeSend = null;
+      window.playerCaptionRequest = url => {
+        ${transport === 'fetch' ? "return fetch(url).then(response => response.text()).then(text => { player.dataset.captionBytes = String(text.length); });" : "const xhr = new XMLHttpRequest(); xhr.open('GET', url); xhr.onload = () => { player.dataset.captionBytes = String(xhr.responseText.length); }; xhr.send();"}
+      };
+      const cc =`).replace('if (on) fetch(', 'if (on) window.playerCaptionRequest(');
+    await openPlayer(extension, '', fixture);
+    let nativeReads = 0;
+    await context.route('https://www.youtube.com/api/timedtext**', route => {
+      const isPlayer = new URL(route.request().url()).searchParams.get('pot') === 'fixture';
+      return route.fulfill({ contentType: 'application/json', body: isPlayer && ++nativeReads === 1 ? subtitleTrack : '' });
+    });
+    // Stop the optional startup observer before recording the baseline methods.
+    await page.evaluate(() => {
+      const scope = window as unknown as { __cloudysGlossEarlyCaptions?: { take: (id: string) => unknown }; nativeFetch: typeof fetch; nativeOpen: typeof XMLHttpRequest.prototype.open; nativeSend: typeof XMLHttpRequest.prototype.send };
+      scope.__cloudysGlossEarlyCaptions?.take('owned-video');
+      scope.nativeFetch = fetch; scope.nativeOpen = XMLHttpRequest.prototype.open; scope.nativeSend = XMLHttpRequest.prototype.send;
+    });
+    await page.getByRole('button', { name: '打开字幕记录', exact: true }).click();
+    await expect(page.getByLabel('字幕准备状态')).toHaveText('完整字幕已就绪 · 已备好后续 120 秒');
+    await expect(page.locator('#movie_player')).toHaveAttribute('data-caption-bytes', String(subtitleTrack.length));
+    await expect.poll(() => server.calls.flatMap(call => call.texts ?? [])).toContain('Sentence 24.');
+    await page.getByRole('button', { name: '关闭双语字幕', exact: true }).click();
+    await expect.poll(() => page.evaluate(() => {
+      const scope = window as unknown as { nativeFetch: typeof fetch; nativeOpen: typeof XMLHttpRequest.prototype.open; nativeSend: typeof XMLHttpRequest.prototype.send };
+      return fetch === scope.nativeFetch && XMLHttpRequest.prototype.open === scope.nativeOpen && XMLHttpRequest.prototype.send === scope.nativeSend;
+    })).toBe(true);
+  });
+}
+
+test('用户点双语前 CC 已经下载且后续请求为空，仍复用启动字幕并在再次开启时保留轨道', async ({ extension }) => {
+  const { page, server } = extension; let nativeReads = 0;
+  const fixture = youtubeColumnFixture.replace('</script>', 'cc.click();</script>');
+  await openPlayer(extension, url => new URL(url).searchParams.get('pot') === 'fixture' && ++nativeReads === 1 ? subtitleTrack : '', fixture);
+  expect(server.calls).toHaveLength(0);
+  await page.getByRole('button', { name: '打开字幕记录', exact: true }).click();
+  await expect(page.getByLabel('字幕准备状态')).toHaveText('完整字幕已就绪 · 已备好后续 120 秒');
+  await page.getByRole('button', { name: '关闭双语字幕', exact: true }).click();
+  await expect(page.locator('.ytp-subtitles-button')).toHaveAttribute('aria-pressed', 'true');
+  await page.getByRole('button', { name: '开启双语字幕', exact: true }).click();
+  await expect(page.getByLabel('字幕准备状态')).toHaveText('完整字幕已就绪 · 已备好后续 120 秒');
+  expect(nativeReads).toBe(1);
 });

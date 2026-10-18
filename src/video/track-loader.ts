@@ -28,6 +28,7 @@ export function createCaptionTrackLoader(options: {
   // Resource Timing timestamps identify our fetches without suppressing a later
   // player request for the same URL (for example switching back to English).
   const ownRequests = new Map<string, { start: number; end: number }[]>();
+  const capturing = new Map<string, Selection>();
   let stopped = false; let candidateCount = 0; let metadataReads = 0;
   let selection: Selection = makeSelection('');
   function makeSelection(identity: string): Selection {
@@ -102,15 +103,20 @@ export function createCaptionTrackLoader(options: {
       if (candidate.queued) { candidate.queued = false; void load(candidate, selection); }
     }
   }
-  function add(value: string, fromPlayer: boolean) {
+  function select(value: string, fromPlayer: boolean) {
     const url = captionUrl(value, options.id);
-    if (!url || stopped) return;
+    if (!url || stopped) return null;
     const identity = trackIdentity(url);
     if (identity && identity !== selection.identity && (fromPlayer || !selection.identity)) {
       selection.abort.abort(); selection = makeSelection(identity);
       options.send({ type: 'selection', identity });
     }
-    if (selection.identity && identity !== selection.identity) return;
+    if (selection.identity && identity !== selection.identity) return null;
+    return url;
+  }
+  function add(value: string, fromPlayer: boolean) {
+    const url = select(value, fromPlayer);
+    if (!url || capturing.get(url.href) === selection) return;
     if (selection.ready || selection.candidates.has(url.href) || candidateCount >= 8) return;
     candidateCount++;
     selection.candidates.set(url.href, { url: url.href, attempts: 0, queued: true });
@@ -142,6 +148,29 @@ export function createCaptionTrackLoader(options: {
     check();
   }
   return {
+    /** Called when the player starts a request, before its response arrives.
+     * Bind the response to that selection so a late old language cannot win. */
+    capture(value: string, startedAt = performance.now()) {
+      const url = select(value, true);
+      if (!url || selection.ready || capturing.get(url.href) === selection) return;
+      const selected = selection; capturing.set(url.href, selected);
+      // The player's later ResourceTiming entry must not switch us back to an
+      // older track whose captured response happened to finish last.
+      const entries = ownRequests.get(url.href) ?? [];
+      entries.push({ start: startedAt, end: performance.now() });
+      ownRequests.delete(url.href); ownRequests.set(url.href, entries.slice(-3));
+      if (ownRequests.size > 32) ownRequests.delete(ownRequests.keys().next().value!);
+      let finished = false;
+      return (body?: string) => {
+        if (finished) return; finished = true;
+        if (capturing.get(url.href) === selected) capturing.delete(url.href);
+        if (!current(selected) || selected.ready) return;
+        if (body && body.length <= MAX_CAPTION_BYTES && parseCaptions(body).length) {
+          selected.ready = true;
+          options.send({ type: 'track', body, identity: selected.identity });
+        } else add(url.href, false);
+      };
+    },
     start(recent?: CaptionResource) {
       if (stopped) return;
       if (recent && captionUrl(recent.name, options.id)) add(recent.name, true);
@@ -158,7 +187,7 @@ export function createCaptionTrackLoader(options: {
       stopped = true; selection.abort.abort();
       for (const abort of active) abort.abort();
       for (const timer of timers) clearTimeout(timer);
-      timers.clear(); ownRequests.clear();
+      timers.clear(); ownRequests.clear(); capturing.clear();
     },
   };
 }

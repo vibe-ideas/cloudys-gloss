@@ -31,6 +31,28 @@ describe('YouTube 完整字幕轨道恢复', () => {
   beforeEach(() => { vi.useFakeTimers(); });
   afterEach(() => { vi.useRealTimers(); });
 
+  it('直接收到播放器字幕时不重复下载，同次资源通知不会再请求', () => {
+    const state = setup(); const startedAt = performance.now();
+    const publish = state.loader.capture(url(), startedAt)!;
+    state.loader.observe({ name: url(), startTime: startedAt });
+    publish(captions());
+    expect(state.requests).toHaveLength(0); expect(state.tracks()[0]?.body).toBe(captions()); state.loader.stop();
+  });
+  it('播放器旧语言响应迟到时不覆盖新语言，其资源通知也不能切回旧轨道', () => {
+    const state = setup(); const startedAt = performance.now();
+    const old = state.loader.capture(url(), startedAt)!;
+    const current = state.loader.capture(url('fr'), startedAt + 5)!;
+    current(captions('Bonjour.')); old(captions('Old English.'));
+    state.loader.observe({ name: url(), startTime: startedAt });
+    expect(state.tracks()).toHaveLength(1); expect(state.tracks()[0]?.identity).toBe(identity('fr'));
+    expect(state.requests).toHaveLength(0); state.loader.stop();
+  });
+  it('播放器响应为空时才回退到有界下载，停止后不再接受已捕获正文', () => {
+    const state = setup(); state.loader.capture(url())!(''); expect(state.requests).toHaveLength(1);
+    const publish = state.loader.capture(url('fr'))!; state.loader.stop(); publish(captions('Bonjour.'));
+    expect(state.tracks()).toHaveLength(0);
+  });
+
   it('字幕首请求失败后，500 毫秒重试成功即可发布完整轨道', async () => {
     const state = setup(); state.loader.start({ name: url(), startTime: -100 });
     state.requests[0]!.response.reject(new Error('network')); await settle();

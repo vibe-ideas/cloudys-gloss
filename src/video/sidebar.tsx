@@ -30,8 +30,8 @@ const dockCss = `
 [data-cloudys-history=docked] .ytp-caption-window-container,[data-cloudys-history=docked] .ytp-cued-thumbnail-overlay{width:calc(100% - var(--cloudys-history-width))!important}
 `;
 
-type Props = { history: SubtitleHistory; revision: number; close: () => void; seek: (time: number, retry?: boolean) => void };
-function HistoryPanel({ history, revision, close, seek }: Props) {
+type Props = { history: SubtitleHistory; revision: number; close: () => void; seek: (time: number, retry?: boolean) => void; status: string; recover?: () => void };
+function HistoryPanel({ history, revision, close, seek, status, recover }: Props) {
   const [following, setFollowing] = useState(true);
   const [anchor, setAnchor] = useState<number>();
   const scroll = useRef<HTMLDivElement>(null);
@@ -46,7 +46,7 @@ function HistoryPanel({ history, revision, close, seek }: Props) {
     if (following && scroll.current) scroll.current.scrollTop = scroll.current.scrollHeight;
   }, [following, revision]);
   return <section class="panel" aria-label="字幕记录" onKeyDown={event => { event.stopPropagation(); if (event.key === 'Escape') { event.preventDefault(); close(); } }} onPointerDown={event => event.stopPropagation()} onClick={event => event.stopPropagation()} onDblClick={event => event.stopPropagation()}>
-    <header class="header"><div class="heading"><h2>字幕记录</h2><p class="subtitle">回看刚才的内容 · 点击时间跳转</p></div><button class="close" aria-label="关闭字幕记录" onClick={close}>×</button></header>
+    <header class="header"><div class="heading"><h2>字幕记录</h2><p class="subtitle">回看刚才的内容 · 点击时间跳转</p>{status && <p class="subtitle" aria-label="字幕准备状态">{status}</p>}{recover && <button class="repair" onClick={recover}>重新读取完整字幕</button>}</div><button class="close" aria-label="关闭字幕记录" onClick={close}>×</button></header>
     <div class="scroll" ref={scroll} tabIndex={0} aria-label="历史双语字幕" onWheel={stopFollowing} onTouchStart={stopFollowing}
       onPointerDown={event => { if (event.target === event.currentTarget) stopFollowing(); }}
       onKeyDown={event => { if (['ArrowUp', 'ArrowDown', 'PageUp', 'PageDown', 'Home', 'End', ' '].includes(event.key)) stopFollowing(); }}>
@@ -76,9 +76,11 @@ export class SubtitleSidebar {
   private lifetime = new AbortController();
   private frame?: number;
   private revision = -1;
+  private status = '';
+  private recoverable = false;
   private visible = false;
   private secondary?: HTMLElement;
-  constructor(private player: HTMLElement, private history: SubtitleHistory, private close: () => void, private seek: Props['seek']) {
+  constructor(private player: HTMLElement, private history: SubtitleHistory, private close: () => void, private seek: Props['seek'], private recover?: () => void) {
     this.host.setAttribute(OWN, 'video-history'); this.host.hidden = true; this.mount.style.height = '100%';
     const shadow = this.host.attachShadow({ mode: 'open' }); const sheet = document.createElement('style'); sheet.textContent = css; shadow.append(sheet, this.mount);
     this.style.setAttribute(OWN, 'video-history-style'); this.style.textContent = dockCss; player.append(this.style);
@@ -87,14 +89,15 @@ export class SubtitleSidebar {
     document.addEventListener('fullscreenchange', () => this.scheduleLayout(), { signal: this.lifetime.signal });
     window.addEventListener('resize', () => this.scheduleLayout(), { signal: this.lifetime.signal });
   }
-  update(visible: boolean) {
+  update(visible: boolean, status = '', recoverable = false) {
     if (visible !== this.visible) {
       this.visible = visible; this.host.hidden = !visible; this.revision = -1;
       if (visible) this.scheduleLayout(); else { this.restore(); render(null, this.mount); }
     }
-    if (!visible || this.revision === this.history.revision) return;
+    if (!visible || (this.revision === this.history.revision && this.status === status && this.recoverable === recoverable)) return;
     this.revision = this.history.revision;
-    render(<HistoryPanel history={this.history} revision={this.revision} close={this.close} seek={this.seek} />, this.mount);
+    this.status = status; this.recoverable = recoverable;
+    render(<HistoryPanel history={this.history} revision={this.revision} close={this.close} seek={this.seek} status={status} recover={recoverable ? this.recover : undefined} />, this.mount);
   }
   private scheduleLayout() {
     if (!this.visible || this.frame !== undefined) return;

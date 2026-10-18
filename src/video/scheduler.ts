@@ -25,6 +25,24 @@ export class SubtitleScheduler {
   private enabled = true;
   private live = '';
   constructor(private client: SubtitleClient, private changed: (line: SubtitleLine) => void) {}
+  /** Contiguous confirmed buffer ahead of playback, bounded like prefetch. */
+  bufferSeconds() {
+    if (!this.captions.length) return 0;
+    let index = captionIndex(this.captions, this.time);
+    if (index < 0) {
+      let low = 0; let high = this.captions.length;
+      while (low < high) { const mid = (low + high) >>> 1; if (this.captions[mid]!.start < this.time) low = mid + 1; else high = mid; }
+      index = low;
+    }
+    let end = this.time;
+    for (let i = index; i < Math.min(this.captions.length, index + 64); i++) {
+      const cue = this.captions[i]!;
+      if (cue.start > this.time + 120 * this.rate) break;
+      if (needsChineseTranslation(cue.text) && (!this.cache.has(cue.text) || this.pending?.provisional.has(cue.text))) break;
+      end = cue.end;
+    }
+    return Math.max(0, Math.floor(Math.min(120, (end - this.time) / this.rate)));
+  }
   setTrack(captions: Caption[]) { this.reset(); this.enabled = true; this.captions = captions; }
   setLive(text: string, time = this.time) {
     if (this.live === text) return;

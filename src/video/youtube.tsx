@@ -45,6 +45,7 @@ export class YouTubeSubtitles {
   private trackBody = '';
   private trackIdentity = '';
   private ccEnabledByUs = false;
+  private refreshCaptions = false;
   private line: SubtitleLine = emptyLine;
   private note = '';
   private showError = false;
@@ -106,7 +107,7 @@ export class YouTubeSubtitles {
       const row = this.scheduler.history.entries.find(row => row.start === time);
       this.historyRetry = retry && row ? { time, text: row.original } : undefined;
       video.currentTime = time;
-    });
+    }, () => this.start(false, true));
     for (const event of ['timeupdate', 'play', 'pause', 'seeked', 'ratechange', 'loadedmetadata']) video.addEventListener(event, () => this.tick(), { signal });
     video.addEventListener('seeking', () => {
       if (this.enabled) {
@@ -118,10 +119,11 @@ export class YouTubeSubtitles {
     this.draw(); if (this.enabled) this.start();
   }
   settingsChanged() { this.scheduler.destroy(); if (this.enabled && this.player) this.start(); }
-  private start(resume = false) {
+  private start(resume = false, refreshCaptions = false) {
     if (!this.player || !this.video || document.hidden) return;
     this.stopBridge(); this.observer?.disconnect();
-    const captions = resume && this.trackBody ? captionPhrases(parseCaptions(this.trackBody)) : [];
+    this.refreshCaptions = refreshCaptions;
+    const captions = (resume || !refreshCaptions) && this.trackBody ? captionPhrases(parseCaptions(this.trackBody)) : [];
     this.track = captions.length > 0;
     if (!this.track) this.trackBody = '';
     this.showError = false; this.scheduler.setTrack(captions);
@@ -135,11 +137,7 @@ export class YouTubeSubtitles {
     this.bridge ??= this.loadBridge().catch(() => { this.bridge = undefined; });
     void this.bridge.then(() => {
       if (!this.enabled || channel !== this.channel) return;
-      window.postMessage({ source: 'cloudys-gloss:captions:request', channel, id: this.id, action: 'start' }, location.origin);
-      // Enable the normal player captions so live fallback and authorized caption
-      // requests both work. Restore only if we changed the original CC state.
-      const cc = this.player?.querySelector<HTMLButtonElement>('.ytp-subtitles-button');
-      if (cc?.getAttribute('aria-pressed') === 'false') { this.ccEnabledByUs = true; cc.click(); }
+      window.postMessage({ source: 'cloudys-gloss:captions:request', channel, id: this.id, action: 'start', refresh: refreshCaptions }, location.origin);
     });
     clearTimeout(this.waitingTimer);
     this.waitingTimer = setTimeout(() => {
@@ -171,6 +169,13 @@ export class YouTubeSubtitles {
   private message = (event: MessageEvent) => {
     const data = event.data;
     if (event.source !== window || event.origin !== location.origin || !this.enabled || !this.channel || data?.source !== 'cloudys-gloss:captions:response' || data.channel !== this.channel || data.id !== this.id || this.id !== videoId(location.href)) return;
+    // Wait for response observation to be installed before enabling native CC.
+    if (data.type === 'ready') {
+      const cc = this.player?.querySelector<HTMLButtonElement>('.ytp-subtitles-button');
+      if (cc?.getAttribute('aria-pressed') === 'false') { this.ccEnabledByUs = true; cc.click(); }
+      else if (cc && this.refreshCaptions) { cc.click(); cc.click(); }
+      this.refreshCaptions = false;
+    }
     if (data.type === 'selection' && typeof data.identity === 'string' && data.identity.length <= 2000) {
       if (this.trackIdentity && this.trackIdentity !== data.identity) {
         this.track = false; this.trackBody = ''; this.historyTrackBody = ''; this.historyRetry = undefined;
@@ -219,14 +224,14 @@ export class YouTubeSubtitles {
       this.historyButton.setAttribute('aria-expanded', String(!!historyVisible)); this.historyButton.title = '在右侧回看双语字幕';
       this.historyButton.style.color = historyVisible ? '#dfff72' : 'inherit';
     }
-    this.sidebar?.update(!!historyVisible);
+    this.sidebar?.update(!!historyVisible, this.track ? `完整字幕已就绪 · 已备好后续 ${this.scheduler.bufferSeconds()} 秒` : '实时字幕模式 · 尚未拿到完整字幕，无法预译后文', !this.track);
     if (!this.mount) return;
     const visible = this.enabled && !document.hidden && !this.player?.classList.contains('ad-showing');
     const line = visible ? this.line : emptyLine;
     if (line.original) this.player?.setAttribute('data-cloudys-subtitles', 'active'); else this.player?.removeAttribute('data-cloudys-subtitles');
     const key = JSON.stringify([visible, line, this.note, this.showError]); if (key === this.lastDraw) return; this.lastDraw = key;
     render(<>
-      {visible && !line.original && this.note && <div class="notice" role="status"><p>{this.note}</p><button onClick={() => this.start()}>重新读取字幕</button></div>}
+      {visible && !line.original && this.note && <div class="notice" role="status"><p>{this.note}</p><button onClick={() => this.start(false, true)}>重新读取字幕</button></div>}
       {line.original && <div class="captions" aria-label="双语字幕">
         <div class="line original">{line.original}</div>
         {line.translated && <div class="line translation" lang="zh-CN">{line.translated}</div>}

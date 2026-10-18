@@ -11,6 +11,15 @@ function setup() {
 afterEach(() => { vi.useRealTimers(); });
 const flush = async () => { await Promise.resolve(); await Promise.resolve(); await Promise.resolve(); };
 describe('双语字幕随播放位置调度', () => {
+  it('准备进度只统计从当前位置连续完成的译文，未确认流式结果不虚报缓冲', async () => {
+    const { scheduler, jobs } = setup();
+    scheduler.setTrack(Array.from({ length: 1000 }, (_, i) => ({ start: i * 5, end: (i + 1) * 5, text: `Sentence ${i}.` }))); scheduler.tick(0);
+    expect(scheduler.bufferSeconds()).toBe(0); jobs[0]!.item(0, '首句。', false); expect(scheduler.bufferSeconds()).toBe(0);
+    jobs[0]!.resolve(['首句。']); await flush(); expect(scheduler.bufferSeconds()).toBe(5);
+    jobs[1]!.item(1, '第三句。', true); expect(scheduler.bufferSeconds()).toBe(5);
+    jobs[1]!.resolve(jobs[1]!.texts.map(() => '译文。')); await flush(); expect(scheduler.bufferSeconds()).toBe(45);
+    scheduler.tick(2); expect(scheduler.bufferSeconds()).toBe(43); scheduler.reset(); expect(scheduler.bufferSeconds()).toBe(0);
+  });
   it('当前句优先，小批预取而非一次翻完整视频，首句流式到达立即显示', async () => {
     const { scheduler, jobs, line } = setup();
     scheduler.setTrack(Array.from({ length: 10000 }, (_, i) => ({ start: i * 5, end: (i + 1) * 5, text: `Sentence ${i}.` })));
