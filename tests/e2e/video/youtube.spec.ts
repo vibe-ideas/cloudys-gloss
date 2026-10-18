@@ -395,6 +395,61 @@ test('影院及全屏字幕侧栏留在视频右侧，关闭后恢复完整画�
   expect((await page.locator('video').boundingBox())!.width).toBeCloseTo((await player.boundingBox())!.width, 0);
 });
 
+test('字幕记录连续换句自动滚动，调宽或窗口变矮后仍定位当前句', async ({ extension }) => {
+  const { page } = extension;
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await openPlayer(extension, subtitleTrack, youtubeColumnFixture);
+  await page.getByRole('button', { name: '打开字幕记录', exact: true }).click();
+  const history = page.locator('[data-cloudys-gloss="video-history"]');
+  const scroll = history.getByLabel('历史双语字幕');
+  const assertCurrentVisible = async () => {
+    await expect.poll(async () => {
+      const viewport = await scroll.boundingBox(); const row = await history.locator('[aria-current="true"]').boundingBox();
+      if (!viewport || !row) return false;
+      return row.y >= viewport.y - 1 && (row.height > viewport.height - 20 ? row.y <= viewport.y + 12 : row.y + row.height <= viewport.y + viewport.height + 1);
+    }).toBe(true);
+  };
+  for (let i = 1; i <= 12; i++) {
+    await page.evaluate(time => (window as unknown as { setClock: (time: number) => void }).setClock(time), i * 5);
+    await expect(history.locator('[aria-current="true"] .en')).toHaveText(`Sentence ${i}.`);
+    await assertCurrentVisible();
+  }
+  await expect.poll(() => scroll.evaluate(node => node.scrollTop)).toBeGreaterThan(100);
+  await history.getByRole('separator', { name: '调整字幕记录宽度' }).press('End');
+  await page.setViewportSize({ width: 1440, height: 500 });
+  await assertCurrentVisible();
+  await expect(history.getByRole('button', { name: '定位当前句', exact: true })).toBeVisible();
+  // Simulate an external layout/scroll restoration without a manual reading
+  // gesture: the visible follow control must also recover while already on.
+  await scroll.evaluate(node => { node.scrollTop = 0; });
+  await history.getByRole('button', { name: '定位当前句', exact: true }).click();
+  await assertCurrentVisible();
+});
+
+test('点击字幕区空白和底部向下滚动不会误停跟随，手动向上回看后可恢复', async ({ extension }) => {
+  const { page } = extension;
+  await openPlayer(extension, subtitleTrack, youtubeColumnFixture);
+  await page.getByRole('button', { name: '打开字幕记录', exact: true }).click();
+  const history = page.locator('[data-cloudys-gloss="video-history"]');
+  const scroll = history.getByLabel('历史双语字幕');
+  await scroll.click({ position: { x: 20, y: 3 } });
+  await expect(history.getByRole('button', { name: '定位当前句', exact: true })).toBeVisible();
+  for (let i = 1; i <= 10; i++) {
+    await page.evaluate(time => (window as unknown as { setClock: (time: number) => void }).setClock(time), i * 5);
+    await expect(history.locator('[aria-current="true"] .en')).toHaveText(`Sentence ${i}.`);
+  }
+  await expect.poll(() => scroll.evaluate(node => node.scrollHeight - node.clientHeight - node.scrollTop)).toBeLessThan(3);
+  await scroll.hover(); await page.mouse.wheel(0, 300);
+  await expect(history.getByRole('button', { name: '定位当前句', exact: true })).toBeVisible();
+  await page.mouse.wheel(0, -300);
+  await expect(history.getByRole('button', { name: '回到当前句', exact: true })).toBeVisible();
+  await page.evaluate(() => (window as unknown as { setClock: (time: number) => void }).setClock(60));
+  await expect(history.locator('[aria-current="true"]')).toHaveCount(0);
+  await history.getByRole('button', { name: '回到当前句', exact: true }).click();
+  await expect(history.locator('[aria-current="true"] .en')).toHaveText('Sentence 12.');
+  await expect.poll(() => scroll.evaluate(node => node.scrollHeight - node.clientHeight - node.scrollTop)).toBeLessThan(3);
+});
+
 test('翻阅历史时不被播放抢走滚动位置，回到当前句后恢复跟随且换视频清空旧记录', async ({ extension }) => {
   const { page } = extension; await openPlayer(extension, subtitleTrack, youtubeColumnFixture);
   await page.getByRole('button', { name: '打开字幕记录', exact: true }).click();

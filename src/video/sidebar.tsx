@@ -44,21 +44,58 @@ function HistoryPanel({ history, revision, close, seek, status, recover }: Props
   const [following, setFollowing] = useState(true);
   const [anchor, setAnchor] = useState<number>();
   const scroll = useRef<HTMLDivElement>(null);
+  const followingRef = useRef(true);
+  const followCurrent = useRef(() => {});
+  const touchY = useRef<number | undefined>(undefined);
+  followingRef.current = following;
   const entries = history.entries;
   const current = history.currentStart;
   const end = Math.max(1, Math.min(entries.length, (following ? history.indexAt(current ?? Infinity) : history.indexAt(anchor ?? Infinity)) + 1));
   const start = Math.max(0, end - PAGE_SIZE);
   const rows = entries.slice(start, end);
-  const stopFollowing = () => { if (following) { setAnchor(entries[end - 1]?.start); setFollowing(false); } };
-  const page = (nextEnd: number) => { setAnchor(entries[Math.max(0, Math.min(entries.length, nextEnd) - 1)]?.start); setFollowing(false); if (scroll.current) scroll.current.scrollTop = 0; };
+  const stopFollowing = () => { if (following) { followingRef.current = false; setAnchor(entries[end - 1]?.start); setFollowing(false); } };
+  const page = (nextEnd: number) => { followingRef.current = false; setAnchor(entries[Math.max(0, Math.min(entries.length, nextEnd) - 1)]?.start); setFollowing(false); if (scroll.current) scroll.current.scrollTop = 0; };
   useLayoutEffect(() => {
-    if (following && scroll.current) scroll.current.scrollTop = scroll.current.scrollHeight;
-  }, [following, revision]);
+    const viewport = scroll.current!;
+    let frame: number | undefined;
+    const schedule = () => {
+      if (!followingRef.current || frame !== undefined) return;
+      frame = requestAnimationFrame(() => {
+        frame = undefined;
+        if (!followingRef.current || !viewport.isConnected || !viewport.clientHeight) return;
+        const row = viewport.querySelector<HTMLElement>('[aria-current=true]');
+        if (!row) return;
+        const box = viewport.getBoundingClientRect(); const current = row.getBoundingClientRect();
+        const top = viewport.scrollTop + current.top - box.top;
+        // Keep the entire current row visible where possible; long rows start
+        // at their beginning. Never scroll the surrounding YouTube document.
+        const target = Math.max(0, Math.min(top - 8, top + current.height - viewport.clientHeight + 16));
+        if (Math.abs(viewport.scrollTop - target) > 1) viewport.scrollTop = target;
+      });
+    };
+    followCurrent.current = schedule;
+    // Initial render can precede attachment/layout. Observe both the viewport
+    // and its bounded list for reflow, late translations and width changes.
+    const observer = new ResizeObserver(schedule);
+    observer.observe(viewport); observer.observe(viewport.querySelector('ol')!);
+    schedule();
+    return () => { observer.disconnect(); if (frame !== undefined) cancelAnimationFrame(frame); followCurrent.current = () => {}; };
+  }, []);
+  useLayoutEffect(() => { followCurrent.current(); }, [following, revision]);
   return <section class="panel" aria-label="字幕记录" onKeyDown={event => { event.stopPropagation(); if (event.key === 'Escape') { event.preventDefault(); close(); } }} onPointerDown={event => event.stopPropagation()} onClick={event => event.stopPropagation()} onDblClick={event => event.stopPropagation()}>
     <header class="header"><div class="heading"><h2>字幕记录</h2><p class="subtitle">回看刚才的内容 · 点击时间跳转</p>{status && <p class="subtitle" aria-label="字幕准备状态">{status}</p>}{recover && <button class="repair" onClick={recover}>重新读取完整字幕</button>}</div><button class="close" aria-label="关闭字幕记录" onClick={close}>×</button></header>
-    <div class="scroll" ref={scroll} tabIndex={0} aria-label="历史双语字幕" onWheel={stopFollowing} onTouchStart={stopFollowing}
-      onPointerDown={event => { if (event.target === event.currentTarget) stopFollowing(); }}
-      onKeyDown={event => { if (['ArrowUp', 'ArrowDown', 'PageUp', 'PageDown', 'Home', 'End', ' '].includes(event.key)) stopFollowing(); }}>
+    <div class="scroll" ref={scroll} tabIndex={0} aria-label="历史双语字幕"
+      onWheel={event => {
+        const node = event.currentTarget;
+        if ((event.deltaY < 0 && node.scrollTop > 1) || (event.deltaY > 0 && node.scrollTop + node.clientHeight < node.scrollHeight - 2)) stopFollowing();
+      }}
+      onTouchStart={event => { touchY.current = event.touches[0]?.clientY; }}
+      onTouchMove={event => { if (touchY.current !== undefined && Math.abs((event.touches[0]?.clientY ?? touchY.current) - touchY.current) > 6 && event.currentTarget.scrollHeight > event.currentTarget.clientHeight) stopFollowing(); }}
+      onPointerDown={event => {
+        const node = event.currentTarget;
+        if (event.target === node && node.scrollHeight > node.clientHeight && event.clientX >= node.getBoundingClientRect().right - Math.max(12, node.offsetWidth - node.clientWidth)) stopFollowing();
+      }}
+      onKeyDown={event => { if (event.target === event.currentTarget && ['ArrowUp', 'ArrowDown', 'PageUp', 'PageDown', 'Home', 'End', ' '].includes(event.key)) stopFollowing(); }}>
       {start > 0 && <button class="page" onClick={() => page(start)}>查看更早的字幕</button>}
       {!entries.length && <p class="empty">播放视频后，原文和译文会留在这里。你可以随时回看，视频会继续播放。</p>}
       <ol>{rows.map(row => <li class="row" key={row.start} aria-current={row.start === current ? 'true' : undefined}>
@@ -71,7 +108,7 @@ function HistoryPanel({ history, revision, close, seek, status, recover }: Props
       </li>)}</ol>
       {end < entries.length && <button class="page" onClick={() => page(end + PAGE_SIZE)}>查看较新的字幕</button>}
     </div>
-    <footer class="footer"><span>{entries.length ? `${start + 1}–${end} / ${entries.length} 条` : '本次观看记录'}</span>{following ? <span>跟随当前句</span> : <button class="follow" onClick={() => setFollowing(true)}>回到当前句</button>}</footer>
+    <footer class="footer"><span>{entries.length ? `${start + 1}–${end} / ${entries.length} 条` : '本次观看记录'}</span><button class="follow" aria-label={following ? '定位当前句' : '回到当前句'} onClick={() => { followingRef.current = true; setFollowing(true); followCurrent.current(); }}>{following ? '跟随当前句' : '回到当前句'}</button></footer>
   </section>;
 }
 
