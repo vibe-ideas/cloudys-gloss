@@ -38,6 +38,28 @@ for (const format of ['JSON3', 'XML'] as const) {
   });
 }
 
+test('长句双语字幕在桌面和窄播放器中完整换行，不遮挡播放控制栏', async ({ extension }, testInfo) => {
+  const { page, server } = extension;
+  const source = 'Instead of putting every tool into the system prompt, the agent can search for the tools it needs, load them when they become relevant, and keep the context window focused on the current task.';
+  const translated = '无需将所有工具都放进系统提示，智能体可以搜索所需的工具，在需要时再加载，让上下文窗口始终聚焦当前任务。';
+  server.setTranslation(source, translated);
+  await openPlayer(extension, JSON.stringify({ events: [{ tStartMs: 0, dDurationMs: 10000, segs: [{ utf8: source }] }] }), youtubeColumnFixture);
+  await page.getByRole('button', { name: '开启双语字幕', exact: true }).click();
+  const captions = page.locator('[data-cloudys-gloss="video-subtitles"] .captions');
+  await expect(captions.locator('.translation')).toHaveText(translated);
+  for (const width of [1440, 600]) {
+    await page.setViewportSize({ width, height: 900 });
+    await expect.poll(async () => {
+      const box = (await captions.boundingBox())!;
+      const player = (await page.locator('#movie_player').boundingBox())!;
+      const controls = (await page.locator('.ytp-right-controls').boundingBox())!;
+      return box.x >= player.x && box.x + box.width <= player.x + player.width + 1 && box.y >= player.y && box.y + box.height <= controls.y;
+    }).toBe(true);
+    expect(await captions.evaluate(node => node.scrollHeight <= node.clientHeight + 1)).toBe(true);
+    await page.screenshot({ path: testInfo.outputPath(`subtitles-long-${width}.png`) });
+  }
+});
+
 test('YouTube 双语字幕逐句返回，拖动定位新字幕，全屏显示且关闭恢复 CC', async ({ extension }, testInfo) => {
   const { page, server } = extension;
   server.setTranslation('Welcome to the video.', '欢迎观看这个视频。');

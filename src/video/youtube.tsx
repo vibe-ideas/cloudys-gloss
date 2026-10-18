@@ -7,15 +7,17 @@ import { MAX_CAPTION_BYTES, videoId } from './protocol';
 import { SubtitleScheduler, type SubtitleClient, type SubtitleLine } from './scheduler';
 
 const css = `
-:host{all:initial!important;position:absolute!important;inset:0!important;z-index:60!important;pointer-events:none!important;color-scheme:dark!important}
+:host{all:initial!important;position:absolute!important;inset:0!important;z-index:60!important;pointer-events:none!important;color-scheme:dark!important;container-type:inline-size!important}
 :host([data-history-docked]){right:var(--cloudys-history-width)!important}
-*{box-sizing:border-box}.captions{position:absolute;bottom:12%;left:8%;width:84%;text-align:center;font-family:system-ui,-apple-system,sans-serif;line-height:1.45;color:#fff;text-shadow:0 1px 3px #000;overflow-wrap:anywhere;max-height:55%;overflow:hidden}
-.line{display:table;margin:3px auto;padding:3px 10px;border-radius:5px;background:#101310d9;white-space:pre-line}
-.original{font-size:clamp(13px,1.5vw,21px);color:#eee}.translation{font-size:clamp(16px,1.9vw,27px);font-weight:550}
+*{box-sizing:border-box}.captions{position:absolute;bottom:max(58px,9%);left:50%;transform:translateX(-50%);width:max-content;max-width:min(90%,1040px);padding:9px 16px 10px;border:1px solid #ffffff12;border-radius:10px;background:#101216cc;box-shadow:0 3px 14px #0003;text-align:center;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;line-height:1.45;color:#fafbf8;text-shadow:0 1px 2px #0008;overflow-wrap:anywhere;max-height:65%;overflow:hidden}
+.line{margin:0;white-space:pre-line;text-wrap:pretty}
+.original{font-size:clamp(12px,1.7cqw,19px);line-height:1.4;color:#d5d8dc;font-weight:400}
+.translation{margin-top:5px;font-size:clamp(15px,2.2cqw,26px);line-height:1.45;font-weight:500}
 .waiting{display:block;width:30px;height:3px;margin:8px auto;background:#dfff7280;border-radius:3px;animation:breathe 1.3s ease-in-out infinite}
 .notice{position:absolute;top:12px;left:12px;max-width:min(420px,85%);padding:10px 14px;border-radius:8px;background:#141713e8;color:#eee;font:13px/1.5 system-ui;pointer-events:auto}
 .notice p{margin:0}.notice button,.retry{font:12px/1.5 system-ui;color:#dfff72;border:1px solid #dfff7250;background:#141713ed;padding:4px 9px;border-radius:5px;cursor:pointer;pointer-events:auto}.notice button{margin-top:7px}
-.retry{display:table;margin:5px auto}.error{display:table;margin:5px auto;background:#141713ed;font-size:12px;max-width:100%;padding:4px 8px;pointer-events:auto}
+.actions{display:flex;justify-content:center;flex-wrap:wrap;gap:6px;margin-top:8px}.retry{margin:0;background:#ffffff0a;border-color:#ffffff24;color:#e3e8da;border-radius:6px;padding:4px 10px}.retry:hover{background:#ffffff1c;border-color:#ffffff45}.error{display:block;margin:7px 0 0;color:#efc5c5;text-shadow:none;font-size:12px;text-align:left;max-width:100%;padding:7px 9px;border-radius:6px;background:#ffffff08;pointer-events:auto}
+@container(max-width:600px){.captions{bottom:52px;max-width:94%;padding:6px 10px 7px;border-radius:8px}.translation{margin-top:3px}}
 button:focus-visible{outline:2px solid #dfff72;outline-offset:3px}
 @keyframes breathe{50%{opacity:.3;transform:scaleX(.55)}}@media(prefers-reduced-motion:reduce){.waiting{animation:none}}
 `;
@@ -241,7 +243,7 @@ export class YouTubeSubtitles {
         <div class="line original">{line.original}</div>
         {line.translated && <div class="line translation" lang="zh-CN">{line.translated}</div>}
         {line.pending && !line.translated && <span class="waiting" aria-label="正在翻译字幕" />}
-        {line.error && <><button class="retry" onClick={() => this.scheduler.retry()}>重试这句</button><button class="retry" onClick={() => { this.showError = !this.showError; this.draw(); }}>错误原因</button>{this.showError && <span class="error">{line.error}</span>}</>}
+        {line.error && <><div class="actions"><button class="retry" onClick={() => this.scheduler.retry()}>重试这句</button><button class="retry" aria-expanded={this.showError} onClick={() => { this.showError = !this.showError; this.draw(); }}>错误原因</button></div>{this.showError && <span class="error">{line.error}</span>}</>}
       </div>}
     </>, this.mount);
   }
