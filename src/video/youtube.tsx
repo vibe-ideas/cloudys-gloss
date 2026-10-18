@@ -1,4 +1,5 @@
 import { render } from 'preact';
+import { SubtitleSidebar } from './sidebar';
 import { injectScript } from 'wxt/utils/inject-script';
 import { OWN } from '../page/blocks';
 import { captionText, captionPhrases, parseCaptions } from './captions';
@@ -7,6 +8,7 @@ import { SubtitleScheduler, type SubtitleClient, type SubtitleLine } from './sch
 
 const css = `
 :host{all:initial!important;position:absolute!important;inset:0!important;z-index:60!important;pointer-events:none!important;color-scheme:dark!important}
+:host([data-history-docked]){right:var(--cloudys-history-width)!important}
 *{box-sizing:border-box}.captions{position:absolute;bottom:12%;left:8%;width:84%;text-align:center;font-family:system-ui,-apple-system,sans-serif;line-height:1.45;color:#fff;text-shadow:0 1px 3px #000;overflow-wrap:anywhere;max-height:55%;overflow:hidden}
 .line{display:table;margin:3px auto;padding:3px 10px;border-radius:5px;background:#101310d9;white-space:pre-line}
 .original{font-size:clamp(13px,1.5vw,21px);color:#eee}.translation{font-size:clamp(16px,1.9vw,27px);font-weight:550}
@@ -25,6 +27,11 @@ export class YouTubeSubtitles {
   private player?: HTMLElement;
   private video?: HTMLVideoElement;
   private button?: HTMLButtonElement;
+  private historyButton?: HTMLButtonElement;
+  private sidebar?: SubtitleSidebar;
+  private sidebarOpen = false;
+  private historyTrackBody = '';
+  private historyRetry?: { time: number; text: string };
   private host?: HTMLElement;
   private mount?: HTMLElement;
   private style?: HTMLStyleElement;
@@ -36,6 +43,7 @@ export class YouTubeSubtitles {
   private enabled = false;
   private track = false;
   private trackBody = '';
+  private trackIdentity = '';
   private ccEnabledByUs = false;
   private line: SubtitleLine = emptyLine;
   private note = '';
@@ -54,7 +62,7 @@ export class YouTubeSubtitles {
     document.addEventListener('yt-navigate-finish', () => this.navigate(), { signal: this.lifetime.signal });
     document.addEventListener('visibilitychange', () => {
       if (document.hidden) { this.scheduler.reset(); this.track = false; this.stopBridge(); }
-      else if (this.enabled && this.player) this.start();
+      else if (this.enabled && this.player) this.start(true);
     }, { signal: this.lifetime.signal });
     this.navigate();
   }
@@ -74,27 +82,50 @@ export class YouTubeSubtitles {
     }
     // Discard orphaned DOM left by a discarded extension realm after reload.
     for (const node of player.querySelectorAll(`[${OWN}="video-toggle"],[${OWN}="video-subtitles"],[${OWN}="video-style"]`)) node.remove();
+    for (const node of document.querySelectorAll(`[${OWN}="video-history"],[${OWN}="video-history-toggle"],[${OWN}="video-history-style"]`)) node.remove();
+    player.removeAttribute('data-cloudys-history'); player.style.removeProperty('--cloudys-history-width');
     player.removeAttribute('data-cloudys-subtitles');
     this.id = id; this.player = player; this.video = video; this.binding = new AbortController();
     const signal = this.binding.signal;
     this.button = document.createElement('button'); this.button.setAttribute(OWN, 'video-toggle'); this.button.className = 'ytp-button';
     this.button.textContent = '双语'; this.button.style.cssText = 'width:48px;font:600 13px system-ui;vertical-align:top;color:inherit';
     this.button.addEventListener('click', () => { this.enabled = !this.enabled; if (this.enabled) this.start(); else this.stop(); }, { signal });
-    controls.prepend(this.button);
+    this.historyButton = document.createElement('button'); this.historyButton.setAttribute(OWN, 'video-history-toggle'); this.historyButton.className = 'ytp-button';
+    this.historyButton.textContent = '记录'; this.historyButton.style.cssText = 'width:48px;font:500 13px system-ui;vertical-align:top;color:inherit';
+    this.historyButton.addEventListener('click', () => {
+      this.sidebarOpen = !this.sidebarOpen;
+      if (this.sidebarOpen && !this.enabled) { this.enabled = true; this.start(); }
+      this.draw();
+    }, { signal });
+    controls.prepend(this.button, this.historyButton);
     this.host = document.createElement('div'); this.host.setAttribute(OWN, 'video-subtitles');
     const shadow = this.host.attachShadow({ mode: 'open' }); const style = document.createElement('style'); style.textContent = css;
     this.mount = document.createElement('div'); shadow.append(style, this.mount); player.append(this.host);
     this.style = document.createElement('style'); this.style.setAttribute(OWN, 'video-style'); this.style.textContent = nativeStyle; player.append(this.style);
+    this.sidebar = new SubtitleSidebar(player, this.scheduler.history, () => { this.sidebarOpen = false; this.draw(); this.historyButton?.focus(); }, (time, retry) => {
+      const row = this.scheduler.history.entries.find(row => row.start === time);
+      this.historyRetry = retry && row ? { time, text: row.original } : undefined;
+      video.currentTime = time;
+    });
     for (const event of ['timeupdate', 'play', 'pause', 'seeked', 'ratechange', 'loadedmetadata']) video.addEventListener(event, () => this.tick(), { signal });
-    video.addEventListener('seeking', () => { if (this.enabled) { if (!this.track) this.scheduler.setLive(''); this.scheduler.tick(video.currentTime, true); } }, { signal });
+    video.addEventListener('seeking', () => {
+      if (this.enabled) {
+        if (!this.track) this.scheduler.setLive(''); this.scheduler.tick(video.currentTime, true);
+        if (this.historyRetry && Math.abs(this.historyRetry.time - video.currentTime) < .1 && this.track) { this.scheduler.retry(); this.historyRetry = undefined; }
+        else if (this.historyRetry && Math.abs(this.historyRetry.time - video.currentTime) > 5) this.historyRetry = undefined;
+      }
+    }, { signal });
     this.draw(); if (this.enabled) this.start();
   }
   settingsChanged() { this.scheduler.destroy(); if (this.enabled && this.player) this.start(); }
-  private start() {
+  private start(resume = false) {
     if (!this.player || !this.video || document.hidden) return;
     this.stopBridge(); this.observer?.disconnect();
-    this.track = false; this.trackBody = ''; this.showError = false; this.scheduler.setTrack([]);
-    this.note = '正在读取字幕。若没有字幕，请在 YouTube 的 CC 菜单中选择英文字幕。';
+    const captions = resume && this.trackBody ? captionPhrases(parseCaptions(this.trackBody)) : [];
+    this.track = captions.length > 0;
+    if (!this.track) this.trackBody = '';
+    this.showError = false; this.scheduler.setTrack(captions);
+    this.note = this.track ? '' : '正在读取字幕。若没有字幕，请在 YouTube 的 CC 菜单中选择英文字幕。';
     this.channel = crypto.randomUUID(); const channel = this.channel;
     this.observer = new MutationObserver(records => {
       if (records.some(record => record.type === 'attributes' && record.target === this.player)) this.tick();
@@ -132,17 +163,25 @@ export class YouTubeSubtitles {
     this.ccEnabledByUs = false; this.draw();
   }
   private unbind() {
-    this.stop(); this.binding?.abort(); this.button?.remove(); this.style?.remove();
+    this.stop(); this.binding?.abort(); this.button?.remove(); this.historyButton?.remove(); this.sidebar?.destroy(); this.sidebar = undefined; this.style?.remove();
+    this.scheduler.history.clear(); this.historyTrackBody = ''; this.trackBody = ''; this.trackIdentity = ''; this.historyRetry = undefined; this.historyButton = undefined;
     if (this.mount) render(null, this.mount); this.host?.remove();
     this.player = undefined; this.video = undefined; this.mount = undefined; this.button = undefined; this.id = ''; this.lastDraw = '';
   }
   private message = (event: MessageEvent) => {
     const data = event.data;
     if (event.source !== window || event.origin !== location.origin || !this.enabled || !this.channel || data?.source !== 'cloudys-gloss:captions:response' || data.channel !== this.channel || data.id !== this.id || this.id !== videoId(location.href)) return;
+    if (data.type === 'selection' && typeof data.identity === 'string' && data.identity.length <= 2000) {
+      if (this.trackIdentity && this.trackIdentity !== data.identity) {
+        this.track = false; this.trackBody = ''; this.historyTrackBody = ''; this.historyRetry = undefined;
+        this.scheduler.history.clear(); this.scheduler.setTrack([]); this.readLive();
+      }
+      this.trackIdentity = data.identity;
+    }
     if (data.type === 'track' && typeof data.body === 'string' && data.body.length <= MAX_CAPTION_BYTES) {
       if (this.track && data.body === this.trackBody) return;
       const captions = captionPhrases(parseCaptions(data.body));
-      if (captions.length) { this.track = true; this.trackBody = data.body; this.note = ''; this.scheduler.setTrack(captions); this.tick(); }
+      if (captions.length) { if (this.historyTrackBody !== data.body) this.scheduler.history.clear(); this.historyTrackBody = data.body; this.track = true; this.trackBody = data.body; this.note = ''; this.scheduler.setTrack(captions); this.tick(); }
       else this.readLive();
     }
     if (data.type === 'unavailable') this.readLive();
@@ -158,7 +197,10 @@ export class YouTubeSubtitles {
     if (!this.enabled || this.track || !this.player || document.hidden || this.player.classList.contains('ad-showing')) return;
     const text = captionText(Array.from(this.player.querySelectorAll('.ytp-caption-segment')).map(node => node.textContent ?? '').join(' ')).slice(0, 2400);
     if (text) this.note = '';
-    this.scheduler.setLive(text); this.tick();
+    this.scheduler.setLive(text, this.video?.currentTime ?? 0); this.tick();
+    // A live CC seek is asynchronous. Retry only after the requested source
+    // actually reappears, not against stale DOM from before the seek.
+    if (this.historyRetry?.text === text && Math.abs(this.historyRetry.time - (this.video?.currentTime ?? 0)) < 5) { this.historyRetry = undefined; this.scheduler.retry(); }
   }
   private tick(seek = false) {
     if (!this.enabled || !this.video || document.hidden) return;
@@ -171,6 +213,13 @@ export class YouTubeSubtitles {
       this.button.setAttribute('aria-pressed', String(this.enabled)); this.button.title = this.enabled ? `关闭 Cloudy’s Gloss 双语字幕 · ${this.track ? '字幕轨道 · 提前翻译' : '当前 CC · 实时翻译'}` : 'Cloudy’s Gloss 双语字幕 · 使用当前翻译模型';
       this.button.style.color = this.enabled ? '#dfff72' : 'inherit';
     }
+    const historyVisible = this.enabled && this.sidebarOpen && !document.hidden && !this.player?.classList.contains('ad-showing');
+    if (this.historyButton) {
+      this.historyButton.setAttribute('aria-label', historyVisible ? '收起字幕记录' : '打开字幕记录');
+      this.historyButton.setAttribute('aria-expanded', String(!!historyVisible)); this.historyButton.title = '在右侧回看双语字幕';
+      this.historyButton.style.color = historyVisible ? '#dfff72' : 'inherit';
+    }
+    this.sidebar?.update(!!historyVisible);
     if (!this.mount) return;
     const visible = this.enabled && !document.hidden && !this.player?.classList.contains('ad-showing');
     const line = visible ? this.line : emptyLine;

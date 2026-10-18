@@ -173,4 +173,68 @@ describe('双语字幕随播放位置调度', () => {
     jobs[2]!.resolve(['下一句。']); await flush(); expect(line()?.translated).toBe('下一句。'); scheduler.destroy();
   });
 
+  it('字幕播放过去后迟到的译文仍补入历史，取消的未确认内容不会遗留在记录里', async () => {
+    const { scheduler, jobs } = setup();
+    scheduler.setTrack([{ start: 0, end: 5, text: 'First sentence.' }, { start: 5, end: 10, text: 'Second sentence.' }]);
+    scheduler.tick(0); scheduler.tick(5); jobs[0]!.resolve(['第一句。']); await flush();
+    expect(scheduler.history.entries[0]?.translated).toBe('第一句。');
+    jobs[1]!.item(0, '未经确认。', false); scheduler.reset();
+    expect(scheduler.history.entries[1]?.translated).toBe('');
+    scheduler.destroy(); expect(scheduler.history.entries).toHaveLength(0);
+  });
+
+  it('实时 CC 连续换句和清屏不取消正常请求，旧句译文会补入历史且下一批优先当前句', async () => {
+    const { scheduler, jobs, client } = setup();
+    scheduler.setLive('First sentence.', 0); scheduler.setLive('', .2); scheduler.setLive('Second sentence.', .4); scheduler.setLive('Third sentence.', .7);
+    expect(client.cancel).not.toHaveBeenCalled(); expect(jobs).toHaveLength(1);
+    jobs[0]!.resolve(['第一句。']); await flush();
+    expect(scheduler.history.entries[0]?.translated).toBe('第一句。');
+    expect(jobs[1]!.texts).toEqual(['Third sentence.', 'Second sentence.']);
+    jobs[1]!.resolve(['第三句。', '第二句。']); await flush();
+    expect(scheduler.history.entries.map(row => row.translated)).toEqual(['第一句。', '第二句。', '第三句。']); scheduler.destroy();
+  });
+  it('实时字幕逐词增长时只补最新完整句，不把旧前缀译文显示成新句译文', async () => {
+    const { scheduler, jobs, client, line } = setup();
+    scheduler.setLive('Read this', 0); scheduler.setLive('Read this sentence', .2); scheduler.setLive('Read this sentence carefully.', .4);
+    jobs[0]!.resolve(['阅读这个']); await flush();
+    expect(client.cancel).not.toHaveBeenCalled(); expect(line()?.translated).toBe('');
+    expect(jobs[1]!.texts).toEqual(['Read this sentence carefully.']);
+    jobs[1]!.resolve(['仔细阅读这句话。']); await flush(); expect(line()?.translated).toBe('仔细阅读这句话。');
+    expect(scheduler.history.entries).toHaveLength(1); scheduler.destroy();
+  });
+  it('实时字幕持续过载时仅补最近四条中的小批次，过期字幕不无限排队', async () => {
+    vi.useFakeTimers(); const { scheduler, jobs, client } = setup();
+    for (let i = 0; i < 30; i++) { scheduler.setLive(`Sentence ${i}.`, i * .5); await vi.advanceTimersByTimeAsync(500); }
+    expect(client.cancel).not.toHaveBeenCalled(); expect(jobs).toHaveLength(1);
+    jobs[0]!.resolve(['首句。']); await flush(); expect(jobs[1]!.texts).toEqual(['Sentence 29.', 'Sentence 28.', 'Sentence 27.']);
+    jobs[1]!.resolve(['末句。', '上一句。', '再上一句。']); await flush(); expect(jobs[2]!.texts).toEqual(['Sentence 26.']);
+    jobs[2]!.resolve(['保留的第四句。']); await flush(); expect(jobs).toHaveLength(3);
+    expect(scheduler.history.entries[1]?.pending).toBe(false); scheduler.destroy();
+  });
+  it('限流期间实时字幕不断换句也遵守共享冷却，恢复时优先最新句', async () => {
+    vi.useFakeTimers(); const { scheduler, jobs } = setup(); scheduler.setLive('First sentence.', 0);
+    jobs[0]!.reject(new Error('模型服务返回 HTTP 429')); await flush();
+    await vi.advanceTimersByTimeAsync(500); scheduler.setLive('Second sentence.', .5);
+    await vi.advanceTimersByTimeAsync(500); scheduler.setLive('Third sentence.', 1);
+    await vi.advanceTimersByTimeAsync(999); expect(jobs).toHaveLength(1);
+    await vi.advanceTimersByTimeAsync(1); expect(jobs[1]!.texts[0]).toBe('Third sentence.'); scheduler.destroy();
+  });
+  it('实时模型等待超过十二秒后丢弃过期补译，仍优先请求当前显示的字幕', async () => {
+    vi.useFakeTimers(); const { scheduler, jobs } = setup();
+    scheduler.setLive('First sentence.', 0); scheduler.setLive('Old backlog.', .5); scheduler.setLive('Current sentence.', 1);
+    await vi.advanceTimersByTimeAsync(12001);
+    jobs[0]!.resolve(['首句。']); await flush();
+    expect(jobs[1]!.texts).toEqual(['Current sentence.']);
+    expect(scheduler.history.entries[1]?.pending).toBe(false);
+    scheduler.destroy();
+  });
+  it('拖动视频会清理实时字幕待补队列，迟到结果不能重新显示旧视频内容', async () => {
+    const { scheduler, jobs, client } = setup(); scheduler.setLive('Old sentence.', 0); scheduler.setLive('Old backlog.', .5);
+    scheduler.tick(100, true); scheduler.setLive('New position.', 100);
+    expect(client.cancel).toHaveBeenCalledWith(jobs[0]!.id);
+    jobs[0]!.resolve(['旧译文。']); await flush();
+    expect(scheduler.history.entries[0]?.translated).toBe(''); expect(scheduler.history.entries[0]?.pending).toBe(false);
+    expect(jobs.at(-1)?.texts[0]).toBe('New position.'); scheduler.destroy();
+  });
+
 });

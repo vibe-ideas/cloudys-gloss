@@ -1,9 +1,9 @@
 import { readFile } from 'node:fs/promises';
 import type { BrowserContext, Page } from '@playwright/test';
 import { test, expect } from '../support/fixtures';
-import { subtitleTrack, youtubeFixture } from './youtube-fixture';
+import { subtitleTrack, youtubeColumnFixture, youtubeFixture } from './youtube-fixture';
 
-async function openPlayer(extension: { context: BrowserContext; page: Page }, track = subtitleTrack) {
+async function openPlayer(extension: { context: BrowserContext; page: Page }, track = subtitleTrack, fixture = youtubeFixture) {
   const video = await readFile('tests/e2e/video/timeline.webm');
   await extension.context.route('https://www.youtube.com/**', route => {
     if (route.request().url().endsWith('/timeline.webm')) {
@@ -11,7 +11,7 @@ async function openPlayer(extension: { context: BrowserContext; page: Page }, tr
       const start = range ? Number(range[1]) : 0; const end = range?.[2] ? Math.min(Number(range[2]), video.length - 1) : video.length - 1;
       return route.fulfill({ status: range ? 206 : 200, contentType: 'video/webm', headers: { 'Accept-Ranges': 'bytes', ...(range ? { 'Content-Range': `bytes ${start}-${end}/${video.length}` } : {}) }, body: video.subarray(start, end + 1) });
     }
-    return route.fulfill({ status: 200, contentType: route.request().url().includes('/api/timedtext') ? 'application/json' : 'text/html', body: route.request().url().includes('/api/timedtext') ? track : youtubeFixture });
+    return route.fulfill({ status: 200, contentType: route.request().url().includes('/api/timedtext') ? 'application/json' : 'text/html', body: route.request().url().includes('/api/timedtext') ? track : fixture });
   });
   await extension.page.goto('https://www.youtube.com/watch?v=owned-video');
   await expect.poll(() => extension.page.locator('video').evaluate(video => (video as HTMLVideoElement).readyState)).toBeGreaterThan(0);
@@ -77,7 +77,7 @@ test('YouTube SPA 换视频只保留一个字幕开关，广告期间隐藏译�
   await page.locator('#movie_player').evaluate(player => player.classList.remove('ad-showing'));
   await expect(subtitles.locator('.translation')).toBeVisible();
   await page.evaluate(() => {
-    document.dispatchEvent(new Event('yt-navigate-start')); history.pushState({}, '', '/watch?v=second-video');
+    document.dispatchEvent(new Event('yt-navigate-start')); window.history.pushState({}, '', '/watch?v=second-video');
     document.querySelector('.ytp-caption-segment')!.textContent = '';
     document.dispatchEvent(new Event('yt-navigate-finish'));
   });
@@ -122,3 +122,167 @@ for (const failure of ['服务暂时不可用', '模型输出不合格'] as cons
     expect(server.calls.every(call => call.texts?.length === 1 && call.texts[0] === 'Welcome to the video.')).toBe(true);
   });
 }
+
+
+test('右侧字幕记录保留大视频尺寸，回看双语历史和点击时间跳转均复用译文', async ({ extension }, testInfo) => {
+  const { page, server } = extension; await openPlayer(extension, subtitleTrack, youtubeColumnFixture);
+  server.setTranslation('Welcome to the video.', '欢迎观看这个视频。');
+  const player = page.locator('#movie_player'); const before = await player.boundingBox();
+  await page.getByRole('button', { name: '打开字幕记录', exact: true }).click();
+  const history = page.locator('[data-cloudys-gloss="video-history"]');
+  await expect(history).toHaveAttribute('data-mode', 'column');
+  await expect(history.locator('.zh').first()).toHaveText('欢迎观看这个视频。');
+  const after = await player.boundingBox(); const side = await history.boundingBox();
+  expect(after!.width).toBeCloseTo(before!.width, 0); expect(after!.height).toBeCloseTo(before!.height, 0);
+  expect(side!.x).toBeGreaterThanOrEqual(after!.x + after!.width); expect(after!.width).toBeGreaterThan(side!.width * 2);
+  await expect.poll(() => server.finishedStreams).toBeGreaterThanOrEqual(4);
+  await page.evaluate(() => (window as unknown as { setClock: (time: number) => void }).setClock(5));
+  await expect(history.locator('[aria-current="true"] .en')).toHaveText('Sentence 1.');
+  await expect(history.locator('.row')).toHaveCount(2);
+  const calls = server.calls.length;
+  await history.getByRole('button', { name: '跳转到 00:00', exact: true }).click();
+  await expect(page.locator('video')).toHaveJSProperty('currentTime', 0);
+  await expect(history.locator('[aria-current="true"] .zh')).toHaveText('欢迎观看这个视频。');
+  expect(server.calls.length).toBe(calls);
+  await page.screenshot({ path: testInfo.outputPath('history-right-column.png') });
+  await page.evaluate(() => document.documentElement.removeAttribute('dark'));
+  await expect(history).toHaveAttribute('data-theme', 'light');
+  await expect(history.locator('.panel')).toHaveCSS('background-color', 'rgb(255, 255, 255)');
+  await page.screenshot({ path: testInfo.outputPath('history-right-column-light.png') });
+  await history.getByRole('button', { name: '关闭字幕记录', exact: true }).click();
+  await expect(history).toBeHidden(); await expect(player).not.toHaveAttribute('data-cloudys-history');
+  await page.getByRole('button', { name: '打开字幕记录', exact: true }).click();
+  await expect(history.locator('.zh').first()).toHaveText('欢迎观看这个视频。'); expect(server.calls.length).toBe(calls);
+});
+
+test('影院及全屏字幕侧栏留在视频右侧，关闭后恢复完整画面和字幕区域', async ({ extension }, testInfo) => {
+  const { page } = extension; await openPlayer(extension, subtitleTrack, youtubeColumnFixture);
+  await page.locator('ytd-watch-flexy').evaluate(node => node.setAttribute('theater', ''));
+  await page.getByRole('button', { name: '打开字幕记录', exact: true }).click();
+  const history = page.locator('[data-cloudys-gloss="video-history"]'); const player = page.locator('#movie_player');
+  await expect(history).toHaveAttribute('data-mode', 'docked');
+  const assertNoOverlap = async () => {
+    const pane = (await history.boundingBox())!; const video = (await page.locator('video').boundingBox())!;
+    const overlay = (await page.locator('[data-cloudys-gloss="video-subtitles"]').boundingBox())!;
+    expect(video.x + video.width).toBeLessThanOrEqual(pane.x + 1); expect(overlay.x + overlay.width).toBeLessThanOrEqual(pane.x + 1);
+    expect(video.width).toBeGreaterThan(pane.width * 2);
+  };
+  await expect(history.locator('.zh')).toBeVisible(); await assertNoOverlap();
+  await page.getByRole('button', { name: '全屏', exact: true }).click();
+  await expect.poll(() => page.evaluate(() => document.fullscreenElement?.id)).toBe('movie_player');
+  await expect(history).toBeVisible(); await assertNoOverlap();
+  await page.screenshot({ path: testInfo.outputPath('history-fullscreen.png') });
+  await page.evaluate(() => document.exitFullscreen());
+  await history.getByRole('button', { name: '关闭字幕记录', exact: true }).click();
+  await expect(player).not.toHaveAttribute('data-cloudys-history');
+  expect((await page.locator('video').boundingBox())!.width).toBeCloseTo((await player.boundingBox())!.width, 0);
+});
+
+test('翻阅历史时不被播放抢走滚动位置，回到当前句后恢复跟随且换视频清空旧记录', async ({ extension }) => {
+  const { page } = extension; await openPlayer(extension, subtitleTrack, youtubeColumnFixture);
+  await page.getByRole('button', { name: '打开字幕记录', exact: true }).click();
+  const history = page.locator('[data-cloudys-gloss="video-history"]');
+  for (let i = 1; i <= 12; i++) {
+    await page.evaluate(time => (window as unknown as { setClock: (time: number) => void }).setClock(time), i * 5);
+    await expect(history.locator('[aria-current="true"] .en')).toHaveText(`Sentence ${i}.`);
+  }
+  const scroll = history.getByLabel('历史双语字幕'); await scroll.focus(); await scroll.press('Home');
+  await expect(history.getByRole('button', { name: '回到当前句', exact: true })).toBeVisible();
+  await expect.poll(() => scroll.evaluate(node => node.scrollTop)).toBeLessThan(5);
+  await page.evaluate(() => (window as unknown as { setClock: (time: number) => void }).setClock(70));
+  await expect(page.locator('[data-cloudys-gloss="video-subtitles"] .original')).toHaveText('Sentence 14.');
+  expect(await scroll.evaluate(node => node.scrollTop)).toBeLessThan(5);
+  await history.getByRole('button', { name: '回到当前句', exact: true }).click();
+  await expect(history.locator('[aria-current="true"] .en')).toHaveText('Sentence 14.');
+  await expect.poll(() => scroll.evaluate(node => node.scrollTop)).toBeGreaterThan(100);
+  await page.evaluate(() => {
+    document.dispatchEvent(new Event('yt-navigate-start')); window.history.pushState({}, '', '/watch?v=another-video');
+    (document.querySelector('video') as HTMLVideoElement).currentTime = 0;
+    document.dispatchEvent(new Event('yt-navigate-finish'));
+  });
+  await expect(history).toHaveCount(1); await expect(history.locator('.row')).toHaveCount(1);
+  await expect(history.locator('.en')).toHaveText('Welcome to the video.');
+});
+
+test('窄窗口将字幕记录放到播放器下方，关闭双语字幕后恢复页面且不遮挡视频', async ({ extension }, testInfo) => {
+  const { page } = extension; await page.setViewportSize({ width: 700, height: 900 });
+  await openPlayer(extension, subtitleTrack, youtubeColumnFixture);
+  await page.getByRole('button', { name: '打开字幕记录', exact: true }).click();
+  const history = page.locator('[data-cloudys-gloss="video-history"]');
+  await expect(history).toHaveAttribute('data-mode', 'below');
+  const video = (await page.locator('#movie_player').boundingBox())!; const side = (await history.boundingBox())!;
+  expect(side.y).toBeGreaterThanOrEqual(video.y + video.height);
+  await page.screenshot({ path: testInfo.outputPath('history-narrow.png') });
+  await page.getByRole('button', { name: '关闭双语字幕', exact: true }).click();
+  await expect(history).toBeHidden(); await expect(page.locator('#movie_player')).not.toHaveAttribute('data-cloudys-history');
+});
+
+test('完整字幕首次为空后自动恢复轨道并提前翻译，不需要重新开关字幕', async ({ extension }) => {
+  const { page, context, server } = extension; await openPlayer(extension, '');
+  let reads = 0;
+  await context.route('https://www.youtube.com/api/timedtext**', route => route.fulfill({ contentType: 'application/json', body: ++reads <= 2 ? '' : subtitleTrack }));
+  await page.getByRole('button', { name: '开启双语字幕', exact: true }).click();
+  await expect(page.getByRole('button', { name: '关闭双语字幕', exact: true })).toHaveAttribute('title', /字幕轨道 · 提前翻译/);
+  await expect.poll(() => server.calls.flatMap(call => call.texts ?? [])).toContain('Sentence 24.');
+  expect(reads).toBeLessThanOrEqual(6);
+});
+
+test('实时 CC 连续换句时慢请求完成后补入右侧历史，当前句优先且不漏掉近期字幕', async ({ extension }) => {
+  const { page, server } = extension; await openPlayer(extension, '', youtubeColumnFixture);
+  server.setDelay(1400);
+  await page.locator('video').evaluate(video => (video as HTMLVideoElement).play());
+  await page.getByRole('button', { name: '打开字幕记录', exact: true }).click();
+  const overlay = page.locator('[data-cloudys-gloss="video-subtitles"]');
+  const history = page.locator('[data-cloudys-gloss="video-history"]');
+  await expect.poll(() => server.calls.length).toBe(1);
+  for (const text of ['The second sentence.', 'The third sentence.', 'The final sentence.']) {
+    await page.locator('.ytp-caption-segment').evaluate((node, text) => { node.textContent = text; }, text);
+    await expect(overlay.locator('.original')).toHaveText(text);
+  }
+  await expect(history.locator('.row').filter({ hasText: 'Welcome to the video.' }).locator('.zh')).not.toBeEmpty();
+  await expect(overlay.locator('.translation')).toContainText('The final sentence.');
+  await expect(history.locator('.zh')).toHaveCount(4);
+  expect(server.calls[1]?.texts?.[0]).toBe('The final sentence.');
+  expect(server.calls.every(call => (call.texts?.length ?? 0) <= 3)).toBe(true);
+  expect(server.calls.flatMap(call => call.texts ?? []).filter(text => text === 'Welcome to the video.')).toHaveLength(1);
+});
+
+test('实时历史字幕发生鉴权错误后点击跳转并重试，等对应 CC 重现再重新请求', async ({ extension }) => {
+  const { page, server } = extension; await openPlayer(extension, '', youtubeColumnFixture);
+  server.setTranslationFailure(401);
+  await page.getByRole('button', { name: '打开字幕记录', exact: true }).click();
+  const history = page.locator('[data-cloudys-gloss="video-history"]');
+  await expect(history.getByRole('button', { name: '跳转并重试', exact: true })).toBeVisible();
+  server.setTranslationFailure(0);
+  await page.evaluate(() => (window as unknown as { setClock: (time: number) => void }).setClock(10));
+  await page.locator('.ytp-caption-segment').evaluate(node => { node.textContent = 'Another sentence.'; });
+  await expect(page.locator('[data-cloudys-gloss="video-subtitles"] .translation')).toContainText('Another sentence.');
+  await history.getByRole('button', { name: '跳转并重试', exact: true }).click();
+  await expect(page.locator('video')).toHaveJSProperty('currentTime', 0);
+  await page.locator('.ytp-caption-segment').evaluate(node => { node.textContent = 'Welcome to the video.'; });
+  await expect(page.locator('[data-cloudys-gloss="video-subtitles"] .translation')).toContainText('Welcome to the video.');
+  expect(server.calls.flatMap(call => call.texts ?? []).filter(text => text === 'Welcome to the video.')).toHaveLength(2);
+});
+
+test('切回标签页复用完整轨道，随后换语言失败时退回新 CC 而不继续显示旧英语', async ({ extension }) => {
+  const { page, context } = extension; await openPlayer(extension);
+  const toggle = page.getByRole('button', { name: '关闭双语字幕', exact: true });
+  const overlay = page.locator('[data-cloudys-gloss="video-subtitles"]');
+  await page.getByRole('button', { name: '开启双语字幕', exact: true }).click();
+  await expect(toggle).toHaveAttribute('title', /字幕轨道 · 提前翻译/);
+  await context.route('https://www.youtube.com/api/timedtext**', route => route.fulfill({ body: '' }));
+  // Deterministic lifecycle events in the owned fixture, independent of headless
+  // browser tab-focus policy. The production visibility handler is exercised.
+  await page.evaluate(() => {
+    Object.defineProperty(document, 'hidden', { configurable: true, value: true }); document.dispatchEvent(new Event('visibilitychange'));
+    Object.defineProperty(document, 'hidden', { configurable: true, value: false }); document.dispatchEvent(new Event('visibilitychange'));
+  });
+  await expect(toggle).toHaveAttribute('title', /字幕轨道 · 提前翻译/);
+  await page.evaluate(async () => {
+    document.querySelector('.ytp-caption-segment')!.textContent = 'Bonjour le monde.';
+    await fetch('/api/timedtext?v=owned-video&lang=fr&fmt=json3');
+  });
+  await expect(toggle).toHaveAttribute('title', /当前 CC · 实时翻译/);
+  await expect(overlay.locator('.original')).toHaveText('Bonjour le monde.');
+  await expect(overlay.locator('.translation')).toContainText('Bonjour le monde.');
+});
