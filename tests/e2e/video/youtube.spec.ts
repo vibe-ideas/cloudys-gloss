@@ -38,6 +38,105 @@ for (const format of ['JSON3', 'XML'] as const) {
   });
 }
 
+test('播放器原生胶囊样式不污染双语控件，窄屏悬停提示完整且开关不挤动 CC', async ({ extension }, testInfo) => {
+  const { page } = extension;
+  const fixture = youtubeColumnFixture.replace('</style>', `
+.ytp-right-controls{display:flex;height:40px;line-height:56px;gap:0}
+.ytp-button{position:relative;width:48px;height:40px;padding:0;border-radius:40px}
+.ytp-button:before{content:"";position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:48px;height:32px;border-radius:40px}
+.ytp-button:hover:before{background:#ffffff30}
+.ytp-button[aria-pressed=true]:after{content:"";position:absolute;bottom:2px;left:12px;width:24px;height:3px;background:red}
+.ytp-right-controls button{font-size:20px;letter-spacing:3px}
+</style>`);
+  await openPlayer(extension, subtitleTrack, fixture);
+  const toggle = page.locator('[data-cloudys-gloss="video-toggle"]');
+  const history = page.locator('[data-cloudys-gloss="video-history-toggle"]');
+  const group = page.locator('[data-cloudys-gloss="video-controls"]');
+  for (const width of [1440, 420]) {
+    await page.setViewportSize({ width, height: 900 });
+    const before = (await page.locator('.ytp-subtitles-button').boundingBox())!;
+    await toggle.hover();
+    await expect(toggle.locator('.tip')).toBeVisible();
+    const button = (await toggle.boundingBox())!;
+    expect(button.width).toBe(44); expect(button.height).toBe(40);
+    await expect(toggle).toHaveCSS('font-size', '13px');
+    expect(await toggle.evaluate(node => getComputedStyle(node, '::before').content)).toBe('none');
+    const tooltip = (await toggle.locator('.tip').boundingBox())!;
+    const player = (await page.locator('#movie_player').boundingBox())!;
+    expect(tooltip.x).toBeGreaterThanOrEqual(player.x);
+    expect(tooltip.x + tooltip.width).toBeLessThanOrEqual(player.x + player.width);
+    expect(tooltip.y + tooltip.height).toBeLessThan(button.y);
+    await toggle.click();
+    await expect(toggle).toHaveAttribute('aria-pressed', 'true');
+    await expect(toggle.locator('.tip')).toHaveText('关闭双语字幕');
+    await expect(toggle.locator('.tip')).toHaveCSS('opacity', '1');
+    await expect(toggle.locator('.face')).toHaveCSS('color', 'rgb(223, 255, 114)');
+    await expect(history.locator('svg')).toBeVisible();
+    expect((await page.locator('.ytp-subtitles-button').boundingBox())!.x).toBe(before.x);
+    const controls = (await group.boundingBox())!;
+    expect(controls.x + controls.width).toBeLessThanOrEqual(before.x);
+    await page.screenshot({ path: testInfo.outputPath(`player-controls-${width}.png`) });
+    await toggle.click();
+  }
+  await page.locator('.ytp-right-controls').evaluate(node => { (node as HTMLElement).style.visibility = 'hidden'; });
+  await expect(toggle).toBeHidden();
+  await expect(history).toBeHidden();
+  await expect(toggle.locator('.tip')).toBeHidden();
+  await page.locator('.ytp-right-controls').evaluate(node => { (node as HTMLElement).style.visibility = ''; (node as HTMLElement).style.pointerEvents = 'none'; });
+  await expect(toggle).toHaveCSS('pointer-events', 'none');
+  await page.locator('.ytp-right-controls').evaluate(node => { (node as HTMLElement).style.pointerEvents = ''; });
+  await expect(toggle).toBeVisible();
+  await expect(toggle).toHaveCSS('pointer-events', 'auto');
+});
+
+test('键盘切换双语和记录只激活一次、不暂停视频，关闭侧栏后焦点回到入口', async ({ extension }) => {
+  const { page } = extension;
+  const fixture = youtubeColumnFixture.replace('const cc =', `
+    for (const type of ['keydown','keyup']) player.addEventListener(type, event => {
+      if (event.key === ' ' || event.key === 'Enter') { player.dataset.shortcut = 'leaked'; video.pause(); }
+      if (event.key === 'ArrowRight') player.dataset.seekShortcut = 'received';
+    });
+    const cc =`);
+  await openPlayer(extension, subtitleTrack, fixture);
+  await page.locator('video').evaluate(video => (video as HTMLVideoElement).play());
+  const toggle = page.locator('[data-cloudys-gloss="video-toggle"]');
+  const history = page.locator('[data-cloudys-gloss="video-history-toggle"]');
+  await toggle.focus();
+  await toggle.press('Space');
+  await expect(toggle).toHaveAttribute('aria-pressed', 'true');
+  await toggle.press('Enter');
+  await expect(toggle).toHaveAttribute('aria-pressed', 'false');
+  await page.keyboard.press('Tab');
+  await expect(history).toBeFocused();
+  await history.press('Enter');
+  await expect(history).toHaveAttribute('aria-expanded', 'true');
+  await expect(toggle).toHaveAttribute('aria-pressed', 'true');
+  const sidebar = page.locator('[data-cloudys-gloss="video-history"]');
+  await sidebar.getByRole('button', { name: '关闭字幕记录', exact: true }).press('Enter');
+  await expect(history).toBeFocused();
+  await expect(history).toHaveAttribute('aria-expanded', 'false');
+  await expect(history.locator('.tip')).toBeVisible();
+  await history.press('Escape');
+  await expect(history.locator('.tip')).toBeHidden();
+  await expect(page.locator('video')).toHaveJSProperty('paused', false);
+  await expect(page.locator('#movie_player')).not.toHaveAttribute('data-shortcut');
+  await history.press('ArrowRight');
+  await expect(page.locator('#movie_player')).toHaveAttribute('data-seek-shortcut', 'received');
+});
+
+test('侧栏打开时关闭双语，再点击记录一次即可恢复字幕和侧栏', async ({ extension }) => {
+  const { page } = extension;
+  await openPlayer(extension, subtitleTrack, youtubeColumnFixture);
+  const history = page.locator('[data-cloudys-gloss="video-history"]');
+  await page.getByRole('button', { name: '打开字幕记录', exact: true }).click();
+  await expect(history).toBeVisible();
+  await page.getByRole('button', { name: '关闭双语字幕', exact: true }).click();
+  await expect(history).toBeHidden();
+  await page.getByRole('button', { name: '打开字幕记录', exact: true }).click();
+  await expect(history).toBeVisible();
+  await expect(page.getByRole('button', { name: '关闭双语字幕', exact: true })).toHaveAttribute('aria-pressed', 'true');
+});
+
 test('长句双语字幕在桌面和窄播放器中完整换行，不遮挡播放控制栏', async ({ extension }, testInfo) => {
   const { page, server } = extension;
   const source = 'Instead of putting every tool into the system prompt, the agent can search for the tools it needs, load them when they become relevant, and keep the context window focused on the current task.';
@@ -264,7 +363,7 @@ test('完整字幕首次为空后自动恢复轨道并提前翻译，不需要�
   let reads = 0;
   await context.route('https://www.youtube.com/api/timedtext**', route => route.fulfill({ contentType: 'application/json', body: ++reads <= 2 ? '' : subtitleTrack }));
   await page.getByRole('button', { name: '开启双语字幕', exact: true }).click();
-  await expect(page.getByRole('button', { name: '关闭双语字幕', exact: true })).toHaveAttribute('title', /字幕轨道 · 提前翻译/);
+  await expect(page.getByRole('button', { name: '关闭双语字幕', exact: true })).toHaveAttribute('aria-description', /字幕轨道 · 提前翻译/);
   await expect.poll(() => server.calls.flatMap(call => call.texts ?? [])).toContain('Sentence 24.');
   expect(reads).toBeLessThanOrEqual(6);
 });
@@ -311,7 +410,7 @@ test('切回标签页复用完整轨道，随后换语言失败时退回新 CC �
   const toggle = page.getByRole('button', { name: '关闭双语字幕', exact: true });
   const overlay = page.locator('[data-cloudys-gloss="video-subtitles"]');
   await page.getByRole('button', { name: '开启双语字幕', exact: true }).click();
-  await expect(toggle).toHaveAttribute('title', /字幕轨道 · 提前翻译/);
+  await expect(toggle).toHaveAttribute('aria-description', /字幕轨道 · 提前翻译/);
   await context.route('https://www.youtube.com/api/timedtext**', route => route.fulfill({ body: '' }));
   // Deterministic lifecycle events in the owned fixture, independent of headless
   // browser tab-focus policy. The production visibility handler is exercised.
@@ -319,12 +418,12 @@ test('切回标签页复用完整轨道，随后换语言失败时退回新 CC �
     Object.defineProperty(document, 'hidden', { configurable: true, value: true }); document.dispatchEvent(new Event('visibilitychange'));
     Object.defineProperty(document, 'hidden', { configurable: true, value: false }); document.dispatchEvent(new Event('visibilitychange'));
   });
-  await expect(toggle).toHaveAttribute('title', /字幕轨道 · 提前翻译/);
+  await expect(toggle).toHaveAttribute('aria-description', /字幕轨道 · 提前翻译/);
   await page.evaluate(async () => {
     document.querySelector('.ytp-caption-segment')!.textContent = 'Bonjour le monde.';
     await fetch('/api/timedtext?v=owned-video&lang=fr&fmt=json3');
   });
-  await expect(toggle).toHaveAttribute('title', /当前 CC · 实时翻译/);
+  await expect(toggle).toHaveAttribute('aria-description', /当前 CC · 实时翻译/);
   await expect(overlay.locator('.original')).toHaveText('Bonjour le monde.');
   await expect(overlay.locator('.translation')).toContainText('Bonjour le monde.');
 });

@@ -1,5 +1,6 @@
 import { render } from 'preact';
 import { SubtitleSidebar } from './sidebar';
+import { createSubtitleControls, labelSubtitleControl } from './controls';
 import { injectScript } from 'wxt/utils/inject-script';
 import { OWN } from '../page/blocks';
 import { captionText, captionPhrases, parseCaptions } from './captions';
@@ -30,6 +31,7 @@ export class YouTubeSubtitles {
   private video?: HTMLVideoElement;
   private button?: HTMLButtonElement;
   private historyButton?: HTMLButtonElement;
+  private controlsHost?: HTMLElement;
   private sidebar?: SubtitleSidebar;
   private sidebarOpen = false;
   private historyTrackBody = '';
@@ -84,23 +86,21 @@ export class YouTubeSubtitles {
       return;
     }
     // Discard orphaned DOM left by a discarded extension realm after reload.
-    for (const node of player.querySelectorAll(`[${OWN}="video-toggle"],[${OWN}="video-subtitles"],[${OWN}="video-style"]`)) node.remove();
+    for (const node of player.querySelectorAll(`[${OWN}="video-controls"],[${OWN}="video-toggle"],[${OWN}="video-subtitles"],[${OWN}="video-style"]`)) node.remove();
     for (const node of document.querySelectorAll(`[${OWN}="video-history"],[${OWN}="video-history-toggle"],[${OWN}="video-history-style"]`)) node.remove();
     player.removeAttribute('data-cloudys-history'); player.style.removeProperty('--cloudys-history-width');
     player.removeAttribute('data-cloudys-subtitles');
     this.id = id; this.player = player; this.video = video; this.binding = new AbortController();
     const signal = this.binding.signal;
-    this.button = document.createElement('button'); this.button.setAttribute(OWN, 'video-toggle'); this.button.className = 'ytp-button';
-    this.button.textContent = '双语'; this.button.style.cssText = 'width:48px;font:600 13px system-ui;vertical-align:top;color:inherit';
+    const buttons = createSubtitleControls(signal);
+    this.controlsHost = buttons.host; this.button = buttons.button; this.historyButton = buttons.historyButton;
     this.button.addEventListener('click', () => { this.enabled = !this.enabled; if (this.enabled) this.start(); else this.stop(); }, { signal });
-    this.historyButton = document.createElement('button'); this.historyButton.setAttribute(OWN, 'video-history-toggle'); this.historyButton.className = 'ytp-button';
-    this.historyButton.textContent = '记录'; this.historyButton.style.cssText = 'width:48px;font:500 13px system-ui;vertical-align:top;color:inherit';
     this.historyButton.addEventListener('click', () => {
-      this.sidebarOpen = !this.sidebarOpen;
+      this.sidebarOpen = !this.enabled || !this.sidebarOpen;
       if (this.sidebarOpen && !this.enabled) { this.enabled = true; this.start(); }
       this.draw();
     }, { signal });
-    controls.prepend(this.button, this.historyButton);
+    controls.prepend(this.controlsHost);
     this.host = document.createElement('div'); this.host.setAttribute(OWN, 'video-subtitles');
     const shadow = this.host.attachShadow({ mode: 'open' }); const style = document.createElement('style'); style.textContent = css;
     this.mount = document.createElement('div'); shadow.append(style, this.mount); player.append(this.host);
@@ -163,7 +163,7 @@ export class YouTubeSubtitles {
     this.ccEnabledByUs = false; this.draw();
   }
   private unbind() {
-    this.stop(); this.binding?.abort(); this.button?.remove(); this.historyButton?.remove(); this.sidebar?.destroy(); this.sidebar = undefined; this.style?.remove();
+    this.stop(); this.binding?.abort(); this.controlsHost?.remove(); this.controlsHost = undefined; this.sidebar?.destroy(); this.sidebar = undefined; this.style?.remove();
     this.scheduler.history.clear(); this.historyTrackBody = ''; this.trackBody = ''; this.trackIdentity = ''; this.historyRetry = undefined; this.historyButton = undefined;
     if (this.mount) render(null, this.mount); this.host?.remove();
     this.player = undefined; this.video = undefined; this.mount = undefined; this.button = undefined; this.id = ''; this.lastDraw = '';
@@ -221,15 +221,14 @@ export class YouTubeSubtitles {
   }
   private draw() {
     if (this.button) {
-      this.button.setAttribute('aria-label', this.enabled ? '关闭双语字幕' : '开启双语字幕');
-      this.button.setAttribute('aria-pressed', String(this.enabled)); this.button.title = this.enabled ? `关闭 Cloudy’s Gloss 双语字幕 · ${this.track ? '字幕轨道 · 提前翻译' : '当前 CC · 实时翻译'}` : 'Cloudy’s Gloss 双语字幕 · 使用当前翻译模型';
-      this.button.style.color = this.enabled ? '#dfff72' : 'inherit';
+      labelSubtitleControl(this.button, this.enabled ? '关闭双语字幕' : '开启双语字幕');
+      this.button.setAttribute('aria-pressed', String(this.enabled));
+      this.button.setAttribute('aria-description', this.enabled ? (this.track ? '字幕轨道 · 提前翻译' : '当前 CC · 实时翻译') : '使用当前翻译模型');
     }
     const historyVisible = this.enabled && this.sidebarOpen && !document.hidden && !this.player?.classList.contains('ad-showing');
     if (this.historyButton) {
-      this.historyButton.setAttribute('aria-label', historyVisible ? '收起字幕记录' : '打开字幕记录');
-      this.historyButton.setAttribute('aria-expanded', String(!!historyVisible)); this.historyButton.title = '在右侧回看双语字幕';
-      this.historyButton.style.color = historyVisible ? '#dfff72' : 'inherit';
+      labelSubtitleControl(this.historyButton, historyVisible ? '收起字幕记录' : '打开字幕记录');
+      this.historyButton.setAttribute('aria-expanded', String(!!historyVisible));
     }
     this.sidebar?.update(!!historyVisible, this.track ? `完整字幕已就绪 · 已备好后续 ${this.scheduler.bufferSeconds()} 秒` : '实时字幕模式 · 尚未拿到完整字幕，无法预译后文', !this.track);
     if (!this.mount) return;
