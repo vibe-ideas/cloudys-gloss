@@ -9,6 +9,7 @@ export class SubtitleScheduler {
   private captions: Caption[] = [];
   private cache = new Map<string, string>();
   private errors = new Map<string, string>();
+  private deferred = new Set<string>();
   private pending?: { id: string; texts: string[]; generation: number; provisional: Set<string> };
   private generation = 0;
   private time = 0;
@@ -29,8 +30,13 @@ export class SubtitleScheduler {
     if (seek || Math.abs(time - this.time) > 5) this.abort();
     this.time = time; this.rate = Math.max(1, Math.min(rate, 3)); this.draw(); this.pump();
   }
-  retry() { const text = this.current(); this.errors.delete(text); this.failureUntil = 0; this.draw(); this.pump(); }
-  reset() { this.abort(); this.captions = []; this.live = ''; this.errors.clear(); this.failureUntil = 0; this.enabled = false; this.draw(); }
+  retry() {
+    const text = this.current();
+    if (!text || !this.enabled) return;
+    if (this.pending && !this.pending.texts.includes(text)) this.abort();
+    this.errors.delete(text); this.failureUntil = 0; this.draw(); this.pump();
+  }
+  reset() { this.abort(); this.captions = []; this.live = ''; this.errors.clear(); this.deferred.clear(); this.failureUntil = 0; this.enabled = false; this.draw(); }
   destroy() { this.reset(); this.cache.clear(); }
   private current() { return this.captions.length ? this.captions[captionIndex(this.captions, this.time)]?.text ?? '' : this.live; }
   private abort() { this.generation++; if (this.pending) { for (const text of this.pending.provisional) this.cache.delete(text); this.client.cancel(this.pending.id); } this.pending = undefined; }
@@ -54,7 +60,7 @@ export class SubtitleScheduler {
       }
       for (let i = index; i < Math.min(this.captions.length, index + 64); i++) {
         const cue = this.captions[i]!; if (cue.start > this.time + 120 * this.rate) break;
-        if (missing(cue.text)) { firstMissing = Math.min(firstMissing, cue.start); candidates.push(cue.text); }
+        if (missing(cue.text) && !this.deferred.has(cue.text)) { firstMissing = Math.min(firstMissing, cue.start); candidates.push(cue.text); }
       }
       // Once buffered, refill in batches instead of paying one API request for
       // every new cue at the far edge. Refill early when less than 30 s remains.
@@ -66,20 +72,35 @@ export class SubtitleScheduler {
     const job = { id: crypto.randomUUID(), texts, generation: this.generation, provisional: new Set<string>() }; this.pending = job;
     const active = () => this.enabled && job.generation === this.generation;
     const put = (text: string, translation: string) => {
-      this.cache.delete(text); this.cache.set(text, translation);
+      this.cache.delete(text); this.cache.set(text, translation); this.deferred.delete(text);
       if (this.cache.size > 500) this.cache.delete(this.cache.keys().next().value!);
     };
     void this.client.translate(job.id, texts, (index, text, confirmed) => {
       if (active() && texts[index]) {
         if (confirmed) job.provisional.delete(texts[index]!); else job.provisional.add(texts[index]!);
-        put(texts[index]!, text); this.draw();
+        // An empty item revokes an invalid provisional translation. It is not a cache hit.
+        if (text) put(texts[index]!, text); else this.cache.delete(texts[index]!);
+        this.draw();
       }
     }, { priority: texts.includes(current) ? 'visible' : 'prefetch' }).then(values => {
       if (active()) values.forEach((value, index) => put(texts[index]!, value));
     }).catch((error: unknown) => {
       if (active()) {
         this.failureUntil = Date.now() + 30000;
-        for (const text of texts) { this.cache.delete(text); this.errors.set(text, error instanceof Error ? error.message : '字幕翻译失败'); if (this.errors.size > 500) this.errors.delete(this.errors.keys().next().value!); }
+        for (const text of texts) {
+          // Confirmed items (including background cache hits) survive a sibling's failure.
+          if (this.cache.has(text) && !job.provisional.has(text)) continue;
+          this.cache.delete(text);
+          if (texts.length > 1) {
+            // Do not label a whole batch as failed or retry it endlessly. Each missing
+            // cue gets one independent attempt when it becomes the current cue.
+            this.deferred.add(text);
+            if (this.deferred.size > 500) this.deferred.delete(this.deferred.values().next().value!);
+          } else {
+            this.errors.set(text, error instanceof Error ? error.message : '字幕翻译失败');
+            if (this.errors.size > 500) this.errors.delete(this.errors.keys().next().value!);
+          }
+        }
       }
     }).finally(() => {
       if (!active()) return;

@@ -69,4 +69,46 @@ describe('双语字幕随播放位置调度', () => {
     scheduler.setTrack([{ start: 0, end: 5, text: '另一条字幕轨道。' }]); scheduler.tick(0);
     jobs[0]!.item(0, '旧轨道', true); expect(line()?.original).toBe('另一条字幕轨道。'); expect(line()?.translated).toBe('');
   });
+  it('批量预翻译失败后保留已确认字幕，未确认句到播放时单独补译', async () => {
+    const { scheduler, jobs, line } = setup();
+    scheduler.setTrack(Array.from({ length: 4 }, (_, i) => ({ start: i * 5, end: (i + 1) * 5, text: `Sentence ${i}.` })));
+    scheduler.tick(0); jobs[0]!.resolve(['首句。']); await flush();
+    expect(jobs[1]!.texts).toEqual(['Sentence 1.', 'Sentence 2.', 'Sentence 3.']);
+    jobs[1]!.item(0, '已确认。', true); jobs[1]!.item(1, '未确认。', false);
+    jobs[1]!.reject(new Error('模型输出校验失败')); await flush();
+    scheduler.tick(5); expect(line()?.translated).toBe('已确认。'); expect(line()?.error).toBe('');
+    scheduler.tick(10); expect(jobs[2]!.texts).toEqual(['Sentence 2.']);
+    expect(line()?.translated).toBe(''); expect(line()?.pending).toBe(true); expect(line()?.error).toBe('');
+    jobs[2]!.resolve(['独立补译。']); await flush(); expect(line()?.translated).toBe('独立补译。');
+    scheduler.destroy();
+  });
+  it('批量失败后的单句补译仍失败时显示原因，重复播放时不自动重试', async () => {
+    const { scheduler, jobs, line } = setup();
+    scheduler.setTrack(Array.from({ length: 3 }, (_, i) => ({ start: i * 5, end: (i + 1) * 5, text: `Sentence ${i}.` })));
+    scheduler.tick(0); jobs[0]!.resolve(['首句。']); await flush();
+    jobs[1]!.reject(new Error('批量失败')); await flush();
+    scheduler.tick(5); expect(jobs[2]!.texts).toEqual(['Sentence 1.']);
+    jobs[2]!.reject(new Error('单句仍失败')); await flush(); scheduler.tick(6); scheduler.tick(7);
+    expect(line()?.error).toBe('单句仍失败'); expect(jobs).toHaveLength(3);
+    scheduler.retry(); expect(jobs[3]!.texts).toEqual(['Sentence 1.']); scheduler.destroy();
+  });
+  it('模型撤回不合格的流式译文后恢复等待状态，不把空译文当作缓存命中', () => {
+    const { scheduler, jobs, line } = setup(); scheduler.setLive('Read this sentence.');
+    jobs[0]!.item(0, '临时译文。', false); expect(line()?.pending).toBe(false);
+    jobs[0]!.item(0, '', false); expect(line()?.translated).toBe(''); expect(line()?.pending).toBe(true);
+    scheduler.destroy();
+  });
+  it('当前句失败时点击重试会取消后续预翻译，立即单独请求当前句', async () => {
+    const { scheduler, jobs, client, line } = setup();
+    scheduler.setTrack(Array.from({ length: 4 }, (_, i) => ({ start: i * 5, end: (i + 1) * 5, text: `Sentence ${i}.` })));
+    scheduler.tick(0); jobs[0]!.reject(new Error('当前句失败')); await flush();
+    const clock = vi.spyOn(Date, 'now').mockReturnValue(Date.now() + 31000);
+    try { scheduler.tick(1); } finally { clock.mockRestore(); }
+    expect(jobs[1]!.texts).toEqual(['Sentence 1.', 'Sentence 2.', 'Sentence 3.']);
+    scheduler.retry(); expect(client.cancel).toHaveBeenCalledWith(jobs[1]!.id);
+    expect(jobs[2]!.texts).toEqual(['Sentence 0.']); expect(line()?.error).toBe('');
+    jobs[1]!.item(0, '过期响应。', true); jobs[2]!.resolve(['重试成功。']); await flush();
+    expect(line()?.translated).toBe('重试成功。'); scheduler.destroy();
+  });
+
 });
