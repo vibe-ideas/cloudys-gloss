@@ -280,11 +280,12 @@ test('右侧字幕记录保留大视频尺寸，回看双语历史和点击时�
   await page.evaluate(() => (window as unknown as { setClock: (time: number) => void }).setClock(5));
   await expect(history.locator('[aria-current="true"] .en')).toHaveText('Sentence 1.');
   await expect(history.locator('.row')).toHaveCount(2);
-  const calls = server.calls.length;
+  const cachedRequests = () => server.calls.flatMap(call => call.texts ?? []).filter(text => ['Welcome to the video.', 'Sentence 1.'].includes(text));
+  const calls = cachedRequests();
   await history.getByRole('button', { name: '跳转到 00:00', exact: true }).click();
   await expect(page.locator('video')).toHaveJSProperty('currentTime', 0);
   await expect(history.locator('[aria-current="true"] .zh')).toHaveText('欢迎观看这个视频。');
-  expect(server.calls.length).toBe(calls);
+  expect(cachedRequests()).toEqual(calls);
   await page.screenshot({ path: testInfo.outputPath('history-right-column.png') });
   await page.evaluate(() => document.documentElement.removeAttribute('dark'));
   await expect(history).toHaveAttribute('data-theme', 'light');
@@ -293,7 +294,82 @@ test('右侧字幕记录保留大视频尺寸，回看双语历史和点击时�
   await history.getByRole('button', { name: '关闭字幕记录', exact: true }).click();
   await expect(history).toBeHidden(); await expect(player).not.toHaveAttribute('data-cloudys-history');
   await page.getByRole('button', { name: '打开字幕记录', exact: true }).click();
-  await expect(history.locator('.zh').first()).toHaveText('欢迎观看这个视频。'); expect(server.calls.length).toBe(calls);
+  await expect(history.locator('.zh').first()).toHaveText('欢迎观看这个视频。'); expect(cachedRequests()).toEqual(calls);
+});
+
+for (const mode of ['普通页面', '全屏'] as const) {
+  test(`${mode}拖动字幕记录边缘实时调宽，关闭重开保留宽度且双击恢复默认`, async ({ extension }, testInfo) => {
+    const { page } = extension;
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await openPlayer(extension, subtitleTrack, youtubeColumnFixture);
+    if (mode === '全屏') {
+      await page.getByRole('button', { name: '全屏', exact: true }).click();
+      await expect.poll(() => page.evaluate(() => document.fullscreenElement?.id)).toBe('movie_player');
+    }
+    await page.getByRole('button', { name: '打开字幕记录', exact: true }).click();
+    const history = page.locator('[data-cloudys-gloss="video-history"]');
+    const grip = history.getByRole('separator', { name: '调整字幕记录宽度' });
+    await expect(grip).toBeVisible();
+    const original = (await history.boundingBox())!.width;
+    const handle = (await grip.boundingBox())!;
+    await page.mouse.move(handle.x + handle.width / 2, handle.y + handle.height / 2);
+    await page.mouse.down();
+    await page.mouse.move(handle.x + handle.width / 2 - 100, handle.y + handle.height / 2, { steps: 12 });
+    await expect.poll(async () => Math.round((await history.boundingBox())!.width)).toBe(Math.round(original + 100));
+    await page.mouse.up();
+    const video = (await page.locator('video').boundingBox())!;
+    const pane = (await history.boundingBox())!;
+    const overlay = (await page.locator('[data-cloudys-gloss="video-subtitles"]').boundingBox())!;
+    expect(video.x + video.width).toBeLessThanOrEqual(pane.x + 1);
+    expect(overlay.x + overlay.width).toBeLessThanOrEqual(pane.x + 1);
+    await page.screenshot({ path: testInfo.outputPath('history-resized.png') });
+    await history.getByRole('button', { name: '关闭字幕记录', exact: true }).click();
+    await expect(page.locator('ytd-watch-flexy')).not.toHaveAttribute('data-cloudys-history-column');
+    await page.getByRole('button', { name: '打开字幕记录', exact: true }).click();
+    await expect(history).toBeVisible();
+    await expect.poll(async () => Math.round((await history.boundingBox())!.width)).toBe(Math.round(original + 100));
+    // Stock Firefox's BiDi driver ignores clickCount and emits two click:1
+    // events for dblclick(). Exercise its DOM handler explicitly; Chromium
+    // exercises native double-click input. Both also exercise real key input.
+    if (testInfo.project.name === 'firefox') await grip.dispatchEvent('dblclick', { detail: 2 });
+    else await grip.dblclick();
+    await expect.poll(async () => Math.round((await history.boundingBox())!.width)).toBe(Math.round(original));
+  });
+}
+
+test('键盘调宽字幕记录遵守宽度边界，取消拖动还原，窄窗口自动停用调整柄', async ({ extension }) => {
+  const { page } = extension;
+  await openPlayer(extension, subtitleTrack, youtubeColumnFixture);
+  await page.getByRole('button', { name: '打开字幕记录', exact: true }).click();
+  const history = page.locator('[data-cloudys-gloss="video-history"]');
+  const grip = history.getByRole('separator', { name: '调整字幕记录宽度' });
+  await expect(grip).toBeVisible();
+  const initial = Number(await grip.getAttribute('aria-valuenow'));
+  await grip.press('ArrowLeft');
+  await expect(grip).toHaveAttribute('aria-valuenow', String(initial + 20));
+  await grip.press('End');
+  await expect.poll(async () => await grip.getAttribute('aria-valuenow')).toBe(await grip.getAttribute('aria-valuemax'));
+  const handle = (await grip.boundingBox())!;
+  await page.mouse.move(handle.x + 6, handle.y + 80); await page.mouse.down();
+  await page.mouse.move(handle.x + 106, handle.y + 80, { steps: 5 });
+  await page.keyboard.press('Escape'); await page.mouse.up();
+  await expect.poll(async () => await grip.getAttribute('aria-valuenow')).toBe(await grip.getAttribute('aria-valuemax'));
+  await grip.press('Home');
+  await expect.poll(async () => await grip.getAttribute('aria-valuenow')).toBe(await grip.getAttribute('aria-valuemin'));
+  await grip.press('Enter');
+  await expect(grip).toHaveAttribute('aria-valuenow', String(initial));
+  await page.setViewportSize({ width: 700, height: 900 });
+  await expect(history).toHaveAttribute('data-mode', 'below'); await expect(grip).toBeHidden();
+  await expect(page.locator('ytd-watch-flexy')).not.toHaveAttribute('data-cloudys-history-column');
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await expect(history).toHaveAttribute('data-mode', 'column'); await expect(grip).toBeVisible();
+  await page.evaluate(() => {
+    document.dispatchEvent(new Event('yt-navigate-start')); window.history.pushState({}, '', '/watch?v=resized-next-video');
+    document.dispatchEvent(new Event('yt-navigate-finish'));
+  });
+  await expect(history).toHaveCount(1); await expect(grip).toBeVisible();
+  await expect(grip).toHaveAttribute('aria-valuenow', String(initial));
+  await expect(page.locator('ytd-watch-flexy')).not.toHaveAttribute('data-cloudys-history-column');
 });
 
 test('影院及全屏字幕侧栏留在视频右侧，关闭后恢复完整画面和字幕区域', async ({ extension }, testInfo) => {
