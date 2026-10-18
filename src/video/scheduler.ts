@@ -10,7 +10,9 @@ export class SubtitleScheduler {
   private cache = new Map<string, string>();
   private errors = new Map<string, string>();
   private deferred = new Set<string>();
-  private pending?: { id: string; texts: string[]; generation: number; provisional: Set<string> };
+  private retries = new Map<string, { failures: number; due: number }>();
+  private retryTimer?: ReturnType<typeof setTimeout>;
+  private pending?: { id: string; texts: string[]; generation: number; retrying: boolean; provisional: Set<string> };
   private generation = 0;
   private time = 0;
   private rate = 1;
@@ -28,25 +30,35 @@ export class SubtitleScheduler {
   tick(time: number, seek = false, rate = 1) {
     if (!this.enabled) return;
     if (seek || Math.abs(time - this.time) > 5) this.abort();
-    this.time = time; this.rate = Math.max(1, Math.min(rate, 3)); this.draw(); this.pump();
+    this.time = time; this.rate = Math.max(1, Math.min(rate, 3));
+    if (this.pending?.retrying && !this.pending.texts.includes(this.current())) this.abort();
+    this.draw(); this.pump();
   }
   retry() {
     const text = this.current();
     if (!text || !this.enabled) return;
     if (this.pending && !this.pending.texts.includes(text)) this.abort();
-    this.errors.delete(text); this.failureUntil = 0; this.draw(); this.pump();
+    this.errors.delete(text); this.retries.delete(text); this.failureUntil = 0; this.draw(); this.pump();
   }
-  reset() { this.abort(); this.captions = []; this.live = ''; this.errors.clear(); this.deferred.clear(); this.failureUntil = 0; this.enabled = false; this.draw(); }
+  reset() { this.abort(); this.captions = []; this.live = ''; this.errors.clear(); this.deferred.clear(); this.retries.clear(); this.failureUntil = 0; this.enabled = false; this.draw(); }
   destroy() { this.reset(); this.cache.clear(); }
   private current() { return this.captions.length ? this.captions[captionIndex(this.captions, this.time)]?.text ?? '' : this.live; }
-  private abort() { this.generation++; if (this.pending) { for (const text of this.pending.provisional) this.cache.delete(text); this.client.cancel(this.pending.id); } this.pending = undefined; }
+  private abort() { clearTimeout(this.retryTimer); this.retryTimer = undefined; this.generation++; if (this.pending) { for (const text of this.pending.provisional) this.cache.delete(text); this.client.cancel(this.pending.id); } this.pending = undefined; }
   private draw() {
     const original = this.enabled ? this.current() : '';
     this.changed({ original, translated: this.cache.get(original) ?? '', pending: !!original && needsChineseTranslation(original) && !this.cache.has(original) && !this.errors.has(original), error: this.errors.get(original) ?? '' });
   }
   private pump() {
     if (!this.enabled || this.pending) return;
+    clearTimeout(this.retryTimer); this.retryTimer = undefined;
     const current = this.current();
+    const retry = this.retries.get(current);
+    if (retry && !this.cache.has(current) && retry.due > Date.now()) {
+      // A single wake-up also works while paused. Always re-evaluate the current
+      // cue when it fires, so a timer cannot resurrect an old subtitle.
+      this.retryTimer = setTimeout(() => { this.retryTimer = undefined; this.pump(); }, retry.due - Date.now());
+      return;
+    }
     const missing = (text: string) => text && !this.cache.has(text) && !this.errors.has(text) && needsChineseTranslation(text);
     const urgent = !!missing(current);
     const candidates: string[] = [];
@@ -60,7 +72,7 @@ export class SubtitleScheduler {
       }
       for (let i = index; i < Math.min(this.captions.length, index + 64); i++) {
         const cue = this.captions[i]!; if (cue.start > this.time + 120 * this.rate) break;
-        if (missing(cue.text) && !this.deferred.has(cue.text)) { firstMissing = Math.min(firstMissing, cue.start); candidates.push(cue.text); }
+        if (missing(cue.text) && !this.deferred.has(cue.text) && !this.retries.has(cue.text)) { firstMissing = Math.min(firstMissing, cue.start); candidates.push(cue.text); }
       }
       // Once buffered, refill in batches instead of paying one API request for
       // every new cue at the far edge. Refill early when less than 30 s remains.
@@ -69,7 +81,7 @@ export class SubtitleScheduler {
     let chars = 0;
     const texts = [...new Set(candidates)].filter(text => { chars += text.length; return chars <= 2400; }).slice(0, urgent ? 1 : 8);
     if (!texts.length) return;
-    const job = { id: crypto.randomUUID(), texts, generation: this.generation, provisional: new Set<string>() }; this.pending = job;
+    const job = { id: crypto.randomUUID(), texts, generation: this.generation, retrying: this.retries.has(current) && texts.includes(current), provisional: new Set<string>() }; this.pending = job;
     const active = () => this.enabled && job.generation === this.generation;
     const put = (text: string, translation: string) => {
       this.cache.delete(text); this.cache.set(text, translation); this.deferred.delete(text);
@@ -77,13 +89,13 @@ export class SubtitleScheduler {
     };
     void this.client.translate(job.id, texts, (index, text, confirmed) => {
       if (active() && texts[index]) {
-        if (confirmed) job.provisional.delete(texts[index]!); else job.provisional.add(texts[index]!);
+        if (confirmed) { job.provisional.delete(texts[index]!); this.retries.delete(texts[index]!); } else job.provisional.add(texts[index]!);
         // An empty item revokes an invalid provisional translation. It is not a cache hit.
         if (text) put(texts[index]!, text); else this.cache.delete(texts[index]!);
         this.draw();
       }
     }, { priority: texts.includes(current) ? 'visible' : 'prefetch' }).then(values => {
-      if (active()) values.forEach((value, index) => put(texts[index]!, value));
+      if (active()) values.forEach((value, index) => { put(texts[index]!, value); this.retries.delete(texts[index]!); });
     }).catch((error: unknown) => {
       if (active()) {
         this.failureUntil = Date.now() + 30000;
@@ -97,8 +109,19 @@ export class SubtitleScheduler {
             this.deferred.add(text);
             if (this.deferred.size > 500) this.deferred.delete(this.deferred.values().next().value!);
           } else {
-            this.errors.set(text, error instanceof Error ? error.message : '字幕翻译失败');
-            if (this.errors.size > 500) this.errors.delete(this.errors.keys().next().value!);
+            const message = error instanceof Error ? error.message : '字幕翻译失败';
+            const failures = (this.retries.get(text)?.failures ?? 0) + 1;
+            // Configuration/authentication errors cannot recover by resending.
+            const permanent = /HTTP (?:400|401|403|404|422)\b|扩展连接已失效/.test(message);
+            if (!permanent && failures <= 2) {
+              const delay = /HTTP 429\b/.test(message) ? failures * 2000 : failures === 1 ? 500 : 1500;
+              this.retries.set(text, { failures, due: Date.now() + delay });
+              if (this.retries.size > 500) this.retries.delete(this.retries.keys().next().value!);
+            } else {
+              this.retries.delete(text);
+              this.errors.set(text, message);
+              if (this.errors.size > 500) this.errors.delete(this.errors.keys().next().value!);
+            }
           }
         }
       }

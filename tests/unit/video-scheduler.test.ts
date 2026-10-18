@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { SubtitleScheduler, type SubtitleClient, type SubtitleLine } from '../../src/video/scheduler';
 
 function setup() {
@@ -8,6 +8,7 @@ function setup() {
   const scheduler = new SubtitleScheduler(client, value => { line = value; });
   return { scheduler, client, jobs, line: () => line };
 }
+afterEach(() => { vi.useRealTimers(); });
 const flush = async () => { await Promise.resolve(); await Promise.resolve(); await Promise.resolve(); };
 describe('双语字幕随播放位置调度', () => {
   it('当前句优先，小批预取而非一次翻完整视频，首句流式到达立即显示', async () => {
@@ -52,12 +53,12 @@ describe('双语字幕随播放位置调度', () => {
     expect(jobs).toHaveLength(1); expect(line()?.pending).toBe(false);
     scheduler.setLive('Read this sentence.'); expect(line()?.translated).toBe('读这句话。'); expect(jobs).toHaveLength(1);
   });
-  it('字幕失败展示原因且不会自动重试风暴，点击重试后只恢复当前句', async () => {
+  it('字幕等待自动重试时手动重试可立即恢复当前句', async () => {
     const { scheduler, jobs, line } = setup(); scheduler.setTrack([]); scheduler.setLive('Try again.');
     jobs[0]!.reject(new Error('模型连接失败')); await flush(); scheduler.tick(0); scheduler.tick(1);
-    expect(line()?.error).toBe('模型连接失败'); expect(jobs).toHaveLength(1);
+    expect(line()?.error).toBe(''); expect(line()?.pending).toBe(true); expect(jobs).toHaveLength(1);
     scheduler.retry(); expect(jobs).toHaveLength(2); jobs[1]!.resolve(['再试一次。']); await flush();
-    expect(line()?.translated).toBe('再试一次。'); expect(line()?.error).toBe('');
+    expect(line()?.translated).toBe('再试一次。'); expect(line()?.error).toBe(''); scheduler.destroy();
   });
   it('取消的未确认流式字幕不留在缓存，重新开启后会重新请求', () => {
     const { scheduler, jobs, line } = setup(); scheduler.setTrack([]); scheduler.setLive('Read again.');
@@ -82,14 +83,14 @@ describe('双语字幕随播放位置调度', () => {
     jobs[2]!.resolve(['独立补译。']); await flush(); expect(line()?.translated).toBe('独立补译。');
     scheduler.destroy();
   });
-  it('批量失败后的单句补译仍失败时显示原因，重复播放时不自动重试', async () => {
+  it('批量失败后的单句补译遇到密钥错误时直接提示，允许修正后手动重试', async () => {
     const { scheduler, jobs, line } = setup();
     scheduler.setTrack(Array.from({ length: 3 }, (_, i) => ({ start: i * 5, end: (i + 1) * 5, text: `Sentence ${i}.` })));
     scheduler.tick(0); jobs[0]!.resolve(['首句。']); await flush();
     jobs[1]!.reject(new Error('批量失败')); await flush();
     scheduler.tick(5); expect(jobs[2]!.texts).toEqual(['Sentence 1.']);
-    jobs[2]!.reject(new Error('单句仍失败')); await flush(); scheduler.tick(6); scheduler.tick(7);
-    expect(line()?.error).toBe('单句仍失败'); expect(jobs).toHaveLength(3);
+    jobs[2]!.reject(new Error('模型服务返回 HTTP 401')); await flush(); scheduler.tick(6); scheduler.tick(7);
+    expect(line()?.error).toBe('模型服务返回 HTTP 401'); expect(jobs).toHaveLength(3);
     scheduler.retry(); expect(jobs[3]!.texts).toEqual(['Sentence 1.']); scheduler.destroy();
   });
   it('模型撤回不合格的流式译文后恢复等待状态，不把空译文当作缓存命中', () => {
@@ -101,7 +102,7 @@ describe('双语字幕随播放位置调度', () => {
   it('当前句失败时点击重试会取消后续预翻译，立即单独请求当前句', async () => {
     const { scheduler, jobs, client, line } = setup();
     scheduler.setTrack(Array.from({ length: 4 }, (_, i) => ({ start: i * 5, end: (i + 1) * 5, text: `Sentence ${i}.` })));
-    scheduler.tick(0); jobs[0]!.reject(new Error('当前句失败')); await flush();
+    scheduler.tick(0); jobs[0]!.reject(new Error('模型服务返回 HTTP 401')); await flush();
     const clock = vi.spyOn(Date, 'now').mockReturnValue(Date.now() + 31000);
     try { scheduler.tick(1); } finally { clock.mockRestore(); }
     expect(jobs[1]!.texts).toEqual(['Sentence 1.', 'Sentence 2.', 'Sentence 3.']);
@@ -109,6 +110,67 @@ describe('双语字幕随播放位置调度', () => {
     expect(jobs[2]!.texts).toEqual(['Sentence 0.']); expect(line()?.error).toBe('');
     jobs[1]!.item(0, '过期响应。', true); jobs[2]!.resolve(['重试成功。']); await flush();
     expect(line()?.translated).toBe('重试成功。'); scheduler.destroy();
+  });
+
+  it('暂停播放时字幕请求失败会自动重试，成功后直接显示中文而不弹错误按钮', async () => {
+    vi.useFakeTimers(); const { scheduler, jobs, line } = setup(); scheduler.setLive('Keep watching.');
+    jobs[0]!.reject(new Error('模型输出不符合翻译结构要求')); await flush();
+    expect(line()?.pending).toBe(true); expect(line()?.error).toBe('');
+    await vi.advanceTimersByTimeAsync(499); expect(jobs).toHaveLength(1);
+    await vi.advanceTimersByTimeAsync(1); expect(jobs[1]!.texts).toEqual(['Keep watching.']);
+    jobs[1]!.resolve(['继续观看。']); await flush();
+    expect(line()?.translated).toBe('继续观看。'); expect(line()?.pending).toBe(false);
+    await vi.advanceTimersByTimeAsync(10000); expect(jobs).toHaveLength(2); scheduler.destroy();
+  });
+  it('流式译文连续校验失败最多自动重试两次，耗尽后显示原因且手动重试仍可恢复', async () => {
+    vi.useFakeTimers(); const { scheduler, jobs, line } = setup(); scheduler.setLive('Keep watching.');
+    for (let i = 0; i < 3; i++) {
+      jobs[i]!.item(0, '未确认译文。', false); jobs[i]!.reject(new Error('模型输出校验失败')); await flush();
+      if (i < 2) {
+        expect(line()?.error).toBe('');
+        const delay = i === 0 ? 500 : 1500;
+        await vi.advanceTimersByTimeAsync(delay - 1); expect(jobs).toHaveLength(i + 1);
+        await vi.advanceTimersByTimeAsync(1); expect(jobs).toHaveLength(i + 2);
+      }
+    }
+    expect(line()?.translated).toBe(''); expect(line()?.pending).toBe(false); expect(line()?.error).toBe('模型输出校验失败');
+    await vi.advanceTimersByTimeAsync(60000); scheduler.tick(1); expect(jobs).toHaveLength(3);
+    scheduler.retry(); jobs[3]!.resolve(['继续观看。']); await flush(); expect(line()?.error).toBe('');
+    expect(line()?.translated).toBe('继续观看。'); scheduler.destroy();
+  });
+  it('自动重试等待期间字幕换句后只翻译新句，旧句计时器不再发起请求', async () => {
+    vi.useFakeTimers(); const { scheduler, jobs, line } = setup(); scheduler.setLive('Old sentence.');
+    jobs[0]!.reject(new Error('连接失败')); await flush(); scheduler.setLive('New sentence.');
+    expect(jobs[1]!.texts).toEqual(['New sentence.']); jobs[1]!.resolve(['新的句子。']); await flush();
+    await vi.advanceTimersByTimeAsync(10000); expect(jobs).toHaveLength(2); expect(line()?.translated).toBe('新的句子。'); scheduler.destroy();
+  });
+  it('自动重试等待期间关闭或切换视频会清除计时器，不再请求旧字幕', async () => {
+    vi.useFakeTimers(); const { scheduler, jobs } = setup(); scheduler.setLive('Old video.');
+    jobs[0]!.reject(new Error('连接失败')); await flush(); scheduler.reset();
+    expect(vi.getTimerCount()).toBe(0); await vi.advanceTimersByTimeAsync(10000); expect(jobs).toHaveLength(1);
+    scheduler.setTrack([{ start: 0, end: 5, text: 'New video.' }]); scheduler.tick(0);
+    expect(jobs[1]!.texts).toEqual(['New video.']); scheduler.destroy(); expect(vi.getTimerCount()).toBe(0);
+  });
+  it('模型返回限流时等待更久再重试，播放事件不会提前或重复触发请求', async () => {
+    vi.useFakeTimers(); const { scheduler, jobs } = setup(); scheduler.setLive('Keep watching.');
+    jobs[0]!.reject(new Error('模型服务返回 HTTP 429')); await flush();
+    await vi.advanceTimersByTimeAsync(1000); scheduler.tick(0); scheduler.tick(0);
+    await vi.advanceTimersByTimeAsync(999); expect(jobs).toHaveLength(1);
+    await vi.advanceTimersByTimeAsync(1); expect(jobs).toHaveLength(2);
+    jobs[1]!.reject(new Error('模型服务返回 HTTP 429')); await flush();
+    await vi.advanceTimersByTimeAsync(3999); expect(jobs).toHaveLength(2);
+    await vi.advanceTimersByTimeAsync(1); expect(jobs).toHaveLength(3); scheduler.destroy();
+  });
+
+  it('自动重试尚未返回但视频已播放到下一句时取消旧请求，优先翻译新句', async () => {
+    vi.useFakeTimers(); const { scheduler, jobs, client, line } = setup();
+    scheduler.setTrack([{ start: 0, end: 3, text: 'First sentence.' }, { start: 3, end: 6, text: 'Next sentence.' }]);
+    scheduler.tick(0); jobs[0]!.reject(new Error('连接失败')); await flush();
+    await vi.advanceTimersByTimeAsync(500); expect(jobs).toHaveLength(2);
+    scheduler.tick(3); expect(client.cancel).toHaveBeenCalledWith(jobs[1]!.id);
+    expect(jobs[2]!.texts).toEqual(['Next sentence.']);
+    jobs[1]!.item(0, '过期译文。', true); expect(line()?.translated).toBe('');
+    jobs[2]!.resolve(['下一句。']); await flush(); expect(line()?.translated).toBe('下一句。'); scheduler.destroy();
   });
 
 });

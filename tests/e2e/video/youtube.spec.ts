@@ -105,3 +105,20 @@ test('暂停时持续预翻译两分钟，随后连续播放使用缓冲译文�
   // Only future refill is requested; revisiting an already buffered cue is free.
   expect(server.calls.slice(calls).flatMap(call => call.texts ?? [])).not.toContain('Sentence 12.');
 });
+
+for (const failure of ['服务暂时不可用', '模型输出不合格'] as const) {
+  test(`字幕遇到${failure}后自动重试成功，全程无需点击重试按钮`, async ({ extension }) => {
+    const { page, server } = extension; await openPlayer(extension, '');
+    if (failure === '服务暂时不可用') server.setTranslationFailure(503); else server.setInvalid(true);
+    await page.getByRole('button', { name: '开启双语字幕', exact: true }).click();
+    const subtitles = page.locator('[data-cloudys-gloss="video-subtitles"]');
+    // Invalid structured output also goes through the provider's plain-text repair.
+    await expect.poll(() => server.calls.length).toBeGreaterThanOrEqual(failure === '服务暂时不可用' ? 1 : 2);
+    await expect(subtitles.getByRole('button', { name: '重试这句', exact: true })).toHaveCount(0);
+    server.setTranslationFailure(0); server.setInvalid(false);
+    server.setTranslation('Welcome to the video.', '自动恢复的中文字幕。');
+    await expect(subtitles.locator('.translation')).toHaveText('自动恢复的中文字幕。');
+    await expect(subtitles.getByRole('button', { name: '重试这句', exact: true })).toHaveCount(0);
+    expect(server.calls.every(call => call.texts?.length === 1 && call.texts[0] === 'Welcome to the video.')).toBe(true);
+  });
+}
