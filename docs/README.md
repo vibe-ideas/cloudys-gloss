@@ -14,6 +14,7 @@
 
 ## 开发维护
 
+- [v0.1.12 更新说明](releases/0.1.12.md)
 - [架构与性能设计](development/architecture.md)
 - [单元测试、浏览器 E2E 与真实模型测试](development/testing.md)
 - [GitHub CI、版本标签与自动发布](development/releases.md)
