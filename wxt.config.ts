@@ -51,6 +51,7 @@ export default defineConfig({
     description: '本地模型驱动的双语阅读与 AI 单词卡',
     permissions: ['storage', 'nativeMessaging'],
     host_permissions: ['http://*/*', 'https://*/*'],
+    web_accessible_resources: [{ resources: ['youtube-bridge.js'], matches: ['https://www.youtube.com/*', 'https://m.youtube.com/*', 'https://youtube.com/*'] }],
     browser_specific_settings: { gecko: { id: firefoxUpdate.addonId, ...(browser === 'firefox' ? { update_url: firefoxUpdate.updateUrl } : {}), strict_min_version: '140.0', data_collection_permissions: { required: ['websiteContent'] } } },
   }),
 });

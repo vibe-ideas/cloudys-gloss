@@ -1,7 +1,7 @@
 import { needsChineseTranslation } from '../core/source-language';
 
 export const OWN = 'data-cloudys-gloss';
-const excluded = `script,style,noscript,pre,code,textarea,input,select,option,svg,canvas,iframe,[contenteditable]:not([contenteditable="false"]),[translate="no"],[${OWN}]`;
+const excluded = `script,style,noscript,pre,code,textarea,input,select,option,svg,canvas,iframe,[contenteditable]:not([contenteditable="false"]),[translate="no"],[${OWN}],.ytp-caption-window-container`;
 const hidden = '[hidden],[aria-hidden="true"],[inert]';
 const controls = 'button,summary,label,legend,[role="button"],[role="tab"],[role="menuitem"],[role="menuitemcheckbox"],[role="menuitemradio"],[role="switch"],[role="checkbox"],[role="radio"],[aria-haspopup],a[aria-controls],a.button,a.btn,a.cta';
 const navigation = 'nav,header,footer,search,[role="navigation"],[role="menu"],[role="menubar"],[role="toolbar"],[role="tablist"],[role="search"],[role="breadcrumb"]';

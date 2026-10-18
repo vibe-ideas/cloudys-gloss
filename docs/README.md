@@ -2,6 +2,8 @@
 
 ## 使用指南
 
+- [YouTube 双语字幕与提前翻译](guides/youtube-subtitles.md)
+
 - [四下空格：输入框草稿翻译为英文](guides/input-translation.md)
 
 - [导入、管理与使用离线 StarDict 词库](guides/dictionary-import.md)
@@ -21,6 +23,8 @@
 - [数据与权限](reference/privacy.md)
 
 ## 体验设计
+
+- [YouTube 字幕读取、调度与显示](design/youtube-subtitles.md)
 
 - [中文正文跳过网页翻译](design/source-language.md)
 - [中文译文的中西文混排规则](design/chinese-spacing.md)
@@ -43,6 +47,8 @@
 - [PDF 原版式翻译：竞品、BabelDOC、PDF.js 与实现取舍](research/2026-10-05-pdf-layout.md)
 
 ## 性能
+
+- [YouTube 双语字幕验证与缓冲优化](performance/2026-10-18-youtube-subtitles.md)
 
 - [网页中文段落判断的本地开销](performance/2026-10-18-source-language.md)
 - [中文间距整理的本地处理开销](performance/2026-10-18-chinese-spacing.md)

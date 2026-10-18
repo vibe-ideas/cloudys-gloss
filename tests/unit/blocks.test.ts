@@ -63,6 +63,10 @@ describe('全文翻译语义块提取', () => {
     const blocks = semanticBlocks(document.body);
     expect(blocks).toHaveLength(1); expect(blockText(blocks[0]!)).toBe('Hello beautiful world.');
   });
+  it('网页全文翻译跳过播放器原生字幕，避免与双语字幕重复请求和插入', () => {
+    document.body.innerHTML = '<div class="ytp-caption-window-container"><span class="ytp-caption-segment">Current video sentence.</span></div><p>Video description.</p>';
+    expect(semanticBlocks(document.body).map(element => blockText(element))).toEqual(['Video description.']);
+  });
   it('代码、输入框、可编辑区域和已有译文不会再次送给模型', () => {
     document.body.innerHTML = '<pre><p>secret code</p></pre><div contenteditable>private input</div><p>Hello<span data-cloudys-gloss>你好</span></p>';
     const blocks = semanticBlocks(document.body);
