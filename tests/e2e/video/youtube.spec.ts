@@ -18,6 +18,26 @@ async function openPlayer(extension: { context: BrowserContext; page: Page }, tr
   await expect(extension.page.getByRole('button', { name: '开启双语字幕', exact: true })).toBeVisible();
 }
 
+for (const format of ['JSON3', 'XML'] as const) {
+  test(`YouTube 强制 Trusted Types 时，${format} 完整字幕正常预译且不触发安全策略错误`, async ({ extension }) => {
+    const { page } = extension;
+    const errors: string[] = [];
+    page.on('console', message => { if (message.type() === 'error' && /Trusted|Content Security Policy|EvalError/i.test(message.text())) errors.push(message.text()); });
+    page.on('pageerror', error => errors.push(error.message));
+    const fixture = youtubeColumnFixture.replace('<head>', `<head><meta http-equiv="Content-Security-Policy" content="require-trusted-types-for 'script'">`)
+      .replace('const player =', `document.addEventListener('securitypolicyviolation', event => {
+        document.documentElement.dataset.policyViolations = (document.documentElement.dataset.policyViolations || '') + event.effectiveDirective + ';';
+      }); const player =`);
+    const track = format === 'JSON3' ? subtitleTrack : '<transcript><text start="0" dur="5">Welcome to the video.</text><text start="5" dur="5">Next sentence.</text></transcript>';
+    await openPlayer(extension, track, fixture);
+    await page.getByRole('button', { name: '打开字幕记录', exact: true }).click();
+    await expect(page.getByLabel('字幕准备状态')).toContainText('完整字幕已就绪');
+    await expect(page.locator('[data-cloudys-gloss="video-subtitles"] .translation')).toBeVisible();
+    expect(await page.locator('html').getAttribute('data-policy-violations')).toBeNull();
+    expect(errors).toEqual([]);
+  });
+}
+
 test('YouTube 双语字幕逐句返回，拖动定位新字幕，全屏显示且关闭恢复 CC', async ({ extension }, testInfo) => {
   const { page, server } = extension;
   server.setTranslation('Welcome to the video.', '欢迎观看这个视频。');

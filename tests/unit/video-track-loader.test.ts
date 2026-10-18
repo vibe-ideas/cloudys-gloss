@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { createCaptionTrackLoader, type CaptionTrack, type TrackMessage } from '../../src/video/track-loader';
 import { MAX_CAPTION_BYTES } from '../../src/video/protocol';
+import { parseCaptions } from '../../src/video/captions';
 
 const url = (language = 'en', extra = '') => `https://www.youtube.com/api/timedtext?v=example&lang=${language}&fmt=json3${extra}`;
 const identity = (language = 'en', kind = '', name = '', vssId = '') => JSON.stringify([language, kind, name, vssId]);
@@ -10,7 +11,7 @@ function deferred<T>() {
   const promise = new Promise<T>((yes, no) => { resolve = yes; reject = no; });
   return { promise, resolve, reject };
 }
-function setup(readMetadata: () => CaptionTrack[] | undefined = () => undefined) {
+function setup(readMetadata: () => CaptionTrack[] | undefined = () => undefined, validate: (body: string, signal: AbortSignal) => boolean | Promise<boolean> = body => parseCaptions(body).length > 0) {
   const requests: { value: string; signal: AbortSignal; response: ReturnType<typeof deferred<Response>>; start: number }[] = [];
   const messages: TrackMessage[] = [];
   const fetcher = vi.fn((value: RequestInfo | URL, init?: RequestInit) => {
@@ -20,7 +21,7 @@ function setup(readMetadata: () => CaptionTrack[] | undefined = () => undefined)
     return response.promise;
   });
   const metadata = vi.fn(readMetadata);
-  const loader = createCaptionTrackLoader({ id: 'example', send: message => messages.push(message), fetch: fetcher, readMetadata: metadata });
+  const loader = createCaptionTrackLoader({ id: 'example', send: message => messages.push(message), fetch: fetcher, readMetadata: metadata, validate });
   const tracks = () => messages.filter(message => message.type === 'track');
   const observe = (value: string) => loader.observe({ name: value, startTime: performance.now() + 100 });
   return { loader, requests, messages, metadata, tracks, observe };
@@ -31,18 +32,44 @@ describe('YouTube 完整字幕轨道恢复', () => {
   beforeEach(() => { vi.useFakeTimers(); });
   afterEach(() => { vi.useRealTimers(); });
 
-  it('直接收到播放器字幕时不重复下载，同次资源通知不会再请求', () => {
+  it('字幕仍在校验时不重复下载，切换语言后忽略旧校验结果', async () => {
+    const checks: { result: ReturnType<typeof deferred<boolean>>; signal: AbortSignal }[] = [];
+    const state = setup(undefined, (_body, signal) => {
+      const result = deferred<boolean>(); checks.push({ result, signal }); return result.promise;
+    });
+    const first = state.loader.capture(url())!(captions());
+    state.loader.start({ name: url('en', '&signature=new'), startTime: 0 });
+    expect(state.requests).toHaveLength(0);
+    const next = state.loader.capture(url('fr'))!(captions('Bonjour.'));
+    expect(checks[0]!.signal.aborted).toBe(true);
+    checks[0]!.result.resolve(true); await first;
+    expect(state.tracks()).toHaveLength(0);
+    checks[1]!.result.resolve(true); await next;
+    expect(state.tracks()).toHaveLength(1); expect(state.tracks()[0]?.identity).toBe(identity('fr'));
+    state.loader.stop();
+  });
+
+  it('关闭字幕时取消未完成校验，迟到通过结果不能恢复旧字幕', async () => {
+    const result = deferred<boolean>(); let signal: AbortSignal | undefined;
+    const state = setup(undefined, (_body, value) => { signal = value; return result.promise; });
+    const pending = state.loader.capture(url())!(captions());
+    state.loader.stop(); expect(signal?.aborted).toBe(true);
+    result.resolve(true); await pending;
+    expect(state.tracks()).toHaveLength(0); expect(state.requests).toHaveLength(0);
+  });
+
+  it('直接收到播放器字幕时不重复下载，同次资源通知不会再请求', async () => {
     const state = setup(); const startedAt = performance.now();
     const publish = state.loader.capture(url(), startedAt)!;
     state.loader.observe({ name: url(), startTime: startedAt });
-    publish(captions());
+    await publish(captions());
     expect(state.requests).toHaveLength(0); expect(state.tracks()[0]?.body).toBe(captions()); state.loader.stop();
   });
-  it('播放器旧语言响应迟到时不覆盖新语言，其资源通知也不能切回旧轨道', () => {
+  it('播放器旧语言响应迟到时不覆盖新语言，其资源通知也不能切回旧轨道', async () => {
     const state = setup(); const startedAt = performance.now();
     const old = state.loader.capture(url(), startedAt)!;
     const current = state.loader.capture(url('fr'), startedAt + 5)!;
-    current(captions('Bonjour.')); old(captions('Old English.'));
+    await current(captions('Bonjour.')); await old(captions('Old English.'));
     state.loader.observe({ name: url(), startTime: startedAt });
     expect(state.tracks()).toHaveLength(1); expect(state.tracks()[0]?.identity).toBe(identity('fr'));
     expect(state.requests).toHaveLength(0); state.loader.stop();

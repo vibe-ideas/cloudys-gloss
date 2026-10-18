@@ -1,4 +1,3 @@
-import { parseCaptions } from './captions';
 import { captionUrl, MAX_CAPTION_BYTES } from './protocol';
 
 export type CaptionTrack = { baseUrl: string; languageCode: string; kind?: string };
@@ -20,6 +19,7 @@ export function createCaptionTrackLoader(options: {
   id: string;
   send: (message: TrackMessage) => void;
   readMetadata: () => CaptionTrack[] | undefined;
+  validate: (body: string, signal: AbortSignal) => boolean | Promise<boolean>;
   fetch?: typeof fetch;
 }) {
   const request = options.fetch ?? fetch;
@@ -74,8 +74,10 @@ export function createCaptionTrackLoader(options: {
         body += decoder.decode(chunk.value, { stream: true });
       }
       body += decoder.decode();
-      // DOMParser is available in the page world for XML/srv3 captions.
-      if (!parseCaptions(body).length) throw new Error('invalid captions');
+      // Parsing belongs to the extension's isolated world: page CSP can reject
+      // both schema code generation and DOMParser even for XML input.
+      if (!await options.validate(body, abort.signal)) throw new Error('invalid captions');
+      if (abort.signal.aborted) throw new Error('caption timeout');
       if (current(selected) && !selected.ready) {
         selected.ready = true;
         options.send({ type: 'track', body, identity: selected.identity });
@@ -116,7 +118,7 @@ export function createCaptionTrackLoader(options: {
   }
   function add(value: string, fromPlayer: boolean) {
     const url = select(value, fromPlayer);
-    if (!url || capturing.get(url.href) === selection) return;
+    if (!url || [...capturing.values()].includes(selection)) return;
     if (selection.ready || selection.candidates.has(url.href) || candidateCount >= 8) return;
     candidateCount++;
     selection.candidates.set(url.href, { url: url.href, attempts: 0, queued: true });
@@ -161,11 +163,15 @@ export function createCaptionTrackLoader(options: {
       ownRequests.delete(url.href); ownRequests.set(url.href, entries.slice(-3));
       if (ownRequests.size > 32) ownRequests.delete(ownRequests.keys().next().value!);
       let finished = false;
-      return (body?: string) => {
+      return async (body?: string) => {
         if (finished) return; finished = true;
-        if (capturing.get(url.href) === selected) capturing.delete(url.href);
+        let valid = false;
+        try {
+          if (current(selected) && !selected.ready && body && body.length <= MAX_CAPTION_BYTES) valid = await options.validate(body, selected.abort.signal);
+        } catch { /* Invalid bodies use the same bounded recovery as downloads. */ }
+        finally { if (capturing.get(url.href) === selected) capturing.delete(url.href); }
         if (!current(selected) || selected.ready) return;
-        if (body && body.length <= MAX_CAPTION_BYTES && parseCaptions(body).length) {
+        if (valid) {
           selected.ready = true;
           options.send({ type: 'track', body, identity: selected.identity });
         } else add(url.href, false);

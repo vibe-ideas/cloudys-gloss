@@ -169,6 +169,11 @@ export class YouTubeSubtitles {
   private message = (event: MessageEvent) => {
     const data = event.data;
     if (event.source !== window || event.origin !== location.origin || !this.enabled || !this.channel || data?.source !== 'cloudys-gloss:captions:response' || data.channel !== this.channel || data.id !== this.id || this.id !== videoId(location.href)) return;
+    if (data.type === 'validate' && typeof data.requestId === 'string' && data.requestId.length <= 100) {
+      const valid = typeof data.body === 'string' && data.body.length <= MAX_CAPTION_BYTES && parseCaptions(data.body).length > 0;
+      window.postMessage({ source: 'cloudys-gloss:captions:request', channel: this.channel, id: this.id, action: 'validated', requestId: data.requestId, valid }, location.origin);
+      return;
+    }
     // Wait for response observation to be installed before enabling native CC.
     if (data.type === 'ready') {
       const cc = this.player?.querySelector<HTMLButtonElement>('.ytp-subtitles-button');

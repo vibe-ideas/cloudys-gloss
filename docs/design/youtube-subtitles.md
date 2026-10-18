@@ -4,7 +4,9 @@
 
 视频功能使用独立 WXT content entrypoint，仅在 YouTube 域名加载，支持 `/watch` 与 `/embed` 路径。其余网页不加载视频调度器、解析器或额外观察器。模型请求复用 `translateStream → background → TranslationService`，不增加权限，不把模型地址、API Key 或网页 Cookie 交给页面脚本。
 
-用户开启双语后，用 WXT `injectScript` 加载约 90 KB 的页面桥接脚本（含字幕校验器，仅开启时加载）。它通过 PerformanceObserver 查找播放器实际使用的 `/api/timedtext` 地址；不存在时尝试播放器暴露的字幕轨道。地址必须属于 YouTube HTTPS、精确匹配当前视频，并拒绝带 `tlang` 的自动翻译轨道。请求在页面同源环境读取当前可访问的字幕，不构造访问令牌、不绕过登录或访问限制。开启期间临时包装 fetch / XHR，只复用当前视频字幕响应；返回原 Promise / Response，不改请求参数，也没有整页轮询。关闭时恢复原方法，若其他扩展已替换方法则不覆盖。
+用户开启双语后，用 WXT `injectScript` 加载约 9.7 KB 的页面桥接脚本（仅开启时加载）。它通过 PerformanceObserver 查找播放器实际使用的 `/api/timedtext` 地址；不存在时尝试播放器暴露的字幕轨道。地址必须属于 YouTube HTTPS、精确匹配当前视频，并拒绝带 `tlang` 的自动翻译轨道。请求在页面同源环境读取当前可访问的字幕，不构造访问令牌、不绕过登录或访问限制。开启期间临时包装 fetch / XHR，只复用当前视频字幕响应；返回原 Promise / Response，不改请求参数，也没有整页轮询。关闭时恢复原方法，若其他扩展已替换方法则不覆盖。
+
+字幕解析与结构校验在扩展隔离环境执行，页面桥接不加载 Zod 或 DOMParser。读取器发送带会话和请求 ID 的校验消息，收到有效确认才发布完整轨道；最多同时等待 4 项校验，每项 2 秒超时，关闭、换视频或换轨道立即取消等待。校验期间不重复下载同轨道，迟到旧结果不能覆盖新选择。字幕 schema 创建前设置 Zod `jitless`，避免动态代码探测。页面 CSP / Trusted Types 策略保持原样，不创建放行策略。
 
 完整字幕读取失败时，只观察当前播放器内的 `.ytp-caption-segment`。滚动字幕合并、去重，并使用 180 ms 防抖与 650 ms 最长等待。该降级模式没有未来时间轴，因此不能承诺预翻译。播放器保留 CC 原始状态；模型请求取消与读取取消分别由 runtime port / AbortController 处理。
 

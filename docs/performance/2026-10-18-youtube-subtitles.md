@@ -139,3 +139,24 @@ REPORT_VIDEO_LATENCY=1 pnpm exec vitest run tests/unit/video-latency.test.ts --r
 竞品参考及真正的验收定义见 [YouTube 字幕同步](../design/youtube-realtime-reference.md)。当前构建尚未在用户真实视频上完成连续播放验收：浏览器工具的 URL 安全策略拒绝访问 `chrome://extensions`，需要用户重新加载插件并刷新视频，不能绕过该限制替用户执行。
 
 本次验证：lint / typecheck 通过；全量 42 个测试文件、514 个单测通过。Python 报告测试曾出现两项 5 秒超时，最终全量运行使用 `pnpm test -- --testTimeout=15000`，没有改动报告逻辑或断言。Chrome / Firefox 完整字幕 E2E 共 34 项通过，包括原生 fetch / XHR 正文复用、点击前已经下载、关闭重开复用，以及既有的侧栏和自动重试回归。最终导航清理变更另跑双浏览器 6 项相关场景，全部通过。Chrome / Firefox 生产构建均已更新，用户现有浏览器扩展是否载入该构建需单独确认。
+
+## Trusted Types 报错修复
+
+用户提供 Chrome 错误详情：`youtube-bridge.js` 触发 `This document requires 'TrustedScript' assignment`。检查当前依赖代码确认 Zod 在构造 schema 时可能探测动态函数；该异常虽被捕获，仍会留下安全策略违规记录。原来的自有播放器没有启用 Trusted Types，未覆盖这一条件。
+
+新增生产构建 E2E 在页面启用 `require-trusted-types-for 'script'`，监听策略违规、控制台相关错误和未处理异常。修复前 Chrome 的两个用例均失败：JSON3 能取得轨道但产生违规；XML 因 DOMParser 输入被拦截而降级实时 CC。不能因此把截图中的所有错误都归因于同一原因。
+
+修复将 JSON/XML 解析与校验移到扩展隔离环境，页面桥接仅传递有界正文并等待校验确认；Zod 使用 `jitless`。没有修改网页安全策略，也没有添加信任任意脚本或 HTML 的策略。页面桥接从 93.19 KB 降至 9.67 KB，两个浏览器产物均不再包含 Zod 和 DOMParser。
+
+Chrome / Firefox 的四个新场景均通过：JSON3、XML 能加载完整字幕、显示译文，且没有上述策略违规。读取器单测另覆盖“校验中切换语言”和“关闭后迟到校验”，确保不会显示旧结果。截图中另外两条折叠的 `No SW` / 脚本下载错误没有复现，不能判定其具体来源；最终真实网页还需重新加载构建后检查。
+
+参考：[Zod 的 CSP / jitless 说明](https://zod.dev/compile)、[MDN 对 DOMParser 的 Trusted Types 限制](https://developer.mozilla.org/en-US/docs/Web/API/DOMParser/parseFromString)。
+
+新增稳定场景：
+
+- YouTube 强制 Trusted Types 时，JSON3 完整字幕正常预译且不触发安全策略错误。
+- YouTube 强制 Trusted Types 时，XML 完整字幕正常预译且不触发安全策略错误。
+- 字幕仍在校验时不重复下载，切换语言后忽略旧校验结果。
+- 关闭字幕时取消未完成校验，迟到通过结果不能恢复旧字幕。
+
+最终验证：`pnpm lint`、`pnpm typecheck`、默认超时的 `pnpm test` 全部通过（42 个文件、516 个单测）。新 Trusted Types E2E 4 项和其余视频 E2E 34 项分别运行，合计 38 项全部通过；Chrome / Firefox 构建成功。未把本次受控页面结果记为用户真实视频的连续同步验收。

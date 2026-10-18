@@ -11,13 +11,18 @@ export default defineUnlistedScript(() => {
   const scope = window as unknown as Record<string, unknown>;
   if (typeof scope[key] === 'function') (scope[key] as () => void)();
   let retained: { id: string; url: string; body: string } | undefined;
+  const validations = new Map<string, (valid: boolean) => void>();
   let session: { channel: string; observer: PerformanceObserver; loader: ReturnType<typeof createCaptionTrackLoader>; capture: ReturnType<typeof capturePlayerCaptions> } | undefined;
-  const stop = () => { session?.loader.stop(); session?.capture.stop(); session?.observer.disconnect(); session = undefined; };
+  const stop = () => { session?.loader.stop(); session?.capture.stop(); session?.observer.disconnect(); session = undefined; for (const finish of validations.values()) finish(false); };
   const clear = () => { stop(); retained = undefined; };
   const listener = (event: MessageEvent) => {
     if (event.source !== window || event.origin !== location.origin || event.data?.source !== 'cloudys-gloss:captions:request') return;
     const { channel, id, action } = event.data;
     if (typeof channel !== 'string' || channel.length > 100 || typeof id !== 'string') return;
+    if (action === 'validated') {
+      if (session?.channel === channel && id === videoId(location.href) && typeof event.data.requestId === 'string') validations.get(event.data.requestId)?.(event.data.valid === true);
+      return;
+    }
     if (action === 'stop') { if (session?.channel === channel) stop(); return; }
     if (action !== 'start' || id !== videoId(location.href)) return;
     stop();
@@ -32,6 +37,15 @@ export default defineUnlistedScript(() => {
     const loader = createCaptionTrackLoader({
       id,
       fetch: capture.fetch,
+      validate: (body, signal) => new Promise<boolean>(resolve => {
+        if (signal.aborted || validations.size >= 4 || session?.channel !== channel) { resolve(false); return; }
+        const requestId = crypto.randomUUID();
+        const finish = (valid: boolean) => { clearTimeout(timer); signal.removeEventListener('abort', cancel); validations.delete(requestId); resolve(valid); };
+        const cancel = () => finish(false);
+        const timer = setTimeout(cancel, 2000);
+        validations.set(requestId, finish); signal.addEventListener('abort', cancel, { once: true });
+        window.postMessage({ source: 'cloudys-gloss:captions:response', channel, id, type: 'validate', requestId, body }, location.origin);
+      }),
       send: ({ type, body = '', identity }) => {
         if (type === 'selection' && retained) retained = undefined;
         if (type === 'track' && identity) {

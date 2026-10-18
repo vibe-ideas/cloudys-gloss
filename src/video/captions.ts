@@ -2,6 +2,8 @@ import { z } from 'zod';
 
 export type Caption = { start: number; end: number; text: string };
 import { MAX_CAPTION_BYTES } from './protocol';
+// Extension contexts must validate data without probing dynamic code execution.
+z.config({ jitless: true });
 const eventSchema = z.object({
   tStartMs: z.number().finite().min(0), dDurationMs: z.number().finite().min(0).optional(),
   aAppend: z.number().optional(), segs: z.array(z.object({ utf8: z.string().max(12000) })).max(400).optional(),
