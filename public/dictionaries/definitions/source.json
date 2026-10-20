@@ -1,0 +1,9 @@
+{
+  "repository": "https://github.com/skywind3000/ECDICT",
+  "revision": "bc015ed2e24a7abef49fc6dbbb7fe32c1dadaf8b",
+  "inputSha256": "1a6947e04785db63613a92e14903cdae7954f7e84860b10e68e5c7cbb3f9c3cf",
+  "entries": 57932,
+  "license": "../ecdict-license.txt",
+  "selection": "Chinese definition, ASCII headword, tag/oxford or BNC/FRQ rank 1–50000",
+  "scope": "General dictionary; not a context-specific technology glossary"
+}

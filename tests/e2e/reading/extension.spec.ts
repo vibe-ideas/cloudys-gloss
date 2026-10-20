@@ -82,7 +82,8 @@ test('划词仅显示小按钮，点击后才请求词卡并展示音标释义�
   expect(server.calls).toHaveLength(0);
   await page.screenshot({ animations: 'disabled', path: testInfo.outputPath('selection-launcher.png') });
   await page.getByRole('button', { name: '翻译所选内容', exact: true }).click();
-  await expect(page.getByRole('dialog')).toBeVisible(); await expect(page.getByText('释义准备中')).toBeVisible();
+  await expect(page.getByRole('dialog')).toBeVisible();
+  await expect(page.getByRole('region', { name: '本地词库释义' })).toContainText('多云的');
   await expect(page.getByText('多云的；不清晰的')).toBeVisible();
   await expect(page.getByRole('button', { name: '美式发音' })).toContainText('/ˈkɫaʊdi/');
   await expect(page.getByRole('button', { name: '英式发音' })).toContainText('/klˈaʊdi/');

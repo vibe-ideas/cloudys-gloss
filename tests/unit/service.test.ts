@@ -4,6 +4,40 @@ import { cacheKey, ResultCache } from '../../src/core/cache';
 import { TranslationService } from '../../src/model/service';
 import { defaults } from '../../src/core/schema';
 afterEach(() => vi.unstubAllGlobals());
+describe('划词 AI 解释的总等待预算', () => {
+  it('词卡请求发出前已关闭时直接取消，不读取缓存或启动模型', async () => {
+    const cache = new ResultCache(crypto.randomUUID());
+    const read = vi.spyOn(cache, 'get'); const ensureModel = vi.fn();
+    const controller = new AbortController(); controller.abort(new Error('词卡已关闭'));
+    await expect(new TranslationService(cache, ensureModel).dictionary(defaults, 'delightful', '', controller.signal)).rejects.toThrow('词卡已关闭');
+    expect(read).not.toHaveBeenCalled(); expect(ensureModel).not.toHaveBeenCalled();
+  });
+  it('模型启动一直未完成时也按词卡超时返回，之后启动完成不再发送生成请求', async () => {
+    let release!: () => void;
+    const gate = new Promise<void>(resolve => { release = resolve; });
+    const ensureModel = vi.fn(() => gate);
+    const fetcher = vi.fn(); vi.stubGlobal('fetch', fetcher);
+    const service = new TranslationService(new ResultCache(crypto.randomUUID()), ensureModel);
+    try {
+      await expect(service.dictionary({ ...defaults, timeout: 100 }, 'delightful', '', new AbortController().signal)).rejects.toThrow('等待超时');
+      release(); await gate; await Promise.resolve();
+      expect(fetcher).not.toHaveBeenCalled();
+    } finally { release(); }
+  });
+  it('网页占满并发槽时词卡排队超时即取消，网页完成后不会补发过时词卡', async () => {
+    let release!: () => void;
+    const gate = new Promise<void>(resolve => { release = resolve; });
+    const fetcher = vi.fn(async () => { await gate; return new Response(JSON.stringify({ choices: [{ message: { content: '{"translations":["你好"]}' } }] })); });
+    vi.stubGlobal('fetch', fetcher);
+    const service = new TranslationService(new ResultCache(crypto.randomUUID()));
+    const page = service.translate({ ...defaults, concurrency: 1 }, ['Hello'], new AbortController().signal);
+    try {
+      await vi.waitFor(() => expect(fetcher).toHaveBeenCalledOnce());
+      await expect(service.dictionary({ ...defaults, concurrency: 1, timeout: 100 }, 'delightful', '', new AbortController().signal)).rejects.toThrow('等待超时');
+      release(); await page; expect(fetcher).toHaveBeenCalledTimes(1);
+    } finally { release(); await page; }
+  });
+});
 describe('输入框英文翻译的后台调度', () => {
   it('重复输入同一草稿也不读取或写入持久译文缓存，防止草稿留存和翻译方向混用', async () => {
     const cache = new ResultCache(crypto.randomUUID());

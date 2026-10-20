@@ -49,6 +49,8 @@
 
 ## 性能
 
+- [划词先出词典：显示耗时与资源预算](performance/2026-10-20-dictionary-first.md)
+
 - [YouTube 双语字幕验证与缓冲优化](performance/2026-10-18-youtube-subtitles.md)
 
 - [网页中文段落判断的本地开销](performance/2026-10-18-source-language.md)

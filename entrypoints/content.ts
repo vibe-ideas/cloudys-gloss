@@ -15,7 +15,7 @@ export default defineContentScript({
     const toggle = () => { if (translator.status.enabled) translator.stop(); else translator.start(); };
     const floating: FloatingControl = new FloatingControl(toggle, () => { void send({ type: 'settings:open' }).catch(() => {}); }, () => ctx.notifyInvalidated());
     const speaker = new WordSpeaker({ play: (id, word, locale) => send({ type: 'speech:play', id, word, locale }), cancel });
-    const popover = new SelectionPopover({ lookup: (id, word, context) => send({ type: 'dictionary', id, word, context }), local: (id, word) => send({ type: 'lexicon:lookup', id, word }), pronunciation: (id, word) => send({ type: 'pronunciation', id, word }), cancel }, 'system', speaker);
+    const popover = new SelectionPopover({ lookup: (id, word, context) => send({ type: 'dictionary', id, word, context }), local: (id, word) => send({ type: 'lexicon:lookup', id, word }), definitions: (id, word) => send({ type: 'definition:lookup', id, word }), pronunciation: (id, word) => send({ type: 'pronunciation', id, word }), cancel }, 'system', speaker);
     const inputTranslation = new InputTranslation({ translate: (id, text) => send<string>({ type: 'input:translate', id, text }), cancel });
     inputTranslation.setEnabled(false);
     void send<Pick<Settings, 'theme' | 'inputTranslation'>>({ type: 'preferences' }).then(({ theme, inputTranslation: enabled }) => {

@@ -28,7 +28,7 @@ export function placePopover(anchor: Anchor, width: number, height: number, view
     maxHeight,
   };
 }
-export interface DictionaryTransport { lookup(id: string, word: string, context: string): Promise<WordCard>; local?(id: string, word: string): Promise<LocalDefinition[]>; pronunciation?(id: string, word: string): Promise<WordCard['ipa']>; cancel(id: string): void }
+export interface DictionaryTransport { lookup(id: string, word: string, context: string): Promise<WordCard>; local?(id: string, word: string): Promise<LocalDefinition[]>; definitions?(id: string, word: string): Promise<LocalDefinition[]>; pronunciation?(id: string, word: string): Promise<WordCard['ipa']>; cancel(id: string): void }
 const css = `
 :host{all:initial!important;position:fixed!important;inset:0!important;z-index:2147483647!important;pointer-events:none!important;color-scheme:light dark!important}
 *{box-sizing:border-box}
@@ -66,9 +66,12 @@ export function DictionaryCard({ card, speech, pending = false, error, onRetry, 
         <p style={{ whiteSpace: 'pre-wrap', maxHeight: 180, overflow: 'auto', overscrollBehavior: 'contain' }}>{entry.text}</p>
         {entry.truncated && <p class="zh">长词条仅显示前 12,000 字符。</p>}
       </details>)}
-      <p class="zh">词库原有释义，具体含义请结合下方语境解释。</p>
+      <p class="zh">通用词义供快速参考，具体含义以当前语境为准。</p>
     </section>}
-    {error ? <><p class="error" role="alert">{error}</p><button onClick={onRetry}>重试</button></> : pending ? <><p class="zh">{local.length ? 'AI 语境解释准备中' : '释义准备中'}</p><div class="skeleton" /><div class="skeleton" style={{ width: '72%' }} /><div class="skeleton" /></> : <>
+    {error ? <section aria-label="AI 解释状态">
+      {local.length ? <><p class="zh" role="status">AI 语境解释暂不可用，词典释义仍可阅读。</p><details><summary class="zh">错误原因</summary><p class="error">{error}</p></details></> : <p class="error" role="alert">{error}</p>}
+      <button onClick={onRetry}>重试</button>
+    </section> : pending ? <><p class="zh">{local.length ? 'AI 语境解释准备中' : '释义准备中'}</p><div class="skeleton" />{!local.length && <><div class="skeleton" style={{ width: '72%' }} /><div class="skeleton" /></>}</> : <>
     {card.senses.map((sense, i) => <div class="sense" key={i}><span class="pos">{sense.partOfSpeech}</span><span>{sense.meaning}</span></div>)}
     <div class="context"><div class="label">IN THIS CONTEXT · 此处含义</div><p>{card.contextMeaning}</p></div>
     <div class="examples"><div class="label">EXAMPLES · 例句</div>{card.examples.map((example, i) => <div key={i}><p>{example.en}</p><p class="zh">{example.zh}</p></div>)}</div>
@@ -83,6 +86,8 @@ export class SelectionPopover {
   private id?: string;
   private pronunciationId?: string;
   private localId?: string;
+  private definitionId?: string;
+  private lookupId?: string;
   private below?: boolean;
   private pending?: { word: string; context: string; range: Range };
   private sourceRange?: Range;
@@ -160,18 +165,42 @@ export class SelectionPopover {
     let error: string | undefined;
     let ipa: WordCard['ipa'] = { us: '', uk: '' };
     let local: LocalDefinition[] = [];
+    let definitions: LocalDefinition[] = [];
     const show = () => {
       if (this.id !== id) return;
-      render(<section class={`panel ${this.theme}`} role="dialog" tabIndex={-1} aria-label="AI 单词卡" aria-busy={!card && !error}>
+      render(<section class={`panel ${this.theme}`} role="dialog" tabIndex={-1} aria-label="AI 单词卡" aria-busy={!card && !error && !local.length && !definitions.length}>
         <header><span>☁ CLOUDY’S GLOSS</span><button aria-label="关闭词卡" onClick={() => this.close(true)}>×</button></header>
-        <div aria-live="polite"><DictionaryCard card={card ?? { word, ipa, senses: [], contextMeaning: '', examples: [] }} local={local} speech={this.speech} pending={!card && !error} error={error} onRetry={() => this.open(word, context, range, keyboard)} /></div>
+        <div aria-live="polite"><DictionaryCard card={card ?? { word, ipa, senses: [], contextMeaning: '', examples: [] }} local={[...local, ...definitions]} speech={this.speech} pending={!card && !error} error={error} onRetry={() => runLookup()} /></div>
       </section>, this.mount!);
       this.position();
+    };
+    const runLookup = () => {
+      if (this.id !== id) return;
+      if (this.lookupId) this.transport.cancel(this.lookupId);
+      const lookupId = createId(); this.lookupId = lookupId;
+      error = undefined; show();
+      void this.transport.lookup(lookupId, word, context).then(result => {
+        if (this.id !== id || this.lookupId !== lookupId) return;
+        card = { ...result, ipa: { ...ipa, ...result.ipa, us: result.ipa.us || ipa.us, uk: result.ipa.uk || ipa.uk } };
+        error = undefined; show();
+      }).catch((cause: unknown) => {
+        if (this.id !== id || this.lookupId !== lookupId) return;
+        error = cause instanceof Error ? cause.message : '词卡生成失败'; show();
+      }).finally(() => { if (this.lookupId === lookupId) this.lookupId = undefined; });
     };
     show();
     if (!this.mount) return;
     if (keyboard) this.mount.querySelector<HTMLElement>('.panel')?.focus({ preventScroll: true });
     this.resize = new ResizeObserver(() => this.position()); this.resize.observe(this.mount.firstElementChild!);
+    if (this.transport.definitions) {
+      const definitionId = createId(); this.definitionId = definitionId;
+      void this.transport.definitions(definitionId, word).then(result => {
+        if (this.id !== id || this.definitionId !== definitionId) return;
+        definitions = result; show();
+      }).catch(() => { /* Optional local data must not block imported dictionaries or AI. */ }).finally(() => {
+        if (this.definitionId === definitionId) this.definitionId = undefined;
+      });
+    }
     if (this.transport.local) {
       const localId = createId(); this.localId = localId;
       void this.transport.local(localId, word).then(result => {
@@ -192,9 +221,7 @@ export class SelectionPopover {
         if (this.pronunciationId === pronunciationId) this.pronunciationId = undefined;
       });
     }
-    void this.transport.lookup(id, word, context).then((result) => {
-      card = { ...result, ipa: { ...ipa, ...result.ipa, us: result.ipa.us || ipa.us, uk: result.ipa.uk || ipa.uk } }; error = undefined; show();
-    }).catch((cause: unknown) => { error = cause instanceof Error ? cause.message : '词卡生成失败'; show(); });
+    runLookup();
   }
   private position() {
     const panel = this.mount?.firstElementChild as HTMLElement | null;
@@ -212,7 +239,9 @@ export class SelectionPopover {
   }
   close(restoreFocus = false) {
     if (this.timer) clearTimeout(this.timer); this.timer = undefined;
-    if (this.id) this.transport.cancel(this.id); this.id = undefined;
+    this.id = undefined;
+    if (this.lookupId) this.transport.cancel(this.lookupId); this.lookupId = undefined;
+    if (this.definitionId) this.transport.cancel(this.definitionId); this.definitionId = undefined;
     if (this.pronunciationId) this.transport.cancel(this.pronunciationId); this.pronunciationId = undefined;
     if (this.localId) this.transport.cancel(this.localId); this.localId = undefined;
     this.below = undefined;

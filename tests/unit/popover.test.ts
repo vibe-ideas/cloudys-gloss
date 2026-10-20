@@ -23,6 +23,30 @@ async function selectAndOpen(word: string) {
   return document.querySelector('[data-cloudys-gloss=popover]')!.shadowRoot!;
 }
 describe('词卡离线音标预览', () => {
+  it('导入词库和 AI 都未返回时先显示内置释义，AI 失败后原位重试不会清空释义或重新查词', async () => {
+    const first = deferred<WordCard>(); const second = deferred<WordCard>();
+    const definitions = vi.fn(async () => [{ dictionary: 'ECDICT · 通用英汉', headword: 'delightful', matchedAs: 'delightful', text: 'a. 令人愉快的, 可爱的', truncated: false }]);
+    const local = vi.fn(() => new Promise<LocalDefinition[]>(() => {}));
+    const lookup = vi.fn().mockReturnValueOnce(first.promise).mockReturnValueOnce(second.promise);
+    const popover = new SelectionPopover({ lookup, definitions, local, cancel: vi.fn() });
+    try {
+      const shadow = await selectAndOpen('Delightful');
+      await vi.waitFor(() => expect(shadow.textContent).toContain('令人愉快的'));
+      expect(shadow.querySelector('.panel')!.getAttribute('aria-busy')).toBe('false');
+      first.reject(new Error('模型输出不符合结构要求'));
+      await vi.waitFor(() => expect(shadow.textContent).toContain('词典释义仍可阅读'));
+      expect(shadow.querySelector('[role=alert]')).toBeNull();
+      const panel = shadow.querySelector('.panel');
+      [...shadow.querySelectorAll('button')].find(button => button.textContent === '重试')!.click();
+      expect(shadow.querySelector('.panel')).toBe(panel);
+      expect(shadow.textContent).toContain('令人愉快的');
+      expect(definitions).toHaveBeenCalledTimes(1); expect(local).toHaveBeenCalledTimes(1);
+      expect(lookup).toHaveBeenCalledTimes(2);
+      second.resolve({ ...cloudyCard, word: 'Delightful' });
+      await vi.waitFor(() => expect(shadow.textContent).toContain('多云的天气'));
+      expect(shadow.textContent).toContain('令人愉快的');
+    } finally { popover.destroy(); window.getSelection()!.removeAllRanges(); }
+  });
   it('模型尚未返回时展示导入词库的来源与释义，模型失败后仍能阅读且不执行词条 HTML', async () => {
     const card = deferred<WordCard>();
     const popover = new SelectionPopover({ lookup: () => card.promise, local: async () => [{ dictionary: '科技词库', headword: 'cloudy', matchedAs: 'cloudy', text: '<img src="https://bad">本地多云解释', truncated: false }], cancel: vi.fn() });

@@ -1,6 +1,25 @@
 # Offline English pronunciation data
 
-These assets contain pronunciation data only; they are not AI-generated definitions.
+These assets contain offline pronunciation and general English-Chinese definitions; none are AI-generated.
+
+## Definitions
+
+`definitions/` contains 57,932 entries selected from [ECDICT](https://github.com/skywind3000/ECDICT)
+at revision `bc015ed2e24a7abef49fc6dbbb7fe32c1dadaf8b`, distributed under the included
+`ecdict-license.txt` (MIT). `definitions/source.json` records the input checksum and selection rule.
+Keep entries with Chinese definitions and upstream exam tags, Oxford flags, or BNC/FRQ rank
+1–50,000. This selection is independent of test words. Only ASCII headwords of at most 100
+characters are included; definitions are bounded to 4,000 characters. Exact case-insensitive
+lookup does not guess lemmas or context-specific senses. Older technical meanings can be
+incomplete: the UI labels these as general dictionary entries, separate from AI context.
+
+Rebuild from the pinned upstream `ecdict.csv` with
+`python3 scripts/build-definitions.py /path/to/ecdict.csv`. The command verifies the source
+checksum, emits 128 sorted ranges, and does not access the network. Generated assets are
+committed, so normal builds require no download. Background reads only the relevant range,
+with at most two concurrent reads and a 256 KiB UTF-16 text cache budget (not total JS heap).
+
+## Pronunciation
 
 - `us.tsv`: General American, from [ipa-dict](https://github.com/open-dict-data/ipa-dict), based on CMUdict / cmudict-ipa with syllabify stress processing.
 - `uk.tsv`: Received Pronunciation / Standard Southern British, from [Britfone](https://github.com/JoseLlarena/Britfone).

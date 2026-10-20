@@ -4,6 +4,7 @@ import { cacheKey, ResultCache } from '../core/cache';
 import { ConcurrencyQueue } from '../core/queue';
 import { OpenAICompatibleProvider, type PronunciationProvider } from './provider';
 import { WordCardSchema, type Settings } from '../core/schema';
+import { waitFor } from '../speech/pronunciation';
 
 type Priority = 'interactive' | 'visible' | 'prefetch';
 type Subscriber = (text: string, confirmed: boolean) => void;
@@ -152,6 +153,17 @@ export class TranslationService {
     }, signal, 'interactive');
   }
   async dictionary(settings: Settings, word: string, context: string, signal: AbortSignal) {
+    signal.throwIfAborted();
+    const operation = new AbortController();
+    const cancel = () => operation.abort(signal.reason);
+    signal.addEventListener('abort', cancel, { once: true });
+    if (signal.aborted) cancel();
+    // Bound the entire interaction, including queueing, model startup and repair routes.
+    const timer = setTimeout(() => operation.abort(new Error('AI 语境解释等待超时，请稍后重试')), Math.min(settings.timeout, 30000));
+    try { return await waitFor(this.dictionaryPending(settings, word, context, operation.signal), operation.signal); }
+    finally { clearTimeout(timer); signal.removeEventListener('abort', cancel); }
+  }
+  private async dictionaryPending(settings: Settings, word: string, context: string, signal: AbortSignal) {
     this.queue.setLimit(settings.concurrency);
     const key = await this.key(settings, 'dictionary-v2', [word, context]);
     const cached = WordCardSchema.safeParse(await this.cache.get(key));
@@ -163,7 +175,9 @@ export class TranslationService {
       return chineseCardSpacing(WordCardSchema.parse({ ...cached.data, ipa }));
     }
     const card = await this.queue.run(async () => {
+      signal.throwIfAborted();
       await this.ensureModel(settings, signal);
+      signal.throwIfAborted();
       return new OpenAICompatibleProvider(settings, undefined, this.pronunciation).lookup(word, context, signal);
     }, signal, true);
     signal.throwIfAborted();

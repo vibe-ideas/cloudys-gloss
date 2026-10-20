@@ -2,6 +2,7 @@ import { defineBackground } from 'wxt/utils/define-background';
 import { browser } from 'wxt/browser';
 import { z } from 'zod';
 import { ImportedDictionaryStore } from '../src/dictionaries/store';
+import { PackagedDefinitions } from '../src/dictionaries/packaged-definitions';
 import { defaults, RequestSchema, SettingsSchema, type Response } from '../src/core/schema';
 import { PackagedPronunciationDictionary } from '../src/speech/packaged-pronunciation';
 import { NativeSpeech } from '../src/speech/native-speech';
@@ -10,6 +11,11 @@ import { LocalModelManager, NATIVE_HOST, migrateManagedPreset } from '../src/mod
 
 export default defineBackground(() => {
   const dictionaries = new ImportedDictionaryStore();
+  const definitions = new PackagedDefinitions(async path => {
+    const response = await fetch(browser.runtime.getURL(`/dictionaries/definitions/${path}`), { signal: AbortSignal.timeout(5000) });
+    if (!response.ok) throw new Error('内置释义词典无法加载');
+    return response.text();
+  });
   let activeImports = 0;
   const nativeSpeech = new NativeSpeech((message) => browser.runtime.sendNativeMessage(NATIVE_HOST, message));
   const useNativeSpeech = import.meta.env.FIREFOX ? browser.runtime.getPlatformInfo().then(platform => platform.os === 'mac') : Promise.resolve(false);
@@ -111,6 +117,7 @@ export default defineBackground(() => {
         const controller = new AbortController();
         pending.set(key, { controller, tabId: sender.tab?.id });
         try {
+          if (request.type === 'definition:lookup') return { ok: true, data: await definitions.lookup(request.word, controller.signal) };
           if (request.type === 'lexicon:lookup') return { ok: true, data: await dictionaries.lookup(request.word, controller.signal) };
           if (request.type === 'pronunciation') {
             const ipa = await pronunciation.lookup(request.word, controller.signal);

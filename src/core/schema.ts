@@ -40,6 +40,7 @@ export const RequestSchema = z.discriminatedUnion('type', [
   z.object({ type: z.literal('dictionary'), id: requestId, word: z.string().min(1).max(200), context: z.string().max(3000) }),
   z.object({ type: z.literal('pronunciation'), id: requestId, word: z.string().trim().min(1).max(200) }),
   z.object({ type: z.literal('lexicon:lookup'), id: requestId, word: z.string().trim().min(1).max(200) }),
+  z.object({ type: z.literal('definition:lookup'), id: requestId, word: z.string().trim().min(1).max(200) }),
   z.object({ type: z.literal('lexicon:list') }),
   z.object({ type: z.literal('lexicon:delete'), dictionaryId: z.string().uuid() }),
   z.object({ type: z.literal('lexicon:enable'), dictionaryId: z.string().uuid(), enabled: z.boolean() }),
