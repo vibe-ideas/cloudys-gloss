@@ -1,8 +1,36 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { WordSpeaker } from '../../src/speech/speech';
+import { femaleVoice, WordSpeaker } from '../../src/speech/speech';
 
 afterEach(() => vi.unstubAllGlobals());
 describe('单词卡发音', () => {
+  it('男声排在列表前面时仍选择对应口音的本地女声，不混用英美声音', () => {
+    const voices = [
+      { name: 'Daniel', lang: 'en-GB', localService: true },
+      { name: 'Samantha (英语（美国）)', lang: 'en-US', localService: true },
+      { name: 'Google UK English Female', lang: 'en-GB', localService: false },
+      { name: 'Flo (英语（英国）)', lang: 'en-GB', localService: true },
+    ] as SpeechSynthesisVoice[];
+    expect(femaleVoice(voices, 'en-US')).toBe(voices[1]);
+    expect(femaleVoice(voices, 'en-GB')).toBe(voices[3]);
+  });
+  it('浏览器稍后才加载语音列表时等待女声，等待期间关闭词卡不会迟到播放', async () => {
+    const events = new EventTarget(); let voices: SpeechSynthesisVoice[] = [];
+    const speak = vi.fn();
+    vi.stubGlobal('SpeechSynthesisUtterance', class { constructor(public text: string) {} });
+    vi.stubGlobal('speechSynthesis', { speak, cancel: vi.fn(), getVoices: () => voices,
+      addEventListener: events.addEventListener.bind(events), removeEventListener: events.removeEventListener.bind(events) });
+    const speaker = new WordSpeaker({ play: async () => ({ backend: 'browser' }), cancel: vi.fn() });
+    const pending = speaker.play('cloudy', 'en-US'); await Promise.resolve();
+    expect(speak).not.toHaveBeenCalled();
+    voices = [{ name: 'Samantha', lang: 'en-US', localService: true }] as SpeechSynthesisVoice[];
+    events.dispatchEvent(new Event('voiceschanged'));
+    expect(speak.mock.calls[0]![0].voice).toBe(voices[0]);
+    speaker.stop(); await pending;
+    voices = []; const cancelled = speaker.play('cloudy', 'en-US'); await Promise.resolve();
+    speaker.stop(); await cancelled;
+    voices = [{ name: 'Samantha', lang: 'en-US', localService: true }] as SpeechSynthesisVoice[];
+    events.dispatchEvent(new Event('voiceschanged')); expect(speak).toHaveBeenCalledTimes(1);
+  });
   it('系统音频播放成功或失败时都不触碰浏览器语音接口', async () => {
     const speak = vi.fn(); const cancel = vi.fn();
     vi.stubGlobal('speechSynthesis', { speak, cancel });

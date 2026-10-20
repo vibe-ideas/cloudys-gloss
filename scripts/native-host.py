@@ -107,31 +107,48 @@ def status(home):
             "model": service.MODEL, "baseUrl": f"http://127.0.0.1:{service.PORT}/v1"}
 
 
+def female_voice(locale):
+    result = subprocess.run(["/usr/bin/say", "-v", "?"], text=True, capture_output=True, timeout=5)
+    if result.returncode:
+        raise RuntimeError("无法读取系统语音列表")
+    candidates = []
+    for line in result.stdout.splitlines():
+        match = re.match(r"^(.+?)\s+(en_US|en_GB)\s+#", line)
+        if match and match[2] == locale.replace("-", "_"):
+            candidates.append(match[1].strip())
+    preferred = ["Samantha", "Ava", "Allison", "Susan", "Flo", "Shelley", "Sandy"] if locale == "en-US" else ["Serena", "Kate", "Martha", "Flo", "Shelley", "Sandy"]
+    for name in preferred:
+        for candidate in candidates:
+            if re.match(rf"^{name}(?:\s|\(|$)", candidate):
+                return candidate
+    raise RuntimeError("请在 macOS 系统设置中安装对应口音的女声（美式 Samantha；英式 Serena 或 Flo）")
+
+
 def speech(message):
     if set(message) != {"action", "word", "locale"}:
         raise ValueError("无效的发音请求")
     word = message.get("word")
-    voices = {"en-US": "Samantha", "en-GB": "Daniel"}
     if not isinstance(word, str) or not 0 < len(word.strip()) <= 200 or any(ord(c) < 32 for c in word) or "[[" in word:
         raise ValueError("发音文字无效")
-    if message.get("locale") not in voices:
+    if message.get("locale") not in ("en-US", "en-GB"):
         raise ValueError("不支持的发音口音")
+    voice = female_voice(message["locale"])
     # Render only: Firefox plays the resulting PCM via its normal media path.
     # Text goes through stdin, never through a shell or command-line options.
     with tempfile.TemporaryDirectory(prefix="cloudys-gloss-speech-") as folder:
         path = Path(folder) / "word.wav"
         result = subprocess.run([
-            "/usr/bin/say", "-v", voices[message["locale"]], "-r", "175",
+            "/usr/bin/say", "-v", voice, "-r", "175",
             "-o", str(path), "--file-format=WAVE", "--data-format=LEI16@22050",
         ], input=word, text=True, capture_output=True, timeout=15)
         if result.returncode or not path.exists():
-            raise RuntimeError("系统语音生成失败，请安装 Samantha（美式）或 Daniel（英式）语音")
+            raise RuntimeError("系统女声生成失败，请检查对应口音的语音是否已完整安装")
         if path.stat().st_size > 600000:
             raise ValueError("发音过长，请选择较短的词组")
         with wave.open(str(path)) as audio:
             if audio.getnchannels() != 1 or audio.getsampwidth() != 2 or audio.getframerate() != 22050:
                 raise ValueError("系统语音格式无效")
-        return {"audio": base64.b64encode(path.read_bytes()).decode(), "voice": voices[message["locale"]]}
+        return {"audio": base64.b64encode(path.read_bytes()).decode(), "voice": voice}
 
 
 def dispatch(home, message):

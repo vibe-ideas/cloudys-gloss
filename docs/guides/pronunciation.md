@@ -10,7 +10,7 @@ Firefox 在部分 macOS 版本上通过 Web Speech 播放时，会在结尾产�
 2. 后台通过 Native Messaging 调用本地助手，用 macOS `say` 生成 PCM WAV。
 3. 后台使用普通音频播放器播放 WAV，不调用 Web Speech。
 
-美式使用 Samantha，英式使用 Daniel，全部在本机运行。网页的媒体 CSP 不影响后台播放。助手不会为发音启动 MLX，也不会把单词发往远端语音服务。
+优先使用系统已安装的女声：美式 Samantha，英式 Serena / Kate / Martha，其次 Flo / Shelley / Sandy；按口音匹配完整系统名称，不混用美式和英式。当前本机使用 Samantha（美式）与 Flo（英式），全部在本机运行。网页的媒体 CSP 不影响后台播放。助手不会为发音启动 MLX，也不会把单词发往远端语音服务。
 
 在项目目录安装或更新助手，然后重新载入扩展、刷新网页：
 
@@ -24,7 +24,7 @@ pnpm model:bridge
 
 ## 其他浏览器和平台
 
-继续使用浏览器 Web Speech，优先选择对应 `en-US` / `en-GB` 的本地语音，缺少时使用浏览器提供的对应语音或默认语音。
+继续使用浏览器 Web Speech，在对应 `en-US` / `en-GB` 口音中优先选已知女声，本地女声优先。Web Speech 没有统一性别字段，依据已知声音名称或 female 标记选择；找不到女声时保留对应口音的可用系统声音。首次语音列表为空时等待 voiceschanged，最多 500 ms，关闭词卡会取消等待。
 
 ## 回归验证
 
