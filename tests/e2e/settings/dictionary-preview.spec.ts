@@ -1,7 +1,7 @@
 import { test, expect } from '../support/fixtures';
 
 for (const word of ['latency', 'Kubernetes']) {
-  test(`模型忙碌时划选 ${word}，新版离线词库先显示真实音标及口音标注`, async ({ extension }, testInfo) => {
+  test(`模型忙碌时划选 ${word}，先显示真实音标及口音，已收录的本地释义不等待模型`, async ({ extension }, testInfo) => {
     const { page, server, toggle } = extension;
     server.holdStreams();
     await toggle();
@@ -21,7 +21,14 @@ for (const word of ['latency', 'Kubernetes']) {
         await expect(dialog.getByRole('button', { name: '英式发音' })).toContainText('音标暂无');
       }
       await testInfo.attach('offline-ipa-latency.json', { body: JSON.stringify({ word, clickToObservedIpaMs: Date.now() - start }), contentType: 'application/json' });
-      await expect(dialog.getByText('释义准备中')).toBeVisible();
+      if (word === 'latency') {
+        await expect(dialog.getByRole('region', { name: '本地词库释义' })).toContainText('潜伏');
+        await expect(dialog.getByText('AI 语境解释准备中', { exact: true })).toBeVisible();
+        await expect(dialog).toHaveAttribute('aria-busy', 'false');
+      } else {
+        await expect(dialog.getByText('释义准备中', { exact: true })).toBeVisible();
+        await expect(dialog).toHaveAttribute('aria-busy', 'true');
+      }
       expect(server.calls.filter(call => call.word)).toHaveLength(0);
       const rect = (await dialog.boundingBox())!;
       expect(rect.x).toBeGreaterThanOrEqual(0); expect(rect.y).toBeGreaterThanOrEqual(0);
@@ -31,7 +38,7 @@ for (const word of ['latency', 'Kubernetes']) {
   });
 }
 
-test('网页翻译占用模型时，点击划词按钮先出现离线音标，模型空闲后原位置补齐释义', async ({ extension }, testInfo) => {
+test('网页翻译占用模型时，cloudy 词卡先显示离线音标与释义，模型空闲后原位置补齐 AI 解释', async ({ extension }, testInfo) => {
   const { page, server, toggle } = extension;
   server.holdStreams();
   await toggle();
@@ -45,13 +52,15 @@ test('网页翻译占用模型时，点击划词按钮先出现离线音标，�
   try {
     await expect(dialog.getByRole('button', { name: '美式发音' })).toContainText('/ˈkɫaʊdi/');
     await expect(dialog.getByRole('button', { name: '英式发音' })).toContainText('/klˈaʊdi/');
-    await expect(dialog.getByText('释义准备中')).toBeVisible();
-    await expect(dialog).toHaveAttribute('aria-busy', 'true');
+    await expect(dialog.getByRole('region', { name: '本地词库释义' })).toContainText('多云的');
+    await expect(dialog.getByText('AI 语境解释准备中', { exact: true })).toBeVisible();
+    await expect(dialog).toHaveAttribute('aria-busy', 'false');
     expect(server.calls.filter(call => call.word)).toHaveLength(0);
     const before = (await dialog.boundingBox())!;
     await page.screenshot({ path: testInfo.outputPath('dictionary-offline-preview.png') });
     server.releaseStreams();
     await expect(dialog.getByText('多云的；不清晰的')).toBeVisible();
+    await expect(dialog.getByRole('region', { name: '本地词库释义' })).toContainText('多云的');
     await expect(dialog).toHaveAttribute('aria-busy', 'false');
     const after = (await dialog.boundingBox())!;
     expect(after.x).toBe(before.x); expect(after.y).toBe(before.y);
