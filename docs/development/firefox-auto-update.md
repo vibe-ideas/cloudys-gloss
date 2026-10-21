@@ -44,4 +44,12 @@ python3 tests/updates/firefox-native.py
 - macOS 上的 Firefox Developer Edition 158.0b5：运行 `python3 tests/updates/firefox-native.py`，低版本夹具通过公开 HTTPS 更新清单升级到真实 Release 的 0.1.10。扩展永久安装且启用，模型设置保留，退出重启后再次通过版本、启用状态和设置断言。
 - 上述结果来自隔离测试配置，不代表用户日常配置已经完成安装。日常 Firefox 已收到本地 XPI 打开请求，但窗口自动化接口超时，无法代替用户确认安装结果。
 
+## v0.1.14 验收记录（2026-10-21）
+
+- [Release](https://github.com/vibe-ideas/cloudys-gloss/releases/tag/v0.1.14) 与 [发布 CI](https://github.com/vibe-ideas/cloudys-gloss/actions/runs/39578309496) 已公开且成功。534 项单测、18 项真实窗口交互检查、184 项扩展 E2E、14 项产品页测试通过，另有 4 项既有用例按配置跳过。
+- 公开 `latest/download/firefox-updates.json` 已指向 0.1.14，实际下载 XPI 并核验 SHA-256、manifest 版本及稳定更新地址。
+- macOS Firefox Developer Edition 执行 `python3 tests/updates/firefox-native.py --expected 0.1.14`：临时配置中的 0.0.1 低版本夹具通过 Firefox 原生更新升级至公开的 0.1.14，永久安装、启用状态及原模型设置检查通过；重启后再次通过。
+- 该验证不读取或修改日常 Firefox 配置，不能据此声称用户日常安装已经更新。日常永久安装可等待原生自动检查，或在附加组件管理器中主动“检查更新”。
+- v0.1.13 的发布流程已取消，未公开 Release。0.1.14 修正了旧词卡测试仍等待“释义准备中”的过时预期，并保留离线音标、模型队列隔离、释义保留和词卡位置的断言。
+
 Mozilla 参考：[更新扩展](https://extensionworkshop.com/documentation/manage/updating-your-extension/) · [自行分发](https://extensionworkshop.com/documentation/publish/self-distribution/)。
