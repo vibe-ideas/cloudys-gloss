@@ -1,0 +1,42 @@
+[
+  {
+    "id": "R01",
+    "title": "科技文章长段落保留产出数量不等于质量的否定关系",
+    "repetition": 1,
+    "translations": [],
+    "outputHash": "a860272fd5bb7fdfa4528533f61a8290416407477ff9d64ab392fb795e098ca4",
+    "elapsedMs": 2357.370625,
+    "requests": 2,
+    "assessment": {
+      "errors": [
+        "模型输出不符合翻译结构要求，请重试或更换模型",
+        "译文块数与原文不符",
+        "第 1 块为空或缺失",
+        "R01-negation: 保留否定关系"
+      ],
+      "review": [],
+      "automaticPassed": false
+    },
+    "error": "模型输出不符合翻译结构要求，请重试或更换模型"
+  },
+  {
+    "id": "R01",
+    "title": "科技文章长段落保留产出数量不等于质量的否定关系",
+    "repetition": 2,
+    "translations": [],
+    "outputHash": "a860272fd5bb7fdfa4528533f61a8290416407477ff9d64ab392fb795e098ca4",
+    "elapsedMs": 1793.6340420000006,
+    "requests": 2,
+    "assessment": {
+      "errors": [
+        "模型输出不符合翻译结构要求，请重试或更换模型",
+        "译文块数与原文不符",
+        "第 1 块为空或缺失",
+        "R01-negation: 保留否定关系"
+      ],
+      "review": [],
+      "automaticPassed": false
+    },
+    "error": "模型输出不符合翻译结构要求，请重试或更换模型"
+  }
+]

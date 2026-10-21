@@ -1,0 +1,87 @@
+[
+  {
+    "id": "R01",
+    "title": "科技文章长段落保留产出数量不等于质量的否定关系",
+    "repetition": 1,
+    "translations": [
+      "personally，我从未把代码行数或PRs数量放在重要位置。在代理之前，没人关心，这本应是合理的，因为原始生产力并不总是等同于质量或用户可见的成果。这只是一个虚荣指标。"
+    ],
+    "outputHash": "bae3c4a18629444edac6801bc6d228470beb0da2106e0a68f471b8fb4fd1f368",
+    "elapsedMs": 5663.5774169999995,
+    "firstMs": 5662.88825,
+    "requests": 2,
+    "assessment": {
+      "errors": [],
+      "review": [],
+      "automaticPassed": true
+    }
+  },
+  {
+    "id": "R01",
+    "title": "科技文章长段落保留产出数量不等于质量的否定关系",
+    "repetition": 2,
+    "translations": [
+      "personally，我从未把代码行数或PRs数量放在重要位置。在代理之前，没人关心，这本应是合理的，因为原始生产力并不总是等同于质量或用户可见的成果。这只是一个虚荣指标。"
+    ],
+    "outputHash": "bae3c4a18629444edac6801bc6d228470beb0da2106e0a68f471b8fb4fd1f368",
+    "elapsedMs": 4806.375833,
+    "firstMs": 4806.196042,
+    "requests": 2,
+    "assessment": {
+      "errors": [],
+      "review": [],
+      "automaticPassed": true
+    }
+  },
+  {
+    "id": "R01",
+    "title": "科技文章长段落保留产出数量不等于质量的否定关系",
+    "repetition": 3,
+    "translations": [
+      "personally，我从未把代码行数或PRs数量放在重要位置。在代理之前，没人关心，这本应是合理的，因为原始生产力并不总是等同于质量或用户可见的成果。这只是一个虚荣指标。"
+    ],
+    "outputHash": "bae3c4a18629444edac6801bc6d228470beb0da2106e0a68f471b8fb4fd1f368",
+    "elapsedMs": 4902.210459,
+    "firstMs": 4901.9572499999995,
+    "requests": 2,
+    "assessment": {
+      "errors": [],
+      "review": [],
+      "automaticPassed": true
+    }
+  },
+  {
+    "id": "R01",
+    "title": "科技文章长段落保留产出数量不等于质量的否定关系",
+    "repetition": 4,
+    "translations": [
+      "personally，我从未把代码行数或PRs数量放在重要位置。在代理之前，没人关心，这本应是合理的，因为原始生产力并不总是等同于质量或用户可见的成果。这只是一个虚荣指标。"
+    ],
+    "outputHash": "bae3c4a18629444edac6801bc6d228470beb0da2106e0a68f471b8fb4fd1f368",
+    "elapsedMs": 4997.598416999999,
+    "firstMs": 4997.402334,
+    "requests": 2,
+    "assessment": {
+      "errors": [],
+      "review": [],
+      "automaticPassed": true
+    }
+  },
+  {
+    "id": "R01",
+    "title": "科技文章长段落保留产出数量不等于质量的否定关系",
+    "repetition": 5,
+    "translations": [
+      "personally，我从未把代码行数或PRs数量放在重要位置。在代理之前，没人关心，这本应是合理的，因为原始生产力并不总是等同于质量或用户可见的成果。这只是一个虚荣指标。"
+    ],
+    "outputHash": "bae3c4a18629444edac6801bc6d228470beb0da2106e0a68f471b8fb4fd1f368",
+    "elapsedMs": 4989.699790999999,
+    "firstMs": 4989.581415999997,
+    "requests": 2,
+    "assessment": {
+      "errors": [],
+      "review": [],
+      "automaticPassed": true
+    }
+  }
+]

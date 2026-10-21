@@ -1,6 +1,30 @@
 import { test, expect } from '../support/fixtures';
+import retryCorpus from '../../quality/paragraph-retry-cases.json' with { type: 'json' };
 
 const panelSelector = '[data-cloudys-gloss="component-hint"]';
+
+test('失败长段落点击重试后，模型仍复述英文时自动单段补译，只显示中文正文且不重翻其他段落', async ({ extension }) => {
+  const { page, server, toggle } = extension;
+  const source = retryCorpus.cases[0]!.texts[0]!;
+  await page.locator('#first').evaluate((node, text) => { node.textContent = text; }, source);
+  server.setInvalid(true);
+  await toggle();
+  const first = page.locator('#first > [data-cloudys-gloss]');
+  await expect(first).toHaveAttribute('data-state', 'error');
+  await expect(page.locator('#second > [data-cloudys-gloss]')).toHaveAttribute('data-state', 'error');
+  await first.click();
+  server.setInvalid(false);
+  server.setTranslation(source, source);
+  const translation = retryCorpus.cases[0]!.referenceZh[0]!;
+  server.setTranslationRepair(source, translation);
+  const before = server.calls.length;
+  await page.locator(panelSelector).getByRole('button', { name: '重试这一段', exact: true }).click();
+  await expect(first).toHaveAttribute('data-state', 'done');
+  await expect(first).toHaveText(translation);
+  await expect(page.locator(panelSelector).locator('.error')).toBeHidden();
+  expect(server.calls.slice(before).map(call => call.texts)).toEqual([[source], [source]]);
+  await expect(page.locator('#second > [data-cloudys-gloss]')).toHaveAttribute('data-state', 'error');
+});
 
 test('网页失败段落显示各自错误，重试只请求当前段，重新翻译失败保留旧译文', async ({ extension }, testInfo) => {
   const { page, server, toggle } = extension;

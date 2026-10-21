@@ -1,0 +1,19 @@
+{
+  "date": "2026-10-21T12:30:57.977Z",
+  "model": "Qwen/Qwen3-1.7B-MLX-4bit",
+  "modelRevision": "unrecorded",
+  "corpusVersion": "1.0.0",
+  "corpusHash": "4da1b43b6154f144889f2ef104843f1720913882ec4f196b082ed2d210dcce78",
+  "providerHash": "3c9c011ff9b65c7b6d6a31e0e2f1664cdd12c1feee6439b607cc7bd7f0d06a06",
+  "repetitions": 5,
+  "temperature": 0,
+  "concurrency": 1,
+  "requestOptions": {},
+  "chip": "Apple M4 Pro",
+  "route": "OpenAICompatibleProvider.translate with streaming callback, validation and fallback",
+  "runtime": "unrecorded",
+  "promptCache": "unrecorded",
+  "enableThinking": "unrecorded",
+  "cache": "no extension result cache",
+  "reviewPolicy": "Automatic guards are not a semantic quality score; reviews.json records the current review status"
+}

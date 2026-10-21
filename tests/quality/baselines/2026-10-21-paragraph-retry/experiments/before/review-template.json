@@ -1,0 +1,18 @@
+{
+  "corpusHash": "4da1b43b6154f144889f2ef104843f1720913882ec4f196b082ed2d210dcce78",
+  "providerHash": "49a7be586d78cbd6c95ed804e2c88ffb00358eea1584ff367be8776e82c69cb3",
+  "model": "Qwen/Qwen3-1.7B-MLX-4bit",
+  "reviewer": null,
+  "method": null,
+  "reviews": [
+    {
+      "id": "R01",
+      "outputHash": "a860272fd5bb7fdfa4528533f61a8290416407477ff9d64ab392fb795e098ca4",
+      "adequacy": null,
+      "completeness": null,
+      "fluency": null,
+      "critical": null,
+      "notes": null
+    }
+  ]
+}

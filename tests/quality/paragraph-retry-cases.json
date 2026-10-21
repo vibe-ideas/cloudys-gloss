@@ -1,0 +1,12 @@
+{
+  "version": "1.0.0",
+  "cases": [{
+    "id": "R01",
+    "title": "科技文章长段落保留产出数量不等于质量的否定关系",
+    "tags": ["段落重试", "科技文章", "否定"],
+    "texts": ["Personally, I have never put much emphasis into how many lines of code or how many PRs I was landing. Before agents, no one cared, and rightfully so, as raw productivity did not always equate to quality or a visible outcome for users. It was simply a vanity metric."],
+    "referenceZh": ["就我个人而言，我从未过分看重自己写了多少行代码、合并了多少个 PR。在智能体出现之前，没有人在意这些，这也理所当然，因为单纯的产出数量并不总能代表质量，也不一定能给用户带来可见的成果。这只是一个虚荣指标。"],
+    "requirements": ["保留作者不看重代码行数与 PR 数量的立场。", "保留智能体出现之前的时间背景、产出数量不一定代表质量或用户成果的否定关系，以及虚荣指标的评价。"],
+    "checks": [{"id":"R01-negation","block":0,"description":"保留否定关系","pattern":"不|未|无|没","kind":"required","severity":"error"}]
+  }]
+}

@@ -12,6 +12,7 @@ tests/
     holdout.json         # 第一组未参与初始调参的验收题，失败后作为回归集
     acceptance.json      # 第二组独立验收题，候选冻结后执行
     dictionary-cases.json # 词卡语境、词性与释义要求
+    paragraph-retry-cases.json # 用户反馈的长段落持续失败回归
     cases.json           # 版本化固定语料、参考译文、语义要求和规则
     corpus.ts            # Zod 校验与确定性检查
     live.test.ts         # Vitest 调用真实 provider，保存原文对应结果

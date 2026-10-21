@@ -12,6 +12,7 @@ export async function startServer() {
   const calls: { texts?: string[]; text?: string; word?: string; context?: string; example?: string }[] = [];
   let delay = 0; let invalid = false; let translationFailure = 0;
   const translationOverrides = new Map<string, string>();
+  const translationRepairs = new Map<string, string>();
   let streamGate: Promise<void> | undefined; let releaseStream: (() => void) | undefined;
   let finishedStreams = 0; let abortedStreams = 0;
   const token = crypto.randomUUID();
@@ -47,13 +48,13 @@ export async function startServer() {
     if (request.url === '/v1/chat/completions') {
       let raw = ''; for await (const chunk of request) raw += chunk;
       const requestBody = JSON.parse(raw);
-      if (requestBody.messages[0].content.includes('as plain text')) {
-        const text = requestBody.messages[1].content as string;
+      if (requestBody.messages[1].content.startsWith('请把以下英文全文翻译为简体中文')) {
+        const text = (requestBody.messages[1].content as string).split('\n<source>\n').slice(1).join('\n<source>\n').replace(/\n<\/source>$/, '');
         calls.push({ texts: [text] });
         if (translationFailure) { response.writeHead(translationFailure); response.end('test failure'); return; }
         if (delay) await new Promise((resolve) => setTimeout(resolve, delay));
         response.writeHead(200, { 'Content-Type': 'application/json' });
-        response.end(JSON.stringify({ choices: [{ message: { content: invalid ? '{"broken":true}' : `中文译文：${text}` } }] }));
+        response.end(JSON.stringify({ choices: [{ message: { content: invalid ? '{"broken":true}' : translationRepairs.get(text) ?? `中文译文：${text}` } }] }));
         return;
       }
       const data = JSON.parse(requestBody.messages[1].content) as typeof calls[number]; calls.push(data);
@@ -106,5 +107,6 @@ export async function startServer() {
     releaseStreams: () => { releaseStream?.(); streamGate = undefined; },
     setTranslationFailure: (status: number) => { translationFailure = status; },
     setTranslation: (source: string, text: string) => { translationOverrides.set(source, text); },
+    setTranslationRepair: (source: string, text: string) => { translationRepairs.set(source, text); },
     setDelay: (value: number) => { delay = value; }, setInvalid: (value: boolean) => { invalid = value; }, close: () => new Promise<void>((resolve, reject) => { releaseStream?.(); for (const job of pending.values()) { clearTimeout(job.timer); job.reject(new Error('Test server closed')); } pending.clear(); server.closeAllConnections(); server.close((error) => error ? reject(error) : resolve()); }) };
 }
