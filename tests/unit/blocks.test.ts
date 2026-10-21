@@ -58,6 +58,10 @@ describe('全文翻译语义块提取', () => {
     document.querySelectorAll('a')[0]!.after(document.createTextNode(' with '));
     expect(semanticBlocks(document.body).map(element => semanticText(element))).toEqual(['Compare First with Second']);
   });
+  it('X 文章标题和只读富文本按标题、段落提取，保留段内链接，不读取编辑中的草稿', () => {
+    document.body.innerHTML = '<main><header><span data-testid="twitter-article-title">A guide to <a href="/guide">better agents</a></span></header><span role="heading">Verification matters</span><div data-testid="twitterArticleReadView"><div contenteditable="false"><div data-block="true"><div><span>Read <strong>the original</strong> and <a href="/one">verify your work</a>.</span></div></div><div data-block="true"><div><span>Another paragraph.</span></div></div></div></div><div contenteditable="true"><div>Private article draft.</div></div></main>';
+    expect(semanticBlocks(document.body).map(element => semanticText(element))).toEqual(['A guide to better agents', 'Verification matters', 'Read the original and verify your work.', 'Another paragraph.']);
+  });
   it('段落含强调与链接时合并成一个请求单元并保留完整语义', () => {
     document.body.innerHTML = '<article><p>Hello <strong>beautiful</strong> <a>world</a>.</p></article>';
     const blocks = semanticBlocks(document.body);

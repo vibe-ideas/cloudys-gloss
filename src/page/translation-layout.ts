@@ -1,3 +1,5 @@
+import { isXArticle, isXArticleCell } from './x-article';
+
 type Region = { element: HTMLElement; overflow: number; overflowX: number; gridOverlap: boolean; minimum?: number; users: Set<Element>; changed: Map<string, { value: string; priority: string; applied: string }>; originalStyle: string | null; lastStyle: string | null; hostChanged: boolean };
 
 /** Grow normal-flow reading regions only when inserted text would overflow them.
@@ -14,16 +16,21 @@ export class TranslationLayout {
   private frame?: number;
   prepare(element: Element, compact = false) {
     const ancestors: HTMLElement[] = [];
+    const xArticle = isXArticle(element);
     let hint = false;
+    let trackAncestors = true;
     for (let current: Element | null = element; current && current !== document.body; current = current.parentElement) {
       const style = getComputedStyle(current);
       // Keep the app's scroll viewport intact, including fixed dialogs and
       // absolutely positioned reading panes. Their children can still grow.
       if (['auto', 'scroll'].includes(style.overflowY)) break;
+      // Virtual rows are measured by the site; they are not rigid overlays.
+      // Still inspect outer ancestors so a fixed dialog remains protected.
+      if (xArticle && isXArticleCell(current, style)) { trackAncestors = false; continue; }
       if (['absolute', 'fixed'].includes(style.position) || compact && style.position === 'sticky') {
         hint = true; break;
       }
-      if (current instanceof HTMLElement) ancestors.push(current);
+      if (trackAncestors && current instanceof HTMLElement) ancestors.push(current);
     }
     if (compact || hint) {
       this.components.set(element, { hint, display: getComputedStyle(element).display });

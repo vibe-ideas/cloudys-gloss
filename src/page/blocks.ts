@@ -5,7 +5,7 @@ const excluded = `script,style,noscript,pre,code,textarea,input,select,option,sv
 const hidden = '[hidden],[aria-hidden="true"],[inert]';
 const controls = 'button,summary,label,legend,[role="button"],[role="tab"],[role="menuitem"],[role="menuitemcheckbox"],[role="menuitemradio"],[role="switch"],[role="checkbox"],[role="radio"],[aria-haspopup],a[aria-controls],a.button,a.btn,a.cta';
 const navigation = 'nav,header,footer,search,[role="navigation"],[role="menu"],[role="menubar"],[role="toolbar"],[role="tablist"],[role="search"],[role="breadcrumb"]';
-const semantic = `p,h1,h2,h3,h4,h5,h6,li,blockquote,figcaption,td,th,dt,dd,div,section,article,main,${navigation},${controls},.badge,.chip,[role="status"],[role="alert"]`;
+const semantic = `p,h1,h2,h3,h4,h5,h6,li,blockquote,figcaption,td,th,dt,dd,div,section,article,main,${navigation},${controls},.badge,.chip,[role="status"],[role="alert"],[role="heading"],[data-testid="twitter-article-title"]`;
 export type TranslationKind = 'prose' | 'component';
 export type SemanticContext = { groups: WeakMap<Element, boolean>; revision: number };
 export function semanticContext(): SemanticContext { return { groups: new WeakMap(), revision: 0 }; }
@@ -52,7 +52,7 @@ function componentLink(element: Element, context?: SemanticContext) {
   // A header/footer can contain article copy as well as navigation. Ordinary
   // links inside a reading block belong to that sentence; explicit CTA/role
   // controls are already handled by componentOwner before this check.
-  if (element.closest('p,h1,h2,h3,h4,h5,h6,blockquote,figcaption,dt,dd')) return false;
+  if (element.closest('p,h1,h2,h3,h4,h5,h6,blockquote,figcaption,dt,dd,[role="heading"],[data-testid="twitter-article-title"]')) return false;
   if (element.closest(navigation)) return true;
   for (let parent = element.parentElement; parent && parent.matches('span,b,strong,i,em,small,div,section,td,th'); parent = parent.parentElement) {
     if (linkGroup(parent, context)) return true;
@@ -70,6 +70,7 @@ export function translationKind(element: Element, context?: SemanticContext): Tr
   const owner = componentOwner(element, context);
   if (owner && owner !== element) return;
   if (owner === element || componentLink(element, context)) return 'component';
+  if (element.matches('[role="heading"],[data-testid="twitter-article-title"]')) return 'prose';
   if (element.matches('span,small,b,strong') && element.closest(navigation) && !element.parentElement?.closest('p,h1,h2,h3,h4,h5,h6,span,small,b,strong')) return 'component';
   if (!element.matches(semantic)) return;
   return element.matches('th,.badge,.chip,[role="status"]') || !!element.closest(navigation) && !element.matches('p,h1,h2,h3,h4,h5,h6,blockquote,figcaption') ? 'component' : 'prose';
