@@ -43,7 +43,7 @@ export function ModelControls() {
     </div>
     <div class="row switch-row">
       <span class="row-text"><strong>登录时自动启动</strong><small>启停模型不改变此偏好；切换时正在运行的模型会重启。</small></span>
-      <button class="switch" data-on={!!model?.autostart} disabled={!usable} onClick={() => void control('autostart', !model?.autostart)}>
+      <button class="switch" role="switch" aria-checked={!!model?.autostart} data-on={!!model?.autostart} disabled={!usable} onClick={() => void control('autostart', !model?.autostart)}>
         <span class="visually-hidden">{model?.autostart ? '关闭登录自启' : '开启登录自启'}</span></button>
     </div>
   </section>;

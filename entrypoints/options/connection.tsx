@@ -17,30 +17,31 @@ export function Connection({ form }: { form: SettingsForm }) {
     { id: 'ollama', title: 'Ollama', note: '本地 11434', pick: () => replace({ ...settings, ...OLLAMA }) },
     { id: 'custom', title: '自定义', note: 'OpenAI 兼容', pick: () => baseUrl.current?.select() },
   ];
-  return <section id="connection" tabIndex={-1} class="card" aria-labelledby="connection-heading">
-    <header class="card-head"><h2 id="connection-heading">模型连接</h2><p class="muted">请求均由扩展后台发起。选一个预设，或填写自己的兼容服务。</p></header>
+  return <section id="connection" tabIndex={-1} class="card connection-card" aria-labelledby="connection-heading">
+    <header class="card-head"><h2 id="connection-heading">模型连接</h2><p class="muted">网页、词卡和输入框翻译使用此服务。选择预设，或连接自己的 OpenAI 兼容服务。</p></header>
     <div class="segmented" role="group" aria-label="服务预设">
       {presets.map((preset) => <button type="button" key={preset.id} aria-pressed={active === preset.id}
-        onClick={() => { setCustom(preset.id === 'custom'); preset.pick(); }}><strong>{preset.title}</strong><small>{preset.note}</small></button>)}
+        onClick={() => { setCustom(preset.id === 'custom'); preset.pick(); }}><span class="preset-title"><strong>{preset.title}</strong><span class="preset-indicator" aria-hidden="true" /></span><small>{preset.note}</small></button>)}
     </div>
     <div class="grid">
-      <Field full label="Base URL" hint="例如 http://127.0.0.1:8080/v1，也支持完整的 /chat/completions 地址。">
-        <input ref={baseUrl} name="baseUrl" type="url" required value={settings.baseUrl} onInput={(event) => update('baseUrl', event.currentTarget.value)} />
+      <Field full label="服务地址 · Base URL" hint="以 /v1 结尾，或使用完整的 /chat/completions 地址。">
+        <input ref={baseUrl} name="baseUrl" type="url" spellcheck={false} required value={settings.baseUrl} onInput={(event) => update('baseUrl', event.currentTarget.value)} />
       </Field>
-      <Field label="Model" hint="服务中实际可用的模型标识。">
-        <input name="model" required value={settings.model} onInput={(event) => update('model', event.currentTarget.value)} />
+      <Field label="模型名称 · Model" hint="填写服务中可用的模型标识。">
+        <input name="model" spellcheck={false} required value={settings.model} onInput={(event) => update('model', event.currentTarget.value)} />
       </Field>
-      <Field label="API Key" hint="仅保存在本机，本地服务可留空。">
+      <Field label="API Key（可选）" hint="仅保存在本机，本地服务可留空。">
         <input name="apiKey" type="password" autoComplete="off" placeholder="可选" value={settings.apiKey} onInput={(event) => update('apiKey', event.currentTarget.value)} />
       </Field>
     </div>
     <details class="advanced">
       <summary>高级参数<span class="muted">温度 {settings.temperature} · 超时 {settings.timeout / 1000} 秒 · 并发 {settings.concurrency}</span></summary>
       <div class="grid three">
-        <Field label="Temperature"><input name="temperature" type="number" min="0" max="2" step="0.1" value={settings.temperature} onInput={(event) => update('temperature', event.currentTarget.valueAsNumber)} /></Field>
-        <Field label="Timeout（毫秒）"><input name="timeout" type="number" min="1000" max="300000" step="1000" value={settings.timeout} onInput={(event) => update('timeout', event.currentTarget.valueAsNumber)} /></Field>
-        <Field label="Concurrency" hint="本地模型建议 1–2，所有页面共享。"><input name="concurrency" type="number" min="1" max="8" step="1" value={settings.concurrency} onInput={(event) => update('concurrency', event.currentTarget.valueAsNumber)} /></Field>
+        <Field label="温度" hint="0–2，越低越稳定。"><input name="temperature" type="number" min="0" max="2" step="0.1" value={settings.temperature} onInput={(event) => update('temperature', event.currentTarget.valueAsNumber)} /></Field>
+        <Field label="超时（毫秒）" hint="等待单次请求的最长时间。"><input name="timeout" type="number" min="1000" max="300000" step="1000" value={settings.timeout} onInput={(event) => update('timeout', event.currentTarget.valueAsNumber)} /></Field>
+        <Field label="并发请求数" hint="所有页面共享，最多 8 个。"><input name="concurrency" type="number" min="1" max="8" step="1" value={settings.concurrency} onInput={(event) => update('concurrency', event.currentTarget.valueAsNumber)} /></Field>
       </div>
+      <p class="advanced-note muted">默认本机小模型使用 {defaults.concurrency} 并发。服务不支持并行、内存紧张或首段较慢时，可降至 1–2。</p>
     </details>
   </section>;
 }

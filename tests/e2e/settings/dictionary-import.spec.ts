@@ -13,6 +13,8 @@ test('导入压缩 StarDict 后重开设置仍可查询；模型忙碌时先展�
   await options.fill('dictionaryQuery', 'RAG'); await options.click('查询本地词库');
   await expect.poll(() => options.dictionaryText('results')).toContain('检索增强生成');
   await options.screenshot(testInfo.outputPath('dictionary-settings.png'));
+  await options.fill('concurrency', '1'); await options.click('保存设置');
+  await expect.poll(() => options.status()).toContain('设置已保存');
   server.holdStreams();
   try {
     await toggle(); await expect(page.locator('[data-state="partial"]').first()).toBeVisible();
