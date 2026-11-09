@@ -1,0 +1,151 @@
+{
+  "scope": "81 public article blocks; Qwen3 1.7B 4bit; temperature 0; concurrency 8; no extension result cache; server prompt cache not cleared; no image OCR",
+  "browser": "Chromium",
+  "order": [
+    "before",
+    "prefetch",
+    "prefetch-repeat",
+    "before-repeat"
+  ],
+  "runs": {
+    "before": {
+      "blocks": 81,
+      "completed": 81,
+      "firstMs": 3610.699999988079,
+      "elapsedMs": 69030.59999999404
+    },
+    "prefetch": {
+      "blocks": 81,
+      "completed": 81,
+      "firstMs": 2886.5,
+      "elapsedMs": 53915
+    },
+    "prefetch-repeat": {
+      "blocks": 81,
+      "completed": 81,
+      "firstMs": 2878.7000000178814,
+      "elapsedMs": 59805.59999999404
+    },
+    "before-repeat": {
+      "blocks": 81,
+      "completed": 81,
+      "firstMs": 2649.4000000059605,
+      "elapsedMs": 61710.80000001192
+    }
+  },
+  "means": {
+    "beforeMs": 65370.70000000298,
+    "afterMs": 56860.29999999702,
+    "reductionPercent": 13.018676563055884
+  },
+  "protocolExperiments": {
+    "baseline": {
+      "completedBatches": 41,
+      "totalBatches": 41,
+      "elapsedMs": 44870.409875,
+      "firstMs": 3364.3135839999995,
+      "requests": 48,
+      "repairs": 7,
+      "failed": 0,
+      "metadata": {
+        "date": "2026-11-07T18:49:20.745Z",
+        "chip": "Apple M4 Pro",
+        "settings": {
+          "baseUrl": "http://127.0.0.1:8080/v1",
+          "model": "Qwen/Qwen3-1.7B-MLX-4bit",
+          "temperature": 0,
+          "timeout": 120000,
+          "concurrency": 8,
+          "theme": "system",
+          "autoStartLocalModel": true,
+          "inputTranslation": true
+        },
+        "articleSha256": "139a0e753eafb166d7385b6875ac92334a1cd53ed0e233f249b87a2c4f9fe18c",
+        "legacy": false,
+        "proseItems": 2,
+        "batchCharacters": 1800,
+        "modelRevision": "unrecorded",
+        "runtime": "unrecorded",
+        "blocks": 81,
+        "chunks": 81,
+        "batches": 41,
+        "characters": 23126,
+        "scope": "production semantic extraction and 900-character chunks; configurable bounded provider pool with validation and repairs; no result cache or browser rendering",
+        "promptCache": "server unchanged; not cleared"
+      }
+    },
+    "plain": {
+      "completedBatches": 81,
+      "totalBatches": 81,
+      "elapsedMs": 33563.07125,
+      "firstMs": 402.4365829999999,
+      "requests": 81,
+      "repairs": 0,
+      "failed": 0,
+      "metadata": {
+        "date": "2026-11-07T18:50:12.841Z",
+        "chip": "Apple M4 Pro",
+        "settings": {
+          "baseUrl": "http://127.0.0.1:8080/v1",
+          "model": "Qwen/Qwen3-1.7B-MLX-4bit",
+          "temperature": 0,
+          "timeout": 120000,
+          "concurrency": 8,
+          "theme": "system",
+          "autoStartLocalModel": true,
+          "inputTranslation": true
+        },
+        "articleSha256": "139a0e753eafb166d7385b6875ac92334a1cd53ed0e233f249b87a2c4f9fe18c",
+        "legacy": false,
+        "plain": true,
+        "proseItems": 2,
+        "batchCharacters": 1800,
+        "modelRevision": "unrecorded",
+        "runtime": "unrecorded",
+        "blocks": 81,
+        "chunks": 81,
+        "batches": 81,
+        "characters": 23126,
+        "scope": "production semantic extraction and 900-character chunks; configurable bounded provider pool with validation and repairs; no result cache or browser rendering",
+        "promptCache": "server unchanged; not cleared"
+      },
+      "note": "81 initial plain requests used the repair helper; old raw summary counts them as repairs. Rejected after semantic spot-check (title mistranslated as Cua司机椅)."
+    },
+    "short-batch": {
+      "completedBatches": 44,
+      "totalBatches": 44,
+      "elapsedMs": 46726.616125,
+      "firstMs": 3932.524792,
+      "requests": 51,
+      "repairs": 7,
+      "failed": 0,
+      "metadata": {
+        "date": "2026-11-07T18:53:30.301Z",
+        "chip": "Apple M4 Pro",
+        "settings": {
+          "baseUrl": "http://127.0.0.1:8080/v1",
+          "model": "Qwen/Qwen3-1.7B-MLX-4bit",
+          "temperature": 0,
+          "timeout": 120000,
+          "concurrency": 8,
+          "theme": "system",
+          "autoStartLocalModel": true,
+          "inputTranslation": true
+        },
+        "articleSha256": "139a0e753eafb166d7385b6875ac92334a1cd53ed0e233f249b87a2c4f9fe18c",
+        "legacy": false,
+        "plain": false,
+        "proseItems": 2,
+        "batchCharacters": 900,
+        "modelRevision": "unrecorded",
+        "runtime": "unrecorded",
+        "blocks": 81,
+        "chunks": 81,
+        "batches": 44,
+        "characters": 23126,
+        "scope": "production semantic extraction and 900-character chunks; configurable bounded provider pool with validation and repairs; no result cache or browser rendering",
+        "promptCache": "server unchanged; not cleared"
+      }
+    }
+  }
+}

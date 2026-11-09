@@ -8,7 +8,7 @@ import { existsSync } from 'node:fs';
 import { spawn, type ChildProcess } from 'node:child_process';
 import { setTimeout as delay } from 'node:timers/promises';
 import { startServer } from './server';
-import { firefoxBridge } from './firefox-bridge';
+import { firefoxBridge, firefoxTabsBridge } from './firefox-bridge';
 import { SettingsDriver } from './settings-driver';
 
 type Fixture = { headed: boolean; motion: 'reduce' | 'no-preference'; extension: { context: BrowserContext; options: SettingsDriver; page: Page; server: Awaited<ReturnType<typeof startServer>>; toggle: () => Promise<unknown> } };
@@ -83,8 +83,8 @@ export const test = base.extend<Fixture>({
         const manifest = JSON.parse(await readFile(path.join(addon, 'manifest.json'), 'utf8'));
         manifest.background.scripts.push('test-open.js');
         await writeFile(path.join(addon, 'manifest.json'), JSON.stringify(manifest));
-        await writeFile(path.join(addon, 'test-open.js'), "browser.tabs.create({url:browser.runtime.getURL('options.html')});");
-        await writeFile(path.join(addon, 'test-options.js'), firefoxBridge(server.url, server.token));
+        await writeFile(path.join(addon, 'test-open.js'), "browser.tabs.create({url:browser.runtime.getURL('options.html')});" + firefoxTabsBridge(server.controlUrl, server.token));
+        await writeFile(path.join(addon, 'test-options.js'), firefoxBridge(server.controlUrl, server.token));
         const html = await readFile(path.join(addon, 'options.html'), 'utf8');
         await writeFile(path.join(addon, 'options.html'), html.replace('</body>', '<script src="test-options.js"></script></body>'));
         context = await firefox.launchPersistentContext(profile, {

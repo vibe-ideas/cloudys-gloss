@@ -40,13 +40,17 @@ export class PageTranslator {
   private hints = new ComponentHints();
   private preferComponents = false;
   private extraction = semanticContext();
+  private requestLimit = 2;
   constructor(private transport: TranslationTransport, private changed: () => void = () => {}) {}
+  setConcurrency(value: number) { this.requestLimit = Math.max(1, Math.min(8, Math.floor(value) || 1)); this.schedule(); }
   get status() { return { enabled: this.running, translated: this.complete.size, pending: this.requests.size + this.retries.size, error: this.lastError }; }
   start() {
     if (this.running) return;
     this.running = true; this.generation++; this.lastError = '';
     this.motion = mountTranslationMotion();
     document.addEventListener('visibilitychange', this.visibilityChanged);
+    // Feed enough nearby paragraphs to keep high-concurrency model batches
+    // occupied. The request cap, viewport priority and cancellation still apply.
     this.intersections = new IntersectionObserver((entries) => {
       for (const entry of entries) {
         const block = this.blocks.get(entry.target); if (!block) continue;
@@ -57,7 +61,7 @@ export class PageTranslator {
         if (!block.scroll) this.setNear(block, entry.isIntersecting);
       }
       this.schedule();
-    }, { rootMargin: '500px 0px' });
+    }, { rootMargin: this.requestLimit > 4 ? '3000px 0px' : this.requestLimit > 2 ? '1500px 0px' : '500px 0px' });
     this.viewport = new IntersectionObserver((entries) => {
       for (const entry of entries) { const block = this.blocks.get(entry.target); if (block) this.recordVisibility(block, entry); }
       this.schedule();
@@ -320,7 +324,7 @@ export class PageTranslator {
     const source = hint || block.compact || unchanged ? block.element : block.node;
     const other = source === block.element ? block.node : block.element;
     this.hints.release(other);
-    if (!block.compact && !unchanged) {
+    if (!block.compact && !hint && !unchanged) {
       block.node.tabIndex = 0; block.node.setAttribute('role', 'button');
       block.node.setAttribute('aria-label', block.failed ? '翻译失败：查看原因与重试' : '译文操作：重新翻译这一段');
       block.node.title = '点击查看操作 · Enter / Alt+Enter';
@@ -409,10 +413,10 @@ export class PageTranslator {
     if (document.visibilityState === 'hidden') return;
     const slots = () => this.requests.size + [...this.retries].filter(block => block.retry?.id).length;
     for (const block of this.retries) {
-      if (slots() >= 2) break;
+      if (slots() >= this.requestLimit) break;
       if (!block.retry?.id) void this.runRetry(block);
     }
-    while (slots() < 2) {
+    while (slots() < this.requestLimit) {
       const work: Work[] = []; let chars = 0;
       const candidates = [...this.nearby].sort((a, b) => Number(b.visible) - Number(a.visible) || (this.preferComponents ? Number(b.compact) - Number(a.compact) : Number(a.compact) - Number(b.compact)));
       let compactBatch: boolean | undefined;

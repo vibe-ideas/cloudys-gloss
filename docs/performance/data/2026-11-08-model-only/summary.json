@@ -1,0 +1,116 @@
+{
+  "date": "2026-11-08",
+  "sourceCommit": "0757beeb0b45f0b886628ba30a04f0dfbc0ca1c2",
+  "blocks": 81,
+  "characters": 23126,
+  "quality": "Structural completion only; semantic review found number omissions and terminology errors in both baseline and optimized samples.",
+  "providerSamples": [
+    {
+      "artifact": "artifacts/cua-article/model-only-before-20261108",
+      "summary": {
+        "completedBatches": 41,
+        "totalBatches": 41,
+        "elapsedMs": 104840.283334,
+        "firstMs": 1124.703,
+        "requests": 48,
+        "repairs": 7,
+        "failed": 0
+      },
+      "adopted": false
+    },
+    {
+      "artifact": "artifacts/cua-article/model-only-parallel4-20261108",
+      "summary": {
+        "completedBatches": 21,
+        "totalBatches": 21,
+        "elapsedMs": 48243.525917,
+        "firstMs": 1775.557292,
+        "requests": 35,
+        "repairs": 14,
+        "failed": 0
+      },
+      "adopted": false
+    },
+    {
+      "artifact": "artifacts/cua-article/model-only-parallel8-20261108",
+      "summary": {
+        "completedBatches": 41,
+        "totalBatches": 41,
+        "elapsedMs": 40316.205875,
+        "firstMs": 2530.2569999999996,
+        "requests": 46,
+        "repairs": 5,
+        "failed": 0
+      },
+      "adopted": true
+    },
+    {
+      "artifact": "artifacts/cua-article/model-only-chinese8-20261108",
+      "summary": {
+        "completedBatches": 41,
+        "totalBatches": 41,
+        "elapsedMs": 49503.478583000004,
+        "firstMs": 2007.2087080000001,
+        "requests": 74,
+        "repairs": 33,
+        "failed": 0
+      },
+      "adopted": false
+    },
+    {
+      "artifact": "artifacts/cua-article/model-only-single8-20261108",
+      "summary": {
+        "completedBatches": 81,
+        "totalBatches": 81,
+        "elapsedMs": 52390.097042,
+        "firstMs": 1854.3805419999999,
+        "requests": 94,
+        "repairs": 13,
+        "failed": 0
+      },
+      "adopted": false
+    },
+    {
+      "artifact": "artifacts/cua-article/model-only-native8-20261108",
+      "summary": {
+        "completedBatches": 41,
+        "totalBatches": 41,
+        "elapsedMs": 40566.382750000004,
+        "firstMs": 2622.8255419999996,
+        "requests": 53,
+        "repairs": 12,
+        "failed": 0
+      },
+      "adopted": false
+    }
+  ],
+  "extensionSamples": [
+    {
+      "artifact": "artifacts/model-only-ui-one.log",
+      "data": {
+        "blocks": 81,
+        "completed": 81,
+        "firstMs": 1473,
+        "elapsedMs": 105171
+      }
+    },
+    {
+      "artifact": "artifacts/model-only-ui-after.log",
+      "data": {
+        "blocks": 81,
+        "completed": 81,
+        "firstMs": 3705.699999988079,
+        "elapsedMs": 55780
+      }
+    },
+    {
+      "artifact": "artifacts/model-only-ui-firefox.log",
+      "data": {
+        "blocks": 81,
+        "completed": 81,
+        "firstMs": 2358,
+        "elapsedMs": 64942
+      }
+    }
+  ]
+}

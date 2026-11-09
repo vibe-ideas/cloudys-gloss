@@ -1,6 +1,7 @@
 import { test, expect } from '../support/fixtures';
-test('2000 段大页面：同批第一段先显示、第二段显示动态占位；跳到页尾后取消旧任务，关闭恢复全部原文', async ({ extension }, testInfo) => {
-  const { page, server } = extension;
+for (const concurrency of [2, 8]) test(`2000 段页面配置 ${concurrency} 并发时限制在途批次，逐段显示；跳到页尾取消旧任务，关闭恢复原文`, async ({ extension }, testInfo) => {
+  const { page, server, options } = extension;
+  await options.fill('concurrency', String(concurrency)); await options.click('保存设置');
   await page.goto(`${server.url}/large`);
   const original = await page.locator('main').innerHTML();
   server.holdStreams();
@@ -13,7 +14,7 @@ test('2000 段大页面：同批第一段先显示、第二段显示动态占位
   const dot = page.locator('#row-1 [data-gloss-part="loader"] i').first();
   expect(await dot.evaluate((node) => getComputedStyle(node).animationName)).toBe('cloudys-breathe');
   expect(server.finishedStreams).toBe(0);
-  expect(server.calls.length).toBeLessThanOrEqual(2);
+  expect(server.calls.length).toBeLessThanOrEqual(concurrency);
   await expect(page.locator('#row-1999 [data-cloudys-gloss]')).toHaveCount(0);
   await page.screenshot({ animations: 'disabled', path: testInfo.outputPath('large-page-progress.png') });
   await page.locator('#row-1999').scrollIntoViewIfNeeded();

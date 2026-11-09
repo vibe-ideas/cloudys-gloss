@@ -2,6 +2,15 @@ import { expect, type Page } from '@playwright/test';
 type Control = <T>(operation: string, args?: unknown[]) => Promise<T>;
 export class SettingsDriver {
   constructor(private page?: Page, private control?: Control) {}
+  async image<T>(operation: string, args: string[] = []): Promise<T> {
+    if (!this.page) return this.control!(`image-${operation}`, args);
+    // Chrome's normal Page is used by the image tests; this path is only for readiness.
+    return this.page.evaluate(operation => {
+      const api = (globalThis as unknown as { chrome: typeof import('wxt/browser').browser }).chrome;
+      const view = (api.extension.getViews() as unknown as (typeof globalThis)[]).find(view => new URL(view.location.href).pathname === '/image.html');
+      return operation === 'ready' ? !!view?.document.querySelector('#image-url') : null;
+    }, operation) as Promise<T>;
+  }
   async fill(name: string, value: string) {
     if (this.page) {
       // Advanced fields sit in a collapsed <details>; open it like a person would.
@@ -62,6 +71,14 @@ export class SettingsDriver {
       return api.tabs.sendMessage(tab!.id!, { type: 'page:toggle' });
     }, url);
     return this.control!('toggle', [url]);
+  }
+  async contextImage(url: string, source: string) {
+    if (!this.page) return this.control!('context-image', [url, source]);
+    return this.page.evaluate(async ({ url, source }) => {
+      const api = (globalThis as unknown as { chrome: typeof import('wxt/browser').browser }).chrome;
+      const tab = (await api.tabs.query({})).find(tab => tab.url?.startsWith(url));
+      return api.tabs.sendMessage(tab!.id!, { type: 'image:context', url: source }, { frameId: 0 });
+    }, { url, source });
   }
   async switchReadingTab(url: string, active: boolean) {
     if (!this.page) return this.control!('reading-tab', [url, active]);

@@ -1,10 +1,24 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { LocalModelManager, migrateManagedPreset } from '../../src/model/local-model';
+import { LocalModelManager, migrateManagedPreset, migrateModelParallelism } from '../../src/model/local-model';
 import { defaults } from '../../src/core/schema';
 
 const state = { installed: true, running: true, autostart: false, model: defaults.model, baseUrl: defaults.baseUrl };
 afterEach(() => vi.unstubAllGlobals());
 describe('浏览器按需启动本地 MLX', () => {
+  it('本机模型持续返回 HTTP 响应时不重复探测 models，网络失败或手动停止后重新检查', async () => {
+    const fetcher = vi.fn().mockResolvedValue(new Response('{}')); vi.stubGlobal('fetch', fetcher);
+    const native = vi.fn().mockResolvedValue({ ok: true, data: state }); const manager = new LocalModelManager(native);
+    await manager.ensure(defaults, new AbortController().signal); expect(fetcher).toHaveBeenCalledOnce();
+    for (let i = 0; i < 8; i++) { manager.connection(defaults, true); await manager.ensure(defaults, new AbortController().signal); }
+    expect(fetcher).toHaveBeenCalledOnce(); expect(native).not.toHaveBeenCalled();
+    manager.connection(defaults, false); await manager.ensure(defaults, new AbortController().signal); expect(fetcher).toHaveBeenCalledTimes(2);
+    await manager.control('stop'); await manager.ensure(defaults, new AbortController().signal); expect(fetcher).toHaveBeenCalledTimes(3);
+  });
+  it('升级本机默认预设的单并发到八并发，远端接口、自定义模型及其他并发均保留', () => {
+    const old = { ...defaults, concurrency: 1 };
+    expect(migrateModelParallelism(old).concurrency).toBe(8);
+    for (const custom of [{ ...old, baseUrl: 'https://api.example.com/v1' }, { ...old, model: 'my-model' }, { ...old, concurrency: 2 }]) expect(migrateModelParallelism(custom)).toEqual(custom);
+  });
   it('升级默认模型时只迁移旧本机预设，保留主题、并发和用户自定义接口', () => {
     const old = { ...defaults, model: 'mlx-community/Qwen2.5-3B-Instruct-4bit', concurrency: 2, theme: 'dark' as const };
     expect(migrateManagedPreset(old)).toEqual({ ...old, model: defaults.model });

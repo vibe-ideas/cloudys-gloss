@@ -1,6 +1,6 @@
 import { isXArticle, isXArticleCell } from './x-article';
 
-type Region = { element: HTMLElement; overflow: number; overflowX: number; gridOverlap: boolean; minimum?: number; users: Set<Element>; changed: Map<string, { value: string; priority: string; applied: string }>; originalStyle: string | null; lastStyle: string | null; hostChanged: boolean };
+type Region = { element: HTMLElement; overflow: number; overflowX: number; gridOverlap: boolean; minimum?: number; users: Set<Element>; changed: Map<string, { value: string; priority: string; applied: string }>; originalStyle: string | null; lastStyle: string | null; hostChanged: boolean; focusAdded?: boolean };
 
 /** Grow normal-flow reading regions only when inserted text would overflow them.
  * Rigid overlays keep their geometry and expose the retained translation through
@@ -17,6 +17,7 @@ export class TranslationLayout {
   prepare(element: Element, compact = false) {
     const ancestors: HTMLElement[] = [];
     const xArticle = isXArticle(element);
+    const rowLabel = compact || element.matches('div,span,a,section') && parseFloat(getComputedStyle(element).fontSize) <= 14;
     let hint = false;
     let trackAncestors = true;
     for (let current: Element | null = element; current && current !== document.body; current = current.parentElement) {
@@ -29,6 +30,14 @@ export class TranslationLayout {
       if (xArticle && isXArticleCell(current, style)) { trackAncestors = false; continue; }
       if (['absolute', 'fixed'].includes(style.position) || compact && style.position === 'sticky') {
         hint = true; break;
+      }
+      // Dense app chrome (commit attribution, breadcrumbs, icon buttons) owns
+      // a single-line row. Inserting a full-width flex item breaks that row.
+      // Wrapping navigation and reading paragraphs retain their inline bilingual layout.
+      if (rowLabel && ['flex', 'inline-flex'].includes(style.display) && style.flexDirection === 'row' && style.flexWrap === 'nowrap'
+        && current.children.length >= 2) {
+        const height = current.getBoundingClientRect().height;
+        if (height > 0 && height <= 48 && current.querySelector('a[href],button,svg,img,[role="button"]')) { hint = true; break; }
       }
       if (trackAncestors && current instanceof HTMLElement) ancestors.push(current);
     }
@@ -57,6 +66,10 @@ export class TranslationLayout {
       this.set(region, 'text-decoration-line', 'underline');
       this.set(region, 'text-decoration-style', 'dotted');
       this.set(region, 'text-underline-offset', '3px');
+      const focusable = 'a[href],button,input,select,textarea,summary,label[for],[tabindex],[contenteditable="true"]';
+      if (!region.element.matches(focusable) && !region.element.querySelector(focusable)) {
+        region.element.setAttribute('tabindex', '0'); region.focusAdded = true;
+      }
     } else { this.restore(region); region.changed.clear(); region.originalStyle = region.element.getAttribute('style'); region.lastStyle = region.originalStyle; region.hostChanged = false; }
   }
   ownsStyle(element: Element) { const region = this.regions.get(element as HTMLElement); return !!region && region.lastStyle === element.getAttribute('style'); }
@@ -176,6 +189,8 @@ export class TranslationLayout {
     this.sources.delete(source);
   }
   private restore(region: Region) {
+    if (region.focusAdded && region.element.getAttribute('tabindex') === '0') region.element.removeAttribute('tabindex');
+    region.focusAdded = false;
     if (!region.changed.size) return;
     if (!region.hostChanged && region.element.getAttribute('style') === region.lastStyle) {
       if (region.originalStyle === null) region.element.removeAttribute('style');

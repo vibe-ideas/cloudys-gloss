@@ -1,5 +1,15 @@
 import { test, expect } from '../support/fixtures';
 
+test('右键悬浮球后打开翻译快捷面板，选择翻译和恢复原文各执行一次', async ({ extension }) => {
+  const { page, server } = extension; const host = page.locator('[data-cloudys-gloss="floating-control"]');
+  await host.locator('.orb').click({ button: 'right' });
+  await expect(host.getByRole('region', { name: '翻译快捷操作' })).toBeVisible();
+  expect(server.calls).toHaveLength(0);
+  await host.locator('.primary').click(); await expect(page.locator('#first > [data-state="done"]')).toBeVisible();
+  await host.locator('.primary').click(); await expect(page.locator('[data-cloudys-gloss="translation"]')).toHaveCount(0);
+  expect(server.calls.flatMap(call => call.texts ?? []).filter(text => text === 'A cloudy morning brings quiet thoughts.')).toHaveLength(1);
+});
+
 test('扩展重新注入并遇到更新遗留悬浮球时，移入只展开一个，翻译与恢复仍各执行一次', async ({ extension }, testInfo) => {
   const { page, options, server } = extension;
   const host = page.locator('[data-cloudys-gloss="floating-control"]');

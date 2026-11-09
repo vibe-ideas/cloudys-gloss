@@ -1,0 +1,44 @@
+{
+  "date": "2026-11-07",
+  "chip": "Apple M4 Pro",
+  "article": "https://github.com/trycua/cua/blob/0757beeb0b45f0b886628ba30a04f0dfbc0ca1c2/blog/cua-driver-bench.md",
+  "blocks": 81,
+  "sourceCharacters": 23126,
+  "sourceTextsSha256": "3565ba33b5bb0e6b7fe9b5d4b2747eb810a50742bf7c1dfc9ad9fd4ff75dc23c",
+  "cache": "Fresh transport for each measured UI run; no persistent extension result cache. Browser language packs ready. Browser internal caches and server prompt caches unchanged. Current code has a bounded per-page native-only result cache, not reused across these runs.",
+  "languagePackSetupMsSeparateSample": 10684,
+  "fallbackModel": "Qwen/Qwen3-1.7B-MLX-4bit",
+  "fallbackRevision": "21457c6f51ed54a7c16e988c0844db973815c137",
+  "providerBefore": { "elapsedMs": 172007.691834, "firstMs": 1398.662167, "requests": 55, "repairs": 14 },
+  "providerAfter": [
+    { "elapsedMs": 105049.727083, "firstMs": 816.343416, "requests": 49, "repairs": 8 },
+    { "elapsedMs": 127609.556375, "firstMs": 961.967, "requests": 49, "repairs": 8 }
+  ],
+  "extensionModelHtmlReplay": { "elapsedMs": 106047.1, "firstMs": 1462.4, "completed": 81 },
+  "browserFastProductionPagePipeline": [
+    { "pageRef": "main", "elapsedMs": 20328.9, "firstMs": 2581.3, "completed": 81, "fallbackCalls": 1 },
+    { "pageRef": "main", "elapsedMs": 17976.3, "firstMs": 2525.5, "completed": 81, "fallbackCalls": 1 },
+    { "pageRef": "0757beeb0b45f0b886628ba30a04f0dfbc0ca1c2", "elapsedMs": 10319.8, "firstMs": 1118.2, "completed": 81, "fallbackCalls": 1 }
+  ],
+  "uiScope": "Production PageTranslator and BrowserTranslationTransport injected into real GitHub pages, with scrolling and DOM display. Localhost production provider via Node bridge; not installed-extension IPC.",
+  "layoutAndSentenceRepair": {
+    "before": { "elapsedMs": 21269.1, "firstMs": 3155.2, "completed": 81, "nativeCalls": 185, "fallbackCalls": 1, "fallbackCharacters": 680, "commitBeforePx": 44, "commitAfterPx": 188.671875 },
+    "after": [
+      { "elapsedMs": 16063.8, "firstMs": 2280.6, "completed": 81, "nativeCalls": 133, "fallbackCalls": 1, "fallbackCharacters": 102, "commitBeforePx": 44, "commitAfterPx": 44 },
+      { "elapsedMs": 16747.1, "firstMs": 2291.9, "completed": 81, "nativeCalls": 132, "fallbackCalls": 1, "fallbackCharacters": 102, "commitBeforePx": 44, "commitAfterPx": 44 }
+    ],
+    "unitTestsPassed": 573,
+    "compactLayoutE2ePassed": 2,
+    "readingAndRetryE2ePassed": 12,
+    "readingAndRetryE2eSkipped": 2,
+    "widthsPerBrowser": [1200, 700]
+  },
+  "quality": { "automaticCasesPassed": 18, "cases": 18, "semanticAcceptanceNotEstablished": true },
+  "limits": [
+    "Measured fast path requires the browser Translator API and ready language packs.",
+    "Firefox and unsupported browsers fall back to the configured model; no under-30-second result claimed there.",
+    "Headless Chromium language-pack preparation hung in one live extension run. A 20-second preparation deadline and fallback were added and tested.",
+    "Different measurement layers and page shells are not a controlled speedup ratio.",
+    "Three UI runs do not establish P95 or a universal latency guarantee."
+  ]
+}

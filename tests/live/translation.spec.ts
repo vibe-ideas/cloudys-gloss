@@ -1,4 +1,58 @@
 import { test, expect } from '../e2e/support/fixtures';
+import { readFile } from 'node:fs/promises';
+
+test('真实网页翻译：整篇文章随滚动完成所有文本块，记录首段显示及全文耗时', async ({ extension }, testInfo) => {
+  test.skip(!process.env.BENCH_REPLAY_HTML, '设置 BENCH_REPLAY_HTML 为 benchmark-article.ts 导出的 replay.html');
+  test.setTimeout(600000);
+  const html = await readFile(process.env.BENCH_REPLAY_HTML!, 'utf8');
+  const { options, page, server } = extension;
+  await options.fill('baseUrl', process.env.MODEL_BASE_URL!); await options.fill('model', process.env.MODEL_NAME!);
+  await options.fill('apiKey', process.env.MODEL_API_KEY ?? ''); await options.fill('concurrency', process.env.BENCH_CONCURRENCY ?? '8');
+  await options.fill('temperature', '0'); await options.fill('timeout', '120000');
+  await options.click('保存设置'); await expect.poll(() => options.status()).toContain('设置已保存');
+  await page.route(`${server.url}/article-benchmark`, route => route.fulfill({ contentType: 'text/html', body: html }));
+  await page.route('**/*', route => route.request().resourceType() === 'image' ? route.abort() : route.fallback());
+  await page.goto(`${server.url}/article-benchmark`);
+  const blocks = page.locator('[data-bench-block]'); const count = await blocks.count();
+  expect(count).toBeGreaterThan(0);
+  await expect(page.getByRole('button', { name: '翻译当前网页', exact: true })).toBeVisible();
+  await page.evaluate(() => {
+    const started = performance.now();
+    document.documentElement.dataset.benchStarted = String(started);
+    const observer = new MutationObserver(() => {
+      if (!document.querySelector('[data-bench-block] [data-state="done"]')) return;
+      document.documentElement.dataset.benchFirst = String(performance.now() - started); observer.disconnect();
+    });
+    observer.observe(document.body, { subtree: true, childList: true, attributes: true, attributeFilter: ['data-state'] });
+  });
+  await page.getByRole('button', { name: '翻译当前网页', exact: true }).click();
+  for (let index = 0; index < count; index++) {
+    const block = blocks.nth(index);
+    await block.scrollIntoViewIfNeeded();
+    try {
+      await expect(block.locator('[data-state="done"], [data-state="error"]')).toHaveCount(1, { timeout: 30000 });
+      if (await block.locator('[data-state="error"]').count()) {
+        const control = page.locator('[data-cloudys-gloss="floating-control"]'); await control.locator('.orb').click({ button: 'right' });
+        throw new Error(await control.locator('.status').innerText());
+      }
+    }
+    catch (error) {
+      console.log('article block not complete', JSON.stringify({ index, html: await block.evaluate(node => { const copy = node.cloneNode(true) as Element; copy.querySelectorAll('[style]').forEach(element => element.removeAttribute('style')); return copy.outerHTML; }), scrollY: await page.evaluate(() => scrollY) }));
+      await page.screenshot({ path: testInfo.outputPath('article-incomplete.png'), fullPage: true }); throw error;
+    }
+    if (index % 10 === 0) console.log('article progress', index + 1, '/', count);
+  }
+  await expect(page.locator('[data-bench-block] [data-state="error"]')).toHaveCount(0);
+  const metrics = await page.evaluate(() => ({ blocks: document.querySelectorAll('[data-bench-block]').length,
+    completed: document.querySelectorAll('[data-bench-block] [data-state="done"]').length,
+    firstMs: Number(document.documentElement.dataset.benchFirst),
+    elapsedMs: performance.now() - Number(document.documentElement.dataset.benchStarted) }));
+  expect(metrics.completed).toBe(count);
+  console.log(`${testInfo.project.name}: full article ${JSON.stringify(metrics)}`);
+  await page.screenshot({ path: testInfo.outputPath('article-complete.png') });
+  await testInfo.attach('article-metrics', { body: JSON.stringify(metrics), contentType: 'application/json' });
+});
+
 test('真实 MLX / 网关：2000 段页面首段流式出现，滚到页尾继续翻译，记录首段与主线程响应间隔', async ({ extension }, testInfo) => {
   const { options, page, server } = extension;
   await options.fill('baseUrl', process.env.MODEL_BASE_URL!); await options.fill('model', process.env.MODEL_NAME!);

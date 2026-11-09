@@ -5,6 +5,14 @@ import { defaults } from '../../src/core/schema';
 const encoder = new TextEncoder();
 const frame = (content: string) => `data: ${JSON.stringify({ choices: [{ delta: { content } }] })}\r\n\r\n`;
 describe('模型流式翻译', () => {
+  it('服务端在译文结束后单独发送用量时保留缓存命中数据，不把统计当成译文', async () => {
+    const usage = { prompt_tokens: 100, completion_tokens: 20, total_tokens: 120, prompt_tokens_details: { cached_tokens: 80 } };
+    const delta = vi.fn();
+    const response = new Response(frame('你好') + `data: ${JSON.stringify({ choices: [], usage })}\n\ndata: [DONE]\n\n`);
+    const result = await readCompletionStream(response, new AbortController().signal, delta);
+    expect(result.usage).toEqual(usage); expect(result.choices[0]!.message.content).toBe('你好');
+    expect(delta).toHaveBeenCalledExactlyOnceWith('你好');
+  });
   it('小模型批次 JSON 错误时每段只回退一次纯文本翻译，第一段先返回且不等待第二段', async () => {
     let second!: (value: Response) => void;
     const envelope = (content: string) => new Response(JSON.stringify({ choices: [{ message: { content } }] }));

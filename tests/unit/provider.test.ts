@@ -1,9 +1,128 @@
 import { describe, expect, it, vi } from 'vitest';
 import { OpenAICompatibleProvider, completionUrl, type ProviderDiagnostic } from '../../src/model/provider';
 import { defaults } from '../../src/core/schema';
+import { ConcurrencyQueue } from '../../src/core/queue';
 const signal = () => new AbortController().signal;
 const reply = (value: unknown) => new Response(JSON.stringify({ choices: [{ message: { content: JSON.stringify(value) } }] }));
 describe('OpenAI-compatible 模型请求', () => {
+  it('请求额度耗尽时超时也会取消排队，额度释放后不再发送过期翻译', async () => {
+    vi.useFakeTimers();
+    const queue = new ConcurrencyQueue(1); let release!: () => void;
+    const occupied = queue.run(() => new Promise<void>(resolve => { release = resolve; }), signal());
+    const fetcher = vi.fn<typeof fetch>();
+    try {
+      const result = new OpenAICompatibleProvider({ ...defaults, timeout: 1000 }, fetcher, undefined, undefined,
+        { repairConcurrency: 2, schedule: (task, abort) => queue.run(task, abort) }).translate(['Hello'], signal(), () => {});
+      const rejected = expect(result).rejects.toThrow('超时');
+      await vi.advanceTimersByTimeAsync(1001); await rejected;
+      release(); await occupied;
+      await queue.run(async () => {}, signal());
+      expect(fetcher).not.toHaveBeenCalled();
+    } finally { release?.(); vi.useRealTimers(); }
+  });
+  it('两个页面同时补译时共享请求上限，后完成的段落仍按各页原顺序返回', async () => {
+    const queue = new ConcurrencyQueue(2);
+    const pending: { source: string; finish: () => void }[] = [];
+    let active = 0; let peak = 0;
+    const fetcher = vi.fn<typeof fetch>().mockImplementation(async (_url, init) => {
+      const body = JSON.parse(String(init!.body));
+      if (body.stream) return reply({ translations: [] });
+      const source = body.messages[1].content.match(/<source>\n(.*?)\n<\/source>/s)[1];
+      active++; peak = Math.max(peak, active);
+      // Headers arrive immediately; the request permit must cover the body too.
+      return new Response(new ReadableStream({ start(controller) {
+        pending.push({ source, finish: () => {
+          active--;
+          controller.enqueue(new TextEncoder().encode(JSON.stringify({ choices: [{ message: { content: `译文：${source}` } }] })));
+          controller.close();
+        } });
+      } }));
+    });
+    const execution = { repairConcurrency: 2 as const, schedule: <T>(task: () => Promise<T>, abort: AbortSignal) => queue.run(task, abort) };
+    const first = new OpenAICompatibleProvider(defaults, fetcher, undefined, undefined, execution).translate(['Alpha', 'Beta'], signal(), () => {});
+    const second = new OpenAICompatibleProvider(defaults, fetcher, undefined, undefined, execution).translate(['Gamma', 'Delta'], signal(), () => {});
+    await vi.waitFor(() => expect(pending).toHaveLength(2));
+    expect(fetcher).toHaveBeenCalledTimes(4);
+    pending[1]!.finish();
+    await vi.waitFor(() => expect(pending).toHaveLength(3));
+    pending[2]!.finish();
+    await vi.waitFor(() => expect(pending).toHaveLength(4));
+    pending[3]!.finish(); pending[0]!.finish();
+    expect(await first).toEqual(['译文：Alpha', '译文：Beta']);
+    expect(await second).toEqual(['译文：Gamma', '译文：Delta']);
+    expect(peak).toBe(2); expect(active).toBe(0);
+  });
+  it('并行补译有一段失败时取消另一段，不继续启动余下段落或发送迟到译文', async () => {
+    const queue = new ConcurrencyQueue(2); const aborted = vi.fn();
+    let fail!: () => void;
+    const fetcher = vi.fn<typeof fetch>().mockResolvedValueOnce(reply({ translations: [] }))
+      .mockImplementationOnce(() => new Promise(resolve => { fail = () => resolve(new Response('', { status: 500 })); }))
+      .mockImplementationOnce((_url, init) => new Promise((_resolve, reject) => {
+        init!.signal!.addEventListener('abort', () => { aborted(); reject(init!.signal!.reason); }, { once: true });
+      }));
+    const item = vi.fn();
+    const result = new OpenAICompatibleProvider(defaults, fetcher, undefined, undefined,
+      { repairConcurrency: 2, schedule: (task, abort) => queue.run(task, abort) })
+      .translate(['Hello', 'World', 'Again'], signal(), item);
+    const rejected = expect(result).rejects.toThrow('HTTP 500');
+    await vi.waitFor(() => expect(fetcher).toHaveBeenCalledTimes(3));
+    fail(); await rejected;
+    expect(aborted).toHaveBeenCalledOnce(); expect(fetcher).toHaveBeenCalledTimes(3);
+    expect(item.mock.calls.every(([, value]) => value === '')).toBe(true);
+  });
+  it('用户取消补译时移除等待请求，释放请求额度后也不会补发', async () => {
+    const queue = new ConcurrencyQueue(1); const controller = new AbortController();
+    const fetcher = vi.fn<typeof fetch>().mockResolvedValueOnce(reply({ translations: [] }))
+      .mockImplementationOnce((_url, init) => new Promise((_resolve, reject) => {
+        init!.signal!.addEventListener('abort', () => reject(init!.signal!.reason), { once: true });
+      }));
+    const result = new OpenAICompatibleProvider(defaults, fetcher, undefined, undefined,
+      { repairConcurrency: 2, schedule: (task, abort) => queue.run(task, abort) })
+      .translate(['Hello', 'World'], controller.signal, () => {});
+    const rejected = expect(result).rejects.toThrow('关闭网页');
+    await vi.waitFor(() => expect(fetcher).toHaveBeenCalledTimes(2));
+    controller.abort(new Error('关闭网页')); await rejected;
+    await queue.run(async () => {}, signal());
+    expect(fetcher).toHaveBeenCalledTimes(2);
+  });
+  it('本机 Qwen3 翻译及失败补译均关闭思考，原文和质量校验保持完整', async () => {
+    const source = 'Read the entire paragraph before translating it into another language.';
+    const fetcher = vi.fn<typeof fetch>().mockResolvedValueOnce(reply({ translations: [source] }))
+      .mockResolvedValueOnce(new Response(JSON.stringify({ choices: [{ message: { content: '翻译前请先阅读整个段落。' } }] })));
+    expect(await new OpenAICompatibleProvider(defaults, fetcher).translate([source], signal(), () => {}))
+      .toEqual(['翻译前请先阅读整个段落。']);
+    expect(fetcher).toHaveBeenCalledTimes(2);
+    const bodies = fetcher.mock.calls.map(([, init]) => JSON.parse(String(init!.body)));
+    expect(bodies.every(body => body.messages[0].content.endsWith('\n/no_think'))).toBe(true);
+    expect(JSON.parse(bodies[0].messages[1].content)).toEqual({ texts: [source] });
+    expect(bodies[1].messages[1].content).toContain(`\n<source>\n${source}\n</source>`);
+    expect(bodies.every(body => !('chat_template_kwargs' in body) && !('enable_thinking' in body))).toBe(true);
+  });
+  it.each([
+    ['http://localhost:8080/v1', 'mlx-community/Qwen3-1.7B-4bit', true],
+    ['http://[::1]:8080/v1', 'qwen3:1.7b', true],
+    ['https://gateway.example/v1', defaults.model, false],
+    [defaults.baseUrl, 'mlx-community/Qwen3.5-2B-4bit', false],
+    [defaults.baseUrl, 'mlx-community/Qwen3-Coder-30B-4bit', false],
+    [defaults.baseUrl, 'mlx-community/Qwen2.5-3B-Instruct-4bit', false],
+    [defaults.baseUrl, 'custom-Qwen3-model', false],
+  ])('翻译端点 %s 使用模型 %s 时，仅已支持的本机 Qwen3 收到思考开关（%s）', async (baseUrl, model, disabled) => {
+    const fetcher = vi.fn<typeof fetch>().mockResolvedValue(reply({ translations: ['你好'] }));
+    expect(await new OpenAICompatibleProvider({ ...defaults, baseUrl, model }, fetcher).translate(['Hello'], signal())).toEqual(['你好']);
+    const body = JSON.parse(String(fetcher.mock.calls[0]![1]!.body));
+    expect(body.messages[0].content.includes('/no_think')).toBe(disabled);
+    expect(JSON.parse(body.messages[1].content)).toEqual({ texts: ['Hello'] });
+  });
+  it('本机 Qwen3 查词和输入框翻译沿用各自模式，不加入网页翻译的思考开关', async () => {
+    const fetcher = vi.fn<typeof fetch>().mockResolvedValue(reply({ translation: 'Hello.' }));
+    expect(await new OpenAICompatibleProvider(defaults, fetcher).translateInput('你好。', signal())).toBe('Hello.');
+    expect(JSON.parse(String(fetcher.mock.calls[0]![1]!.body)).messages[0].content).not.toContain('/no_think');
+    fetcher.mockReset().mockResolvedValue(reply({ word: 'cloudy', ipa: { us: '', uk: '' },
+      senses: [{ partOfSpeech: 'adjective', meaning: '多云的' }], contextMeaning: '多云的',
+      examples: [{ en: 'A cloudy sky.', zh: '多云的天空。' }] }));
+    await new OpenAICompatibleProvider(defaults, fetcher).lookup('cloudy', '', signal());
+    expect(JSON.parse(String(fetcher.mock.calls[0]![1]!.body)).messages[0].content).not.toContain('/no_think');
+  });
   it.each([
     ['纯文本', '这是完整的中文译文。'],
     ['单段 JSON', '{"translation":"这是完整的中文译文。"}'],

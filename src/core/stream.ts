@@ -45,6 +45,7 @@ export async function readCompletionStream(response: Response, signal: AbortSign
   if (!response.body) throw new Error('模型没有返回响应流');
   const reader = response.body.getReader(); const decoder = new TextDecoder();
   let buffer = ''; let content = ''; let finish: string | null = null; let done = false;
+  let usage: unknown;
   const abort = () => { void reader.cancel().catch(() => {}); };
   signal.addEventListener('abort', abort, { once: true });
   const event = (value: string) => {
@@ -53,6 +54,7 @@ export async function readCompletionStream(response: Response, signal: AbortSign
     if (data.trim() === '[DONE]') { done = true; return; }
     const parsed = JSON.parse(data);
     if (parsed.error) throw new Error('模型流返回错误，请检查模型服务');
+    if (parsed.usage != null) usage = parsed.usage;
     const choice = parsed.choices?.[0];
     if (typeof choice?.delta?.content === 'string') { content += choice.delta.content; delta(choice.delta.content); }
     if (typeof choice?.finish_reason === 'string') finish = choice.finish_reason;
@@ -71,7 +73,7 @@ export async function readCompletionStream(response: Response, signal: AbortSign
       if (next.done) { if (buffer.trim()) event(buffer); break; }
     }
     if (!done && !finish) throw new Error('模型连接中断，译文未完成，请重试');
-    return { choices: [{ message: { content }, finish_reason: finish }] };
+    return { choices: [{ message: { content }, finish_reason: finish }], ...(usage === undefined ? {} : { usage }) };
   } finally {
     signal.removeEventListener('abort', abort); await reader.cancel().catch(() => {}); reader.releaseLock();
   }

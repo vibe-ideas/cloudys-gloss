@@ -3,6 +3,7 @@ import { BrandMark } from '../../src/ui/brand-mark';
 import { useEffect, useState } from 'preact/hooks';
 import { browser } from 'wxt/browser';
 import { pdfReaderHash, pdfTabSource } from '../../src/pdf/link';
+import { send } from '../../src/core/messaging';
 import '../../src/styles/popup.css';
 type Status = { enabled: boolean; translated: number; pending: number; error: string };
 type Pdf = ReturnType<typeof pdfTabSource>;
@@ -46,6 +47,7 @@ function Popup() {
       ? <button class={status.enabled ? '' : 'primary'} onClick={() => void query(true)}>{status.enabled ? '关闭翻译 · 恢复原文' : '翻译当前网页'}</button>
       : <button class="primary" disabled={!pdf && !error} onClick={() => void openPdf(pdf?.url)}>{pdf ? '在双语阅读器中打开 PDF' : '打开 PDF 文件或链接'}</button>}
     {pageAction && <button class="ghost secondary" onClick={() => void openPdf()}>打开 PDF 文件或链接 ↗</button>}
+    <button class="ghost secondary" onClick={() => { void send({ type: 'image:open' }).then(() => window.close()).catch(() => setError('图片翻译无法打开，请重试')); }}>离线图片翻译 ↗</button>
     <p class="tagline">选中英文即可查看 AI 单词卡 · 你的模型，你的阅读。</p>
   </main>;
 }

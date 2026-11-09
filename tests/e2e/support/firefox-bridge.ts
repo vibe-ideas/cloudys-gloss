@@ -1,11 +1,27 @@
 /** Test-copy-only DOM controls. No eval, mock APIs or production behavior changes.
  * Firefox BiDi does not expose extension realms, so commands run in the real
  * options page; all application runtime messages still reach the real background. */
+import { imageOperation } from './image-operation';
+/** Tab activation lives in the test background, so hiding options cannot suspend its reply. */
+export function firefoxTabsBridge(url: string, token: string) {
+  return `(async()=>{const endpoint=${JSON.stringify(url)},token=${JSON.stringify(token)};while(true){try{
+    const command=await(await fetch(endpoint+'/tabs-bridge/'+token)).json();
+    if(!command){await new Promise(resolve=>setTimeout(resolve,50));continue;}
+    const {id,args}=command;let error;
+    try{const tab=(await browser.tabs.query({})).find(tab=>tab.url?.startsWith(args[0]));
+      if(!tab?.id||tab.windowId===undefined)throw new Error('Reading tab unavailable');
+      if(args[1])await browser.tabs.update(tab.id,{active:true});
+      else await browser.tabs.create({windowId:tab.windowId,url:'about:blank',active:true});
+    }catch(reason){error=reason.message;}
+    await fetch(endpoint+'/reply/'+token,{method:'POST',body:JSON.stringify({id,error,value:null})});
+  }catch{break;}}})();`;
+}
 export function firefoxBridge(url: string, token: string) {
   return `
 (async () => {
   const endpoint = ${JSON.stringify(url)};
   const token = ${JSON.stringify(token)};
+  const imageOperation = ${imageOperation.toString()};
   while (true) {
     try {
       const command = await (await fetch(endpoint + '/bridge/' + token)).json();
@@ -13,7 +29,12 @@ export function firefoxBridge(url: string, token: string) {
       const {id, operation, args} = command;
       let value = null; let error;
       try {
-        if (operation === 'ready') value = !!document.querySelector('button[type="submit"]') && !document.querySelector('button[type="submit"]').disabled;
+        if (operation.startsWith('image-')) {
+          const view = browser.extension.getViews().find(view => new URL(view.location.href).pathname === '/image.html');
+          if (!view) { if (operation === 'image-ready') value = false; else throw new Error('Image reader not ready'); }
+          else value = await imageOperation(operation.slice(6), args, view);
+        }
+        else if (operation === 'ready') value = !!document.querySelector('button[type="submit"]') && !document.querySelector('button[type="submit"]').disabled;
         else if (operation === 'active') value = (await browser.tabs.query({active:true,currentWindow:true})).some(tab => tab.url === location.href);
         else if (operation === 'status') value = document.querySelector('[role="status"]').textContent;
         else if (operation === 'model-status') value = document.querySelector('[data-testid="model-status"]').textContent;
@@ -45,6 +66,9 @@ export function firefoxBridge(url: string, token: string) {
         } else if (operation === 'toggle') {
           const tab = (await browser.tabs.query({})).find(tab => tab.url?.startsWith(args[0]));
           value = await browser.tabs.sendMessage(tab.id, {type:'page:toggle'});
+        } else if (operation === 'context-image') {
+          const tab = (await browser.tabs.query({})).find(tab => tab.url?.startsWith(args[0]));
+          value = await browser.tabs.sendMessage(tab.id, {type:'image:context',url:args[1]}, {frameId:0});
         } else if (operation === 'reading-tab') {
           const tab = (await browser.tabs.query({})).find(tab => tab.url?.startsWith(args[0]));
           if (!tab?.id || tab.windowId === undefined) throw new Error('Reading tab unavailable');

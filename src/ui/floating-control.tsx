@@ -4,6 +4,7 @@ import type { Settings } from '../core/schema';
 import type { TranslationStatus } from '../page/translator';
 import { themeCss } from './theme';
 import { BrandMark } from './brand-mark';
+import { send } from '../core/messaging';
 
 const css = `
 :host{all:initial!important;position:fixed!important;inset:0!important;pointer-events:none!important;z-index:2147483646!important;color-scheme:light dark!important;overflow:clip!important}
@@ -136,9 +137,10 @@ export class FloatingControl {
     const label = enabled ? '恢复原文' : '翻译当前网页';
     const menuBelow = this.y < window.innerHeight / 2;
     const menuSpace = menuBelow ? window.innerHeight - this.y - 66 : this.y - 22;
-    render(<><div class={`dock ${this.theme} ${this.side} ${this.open || this.drag?.moved ? 'expanded' : ''} ${this.drag?.moved ? 'dragging' : ''} ${document.hidden ? 'motion-paused' : ''}`} style={{ top: `${this.y}px`, [this.side]: '0px' }}>
+    render(<><div class={`dock ${this.theme} ${this.side} ${this.open || this.drag?.moved ? 'expanded' : ''} ${this.drag?.moved ? 'dragging' : ''} ${document.hidden ? 'motion-paused' : ''}`} style={{ top: `${this.y}px`, [this.side]: '0px' }}
+      onContextMenu={event => { event.preventDefault(); event.stopPropagation(); this.drag = undefined; this.open = true; this.draw(); }}>
       <div class="capsule">
-      <button class={`orb ${enabled ? 'active' : ''} ${pending ? 'busy' : ''}`} aria-busy={pending > 0} aria-label={label} aria-pressed={enabled} title={`${label} · 拖动调整位置`}
+      <button class={`orb ${enabled ? 'active' : ''} ${pending ? 'busy' : ''}`} aria-busy={pending > 0} aria-label={label} aria-pressed={enabled} title={`${label} · 右键快捷菜单 · 拖动调整位置`}
         onPointerDown={(event) => {
           if (event.button !== 0) return;
           this.suppressClick = false;
@@ -176,11 +178,12 @@ export class FloatingControl {
         <div class={`status ${error ? 'error' : ''}`} role="status">{error || (pending ? `已完成 ${translated} 段，译文即将呈现` : enabled ? `已翻译 ${translated} 段 · 滚动时继续翻译` : '保留原文，让中文译文伴你阅读。')}</div>
         <button class="primary" aria-label={label} onClick={() => this.toggle()}><span class="primary-label"><Icon name={enabled ? 'original' : 'translate'} />{label}</span><span class={`toggle-track ${enabled ? 'on' : ''}`} aria-hidden="true"><span /></span></button>
         <div class="rows">
+          <button class="row" aria-label="离线图片翻译" onClick={() => { void send({ type: 'image:open' }).catch(() => {}); this.open = false; this.draw(); }}><Icon name="translate" />离线图片翻译</button>
           {error && <button class="row retry" aria-label="重试翻译" onClick={() => { if (this.status.enabled) this.toggle(); this.toggle(); }}><Icon name="retry" />重试翻译</button>}
           <button class="row" aria-label="模型设置" onClick={() => { this.settings(); this.open = false; this.draw(); }}><Icon name="settings" />模型设置<svg class="end" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="m9 6 6 6-6 6" /></svg></button>
           <button class="row" aria-label="本页隐藏悬浮球" onClick={() => this.destroy()}><Icon name="hide" />本页隐藏悬浮球</button>
         </div>
-        <div class="hint"><Icon name="drag" />移近展开 · 拖动换边</div>
+        <div class="hint"><Icon name="drag" />右键快捷菜单 · 拖动换边</div>
       </div>}
     </div></>, this.mount);
   };

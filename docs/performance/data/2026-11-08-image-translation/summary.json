@@ -1,0 +1,821 @@
+{
+  "date": "2026-11-08",
+  "sourceCommit": "0757beeb0b45f0b886628ba30a04f0dfbc0ca1c2",
+  "scope": "Independent reader; one fresh full-translation sample per browser; server already running; OCR is real for all samples.",
+  "records": [
+    {
+      "artifact": "chromium-live-1794067925319",
+      "data": {
+        "browser": "chromium",
+        "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.0.0 Safari/537.36",
+        "model": "Qwen/Qwen3-1.7B-MLX-4bit",
+        "engine": "model",
+        "rows": [
+          {
+            "run": "first",
+            "ocrMs": 3655.0999999940395,
+            "totalMs": 8135.300000011921,
+            "cached": false,
+            "status": "图片处理完成 · 46 个文字区域 · 1 处识别需核对",
+            "lines": [
+              {
+                "source": "macOS",
+                "score": 0.997293484210968,
+                "translation": "macOS"
+              },
+              {
+                "source": "Windows",
+                "score": 0.9999714749200004,
+                "translation": "Windows"
+              },
+              {
+                "source": "Linux (XFCE)",
+                "score": 0.9995886236429214,
+                "translation": "Linux (XFCE)"
+              },
+              {
+                "source": "8 tasks, 40 trials per driver",
+                "score": 0.9789569460112473,
+                "translation": "8 任务，40 每驱动程序试验"
+              },
+              {
+                "source": "one Windows 11 VM, run by Cua",
+                "score": 0.9978785206531656,
+                "translation": "一个 Windows 11 虚拟机，由 Cua 运行"
+              },
+              {
+                "source": "Ubuntu 24.04 with XFCE, 8 tasks",
+                "score": 0.9978711970390812,
+                "translation": "Ubuntu 24.04 （配有 XFCE）, 8 任务"
+              },
+              {
+                "source": "cua-driver",
+                "score": 0.999940013885498,
+                "translation": "cua-driver"
+              },
+              {
+                "source": "58%(23/40)",
+                "score": 0.9997729182243347,
+                "translation": "58%(23/40)"
+              },
+              {
+                "source": "28%(11/40)",
+                "score": 0.9987983703613281,
+                "translation": "28%(11/40)"
+              },
+              {
+                "source": "13% (5/40)",
+                "score": 0.9637584567070008,
+                "translation": "13% (5/40)"
+              },
+              {
+                "source": "Scale, AgentEnv",
+                "score": 0.9914641459782918,
+                "translation": "Scale, AgentEnv"
+              },
+              {
+                "source": "Scale, AgentEnv",
+                "score": 0.9829250852266948,
+                "translation": "Scale, AgentEnv"
+              },
+              {
+                "source": "Codex Computer Use",
+                "score": 0.9844196736812592,
+                "translation": "Codex Computer Use"
+              },
+              {
+                "source": "33%(13/40)",
+                "score": 0.9989528298377991,
+                "translation": "33%(13/40)"
+              },
+              {
+                "source": "0%(0/40)",
+                "score": 0.9443912042511834,
+                "translation": "0%(0/40)"
+              },
+              {
+                "source": "not available on Linux",
+                "score": 0.9773233885114844,
+                "translation": "不在 Linux 上可用"
+              },
+              {
+                "source": "run by Cua",
+                "score": 0.9988772571086884,
+                "translation": "由 Cua 运行"
+              },
+              {
+                "source": "agent-desktop",
+                "score": 0.9999876572535589,
+                "translation": "agent-desktop"
+              },
+              {
+                "source": "20%",
+                "score": 0.9850019613901774,
+                "translation": "20%"
+              },
+              {
+                "source": "(8/40)",
+                "score": 0.9999852379163107,
+                "translation": "(8/40)"
+              },
+              {
+                "source": "0%(0/40)",
+                "score": 0.999137282371521,
+                "translation": "0%(0/40)"
+              },
+              {
+                "source": "13% (5/40)",
+                "score": 0.9513238668441772,
+                "translation": "13% (5/40)"
+              },
+              {
+                "source": "Scale, AgentEnv",
+                "score": 0.9724586407343546,
+                "translation": "Scale, AgentEnv"
+              },
+              {
+                "source": "run by Cua",
+                "score": 0.9851290822029114,
+                "translation": "由 Cua 运行"
+              },
+              {
+                "source": "3%(1/40)",
+                "score": 0.997196689248085,
+                "translation": "3%(1/40)"
+              },
+              {
+                "source": "20%(8/40)",
+                "score": 0.9993779990408156,
+                "translation": "20%(8/40)"
+              },
+              {
+                "source": "browser-use",
+                "score": 0.9997981786727905,
+                "translation": "browser-use"
+              },
+              {
+                "source": "O",
+                "score": 0.36837297677993774,
+                "translation": "O"
+              },
+              {
+                "source": "no Linux harness",
+                "score": 0.9823664985597134,
+                "translation": "无 Linux 测试框架"
+              },
+              {
+                "source": "Scale, AgentEnv",
+                "score": 0.9752432783444722,
+                "translation": "Scale, AgentEnv"
+              },
+              {
+                "source": "0",
+                "score": 0.9997370839118958,
+                "translation": "0"
+              },
+              {
+                "source": "25",
+                "score": 0.9999932646751404,
+                "translation": "25"
+              },
+              {
+                "source": "50",
+                "score": 0.9999938011169434,
+                "translation": "50"
+              },
+              {
+                "source": "75",
+                "score": 0.9999963045120239,
+                "translation": "75"
+              },
+              {
+                "source": "100%0",
+                "score": 0.9992217540740966,
+                "translation": "100%0"
+              },
+              {
+                "source": "25",
+                "score": 0.9999932646751404,
+                "translation": "25"
+              },
+              {
+                "source": "50",
+                "score": 0.9999938011169434,
+                "translation": "50"
+              },
+              {
+                "source": "75",
+                "score": 0.9999944567680359,
+                "translation": "75"
+              },
+              {
+                "source": "100%0",
+                "score": 0.9994762301445007,
+                "translation": "100%0"
+              },
+              {
+                "source": "25",
+                "score": 0.9999949336051941,
+                "translation": "25"
+              },
+              {
+                "source": "50",
+                "score": 0.9999927282333374,
+                "translation": "50"
+              },
+              {
+                "source": "75",
+                "score": 0.999994695186615,
+                "translation": "75"
+              },
+              {
+                "source": "100%",
+                "score": 0.9769240766763687,
+                "translation": "100%"
+              },
+              {
+                "source": "full background pass →",
+                "score": 0.9789553203366019,
+                "translation": "后台完整通过 →"
+              },
+              {
+                "source": "full background pass →",
+                "score": 0.9789553203366019,
+                "translation": "后台完整通过 →"
+              },
+              {
+                "source": "full background pass →",
+                "score": 0.9744413467970762,
+                "translation": "后台完整通过 →"
+              }
+            ],
+            "regions": 46
+          },
+          {
+            "run": "cached",
+            "ocrMs": 0,
+            "totalMs": 20.19999998807907,
+            "cached": true,
+            "status": "图片处理完成 · 46 个文字区域 · 1 处识别需核对",
+            "regions": 46
+          }
+        ]
+      }
+    },
+    {
+      "artifact": "firefox-live-1794067963430",
+      "data": {
+        "browser": "firefox",
+        "userAgent": "Firefox Developer Edition; extension DOM via test bridge",
+        "model": "Qwen/Qwen3-1.7B-MLX-4bit",
+        "engine": "model",
+        "rows": [
+          {
+            "run": "first",
+            "ocrMs": 3653,
+            "totalMs": 6843,
+            "cached": false,
+            "status": "图片处理完成 · 46 个文字区域 · 1 处识别需核对",
+            "error": "",
+            "lines": [
+              {
+                "source": "macOS",
+                "score": 0.997293484210968,
+                "translation": "macOS"
+              },
+              {
+                "source": "Windows",
+                "score": 0.9999714749200004,
+                "translation": "Windows"
+              },
+              {
+                "source": "Linux (XFCE)",
+                "score": 0.9995886236429214,
+                "translation": "Linux (XFCE)"
+              },
+              {
+                "source": "8 tasks, 40 trials per driver",
+                "score": 0.9789569460112473,
+                "translation": "8 任务，40 每驱动程序试验"
+              },
+              {
+                "source": "one Windows 11 VM, run by Cua",
+                "score": 0.9978785206531656,
+                "translation": "一个 Windows 11 虚拟机，由 Cua 运行"
+              },
+              {
+                "source": "Ubuntu 24.04 with XFCE, 8 tasks",
+                "score": 0.9978711970390812,
+                "translation": "Ubuntu 24.04 （配有 XFCE）, 8 任务"
+              },
+              {
+                "source": "cua-driver",
+                "score": 0.999940013885498,
+                "translation": "cua-driver"
+              },
+              {
+                "source": "58%(23/40)",
+                "score": 0.9997729182243347,
+                "translation": "58%(23/40)"
+              },
+              {
+                "source": "28%(11/40)",
+                "score": 0.9987983703613281,
+                "translation": "28%(11/40)"
+              },
+              {
+                "source": "13% (5/40)",
+                "score": 0.9637584567070008,
+                "translation": "13% (5/40)"
+              },
+              {
+                "source": "Scale, AgentEnv",
+                "score": 0.9914641459782918,
+                "translation": "Scale, AgentEnv"
+              },
+              {
+                "source": "Scale, AgentEnv",
+                "score": 0.9829250852266948,
+                "translation": "Scale, AgentEnv"
+              },
+              {
+                "source": "Codex Computer Use",
+                "score": 0.9844196736812592,
+                "translation": "Codex Computer Use"
+              },
+              {
+                "source": "33%(13/40)",
+                "score": 0.9989528298377991,
+                "translation": "33%(13/40)"
+              },
+              {
+                "source": "0%(0/40)",
+                "score": 0.9443912042511834,
+                "translation": "0%(0/40)"
+              },
+              {
+                "source": "not available on Linux",
+                "score": 0.9773233885114844,
+                "translation": "不在 Linux 上可用"
+              },
+              {
+                "source": "run by Cua",
+                "score": 0.9988772571086884,
+                "translation": "由 Cua 运行"
+              },
+              {
+                "source": "agent-desktop",
+                "score": 0.9999876572535589,
+                "translation": "agent-desktop"
+              },
+              {
+                "source": "20%",
+                "score": 0.9850019613901774,
+                "translation": "20%"
+              },
+              {
+                "source": "(8/40)",
+                "score": 0.9999852379163107,
+                "translation": "(8/40)"
+              },
+              {
+                "source": "0%(0/40)",
+                "score": 0.999137282371521,
+                "translation": "0%(0/40)"
+              },
+              {
+                "source": "13% (5/40)",
+                "score": 0.9513238668441772,
+                "translation": "13% (5/40)"
+              },
+              {
+                "source": "Scale, AgentEnv",
+                "score": 0.9724586407343546,
+                "translation": "Scale, AgentEnv"
+              },
+              {
+                "source": "run by Cua",
+                "score": 0.9851290822029114,
+                "translation": "由 Cua 运行"
+              },
+              {
+                "source": "3%(1/40)",
+                "score": 0.997196689248085,
+                "translation": "3%(1/40)"
+              },
+              {
+                "source": "20%(8/40)",
+                "score": 0.9993779990408156,
+                "translation": "20%(8/40)"
+              },
+              {
+                "source": "browser-use",
+                "score": 0.9997981786727905,
+                "translation": "browser-use"
+              },
+              {
+                "source": "O",
+                "score": 0.36837297677993774,
+                "translation": "O"
+              },
+              {
+                "source": "no Linux harness",
+                "score": 0.9823664985597134,
+                "translation": "无 Linux 测试框架"
+              },
+              {
+                "source": "Scale, AgentEnv",
+                "score": 0.9752432783444722,
+                "translation": "Scale, AgentEnv"
+              },
+              {
+                "source": "0",
+                "score": 0.9997370839118958,
+                "translation": "0"
+              },
+              {
+                "source": "25",
+                "score": 0.9999932646751404,
+                "translation": "25"
+              },
+              {
+                "source": "50",
+                "score": 0.9999938011169434,
+                "translation": "50"
+              },
+              {
+                "source": "75",
+                "score": 0.9999963045120239,
+                "translation": "75"
+              },
+              {
+                "source": "100%0",
+                "score": 0.9992217540740966,
+                "translation": "100%0"
+              },
+              {
+                "source": "25",
+                "score": 0.9999932646751404,
+                "translation": "25"
+              },
+              {
+                "source": "50",
+                "score": 0.9999938011169434,
+                "translation": "50"
+              },
+              {
+                "source": "75",
+                "score": 0.9999944567680359,
+                "translation": "75"
+              },
+              {
+                "source": "100%0",
+                "score": 0.9994762301445007,
+                "translation": "100%0"
+              },
+              {
+                "source": "25",
+                "score": 0.9999949336051941,
+                "translation": "25"
+              },
+              {
+                "source": "50",
+                "score": 0.9999927282333374,
+                "translation": "50"
+              },
+              {
+                "source": "75",
+                "score": 0.999994695186615,
+                "translation": "75"
+              },
+              {
+                "source": "100%",
+                "score": 0.9769240766763687,
+                "translation": "100%"
+              },
+              {
+                "source": "full background pass →",
+                "score": 0.9789553203366019,
+                "translation": "后台完整通过 →"
+              },
+              {
+                "source": "full background pass →",
+                "score": 0.9789553203366019,
+                "translation": "后台完整通过 →"
+              },
+              {
+                "source": "full background pass →",
+                "score": 0.9744413467970762,
+                "translation": "后台完整通过 →"
+              }
+            ],
+            "overlays": 10,
+            "picture": {
+              "x": 33,
+              "y": 478.6000061035156,
+              "width": 679,
+              "height": 246.76666259765625
+            },
+            "regions": 46
+          },
+          {
+            "run": "cached",
+            "ocrMs": 0,
+            "totalMs": 35,
+            "cached": true,
+            "status": "图片处理完成 · 46 个文字区域 · 1 处识别需核对",
+            "error": "",
+            "overlays": 10,
+            "picture": {
+              "x": 33,
+              "y": 478.6000061035156,
+              "width": 679,
+              "height": 246.76666259765625
+            },
+            "regions": 46
+          }
+        ]
+      }
+    },
+    {
+      "artifact": "chromium-ocr-1794066020157",
+      "data": {
+        "browser": "chromium",
+        "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.0.0 Safari/537.36",
+        "external": [],
+        "rows": [
+          {
+            "mode": "tiny",
+            "file": "fig1-background-full-pass-by-os.png",
+            "ocrMs": 2177.0999999940395,
+            "totalMs": 2191.899999976158,
+            "cached": false,
+            "status": "识别完成 · 51 个文字区域",
+            "regions": 51
+          },
+          {
+            "mode": "tiny",
+            "file": "fig2-why-trials-miss.png",
+            "ocrMs": 1310.4000000059605,
+            "totalMs": 1322.699999988079,
+            "cached": false,
+            "status": "识别完成 · 48 个文字区域",
+            "regions": 48
+          },
+          {
+            "mode": "tiny",
+            "file": "fig3-macos-background-per-task.png",
+            "ocrMs": 1319.7000000178814,
+            "totalMs": 1332.800000011921,
+            "cached": false,
+            "status": "识别完成 · 83 个文字区域",
+            "regions": 83
+          },
+          {
+            "mode": "tiny",
+            "file": "fig4-macos-foreground-vs-background.png",
+            "ocrMs": 605.6000000238419,
+            "totalMs": 611.2000000178814,
+            "cached": false,
+            "status": "识别完成 · 21 个文字区域",
+            "regions": 21
+          },
+          {
+            "mode": "tiny",
+            "file": "fig5-macos-disturbances-by-criterion.png",
+            "ocrMs": 906.9000000059605,
+            "totalMs": 913.3000000119209,
+            "cached": false,
+            "status": "识别完成 · 48 个文字区域",
+            "regions": 48
+          },
+          {
+            "mode": "small",
+            "file": "fig1-background-full-pass-by-os.png",
+            "ocrMs": 4312.300000011921,
+            "totalMs": 4318.4000000059605,
+            "cached": false,
+            "status": "识别完成 · 46 个文字区域",
+            "regions": 46
+          },
+          {
+            "mode": "small",
+            "file": "fig2-why-trials-miss.png",
+            "ocrMs": 4984.899999976158,
+            "totalMs": 4993.9000000059605,
+            "cached": false,
+            "status": "识别完成 · 49 个文字区域",
+            "regions": 49
+          },
+          {
+            "mode": "small",
+            "file": "fig3-macos-background-per-task.png",
+            "ocrMs": 6124.800000011921,
+            "totalMs": 6136.299999982119,
+            "cached": false,
+            "status": "识别完成 · 83 个文字区域",
+            "regions": 83
+          },
+          {
+            "mode": "small",
+            "file": "fig4-macos-foreground-vs-background.png",
+            "ocrMs": 2718.9000000059605,
+            "totalMs": 2725.5999999940395,
+            "cached": false,
+            "status": "识别完成 · 22 个文字区域",
+            "regions": 22
+          },
+          {
+            "mode": "small",
+            "file": "fig5-macos-disturbances-by-criterion.png",
+            "ocrMs": 4224.9000000059605,
+            "totalMs": 4231,
+            "cached": false,
+            "status": "识别完成 · 48 个文字区域",
+            "regions": 48
+          }
+        ]
+      }
+    },
+    {
+      "artifact": "firefox-ocr-1794067049812",
+      "data": {
+        "browser": "firefox",
+        "userAgent": "Firefox Developer Edition; extension DOM via test bridge",
+        "external": [],
+        "rows": [
+          {
+            "mode": "tiny",
+            "file": "fig1-background-full-pass-by-os.png",
+            "ocrMs": 1337,
+            "totalMs": 1344,
+            "cached": false,
+            "status": "识别完成 · 51 个文字区域",
+            "error": "",
+            "overlays": 0,
+            "picture": {
+              "x": 33,
+              "y": 478.6000061035156,
+              "width": 679,
+              "height": 246.76666259765625
+            },
+            "regions": 51
+          },
+          {
+            "mode": "tiny",
+            "file": "fig2-why-trials-miss.png",
+            "ocrMs": 1029,
+            "totalMs": 1040,
+            "cached": false,
+            "status": "识别完成 · 48 个文字区域",
+            "error": "",
+            "overlays": 0,
+            "picture": {
+              "x": 33,
+              "y": 478.6000061035156,
+              "width": 679,
+              "height": 386.20001220703125
+            },
+            "regions": 48
+          },
+          {
+            "mode": "tiny",
+            "file": "fig3-macos-background-per-task.png",
+            "ocrMs": 1411,
+            "totalMs": 1422,
+            "cached": false,
+            "status": "识别完成 · 83 个文字区域",
+            "error": "",
+            "overlays": 0,
+            "picture": {
+              "x": 33,
+              "y": 478.6000061035156,
+              "width": 679,
+              "height": 318.86663818359375
+            },
+            "regions": 83
+          },
+          {
+            "mode": "tiny",
+            "file": "fig4-macos-foreground-vs-background.png",
+            "ocrMs": 607,
+            "totalMs": 615,
+            "cached": false,
+            "status": "识别完成 · 21 个文字区域",
+            "error": "",
+            "overlays": 0,
+            "picture": {
+              "x": 33,
+              "y": 478.6000061035156,
+              "width": 679,
+              "height": 242.4499969482422
+            },
+            "regions": 21
+          },
+          {
+            "mode": "tiny",
+            "file": "fig5-macos-disturbances-by-criterion.png",
+            "ocrMs": 1000,
+            "totalMs": 1011,
+            "cached": false,
+            "status": "识别完成 · 48 个文字区域",
+            "error": "",
+            "overlays": 0,
+            "picture": {
+              "x": 33,
+              "y": 478.6000061035156,
+              "width": 679,
+              "height": 319.4666748046875
+            },
+            "regions": 48
+          },
+          {
+            "mode": "small",
+            "file": "fig1-background-full-pass-by-os.png",
+            "ocrMs": 4021,
+            "totalMs": 4028,
+            "cached": false,
+            "status": "识别完成 · 46 个文字区域",
+            "error": "",
+            "overlays": 0,
+            "picture": {
+              "x": 33,
+              "y": 478.6000061035156,
+              "width": 679,
+              "height": 246.76666259765625
+            },
+            "regions": 46
+          },
+          {
+            "mode": "small",
+            "file": "fig2-why-trials-miss.png",
+            "ocrMs": 4593,
+            "totalMs": 4603,
+            "cached": false,
+            "status": "识别完成 · 49 个文字区域",
+            "error": "",
+            "overlays": 0,
+            "picture": {
+              "x": 33,
+              "y": 478.6000061035156,
+              "width": 679,
+              "height": 386.20001220703125
+            },
+            "regions": 49
+          },
+          {
+            "mode": "small",
+            "file": "fig3-macos-background-per-task.png",
+            "ocrMs": 5286,
+            "totalMs": 5295,
+            "cached": false,
+            "status": "识别完成 · 83 个文字区域",
+            "error": "",
+            "overlays": 0,
+            "picture": {
+              "x": 33,
+              "y": 478.6000061035156,
+              "width": 679,
+              "height": 318.86663818359375
+            },
+            "regions": 83
+          },
+          {
+            "mode": "small",
+            "file": "fig4-macos-foreground-vs-background.png",
+            "ocrMs": 2366,
+            "totalMs": 2374,
+            "cached": false,
+            "status": "识别完成 · 22 个文字区域",
+            "error": "",
+            "overlays": 0,
+            "picture": {
+              "x": 33,
+              "y": 478.6000061035156,
+              "width": 679,
+              "height": 242.4499969482422
+            },
+            "regions": 22
+          },
+          {
+            "mode": "small",
+            "file": "fig5-macos-disturbances-by-criterion.png",
+            "ocrMs": 3766,
+            "totalMs": 3773,
+            "cached": false,
+            "status": "识别完成 · 48 个文字区域",
+            "error": "",
+            "overlays": 0,
+            "picture": {
+              "x": 33,
+              "y": 478.6000061035156,
+              "width": 679,
+              "height": 319.4666748046875
+            },
+            "regions": 48
+          }
+        ]
+      }
+    }
+  ]
+}

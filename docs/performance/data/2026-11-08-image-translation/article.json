@@ -1,0 +1,156 @@
+{
+  "date": "2026-11-08",
+  "scope": "Article inline; fresh extension OCR and translation caches; real local Qwen; model server already running; processing clock excludes initiating runtime connection.",
+  "records": [
+    {
+      "artifact": "chromium-article-live-1794069829486",
+      "data": {
+        "browser": "chromium",
+        "model": "Qwen/Qwen3-1.7B-MLX-4bit",
+        "totalMs": 8446.90000000596,
+        "status": "图片翻译完成 · 8.45 秒 · 1 处识别需核对 · 点击“打开图片阅读页”可校对",
+        "labels": [
+          {
+            "source": "8 tasks, 40 trials per driver",
+            "translation": "8 任务，40 每驱动程序试验"
+          },
+          {
+            "source": "one Windows 11 VM, run by Cua",
+            "translation": "一个 Windows 11 虚拟机，由 Cua 运行"
+          },
+          {
+            "source": "Ubuntu 24.04 with XFCE, 8 tasks",
+            "translation": "Ubuntu 24.04 （配有 XFCE）, 8 任务"
+          },
+          {
+            "source": "not available on Linux",
+            "translation": "不在 Linux 上可用"
+          },
+          {
+            "source": "run by Cua",
+            "translation": "由 Cua 运行"
+          },
+          {
+            "source": "run by Cua",
+            "translation": "由 Cua 运行"
+          },
+          {
+            "source": "no Linux harness",
+            "translation": "无 Linux 测试框架"
+          },
+          {
+            "source": "full background pass →",
+            "translation": "后台完整通过 →"
+          },
+          {
+            "source": "full background pass →",
+            "translation": "后台完整通过 →"
+          },
+          {
+            "source": "full background pass →",
+            "translation": "后台完整通过 →"
+          }
+        ],
+        "before": {
+          "x": 48,
+          "y": 189.296875,
+          "width": 900,
+          "height": 327.078125
+        },
+        "after": {
+          "x": 48,
+          "y": 189.296875,
+          "width": 900,
+          "height": 327.078125
+        },
+        "paragraphBefore": {
+          "x": 48,
+          "y": 568.765625,
+          "width": 900,
+          "height": 32.390625
+        },
+        "paragraphAfter": {
+          "x": 48,
+          "y": 568.765625,
+          "width": 900,
+          "height": 32.390625
+        }
+      }
+    },
+    {
+      "artifact": "firefox-article-live-1794069904578",
+      "data": {
+        "browser": "firefox",
+        "model": "Qwen/Qwen3-1.7B-MLX-4bit",
+        "totalMs": 7089,
+        "status": "图片翻译完成 · 7.09 秒 · 1 处识别需核对 · 点击“打开图片阅读页”可校对",
+        "labels": [
+          {
+            "source": "8 tasks, 40 trials per driver",
+            "translation": "8 任务，40 每驱动程序试验"
+          },
+          {
+            "source": "one Windows 11 VM, run by Cua",
+            "translation": "一个 Windows 11 虚拟机，由 Cua 运行"
+          },
+          {
+            "source": "Ubuntu 24.04 with XFCE, 8 tasks",
+            "translation": "Ubuntu 24.04 （配有 XFCE）, 8 任务"
+          },
+          {
+            "source": "not available on Linux",
+            "translation": "不在 Linux 上可用"
+          },
+          {
+            "source": "run by Cua",
+            "translation": "由 Cua 运行"
+          },
+          {
+            "source": "run by Cua",
+            "translation": "由 Cua 运行"
+          },
+          {
+            "source": "no Linux harness",
+            "translation": "无 Linux 测试框架"
+          },
+          {
+            "source": "full background pass →",
+            "translation": "后台完整通过 →"
+          },
+          {
+            "source": "full background pass →",
+            "translation": "后台完整通过 →"
+          },
+          {
+            "source": "full background pass →",
+            "translation": "后台完整通过 →"
+          }
+        ],
+        "before": {
+          "x": 48,
+          "y": 189.31666564941406,
+          "width": 900,
+          "height": 327.08331298828125
+        },
+        "after": {
+          "x": 48,
+          "y": 189.31666564941406,
+          "width": 900,
+          "height": 327.08331298828125
+        },
+        "paragraphBefore": {
+          "x": 48,
+          "y": 568.7999877929688,
+          "width": 900,
+          "height": 32.399993896484375
+        },
+        "paragraphAfter": {
+          "x": 48,
+          "y": 568.7999877929688,
+          "width": 900,
+          "height": 32.399993896484375
+        }
+      }
+    }
+  ]
+}

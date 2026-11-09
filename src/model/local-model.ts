@@ -24,10 +24,19 @@ export function migrateManagedPreset(settings: Settings): Settings {
   return settings;
 }
 
+/** One-time upgrade of the bundled local preset; later manual changes remain user-owned. */
+export function migrateModelParallelism(settings: Settings): Settings {
+  if (settings.concurrency === 1 && isManagedModel(settings)) return { ...settings, concurrency: defaults.concurrency };
+  return settings;
+}
+
 export class LocalModelManager {
   private starting?: Promise<void>;
+  private reachableUntil = 0;
   constructor(private native: NativeSend) {}
+  connection(settings: Settings, reachable: boolean) { if (isManagedModel(settings)) this.reachableUntil = reachable ? performance.now() + 30000 : 0; }
   async control(action: ModelAction, enabled?: boolean): Promise<LocalModelStatus> {
+    if (action === 'stop' || action === 'restart') this.reachableUntil = 0;
     let raw: unknown;
     try { raw = await this.native({ action, ...(enabled === undefined ? {} : { enabled }) }); }
     catch { throw new Error('无法连接本地助手。请先在项目中运行 pnpm model:bridge，再重试。'); }
@@ -41,12 +50,14 @@ export class LocalModelManager {
   async ensure(settings: Settings, signal: AbortSignal) {
     signal.throwIfAborted();
     if (!settings.autoStartLocalModel || !isManagedModel(settings)) return;
+    if (performance.now() < this.reachableUntil) return;
     if (!this.starting) {
       this.starting = (async () => {
         try {
           // Any HTTP response means a server owns this address; let the provider
           // report its API errors instead of starting a competing process.
           await fetch(`${settings.baseUrl.replace(/\/chat\/completions\/?$/, '').replace(/\/$/, '')}/models`, { signal: AbortSignal.timeout(1500) });
+          this.connection(settings, true);
           return;
         } catch { /* A stopped local server can be started by the installed host. */ }
         await this.control('start');

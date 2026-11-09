@@ -1,0 +1,24 @@
+Cloudy's Gloss offline OCR assets
+
+PaddleOCR.js 0.4.2 and PP-OCRv6 tiny/small model assets
+Copyright PaddlePaddle Authors; Apache License 2.0.
+https://github.com/PaddlePaddle/PaddleOCR
+https://github.com/PaddlePaddle/PaddleOCR/blob/main/LICENSE
+
+The SDK worker includes OpenCV.js, js-yaml and Clipper. Its existing notices
+are retained in worker.js. This distribution adapts four Emscripten binding
+wrappers to static JavaScript closures, removes the bundled ONNX runtime, and
+loads the separately packaged CPU WASM runtime. JavaScript eval remains banned.
+
+ONNX Runtime Web: Microsoft Corporation, MIT License.
+https://github.com/microsoft/onnxruntime/blob/main/LICENSE
+@techstark/opencv-js: MIT License; OpenCV 4.x: Apache License 2.0.
+https://github.com/TechStark/opencv-js
+https://github.com/opencv/opencv/blob/4.x/LICENSE
+js-yaml: MIT License. https://github.com/nodeca/js-yaml
+Clipper / clipper-lib: Boost Software License 1.0.
+https://sourceforge.net/projects/jsclipper/
+
+Upstream dependency license files are included alongside this notice where
+provided by the corresponding npm packages. Model archives are pinned by size
+and SHA-256 in models.json; no models or runtime code are fetched at runtime.

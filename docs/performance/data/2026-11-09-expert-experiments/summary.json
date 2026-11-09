@@ -1,0 +1,303 @@
+{
+  "scope": "Local model protocol only; no browser rendering, OCR, or extension result cache; existing server prompt cache not cleared",
+  "cachedModelRevisionObserved": "21457c6f51ed54a7c16e988c0844db973815c137",
+  "productionParallelRepairEnabled": false,
+  "runs": [
+    {
+      "name": "expert-baseline-a",
+      "summary": {
+        "completedBatches": 41,
+        "totalBatches": 41,
+        "elapsedMs": 42703.37175,
+        "firstMs": 3396.503041,
+        "requests": 48,
+        "repairs": 7,
+        "failed": 0
+      },
+      "metadata": {
+        "date": "2026-11-08T16:00:42.404Z",
+        "chip": "Apple M4 Pro",
+        "settings": {
+          "baseUrl": "http://127.0.0.1:8080/v1",
+          "model": "Qwen/Qwen3-1.7B-MLX-4bit",
+          "temperature": 0,
+          "timeout": 120000,
+          "concurrency": 8,
+          "theme": "system",
+          "autoStartLocalModel": true,
+          "inputTranslation": true
+        },
+        "articleSha256": "139a0e753eafb166d7385b6875ac92334a1cd53ed0e233f249b87a2c4f9fe18c",
+        "legacy": false,
+        "plain": false,
+        "proseItems": 2,
+        "batchCharacters": 1800,
+        "modelRevision": "unrecorded",
+        "runtime": "mlx-lm-0.32.0",
+        "blocks": 81,
+        "chunks": 81,
+        "batches": 41,
+        "characters": 23126,
+        "scope": "production semantic extraction and 900-character chunks; configurable bounded provider pool with validation and repairs; no result cache or browser rendering",
+        "promptCache": "server unchanged; not cleared"
+      },
+      "usage": {
+        "requestsWithUsage": 7,
+        "promptTokens": 1277,
+        "cachedPromptTokens": null,
+        "completionTokens": 773,
+        "completeCoverage": false
+      }
+    },
+    {
+      "name": "expert-single-a",
+      "summary": {
+        "completedBatches": 81,
+        "totalBatches": 81,
+        "elapsedMs": 48862.709375000006,
+        "firstMs": 1705.3082499999998,
+        "requests": 94,
+        "repairs": 13,
+        "failed": 0,
+        "peakRequests": 8
+      },
+      "metadata": {
+        "date": "2026-11-08T16:01:50.221Z",
+        "chip": "Apple M4 Pro",
+        "settings": {
+          "baseUrl": "http://127.0.0.1:8080/v1",
+          "model": "Qwen/Qwen3-1.7B-MLX-4bit",
+          "temperature": 0,
+          "timeout": 120000,
+          "concurrency": 8,
+          "theme": "system",
+          "autoStartLocalModel": true,
+          "inputTranslation": true
+        },
+        "articleSha256": "139a0e753eafb166d7385b6875ac92334a1cd53ed0e233f249b87a2c4f9fe18c",
+        "legacy": false,
+        "plain": false,
+        "proseItems": 1,
+        "batchCharacters": 1800,
+        "repairConcurrency": 1,
+        "modelRevision": "unrecorded",
+        "runtime": "mlx-lm-0.32.0",
+        "blocks": 81,
+        "chunks": 81,
+        "batches": 81,
+        "characters": 23126,
+        "scope": "production semantic extraction and 900-character chunks; configurable bounded provider pool with validation and repairs; no result cache or browser rendering",
+        "promptCache": "server unchanged; not cleared"
+      },
+      "usage": {
+        "requestsWithUsage": 13,
+        "promptTokens": 1880,
+        "cachedPromptTokens": null,
+        "completionTokens": 997,
+        "completeCoverage": false
+      }
+    },
+    {
+      "name": "expert-repair-a",
+      "summary": {
+        "completedBatches": 41,
+        "totalBatches": 41,
+        "elapsedMs": 41400.918958,
+        "firstMs": 2255.81675,
+        "requests": 48,
+        "repairs": 7,
+        "failed": 0,
+        "peakRequests": 8
+      },
+      "metadata": {
+        "date": "2026-11-08T16:02:57.308Z",
+        "chip": "Apple M4 Pro",
+        "settings": {
+          "baseUrl": "http://127.0.0.1:8080/v1",
+          "model": "Qwen/Qwen3-1.7B-MLX-4bit",
+          "temperature": 0,
+          "timeout": 120000,
+          "concurrency": 8,
+          "theme": "system",
+          "autoStartLocalModel": true,
+          "inputTranslation": true
+        },
+        "articleSha256": "139a0e753eafb166d7385b6875ac92334a1cd53ed0e233f249b87a2c4f9fe18c",
+        "legacy": false,
+        "plain": false,
+        "proseItems": 2,
+        "batchCharacters": 1800,
+        "repairConcurrency": 2,
+        "modelRevision": "unrecorded",
+        "runtime": "mlx-lm-0.32.0",
+        "blocks": 81,
+        "chunks": 81,
+        "batches": 41,
+        "characters": 23126,
+        "scope": "production semantic extraction and 900-character chunks; configurable bounded provider pool with validation and repairs; no result cache or browser rendering",
+        "promptCache": "server unchanged; not cleared"
+      },
+      "usage": {
+        "requestsWithUsage": 48,
+        "promptTokens": 15416,
+        "cachedPromptTokens": 8364,
+        "completionTokens": 7100,
+        "completeCoverage": true
+      }
+    },
+    {
+      "name": "expert-single-exact-a",
+      "summary": {
+        "completedBatches": 81,
+        "totalBatches": 81,
+        "elapsedMs": 50621.298042,
+        "firstMs": 1696.0267919999997,
+        "requests": 92,
+        "repairs": 11,
+        "failed": 0,
+        "peakRequests": 8
+      },
+      "metadata": {
+        "date": "2026-11-08T16:04:00.931Z",
+        "chip": "Apple M4 Pro",
+        "settings": {
+          "baseUrl": "http://127.0.0.1:8080/v1",
+          "model": "Qwen/Qwen3-1.7B-MLX-4bit",
+          "temperature": 0,
+          "timeout": 120000,
+          "concurrency": 8,
+          "theme": "system",
+          "autoStartLocalModel": true,
+          "inputTranslation": true
+        },
+        "articleSha256": "139a0e753eafb166d7385b6875ac92334a1cd53ed0e233f249b87a2c4f9fe18c",
+        "legacy": false,
+        "plain": false,
+        "exactExample": true,
+        "proseItems": 1,
+        "batchCharacters": 1800,
+        "repairConcurrency": 1,
+        "modelRevision": "unrecorded",
+        "runtime": "mlx-lm-0.32.0",
+        "blocks": 81,
+        "chunks": 81,
+        "batches": 81,
+        "characters": 23126,
+        "scope": "production semantic extraction and 900-character chunks; configurable bounded provider pool with validation and repairs; no result cache or browser rendering",
+        "promptCache": "server unchanged; not cleared"
+      },
+      "usage": {
+        "requestsWithUsage": 92,
+        "promptTokens": 23427,
+        "cachedPromptTokens": 15936,
+        "completionTokens": 7543,
+        "completeCoverage": true
+      }
+    },
+    {
+      "name": "expert-repair-b",
+      "summary": {
+        "completedBatches": 41,
+        "totalBatches": 41,
+        "elapsedMs": 80987.03895900001,
+        "firstMs": 4911.682709000001,
+        "requests": 48,
+        "repairs": 7,
+        "failed": 0,
+        "peakRequests": 8
+      },
+      "metadata": {
+        "date": "2026-11-08T16:05:09.038Z",
+        "chip": "Apple M4 Pro",
+        "settings": {
+          "baseUrl": "http://127.0.0.1:8080/v1",
+          "model": "Qwen/Qwen3-1.7B-MLX-4bit",
+          "temperature": 0,
+          "timeout": 120000,
+          "concurrency": 8,
+          "theme": "system",
+          "autoStartLocalModel": true,
+          "inputTranslation": true
+        },
+        "articleSha256": "139a0e753eafb166d7385b6875ac92334a1cd53ed0e233f249b87a2c4f9fe18c",
+        "legacy": false,
+        "plain": false,
+        "exactExample": false,
+        "proseItems": 2,
+        "batchCharacters": 1800,
+        "repairConcurrency": 2,
+        "modelRevision": "21457c6f51ed54a7c16e988c0844db973815c137",
+        "runtime": "mlx-lm-0.32.0",
+        "blocks": 81,
+        "chunks": 81,
+        "batches": 41,
+        "characters": 23126,
+        "scope": "production semantic extraction and 900-character chunks; configurable bounded provider pool with validation and repairs; no result cache or browser rendering",
+        "promptCache": "server unchanged; not cleared"
+      },
+      "usage": {
+        "requestsWithUsage": 48,
+        "promptTokens": 15416,
+        "cachedPromptTokens": 8232,
+        "completionTokens": 7136,
+        "completeCoverage": true
+      }
+    },
+    {
+      "name": "expert-baseline-b",
+      "summary": {
+        "completedBatches": 41,
+        "totalBatches": 41,
+        "elapsedMs": 48437.252792,
+        "firstMs": 4405.950208,
+        "requests": 46,
+        "repairs": 5,
+        "failed": 0,
+        "peakRequests": 8
+      },
+      "metadata": {
+        "date": "2026-11-08T16:06:35.551Z",
+        "chip": "Apple M4 Pro",
+        "settings": {
+          "baseUrl": "http://127.0.0.1:8080/v1",
+          "model": "Qwen/Qwen3-1.7B-MLX-4bit",
+          "temperature": 0,
+          "timeout": 120000,
+          "concurrency": 8,
+          "theme": "system",
+          "autoStartLocalModel": true,
+          "inputTranslation": true
+        },
+        "articleSha256": "139a0e753eafb166d7385b6875ac92334a1cd53ed0e233f249b87a2c4f9fe18c",
+        "legacy": false,
+        "plain": false,
+        "exactExample": false,
+        "proseItems": 2,
+        "batchCharacters": 1800,
+        "repairConcurrency": 1,
+        "modelRevision": "21457c6f51ed54a7c16e988c0844db973815c137",
+        "runtime": "mlx-lm-0.32.0",
+        "blocks": 81,
+        "chunks": 81,
+        "batches": 41,
+        "characters": 23126,
+        "scope": "production semantic extraction and 900-character chunks; configurable bounded provider pool with validation and repairs; no result cache or browser rendering",
+        "promptCache": "server unchanged; not cleared"
+      },
+      "usage": {
+        "requestsWithUsage": 46,
+        "promptTokens": 15119,
+        "cachedPromptTokens": 8226,
+        "completionTokens": 7020,
+        "completeCoverage": true
+      }
+    }
+  ],
+  "qualityEvidence": {
+    "blockIndex": 47,
+    "source": "Beyond that, in Scale's run cua-driver refused background delivery in 37 of the 40 background trials, because Chromium and Electron windows refuse X11 background input and background keystrokes need a virtual keyboard device these computers don't grant. On the multi-app tasks the agent stopped and reported itself blocked in all 15 background trials, though in the foreground it completed CDB-G02 in 3 of 5 and CDB-G04 in 4 of 5. The drag task had no route that leaves the user's focus alone: cua-driver completed it in 1 of 5 trials, and agent-desktop in 3 of 5 but moved the real pointer each time, so neither had a full pass. agent-desktop completed none of the multi-app tasks in the background.",
+    "baseline": "除此之外，在 Scale 的运行中，cua-driver 在 40 个背景试验中拒绝了背景输入，其中 37 次是因为 Chromium 和 Electron 窗口拒绝 X11 背景输入，且背景键盘输入需要虚拟键盘设备，而这些计算机并不提供此类设备。在多应用任务中，代理停止并报告自己被阻塞，所有 15 个背景试验中都如此。尽管在前台完成了 CDB-G02 的 3 次试验和 CDB-G04 的 4 次试验，但背景中代理未能完成任何多应用任务。拖拽任务没有一条路径可以让用户焦点保持不变：cua-driver 在 5 次试验中完成了一次，agent-desktop 在 5 次试验中完成了 3 次，但每次都会移动真实指针，因此两者都没有完整的通过。agent-desktop 在背景中未能完成任何多应用任务。",
+    "parallelRepair": "除此之外，在Scale的运行中，cua-driver在40个背景试验中的37个中拒绝了背景输入，因为Chromium和Electron窗口拒绝X11背景输入以及背景键盘输入，这些计算机不提供虚拟键盘设备。在多应用任务中，代理停止并报告自己被阻塞，所有15个背景试验中都如此，尽管在前台完成CDB-G02在5个试验中的3个，CDB-G04在5个试验中的4个。拖拽任务没有一条路线可以让用户焦点保持独立：cua-driver在5个试验中的1个中完成，agent-desktop在5个试验中的3个中完成，但每次移动真实指针，因此两者都没有完整的通过。agent-desktop在背景中完成了所有多应用任务。",
+    "finding": "The source says agent-desktop completed none; the parallel-repair run says all. This block was not repaired; batch execution can change outputs even at temperature zero. The baseline has other translation errors too."
+  }
+}

@@ -20,7 +20,14 @@ export class TranslationService {
   // The latest explicit retry owns the cache write, even if an older request
   // finishes later. Entries are removed when their owning request settles.
   private cacheOwners = new Map<string, Flight>();
-  constructor(private cache = new ResultCache(), private ensureModel: (settings: Settings, signal: AbortSignal) => Promise<void> = async () => {}, private pronunciation?: PronunciationProvider) {}
+  constructor(private cache = new ResultCache(), private ensureModel: (settings: Settings, signal: AbortSignal) => Promise<void> = async () => {}, private pronunciation?: PronunciationProvider,
+    private connection: (settings: Settings, reachable: boolean) => void = () => {}) {}
+  private provider(settings: Settings, pronunciation?: PronunciationProvider) {
+    return new OpenAICompatibleProvider(settings, async (input, init) => {
+      try { const response = await fetch(input, init); this.connection(settings, true); return response; }
+      catch (error) { if (!init?.signal?.aborted) this.connection(settings, false); throw error; }
+    }, pronunciation);
+  }
   private key(settings: Settings, kind: string, value: unknown) {
     return cacheKey([settings.baseUrl, settings.model, settings.temperature, settings.apiKey, 'zh-CN', kind, value]);
   }
@@ -64,7 +71,7 @@ export class TranslationService {
       });
       if (!missing.length) return;
       await this.ensureModel(settings, signal);
-      const translations = await new OpenAICompatibleProvider(settings).translate(missing.map((entry) => entry.source), signal,
+      const translations = await this.provider(settings).translate(missing.map((entry) => entry.source), signal,
         (index, text) => this.publish(missing[index]!, text, false));
       signal.throwIfAborted();
       await Promise.all(missing.map(async (entry, index) => {
@@ -147,10 +154,25 @@ export class TranslationService {
       signal.throwIfAborted();
       await this.ensureModel(settings, signal);
       signal.throwIfAborted();
-      const result = await new OpenAICompatibleProvider(settings).translateInput(text, signal);
+      const result = await this.provider(settings).translateInput(text, signal);
       signal.throwIfAborted();
       return result;
     }, signal, 'interactive');
+  }
+  async translateImage(settings: Settings, texts: string[], context: string, signal: AbortSignal, bypassCache = false) {
+    this.queue.setLimit(settings.concurrency);
+    const unique = [...new Set(texts)];
+    const keys = await Promise.all(unique.map(text => this.key(settings, 'image-translation-v7', [context, text])));
+    const values = bypassCache ? [] : await Promise.all(keys.map(key => this.cache.get(key)));
+    signal.throwIfAborted();
+    const results = new Map<string, string>(); const missing: number[] = [];
+    unique.forEach((text, index) => { if (typeof values[index] === 'string') results.set(text, values[index] as string); else missing.push(index); });
+    if (missing.length) {
+      const translated = await this.queue.run(() => this.provider(settings).translateImage(missing.map(index => unique[index]!), context, signal), signal, 'interactive');
+      signal.throwIfAborted();
+      await Promise.all(missing.map(async (index, item) => { const value = chineseSpacing(translated[item]!); results.set(unique[index]!, value); if (value) await this.cache.set(keys[index]!, value); }));
+    }
+    signal.throwIfAborted(); return texts.map(text => results.get(text)!);
   }
   async dictionary(settings: Settings, word: string, context: string, signal: AbortSignal) {
     signal.throwIfAborted();
@@ -178,7 +200,7 @@ export class TranslationService {
       signal.throwIfAborted();
       await this.ensureModel(settings, signal);
       signal.throwIfAborted();
-      return new OpenAICompatibleProvider(settings, undefined, this.pronunciation).lookup(word, context, signal);
+      return this.provider(settings, this.pronunciation).lookup(word, context, signal);
     }, signal, true);
     signal.throwIfAborted();
     await this.cache.set(key, card);
@@ -190,7 +212,7 @@ export class TranslationService {
       await this.ensureModel(settings, signal);
       // Exercise the same streaming + validated plain-text fallback as page
       // translation, with enough source words to require Chinese output.
-      return new OpenAICompatibleProvider(settings).translate(
+      return this.provider(settings).translate(
         ['The weather is cloudy today, so please bring an umbrella.'], signal, () => {});
     }, signal, true);
   }

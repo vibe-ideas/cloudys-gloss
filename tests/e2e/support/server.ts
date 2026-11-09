@@ -1,4 +1,5 @@
-import { createServer } from 'node:http';
+import { createServer, type RequestListener } from 'node:http';
+import { readFile } from 'node:fs/promises';
 import type { AddressInfo } from 'node:net';
 import { readingFixture, readingTranslations } from '../reading/reading-fixture';
 import { layoutFixture, layoutTranslations } from '../layout/layout-fixture';
@@ -17,8 +18,17 @@ export async function startServer() {
   let finishedStreams = 0; let abortedStreams = 0;
   const token = crypto.randomUUID();
   const commands: { id: string; operation: string; args: unknown[] }[] = [];
+  const tabCommands: typeof commands = [];
   const pending = new Map<string, { resolve: (value: unknown) => void; reject: (error: Error) => void; timer: ReturnType<typeof setTimeout> }>();
-  const server = createServer(async (request, response) => {
+  const handler: RequestListener = async (request, response) => {
+    if (request.url?.split('?')[0] === '/article-chart.png') {
+      const image = await readFile('tests/fixtures/image-ocr/cua-background.png');
+      response.writeHead(200, { 'Content-Type': 'image/png', 'Content-Length': image.length }); response.end(image); return;
+    }
+    if (request.url === '/article-images') {
+      response.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8', 'Content-Security-Policy': "default-src 'self'; script-src 'none'; frame-src 'none'; connect-src 'none'; style-src 'unsafe-inline'" });
+      response.end('<!doctype html><html><head><title>Article with chart</title><style>body{margin:48px;font:18px/1.8 system-ui}article{max-width:900px}figure{margin:0}img{display:block;width:100%;height:auto}p{margin:20px 0}.spacer{height:1200px}</style></head><body><article><h1>Computer use benchmark</h1><p>Background agents can use desktop applications while people continue working.</p><figure><a href="/unexpected-navigation"><img id="chart" src="/article-chart.png" alt="Background full pass by operating system"></a><figcaption>Cua Driver Bench operating system comparison.</figcaption></figure><p id="after-chart">Read the original chart and compare the results.</p><div class="spacer"></div></article></body></html>'); return;
+    }
     if (request.url === '/pdf-fixture.pdf') {
       response.writeHead(200, { 'Content-Type': 'application/pdf', 'Content-Length': pdfFixture.byteLength }); response.end(pdfFixture); return;
     }
@@ -38,6 +48,9 @@ export async function startServer() {
     }
     if (request.url === `/bridge/${token}`) {
       response.writeHead(200, { 'Content-Type': 'application/json' }); response.end(JSON.stringify(commands.shift() ?? null)); return;
+    }
+    if (request.url === `/tabs-bridge/${token}`) {
+      response.writeHead(200, { 'Content-Type': 'application/json' }); response.end(JSON.stringify(tabCommands.shift() ?? null)); return;
     }
     if (request.url === `/reply/${token}`) {
       let raw = ''; for await (const chunk of request) raw += chunk;
@@ -95,18 +108,25 @@ export async function startServer() {
       response.end(`<!doctype html><html><head><title>Long reading test</title><style>body{font:18px/1.8 system-ui;margin:40px;max-width:760px}p{min-height:90px;margin:24px 0}</style></head><body><main>${Array.from({ length: 2000 }, (_, index) => `<p id="row-${index}">Paragraph ${index}. Reading across languages should feel natural. A clear translation helps readers understand the ideas while keeping the original words in view.</p>`).join('')}</main></body></html>`); return;
     }
     response.end(`<!doctype html><html><head><title>Reading fixture</title><style>body{font:20px/1.8 system-ui;margin:48px;max-width:720px} .spacer{height:2200px} button{font-size:90px!important} p{margin:24px 0}</style></head><body><main><h1>A little clarity</h1><p id="first">A <strong>cloudy</strong> morning brings quiet thoughts.</p><p id="second">Read the original and discover another meaning.</p><pre>Never translate this code.</pre><div contenteditable="true">Private draft</div><div class="spacer"></div><p id="far">This distant paragraph waits until you scroll.</p></main></body></html>`);
-  });
-  await new Promise<void>((resolve) => server.listen(0, '127.0.0.1', resolve));
+  };
+  const server = createServer(handler); const controlServer = createServer(handler);
+  // Held HTTP/1 streams can occupy all six browser connections to the model origin.
+  // The test driver needs a separate origin so control commands cannot starve.
+  await Promise.all([server, controlServer].map(current => new Promise<void>(resolve => current.listen(0, '127.0.0.1', resolve))));
   const url = `http://127.0.0.1:${(server.address() as AddressInfo).port}`;
+  const controlUrl = `http://127.0.0.1:${(controlServer.address() as AddressInfo).port}`;
   const control = <T>(operation: string, args: unknown[] = []) => new Promise<T>((resolve, reject) => {
     const id = crypto.randomUUID(); const timer = setTimeout(() => { pending.delete(id); reject(new Error(`Firefox options bridge timed out: ${operation}`)); }, 10000);
-    pending.set(id, { resolve: resolve as (value: unknown) => void, reject, timer }); commands.push({ id, operation, args });
+    pending.set(id, { resolve: resolve as (value: unknown) => void, reject, timer }); (operation === 'reading-tab' ? tabCommands : commands).push({ id, operation, args });
   });
-  return { url, calls, token, control, get finishedStreams() { return finishedStreams; }, get abortedStreams() { return abortedStreams; },
+  return { url, controlUrl, calls, token, control, get finishedStreams() { return finishedStreams; }, get abortedStreams() { return abortedStreams; },
     holdStreams: () => { streamGate = new Promise<void>((resolve) => { releaseStream = resolve; }); },
     releaseStreams: () => { releaseStream?.(); streamGate = undefined; },
     setTranslationFailure: (status: number) => { translationFailure = status; },
     setTranslation: (source: string, text: string) => { translationOverrides.set(source, text); },
     setTranslationRepair: (source: string, text: string) => { translationRepairs.set(source, text); },
-    setDelay: (value: number) => { delay = value; }, setInvalid: (value: boolean) => { invalid = value; }, close: () => new Promise<void>((resolve, reject) => { releaseStream?.(); for (const job of pending.values()) { clearTimeout(job.timer); job.reject(new Error('Test server closed')); } pending.clear(); server.closeAllConnections(); server.close((error) => error ? reject(error) : resolve()); }) };
+    setDelay: (value: number) => { delay = value; }, setInvalid: (value: boolean) => { invalid = value; }, close: async () => {
+      releaseStream?.(); for (const job of pending.values()) { clearTimeout(job.timer); job.reject(new Error('Test server closed')); } pending.clear();
+      await Promise.all([server, controlServer].map(current => new Promise<void>((resolve, reject) => { current.closeAllConnections(); current.close(error => error ? reject(error) : resolve()); })));
+    } };
 }

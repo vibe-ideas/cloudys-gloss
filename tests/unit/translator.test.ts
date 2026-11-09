@@ -21,6 +21,18 @@ afterEach(() => vi.unstubAllGlobals());
 const visible = () => observers.forEach((enter) => enter([...observed].map((target) => ({ target, isIntersecting: true } as IntersectionObserverEntry)), {} as IntersectionObserver));
 const intersect = (observer: ObserverRecord, elements: Element[], isIntersecting: boolean) => observer.callback(elements.map((target) => ({ target, isIntersecting } as IntersectionObserverEntry)), {} as IntersectionObserver);
 describe('双语阅读生命周期', () => {
+  it('读者配置八并发时附近段落可同时发出八批，改回单并发后不再启动超额请求', async () => {
+    document.body.innerHTML = Array.from({ length: 24 }, (_, index) => `<p>Reading paragraph ${index}.</p>`).join('');
+    const completions: ((values: string[]) => void)[] = [];
+    const translate = vi.fn<import('../../src/page/translator').TranslationTransport['translate']>(() => new Promise(resolve => completions.push(resolve)));
+    const translator = new PageTranslator({ translate, cancel: vi.fn() }); translator.setConcurrency(8); translator.start();
+    try {
+      await vi.waitFor(() => expect(observed.size).toBe(24)); visible(); await vi.waitFor(() => expect(translate).toHaveBeenCalledTimes(8));
+      translator.setConcurrency(1);
+      completions[0]!(['第一段译文', '第二段译文']); await vi.waitFor(() => expect(translator.status.translated).toBe(2));
+      expect(translate).toHaveBeenCalledTimes(8);
+    } finally { translator.stop(); }
+  });
   it('中文含技术名词的段落不注册翻译观察器或请求，SPA 改成英文后增量翻译，改回中文时移除旧译文', async () => {
     document.body.innerHTML = '<p id="chinese">使用 Kubernetes 与 PostgreSQL 部署服务。</p><p id="english">Read this English paragraph.</p>';
     const chinese = document.querySelector('#chinese')!; const english = document.querySelector('#english')!;
@@ -365,18 +377,21 @@ describe('双语阅读生命周期', () => {
     const paragraph = document.querySelector('p')!;
     const extra = paragraph.querySelector('span')!;
     const translate = vi.fn(async (_id: string, texts: string[]) => texts.map(text => `译文：${text}`));
-    const translator = new PageTranslator({ translate, cancel: vi.fn() }); translator.start(); visible();
-    await vi.waitFor(() => expect(paragraph.querySelector('[data-state="done"]')?.textContent).toBe('译文：Primary text.'));
-    for (let i = 0; i < 10; i++) extra.className = i % 2 ? '' : 'concealed';
-    await vi.waitFor(() => expect(translator.status.translated).toBe(0));
-    await new Promise(resolve => setTimeout(resolve, 60)); visible();
-    await vi.waitFor(() => expect(paragraph.querySelector('[data-state="done"]')?.textContent).toBe('译文：Primary text. Additional details.'));
-    extra.className = 'concealed';
-    await vi.waitFor(() => expect(translator.status.translated).toBe(0));
-    await new Promise(resolve => setTimeout(resolve, 60)); visible();
-    await vi.waitFor(() => expect(paragraph.querySelector('[data-state="done"]')?.textContent).toBe('译文：Primary text.'));
-    expect(translate.mock.calls.flatMap(([, texts]) => texts)).toEqual(['Primary text.', 'Primary text. Additional details.', 'Primary text.']);
-    translator.stop();
+    const translator = new PageTranslator({ translate, cancel: vi.fn() }); translator.start();
+    try {
+      // Incremental discovery may yield before registering this paragraph.
+      await vi.waitFor(() => expect(observed.has(paragraph)).toBe(true)); visible();
+      await vi.waitFor(() => expect(paragraph.querySelector('[data-state="done"]')?.textContent).toBe('译文：Primary text.'));
+      for (let i = 0; i < 10; i++) extra.className = i % 2 ? '' : 'concealed';
+      await vi.waitFor(() => expect(translator.status.translated).toBe(0));
+      await vi.waitFor(() => expect(observed.has(paragraph)).toBe(true)); visible();
+      await vi.waitFor(() => expect(paragraph.querySelector('[data-state="done"]')?.textContent).toBe('译文：Primary text. Additional details.'));
+      extra.className = 'concealed';
+      await vi.waitFor(() => expect(translator.status.translated).toBe(0));
+      await vi.waitFor(() => expect(observed.has(paragraph)).toBe(true)); visible();
+      await vi.waitFor(() => expect(paragraph.querySelector('[data-state="done"]')?.textContent).toBe('译文：Primary text.'));
+      expect(translate.mock.calls.flatMap(([, texts]) => texts)).toEqual(['Primary text.', 'Primary text. Additional details.', 'Primary text.']);
+    } finally { translator.stop(); }
     expect(extra.className).toBe('concealed');
     expect(paragraph.textContent).toBe('Primary text. Additional details.');
   });

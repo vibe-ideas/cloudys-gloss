@@ -11,6 +11,7 @@
 - [MLX、Ollama 与兼容 API 配置](guides/models.md)
 - [模型启动、macOS 登录自启与停止卸载](guides/model-service.md)
 - [PDF 文件、在线链接与逐页双语阅读](guides/pdf.md)
+- [离线图片 OCR、翻译、原图对照与校对](guides/image-translation.md)
 
 ## 开发维护
 
@@ -60,6 +61,8 @@
 - [PDF 原版式首屏、逐块回填与画布预算](performance/2026-10-05-pdf-layout.md)
 
 - [报告索引、指标口径与模型选择](performance/README.md)
+- [恢复纯模型翻译与右键操作](performance/2026-11-08-model-only.md)
+- [已撤回的浏览器翻译方案：历史测速](performance/2026-11-07-cua-article.md)
 - [常见组件、大页面调度与 PDF 资源开销](performance/2026-10-05-components-pdf.md)
 - [三模型翻译质量与逐例对照](performance/2026-10-04-translation-quality.md)
 - [M4 Pro：MLX 与 llama.cpp 对比](performance/2026-10-04-backends.md)

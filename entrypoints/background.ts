@@ -7,9 +7,14 @@ import { defaults, RequestSchema, SettingsSchema, type Response } from '../src/c
 import { PackagedPronunciationDictionary } from '../src/speech/packaged-pronunciation';
 import { NativeSpeech } from '../src/speech/native-speech';
 import { TranslationService } from '../src/model/service';
-import { LocalModelManager, NATIVE_HOST, migrateManagedPreset } from '../src/model/local-model';
+import { LocalModelManager, NATIVE_HOST, migrateManagedPreset, migrateModelParallelism } from '../src/model/local-model';
+import { localImageModel } from '../src/image/regions';
+import { ResultCache } from '../src/core/cache';
+import { InlineImageBroker } from '../src/image/inline-broker';
+import { installTranslationMenus } from '../src/ui/context-menu';
 
 export default defineBackground(() => {
+  installTranslationMenus();
   const dictionaries = new ImportedDictionaryStore();
   const definitions = new PackagedDefinitions(async path => {
     const response = await fetch(browser.runtime.getURL(`/dictionaries/definitions/${path}`), { signal: AbortSignal.timeout(5000) });
@@ -26,13 +31,18 @@ export default defineBackground(() => {
     if (!response.ok) throw new Error('离线音标词典无法加载');
     return response.text();
   });
-  const service = new TranslationService(undefined, (config, signal) => localModel.ensure(config, signal), pronunciation);
-  const pending = new Map<string, { controller: AbortController; tabId?: number }>();
+  const service = new TranslationService(undefined, (config, signal) => localModel.ensure(config, signal), pronunciation, (config, reachable) => localModel.connection(config, reachable));
+  const pending = new Map<string, { controller: AbortController; tabId?: number; documentId?: string }>();
+  const inlineImages = new InlineImageBroker(!import.meta.env.FIREFOX, sender => {
+    for (const job of pending.values()) if (sender?.documentId && job.documentId === sender.documentId || sender?.tab?.id !== undefined && job.tabId === sender.tab.id) job.controller.abort(new Error('图片处理页已关闭'));
+  });
   const presetReady = (async () => {
-    const stored = await browser.storage.local.get(['settings', 'modelPresetVersion']);
-    if (stored.modelPresetVersion !== 2) {
+    const stored = await browser.storage.local.get(['settings', 'modelPresetVersion', 'modelParallelismVersion']);
+    const previous = stored.settings && typeof stored.settings === 'object' && 'pageEngine' in stored.settings ? stored.settings.pageEngine : undefined;
+    if (stored.modelPresetVersion !== 2 || stored.modelParallelismVersion !== 1 || previous !== undefined) {
       const current = SettingsSchema.parse(stored.settings ?? defaults);
-      await browser.storage.local.set({ settings: migrateManagedPreset(current), modelPresetVersion: 2 });
+      const preset = stored.modelPresetVersion !== 2 ? migrateManagedPreset(current) : current;
+      await browser.storage.local.set({ settings: stored.modelParallelismVersion !== 1 ? migrateModelParallelism(preset) : preset, modelPresetVersion: 2, modelParallelismVersion: 1 });
     }
   })();
   const settings = async () => {
@@ -40,9 +50,10 @@ export default defineBackground(() => {
     return SettingsSchema.parse((await browser.storage.local.get('settings')).settings ?? defaults);
   };
   // Extension API activity keeps MV3 alive during slow local inference.
-  const keepalive = setInterval(() => { if (pending.size || activeImports) void browser.runtime.getPlatformInfo(); }, 20000);
+  const keepalive = setInterval(() => { if (pending.size || activeImports || inlineImages.size) void browser.runtime.getPlatformInfo(); }, 20000);
   void keepalive;
   browser.runtime.onConnect.addListener((port) => {
+    if (inlineImages.connect(port)) return;
     if (port.name === 'dictionary-import') {
       if (!port.sender?.url?.startsWith(browser.runtime.getURL('/'))) { port.disconnect(); return; }
       const controller = new AbortController(); let started = false;
@@ -77,7 +88,7 @@ export default defineBackground(() => {
       if (pending.has(candidate) || [...pending.keys()].filter((item) => item.startsWith(`${owner}:`)).length >= 12) {
         post({ type: 'error', error: '当前页面请求过多，请稍后重试' }); return;
       }
-      key = candidate; pending.set(key, { controller, tabId: sender?.tab?.id });
+      key = candidate; pending.set(key, { controller, tabId: sender?.tab?.id, documentId: sender?.documentId });
       void (async () => {
         try {
           const config = await settings(); controller.signal.throwIfAborted();
@@ -97,25 +108,26 @@ export default defineBackground(() => {
     const privileged = !sender.tab && !!sender.url?.startsWith(browser.runtime.getURL('/'));
     return (async (): Promise<Response<unknown>> => {
       try {
-        if (['lexicon:list', 'lexicon:delete', 'lexicon:enable', 'settings:get', 'settings:save', 'connection:test', 'cache:clear', 'model:control'].includes(request.type) && !privileged) {
+        if (['image:translate', 'lexicon:list', 'lexicon:delete', 'lexicon:enable', 'settings:get', 'settings:save', 'connection:test', 'cache:clear', 'model:control'].includes(request.type) && !privileged) {
           // Options tabs have a sender.tab on Firefox. Verify the extension origin too.
           if (!sender.url?.startsWith(browser.runtime.getURL('/'))) throw new Error('此操作仅允许在扩展设置页执行');
         }
-        if (request.type === 'preferences') { const value = await settings(); return { ok: true, data: { theme: value.theme, inputTranslation: value.inputTranslation } }; }
+        if (request.type === 'preferences') { const value = await settings(); return { ok: true, data: { theme: value.theme, inputTranslation: value.inputTranslation, concurrency: value.concurrency } }; }
+        if (request.type === 'image:open') { await browser.tabs.create({ url: browser.runtime.getURL('/image.html') + (request.url ? `#url=${encodeURIComponent(request.url)}` : '') }); return { ok: true, data: null }; }
         if (request.type === 'settings:get') return { ok: true, data: await settings() };
         if (request.type === 'lexicon:list') return { ok: true, data: await dictionaries.list() };
         if (request.type === 'lexicon:delete') { await dictionaries.remove(request.dictionaryId); return { ok: true, data: null }; }
         if (request.type === 'lexicon:enable') { await dictionaries.enable(request.dictionaryId, request.enabled); return { ok: true, data: null }; }
         if (request.type === 'settings:open') { await browser.runtime.openOptionsPage(); return { ok: true, data: null }; }
         if (request.type === 'settings:save') { await presetReady; await browser.storage.local.set({ settings: request.settings }); return { ok: true, data: null }; }
-        if (request.type === 'cache:clear') { await service.clear(); return { ok: true, data: null }; }
+        if (request.type === 'cache:clear') { await Promise.all([service.clear(), new ResultCache('cloudys-gloss-image-ocr').clear()]); return { ok: true, data: null }; }
         if (request.type === 'model:control') return { ok: true, data: await localModel.control(request.action, request.enabled) };
         const key = `${owner}:${request.id}`;
         if (request.type === 'cancel') { pending.get(key)?.controller.abort(new Error('请求已取消')); return { ok: true, data: null }; }
         if (pending.has(key)) throw new Error('重复请求');
         if ([...pending.keys()].filter((item) => item.startsWith(`${owner}:`)).length >= 12) throw new Error('当前页面请求过多，请稍后重试');
         const controller = new AbortController();
-        pending.set(key, { controller, tabId: sender.tab?.id });
+        pending.set(key, { controller, tabId: sender.tab?.id, documentId: sender.documentId });
         try {
           if (request.type === 'definition:lookup') return { ok: true, data: await definitions.lookup(request.word, controller.signal) };
           if (request.type === 'lexicon:lookup') return { ok: true, data: await dictionaries.lookup(request.word, controller.signal) };
@@ -129,6 +141,10 @@ export default defineBackground(() => {
             return { ok: true, data: native ? await nativeSpeech.play(request.word, request.locale, controller.signal) : { backend: 'browser' } };
           }
           const config = request.type === 'connection:test' ? request.settings : await settings();
+          if (request.type === 'image:translate') {
+            if (!localImageModel(config.baseUrl)) throw new Error('离线图片翻译仅使用本机模型，请先在设置中配置并启动本地服务');
+            return { ok: true, data: await service.translateImage({ ...config, autoStartLocalModel: false }, request.texts, request.context, controller.signal, request.bypassCache) };
+          }
           if (request.type === 'input:translate') {
             if (!config.inputTranslation) throw new Error('输入框快捷翻译已关闭');
             return { ok: true, data: await service.translateInput(config, request.text, controller.signal) };
