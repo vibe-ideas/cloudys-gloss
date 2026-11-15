@@ -2,7 +2,9 @@ import { test, expect } from '../support/fixtures';
 
 for (const word of ['latency', 'Kubernetes']) {
   test(`模型忙碌时划选 ${word}，先显示真实音标及口音，已收录的本地释义不等待模型`, async ({ extension }, testInfo) => {
-    const { page, server, toggle } = extension;
+    const { options, page, server, toggle } = extension;
+    await options.fill('concurrency', '1'); await options.click('保存设置');
+    await expect.poll(() => options.status()).toContain('设置已保存');
     server.holdStreams();
     await toggle();
     await expect(page.locator('[data-state="partial"]').first()).toBeVisible();
@@ -39,7 +41,9 @@ for (const word of ['latency', 'Kubernetes']) {
 }
 
 test('网页翻译占用模型时，cloudy 词卡先显示离线音标与释义，模型空闲后原位置补齐 AI 解释', async ({ extension }, testInfo) => {
-  const { page, server, toggle } = extension;
+  const { options, page, server, toggle } = extension;
+  await options.fill('concurrency', '1'); await options.click('保存设置');
+  await expect.poll(() => options.status()).toContain('设置已保存');
   server.holdStreams();
   await toggle();
   await expect(page.locator('[data-state="partial"]').first()).toBeVisible();

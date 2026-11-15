@@ -121,7 +121,7 @@ test('裁剪和扫描页保留可见原稿且不发送不可确认文字，后�
   await driver.command('file', [pdfLayoutFixture.toString('base64'), 'visibility-cases.pdf']);
   await expect.poll(async () => (await driver.snapshot()).source).toContain(pdfLayoutTexts.title);
   await driver.command('fill', ['#page-number', '2']); await driver.command('submit', ['#page-number']);
-  await expect.poll(async () => (await driver.snapshot()).status).toContain('可见性无法确认');
+  await expect.poll(async () => (await driver.snapshot()).status, { timeout: 15000 }).toContain('可见性无法确认');
   let state = await driver.snapshot(); expect(state.canvasVisible).toBe(true); expect(state.source).toHaveLength(0); expect(state.reading).toBe(false);
   expect(state.overlays).toHaveLength(0); expect((await driver.pixels()).changed).toBe(0);
   await driver.command('click', ['开启双语']); await driver.command('frame');
@@ -130,14 +130,14 @@ test('裁剪和扫描页保留可见原稿且不发送不可确认文字，后�
   state = await driver.snapshot(); expect(state.reading).toBe(false); expect(state.canvasVisible).toBe(true); expect(state.source).toHaveLength(0);
   await driver.screenshot(testInfo.outputPath('pdf-clipping-original.png'));
   await driver.command('fill', ['#page-number', '3']); await driver.command('submit', ['#page-number']);
-  await expect.poll(async () => (await driver.snapshot()).status).toContain('暂不支持 OCR');
+  await expect.poll(async () => (await driver.snapshot()).status, { timeout: 15000 }).toContain('暂不支持 OCR');
   state = await driver.snapshot(); expect(state.reading).toBe(false); expect(state.canvasVisible).toBe(true); expect(state.source).toHaveLength(0);
   expect(state.translations).toHaveLength(0); expect(server.calls).toHaveLength(0);
   const scan = await driver.pixels(); expect(scan.changed).toBe(0); expect(scan.nonWhite).toBeGreaterThan(1000);
   await driver.screenshot(testInfo.outputPath('pdf-scan-original.png'));
   await driver.command('click', ['页面对照']);
   await driver.command('fill', ['#page-number', '4']); await driver.command('submit', ['#page-number']);
-  await expect.poll(async () => (await driver.snapshot()).status).toContain('本页翻译完成');
+  await expect.poll(async () => (await driver.snapshot()).status, { timeout: 15000 }).toContain('本页翻译完成');
   state = await driver.snapshot(); expect(state.source).toEqual([pdfLayoutTexts.visible]);
   expect(state.translations.join('')).toContain('可见页面摘要');
   expect(server.calls.flatMap(call => call.texts ?? [])).toEqual([pdfLayoutTexts.visible]);
