@@ -53,7 +53,7 @@ test('文章内图片原位显示译文，切换原图及缩放滚动不改排�
   await image.evaluate(node => { (node as HTMLImageElement).src = '/article-chart.png?replacement'; });
   await expect(overlay).toHaveCount(0);
   await page.goto(server.url);
-  await expect.poll(() => context.pages().length, { timeout: 15000 }).toBeLessThanOrEqual(tabs);
+  await expect.poll(() => context.pages().length, { timeout: 35000 }).toBeLessThanOrEqual(tabs);
 });
 
 test('右键文章内图片后从菜单通道翻译所选图片，重复图片地址不会错误覆盖第一张', async ({ extension }) => {

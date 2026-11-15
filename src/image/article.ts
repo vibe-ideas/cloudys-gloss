@@ -23,6 +23,8 @@ export class ArticleImageTranslator {
     window.addEventListener('scroll', this.schedule, { signal, capture: true, passive: true });
     window.addEventListener('resize', this.schedule, { signal, passive: true });
     document.addEventListener('load', this.schedule, { signal, capture: true });
+    window.addEventListener('pagehide', () => this.reset(), { signal });
+    window.addEventListener('beforeunload', () => this.reset(), { signal });
     if (typeof ResizeObserver !== 'undefined') this.resize = new ResizeObserver(this.schedule);
     this.mutations = new MutationObserver(records => {
       if (records.some(record => !(record.target instanceof Element ? record.target : record.target.parentElement)?.closest(`[${OWN}]`))) this.schedule();
