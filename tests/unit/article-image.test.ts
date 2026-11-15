@@ -55,6 +55,16 @@ describe('网页文章内的图片翻译', () => {
     const count = owner.post.mock.calls.length; processor.receive({ type: 'progress', id: job.id, status: '已取消的任务' }); expect(owner.post).toHaveBeenCalledTimes(count);
     owner.disconnect(); expect(processor.disconnect).toHaveBeenCalled(); await vi.waitFor(() => expect(api.remove).toHaveBeenCalledWith(22));
   });
+  it('网页卸载发送 release 或标签页跳转更新时立即释放处理页', async () => {
+    api.create.mockResolvedValue({ id: 22 }); api.remove.mockResolvedValue(undefined);
+    const broker = new InlineImageBroker(false); const owner = connection('image-inline-owner', 7); broker.connect(owner.value); owner.receive(job);
+    await vi.waitFor(() => expect(api.create).toHaveBeenCalledOnce());
+    const url = api.create.mock.calls[0]![0].url as string; const processor = connection('image-inline-processor', 22, url); broker.connect(processor.value); processor.receive({ token: url.split('#')[1] });
+    await vi.waitFor(() => expect(processor.post).toHaveBeenCalledWith(job));
+    broker.handleTabUpdated(7, { status: 'loading' });
+    await vi.waitFor(() => expect(api.remove).toHaveBeenCalledWith(22));
+    expect(broker.size).toBe(0);
+  });
   it('图片完成后保留后台模型供下一张复用，空闲 30 秒自动关闭处理页', async () => {
     vi.useFakeTimers(); api.create.mockResolvedValue({ id: 22 }); api.remove.mockResolvedValue(undefined);
     const broker = new InlineImageBroker(false); const owner = connection('image-inline-owner'); broker.connect(owner.value); owner.receive(job);

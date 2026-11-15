@@ -143,6 +143,6 @@ export class ArticleImageTranslator {
     this.active = undefined; this.changed?.();
   }
   private remove(image: HTMLImageElement) { this.results.get(image)?.host.remove(); this.results.delete(image); this.resize?.unobserve(image); }
-  reset() { this.stop(); const port = this.port; this.port = undefined; port?.disconnect(); for (const image of this.results.keys()) this.remove(image); }
+  reset() { this.stop(); const port = this.port; this.port = undefined; if (port) { try { port.postMessage({ type: 'release' }); } catch { /* Port already closed. */ } port.disconnect(); } for (const image of this.results.keys()) this.remove(image); }
   destroy() { this.reset(); this.controller.abort(); this.resize?.disconnect(); this.mutations.disconnect(); cancelAnimationFrame(this.frame); }
 }

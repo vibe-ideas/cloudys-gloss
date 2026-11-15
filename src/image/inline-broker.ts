@@ -22,6 +22,11 @@ export class InlineImageBroker {
         if (!this.sessions.size) this.close(); else this.drain();
       });
       port.onMessage.addListener((raw: unknown) => {
+        if (raw && typeof raw === 'object' && 'type' in raw && raw.type === 'release') {
+          this.cancel(session); this.sessions.delete(session);
+          if (!this.sessions.size) this.close(); else this.drain();
+          return;
+        }
         if (raw && typeof raw === 'object' && 'type' in raw && raw.type === 'stop') { this.cancel(session); this.drain(); return; }
         const parsed = InlineImageRequest.safeParse(raw); if (!parsed.success) return;
         this.cancel(session); session.job = parsed.data; this.drain();
@@ -51,6 +56,19 @@ export class InlineImageBroker {
       }).catch(() => port.disconnect());
     });
     return true;
+  }
+  handleTabRemoved(tabId: number) {
+    let changed = false;
+    for (const session of this.sessions) {
+      if (session.owner.sender?.tab?.id === tabId) {
+        this.cancel(session); this.sessions.delete(session); changed = true;
+      }
+    }
+    if (changed) { if (!this.sessions.size) this.close(); else this.drain(); }
+  }
+  handleTabUpdated(tabId: number, changeInfo: { url?: string; status?: string }) {
+    if (!changeInfo.url && changeInfo.status !== 'loading') return;
+    this.handleTabRemoved(tabId);
   }
   private post(session: Session, message: unknown) { try { session.owner.postMessage(message); } catch { /* Owner disconnect cleans up its job. */ } }
   private cancel(session: Session) {

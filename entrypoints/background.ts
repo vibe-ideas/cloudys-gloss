@@ -158,6 +158,10 @@ export default defineBackground(() => {
     })();
   });
   browser.tabs.onRemoved.addListener((tabId) => {
+    inlineImages.handleTabRemoved(tabId);
     for (const job of pending.values()) if (job.tabId === tabId) job.controller.abort(new Error('页面已关闭'));
+  });
+  browser.tabs.onUpdated.addListener((tabId, changeInfo) => {
+    inlineImages.handleTabUpdated(tabId, changeInfo);
   });
 });
