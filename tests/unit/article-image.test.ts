@@ -1,10 +1,11 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { imageDisplay } from '../../src/image/display';
 import { InlineImageBroker } from '../../src/image/inline-broker';
+import { ImageTranslationLauncher } from '../../src/image/launcher';
 
-const api = vi.hoisted(() => ({ create: vi.fn(), remove: vi.fn(), offscreenCreate: vi.fn(), offscreenClose: vi.fn(), contexts: vi.fn() }));
+const api = vi.hoisted(() => ({ create: vi.fn(), remove: vi.fn(), offscreenCreate: vi.fn(), offscreenClose: vi.fn(), contexts: vi.fn(), connect: vi.fn() }));
 vi.mock('wxt/browser', () => ({ browser: {
-  runtime: { id: 'test-addon', getURL: (path: string) => 'chrome-extension://test-addon' + path, getContexts: api.contexts },
+  runtime: { id: 'test-addon', getURL: (path: string) => 'chrome-extension://test-addon' + path, getContexts: api.contexts, connect: api.connect },
   tabs: { create: api.create, remove: api.remove },
   offscreen: { createDocument: api.offscreenCreate, closeDocument: api.offscreenClose },
 } }));
@@ -99,5 +100,28 @@ describe('网页文章内的图片翻译', () => {
     const next = connection('image-inline-owner'); broker.connect(next.value); next.receive(job);
     await vi.waitFor(() => expect(next.post).toHaveBeenCalledWith(expect.objectContaining({ type: 'error' })));
     expect(api.offscreenCreate).not.toHaveBeenCalled(); expect(api.offscreenClose).not.toHaveBeenCalled(); next.disconnect();
+  });
+});
+
+describe('图片右键翻译控制器', () => {
+  it('不向页面注入悬停工具条，仅记录右键图片并触发原位翻译', () => {
+    api.connect.mockReturnValue({ onMessage: { addListener: vi.fn() }, onDisconnect: { addListener: vi.fn() }, postMessage: vi.fn(), disconnect: vi.fn() });
+    const launcher = new ImageTranslationLauncher();
+    expect(document.querySelector('[cloudys-gloss="image-launcher"]')).toBeNull();
+
+    const image = document.createElement('img');
+    image.src = 'https://images.example/pic.png';
+    document.body.append(image);
+
+    const event = new MouseEvent('contextmenu', { bubbles: true, cancelable: true });
+    Object.defineProperty(event, 'isTrusted', { value: true });
+    image.dispatchEvent(event);
+
+    expect(launcher.translateFromContext('https://images.example/pic.png')).toBe(true);
+    expect(launcher.translateFromContext('https://images.example/absent.png')).toBe(false);
+
+    launcher.reset();
+    launcher.destroy();
+    image.remove();
   });
 });

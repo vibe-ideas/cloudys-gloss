@@ -69,9 +69,9 @@ test('文章图片使用真实本机 Qwen 原位翻译，记录处理时长、�
   const { page, server } = extension;
   await page.goto(server.url + '/article-images');
   const image = page.locator('#chart'); await expect.poll(() => image.evaluate(node => (node as HTMLImageElement).naturalWidth)).toBeGreaterThan(0);
-  await page.locator('[data-cloudys-gloss="image-launcher"]').waitFor({ state: 'attached' });
   const before = await image.boundingBox(); const paragraph = await page.locator('#after-chart').boundingBox();
-  await image.hover(); await page.getByRole('button', { name: '翻译这张图片', exact: true }).click();
+  await image.click({ button: 'right' }); await page.keyboard.press('Escape');
+  expect(await extension.options.contextImage(server.url, server.url + '/article-chart.png')).toBe(true);
   const overlay = page.locator('[data-cloudys-gloss="image-overlay"]');
   await expect(overlay).toHaveAttribute('data-image-state', 'done', { timeout: 120000 });
   await expect(overlay.getByRole('status')).not.toContainText('翻译未完成');

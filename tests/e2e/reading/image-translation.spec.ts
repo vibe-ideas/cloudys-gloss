@@ -11,70 +11,23 @@ function imageTranslations(server: { setTranslation: (source: string, translated
   })) server.setTranslation(source, translated);
 }
 
-test('图片翻译图标可辨识操作，进度从零开始，窄图停靠空白处后仍可停止', async ({ extension }, testInfo) => {
-  test.setTimeout(90000);
-  const { page, server } = extension; imageTranslations(server); server.setDelay(3000);
+test('悬停文章图片不弹出翻译组件，保留原生页面体验', async ({ extension }) => {
+  const { page, server } = extension; imageTranslations(server);
   await page.goto(server.url + '/article-images');
-  const image = page.locator('#chart'); const toolbar = page.locator('[data-cloudys-gloss="image-launcher"]');
+  const image = page.locator('#chart');
   await image.hover();
-  const translate = toolbar.getByRole('button', { name: '翻译这张图片', exact: true });
-  await expect(translate.locator('svg')).toBeVisible(); await expect(translate).toHaveText('');
-  await translate.focus(); await page.keyboard.press('Tab');
-  await expect(toolbar.getByRole('button', { name: '打开图片阅读页', exact: true })).toBeFocused();
-  await page.screenshot({ path: testInfo.outputPath('image-toolbar-idle.png') });
-  await translate.click();
-  await expect(toolbar.getByRole('status')).toHaveText(/^0\/\d+$/, { timeout: 70000 });
-  await expect(toolbar.getByRole('status')).toHaveAttribute('title', /正在本机翻译/);
-  const wide = (await toolbar.boundingBox())!;
-  expect(wide.height).toBeLessThanOrEqual(36); expect(wide.width).toBeLessThanOrEqual(220);
-  await page.screenshot({ path: testInfo.outputPath('compact-image-progress.png') });
-  await image.evaluate(node => { (node as HTMLElement).style.width = '160px'; });
-  await page.mouse.move(8, 8);
-  await image.hover({ position: { x: 2, y: 2 } });
-  await expect(toolbar).toBeVisible();
-  const narrow = (await toolbar.boundingBox())!; const picture = (await image.boundingBox())!;
-  expect(narrow.height).toBeLessThanOrEqual(36); expect(narrow.width).toBeLessThanOrEqual(148);
-  await expect(toolbar).toHaveAttribute('data-dock', 'outside');
-  const overlap = Math.max(0, Math.min(narrow.x + narrow.width, picture.x + picture.width) - Math.max(narrow.x, picture.x))
-    * Math.max(0, Math.min(narrow.y + narrow.height, picture.y + picture.height) - Math.max(narrow.y, picture.y));
-  expect(overlap).toBe(0);
-  const reader = toolbar.getByRole('button', { name: '打开图片阅读页', exact: true });
-  await expect(reader).toBeVisible();
-  const readerBox = (await reader.boundingBox())!; expect(readerBox.x + readerBox.width).toBeLessThanOrEqual(narrow.x + narrow.width);
-  await page.screenshot({ path: testInfo.outputPath('compact-image-narrow.png') });
-  await toolbar.getByRole('button', { name: '停止图片翻译', exact: true }).click();
-  await expect(toolbar.getByRole('status')).toHaveText('已停止');
-  await page.keyboard.press('Escape'); await expect(toolbar).toBeHidden();
-});
-
-test('图片翻译失败时显示未译数量，警示图标可用键盘打开阅读页查看详情', async ({ extension }, testInfo) => {
-  test.setTimeout(90000);
-  const { page, server, options } = extension; server.setTranslationFailure(503);
-  await page.goto(server.url + '/article-images'); await page.locator('#chart').hover();
-  const toolbar = page.locator('[data-cloudys-gloss="image-launcher"]');
-  await toolbar.getByRole('button', { name: '翻译这张图片', exact: true }).click();
-  const details = toolbar.getByRole('button', { name: /打开阅读页查看详情/ });
-  await expect(details).toContainText(/\d+ 处未译/, { timeout: 70000 });
-  await expect(details.locator('svg')).toBeVisible();
-  await expect(toolbar.getByRole('button', { name: '重试图片翻译', exact: true })).toBeVisible();
-  await details.focus();
-  await page.screenshot({ path: testInfo.outputPath('image-toolbar-warning.png') });
-  await page.keyboard.press('Enter');
-  await expect.poll(() => options.image<boolean>('ready')).toBe(true);
+  await expect(page.locator('[data-cloudys-gloss="image-launcher"]')).toHaveCount(0);
 });
 
 test('文章内图片原位显示译文，切换原图及缩放滚动不改排版，换图后清除旧译文', async ({ extension }, testInfo) => {
   test.setTimeout(90000);
-  const { page, context, server } = extension; imageTranslations(server);
+  const { page, context, options, server } = extension; imageTranslations(server);
   await page.goto(server.url + '/article-images');
   const image = page.locator('#chart'); await expect(image).toBeVisible();
-  await page.locator('[data-cloudys-gloss="image-launcher"]').waitFor({ state: 'attached' });
+  await expect(page.locator('[data-cloudys-gloss="image-launcher"]')).toHaveCount(0);
   const before = await image.boundingBox(); const after = await page.locator('#after-chart').boundingBox(); const tabs = context.pages().length;
-  await image.hover();
-  // The article's scripts cannot initiate privileged OCR by faking a click.
-  await page.getByRole('button', { name: '翻译这张图片', exact: true }).evaluate(node => (node as HTMLButtonElement).click());
-  await expect(page.locator('[data-cloudys-gloss="image-overlay"]')).toHaveCount(0);
-  await page.getByRole('button', { name: '翻译这张图片', exact: true }).click({ timeout: 5000 });
+  await image.click({ button: 'right' }); await page.keyboard.press('Escape');
+  expect(await options.contextImage(server.url, server.url + '/article-chart.png')).toBe(true);
   const overlay = page.locator('[data-cloudys-gloss="image-overlay"]');
   await expect(overlay.getByRole('status')).toContainText('图片翻译完成', { timeout: 70000 });
   await expect(overlay.locator('.translated-region').first()).toBeVisible();
@@ -86,8 +39,12 @@ test('文章内图片原位显示译文，切换原图及缩放滚动不改排�
   expect(await image.boundingBox()).toEqual(before); expect(await page.locator('#after-chart').boundingBox()).toEqual(after);
   // Extension processor is inactive: clicking a linked chart never follows its anchor.
   await expect.poll(() => page.evaluate(() => document.visibilityState)).toBe('visible');
-  await image.hover(); await page.getByRole('button', { name: '查看原图', exact: true }).click(); await expect(overlay).toBeHidden();
-  await image.hover(); await page.getByRole('button', { name: '查看图片译文', exact: true }).click(); await expect(overlay).toBeVisible();
+  await image.click({ button: 'right' }); await page.keyboard.press('Escape');
+  expect(await options.contextImage(server.url, server.url + '/article-chart.png')).toBe(true);
+  await expect(overlay).toBeHidden();
+  await image.click({ button: 'right' }); await page.keyboard.press('Escape');
+  expect(await options.contextImage(server.url, server.url + '/article-chart.png')).toBe(true);
+  await expect(overlay).toBeVisible();
   await page.setViewportSize({ width: 800, height: 800 });
   await expect.poll(async () => { const a = await image.boundingBox(); const b = await overlay.boundingBox(); return a && b ? Math.abs(a.width - b.width) : 1000; }).toBeLessThan(2);
   await page.evaluate(() => window.scrollBy(0, 90));

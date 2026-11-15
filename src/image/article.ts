@@ -17,7 +17,7 @@ export class ArticleImageTranslator {
   private resize?: ResizeObserver;
   private mutations: MutationObserver;
   private frame = 0;
-  constructor(private changed: () => void) {
+  constructor(private changed?: () => void) {
     document.querySelectorAll(`[${OWN}="image-overlay"]`).forEach(node => node.remove());
     const signal = this.controller.signal;
     window.addEventListener('scroll', this.schedule, { signal, capture: true, passive: true });
@@ -38,7 +38,7 @@ export class ArticleImageTranslator {
   toggle(image: HTMLImageElement) {
     const result = this.results.get(image);
     if (result?.busy) { this.stop(); return; }
-    if (this.state(image).translated && result) { result.hidden = !result.hidden; this.schedule(); this.changed(); return; }
+    if (this.state(image).translated && result) { result.hidden = !result.hidden; this.schedule(); this.changed?.(); return; }
     this.start(image);
   }
   private start(image: HTMLImageElement) {
@@ -62,7 +62,7 @@ export class ArticleImageTranslator {
       this.port ??= this.connect();
       this.port.postMessage({ type: 'start', id, url: source });
     } catch { this.fail('图片翻译连接失效，请刷新页面重试'); }
-    this.changed();
+    this.changed?.();
   }
   private connect() {
     const port = browser.runtime.connect({ name: 'image-inline-owner' });
@@ -71,7 +71,7 @@ export class ArticleImageTranslator {
       const event = parsed.data; const image = this.active.image; const result = this.results.get(image); if (!result) return;
       if ((image.currentSrc || image.src) !== result.source) { this.remove(image); this.stop(); return; }
       if (event.type === 'error') this.fail(event.error);
-      else if (event.type === 'progress') { result.status.textContent = event.status; this.changed(); }
+      else if (event.type === 'progress') { result.status.textContent = event.status; this.changed?.(); }
       else {
         result.image = event.image; result.items = event.items; result.ms = event.ms;
         result.host.dataset.totalMs = String(event.ms);
@@ -79,7 +79,7 @@ export class ArticleImageTranslator {
         const uncertain = result.items.filter(line => line.score < .85).length; const failed = result.items.filter(line => line.error).length;
         result.status.textContent = event.done ? `图片翻译完成 · ${(event.ms / 1000).toFixed(2)} 秒${uncertain ? ` · ${uncertain} 处识别需核对` : ''}${failed ? ` · ${failed} 处翻译未完成：${result.items.find(line => line.error)!.text.slice(0, 70)}` : ''} · 点击“打开图片阅读页”可校对` : '正在本机翻译图片文字…';
         if (event.done) { result.busy = false; result.error = failed ? result.items.find(line => line.error)?.error : undefined; this.active = undefined; }
-        this.draw(result); this.schedule(); this.changed();
+        this.draw(result); this.schedule(); this.changed?.();
       }
     });
     port.onDisconnect.addListener(() => { if (this.port === port) { this.port = undefined; if (this.active) this.fail('本机图片处理已停止，请重试或打开图片阅读页'); } });
@@ -133,12 +133,12 @@ export class ArticleImageTranslator {
     if (!transform || transform === 'none') return true;
     try { const matrix = new DOMMatrixReadOnly(transform); return matrix.is2D && matrix.b === 0 && matrix.c === 0 && matrix.a > 0 && matrix.d > 0; } catch { return false; }
   }
-  private fail(error: string) { if (this.active) { const result = this.results.get(this.active.image); if (result) { result.busy = false; result.error = error; result.host.dataset.imageState = 'error'; result.status.textContent = `${error}；可打开图片阅读页处理。`; } } this.active = undefined; this.changed(); }
+  private fail(error: string) { if (this.active) { const result = this.results.get(this.active.image); if (result) { result.busy = false; result.error = error; result.host.dataset.imageState = 'error'; result.status.textContent = `${error}；可打开图片阅读页处理。`; } } this.active = undefined; this.changed?.(); }
   stop() {
     if (!this.active) return;
     try { this.port?.postMessage({ type: 'stop' }); } catch { /* A closed processor has already stopped. */ }
     const result = this.results.get(this.active.image); if (result) { result.busy = false; result.host.dataset.imageState = 'stopped'; result.status.textContent = '已停止，保留已完成的图片译文。'; }
-    this.active = undefined; this.changed();
+    this.active = undefined; this.changed?.();
   }
   private remove(image: HTMLImageElement) { this.results.get(image)?.host.remove(); this.results.delete(image); this.resize?.unobserve(image); }
   reset() { this.stop(); const port = this.port; this.port = undefined; port?.disconnect(); for (const image of this.results.keys()) this.remove(image); }
